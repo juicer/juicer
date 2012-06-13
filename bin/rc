@@ -1,0 +1,73 @@
+#!/bin/bash
+
+usage() {
+    cat <<EOF
+usage: ${0} {create | edit | show | update | create-like | publish}
+
+${0} creates and updates carts. To promote/sign carts see the
+${0}-admin command.
+
+Sub-Commands:
+    create CART-NAME -r REPO-NAME [ item1, [ item2, [...] ] ]
+        Create CART-NAME from items to install into REPO-NAME.
+
+        '-r' may be given multiple times for updating several repos.
+
+    edit CART-NAME
+        Edit CART-NAME in \$EDITOR (falls back to... emacs?).
+
+    show CART-NAME
+        Prints the contents of CART-NAME
+
+    update CART-NAME [ item1, [ item2, [...] ] ]
+        The items of CART-NAME are updated.
+
+    create-like OLD-CART-NAME NEW-CART-NAME [ item1, item2, [...] ]
+        Creates NEW-CART-NAME from OLD-CART-NAME with new items.
+
+    publish CART-NAME
+        Publishes CART-NAME to the pulp server (updates existing carts)
+
+Parameters Format
+    Items given may be any number and combination of the following
+    input resource types:
+
+    http[s]://rpms/directory/ | http[s]://website/some-thing.rpm
+        URL to an HTTP directory index or an RPM. RPM paths are parsed
+        from the index and then sent to the pulp server to be
+        downloaded.
+
+    ./directory/of/items | ./path/to/item.rpm
+        The items given are directly uploaded to the pulp server.
+
+Examples:
+  Create and publish cart CRQ1337:
+    $ rc create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
+        -r services ./new-services-rpms \\
+        -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
+    Created new cart, CRQ1337.
+    $ rc publish CRQ1337
+    Cart published at http://rc.util.phx1.redhat.com/carts/CRQ1337
+
+
+  Update the existing cart, CRQ1337
+    $ rc update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
+    Updated xyz items in CRQ1337.
+    $ rc publish CRQ1337
+    Cart published at http://rc.util.phx1.redhat.com/carts/CRQ1337
+
+EOF
+}
+
+
+
+
+
+while [ ${1} ]; do
+    if [ "${1}" = "-h" -o "${1}" = "--help" ]; then
+	usage
+	exit;
+    fi
+done
+
+echo "done!"

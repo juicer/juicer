@@ -1,0 +1,62 @@
+#!/bin/bash
+
+usage() {
+    cat <<EOF
+usage: ${0} {show | promote | trash | create-repo}
+
+${0} Promote release carts.
+
+Sub-Commands:
+    show CART-NAME
+        Print the contents of CART-NAME.
+
+    promote [ENVIRONMENT] CART-NAME
+        Promote the contents of CART-NAME into ENVIRONMENT. ${0} Does
+        'The Right Thing' to ensure nothing skips required
+        environments. Invokes rpm signing when required.
+
+        Promotes to the 'next' environment if ENVIRONMENT is omitted.
+
+    trash CART-NAME
+        Delete CART-NAME.
+
+    create-repo REPOSITORY [--in ENV1, [ ENV2, [...] ] ]
+        Create a new REPOSITORY. By default they are created in RE,
+        QA, STAGE, and PROD. Use --in to specify specific
+        environments.
+
+Examples:
+  Promote CRQ1337 from RE into QA:
+    $ ${0} promote qa CRQ1337
+    Promoted xyz RPMs from RE into QA.
+
+  Promote CRQ1337 into STAGE:
+    $ ${0} promote CRQ1337
+    ...
+    ...[signing process initiated]...
+    ...
+    Signed and promoted xyz RPMs from QA into STAGE.
+
+  Create a megafrobber repository:
+    $ ${0} create-repo megafrobber
+    Created 'megafrobber' repository in RE, QA, STAGE, and PROD.
+
+  Create a new repo in just RE and QA:
+    $ ${0} create-repo minifrobber --in RE QA
+    Created 'minifrobber' repository in RE and QA.
+
+EOF
+}
+
+
+
+
+
+while [ ${1} ]; do
+    if [ "${1}" = "-h" -o "${1}" = "--help" ]; then
+	usage
+	exit;
+    fi
+done
+
+echo "done!"
