@@ -42,19 +42,19 @@ Parameters Format
 
 Examples:
   Create and publish cart CRQ1337:
-    $ rc create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
+    $ ${0} create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
         -r services ./new-services-rpms \\
         -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
     Created new cart, CRQ1337.
-    $ rc publish CRQ1337
-    Cart published at http://rc.util.phx1.redhat.com/carts/CRQ1337
+    $ ${0} publish CRQ1337
+    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
 
 
   Update the existing cart, CRQ1337
-    $ rc update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
+    $ ${0} update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
     Updated xyz items in CRQ1337.
-    $ rc publish CRQ1337
-    Cart published at http://rc.util.phx1.redhat.com/carts/CRQ1337
+    $ ${0} publish CRQ1337
+    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
 
 EOF
 }

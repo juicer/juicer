@@ -1,0 +1,16 @@
+# Items we should all ignore
+*.py[co]
+*.db
+*.swp
+*.patch
+*~
+\#*
+.\#*
+MANIFEST
+docs/html
+docs/.doctrees
+dist
+build
+*.xml
+Graph/input
+rpm-build
