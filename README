@@ -1,0 +1,9 @@
+Nushus -> Pulp Migration Planning
+
+https://docspace.corp.redhat.com/docs/DOC-104668
+
+
+---
+
+This repo is a collection of tools for managing RPM promotion and
+repositories in the new pulp setup.
