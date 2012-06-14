@@ -1,5 +1,43 @@
-#!/bin/bash
+#!/usr/bin/env python
 
+import argparse
+import JuicerAdmin
+
+def main():
+
+    parser = argparse.ArgumentParser(description='Manage pulp')
+    JuicerAdmin.parser = parser
+
+    parser.add_argument('-v', action='count', \
+                            help='Increase the verbosity (up to 3x)')
+
+    ##################################################################
+    # Keep the different commands separate
+    subparsers = parser.add_subparsers(title='Commands', \
+                                           dest='command', \
+                                           description='\'%(prog)s COMMAND -h\' for individual help topics')
+
+    ##################################################################
+    # Create the 'show' sub-parser
+    parser_show = subparsers.add_parser('create-repo', help='Create pulp repository')
+
+    parser_show.add_argument('name', metavar='host', \
+                                 help='The name of your repo')
+
+    parser_show.add_argument('--in', metavar='envs', \
+                                 nargs="+", \
+                                 dest='envs', \
+                                 help='The environments in which to create your repository')
+
+    parser_show.set_defaults(ja=JuicerAdmin.create)
+
+    args = parser.parse_args()
+    args.ja(args)
+
+if __name__ == '__main__':
+    main()
+
+"""
 usage() {
     cat <<EOF
 usage: ${0} {show | promote | trash | create-repo}
@@ -60,3 +98,4 @@ while [ ${1} ]; do
 done
 
 echo "done!"
+"""
