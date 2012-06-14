@@ -11,7 +11,7 @@ class JuicerAdmin(object):
         # Some default shit, read this in from yaml in util.py
         connect_params={'user': 'admin',
                         'password': 'admin',
-                        'base_url': 'http://snarl.rdu.redhat.com/pulp/api'}
+                        'base_url': 'https://snarl.rdu.redhat.com/pulp/api'}
 
         self.base_url=connect_params['base_url']
         self.auth=(connect_params['user'], connect_params['password'])
@@ -19,7 +19,7 @@ class JuicerAdmin(object):
         
     def put(self, url="", data={}):
         # Returns (response, content)
-        return requests.put(url, json.dumps(data), auth=self.auth, headers=self.headers)
+        return requests.put(url, json.dumps(data), auth=self.auth, headers=self.headers, verify=False)
     
     def get(self, url=""):
         # Returns (response, content)
