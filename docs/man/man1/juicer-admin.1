@@ -1,0 +1,67 @@
+'\" t
+.\"     Title: juicer-admin
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 06/18/2012
+.\"    Manual: Pulp repos and release carts
+.\"    Source: Juicer 0.0.1
+.\"  Language: English
+.\"
+.TH "JUICER\-ADMIN" "1" "06/18/2012" "Juicer 0\&.0\&.1" "Pulp repos and release carts"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+juicer-admin \- manage pulp repos and promote release carts
+.SH "SYNOPSIS"
+.sp
+juicer\-admin [ \-\-op \-\-ti \-\-on \-s]
+.SH "DESCRIPTION"
+.sp
+Manage pulp repositories and release carts\&.
+.SH "OPTIONS"
+.PP
+\fBFILE\fR
+.RS 4
+Release file in YAML format\&. Instructions are read from stdin if
+\fIFILE\fR
+is
+\fI\-\fR
+or not given\&. Multiple
+\fIFILE\fRs can be given\&.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Show this help message and exit\&.
+.RE
+.SH "FILES"
+.sp
+~/\&.juicer\&.conf \(em Juicer configuration file
+.SH "AUTHOR"
+.sp
+Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.
+.SH "COPYRIGHT"
+.sp
+Copyright \(co 2012, Red Hat, Inc\&.\&.
+.sp
+Juicer is released under the terms of the GPLv3+ License\&.
+.SH "SEE ALSO"
+.sp
+\fBjuicer\fR(1), \fBjuicer\&.conf\fR(5)
