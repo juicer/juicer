@@ -1,33 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-usage() {
-    cat <<EOF
-usage: ${0} {create | edit | show | update | create-like | publish}
+import argparse
+import juicer.juicer
 
-${0} creates and updates carts. To promote/sign carts see the
-${0}-admin command.
+def main():
 
-Sub-Commands:
-    create CART-NAME -r REPO-NAME [ item1, [ item2, [...] ] ]
-        Create CART-NAME from items to install into REPO-NAME.
-
-        '-r' may be given multiple times for updating several repos.
-
-    edit CART-NAME
-        Edit CART-NAME in \$EDITOR (falls back to... emacs?).
-
-    show CART-NAME
-        Prints the contents of CART-NAME
-
-    update CART-NAME [ item1, [ item2, [...] ] ]
-        The items of CART-NAME are updated.
-
-    create-like OLD-CART-NAME NEW-CART-NAME [ item1, item2, [...] ]
-        Creates NEW-CART-NAME from OLD-CART-NAME with new items.
-
-    publish CART-NAME
-        Publishes CART-NAME to the pulp server (updates existing carts)
-
+    epilog = """
 Parameters Format
     Items given may be any number and combination of the following
     input resource types:
@@ -42,32 +20,118 @@ Parameters Format
 
 Examples:
   Create and publish cart CRQ1337:
-    $ ${0} create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
+    $ %(prog)s create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
         -r services ./new-services-rpms \\
         -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
     Created new cart, CRQ1337.
-    $ ${0} publish CRQ1337
+    $ %(prog)s publish CRQ1337
     Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
 
 
   Update the existing cart, CRQ1337
-    $ ${0} update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
+    $ %(prog)s update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
     Updated xyz items in CRQ1337.
-    $ ${0} publish CRQ1337
-    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
-
-EOF
-}
+    $ %(prog)s publish CRQ1337
+    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337"""
 
 
+    parser = argparse.ArgumentParser(description='Manage release carts', \
+                                         epilog=epilog, \
+                                         formatter_class=argparse.RawTextHelpFormatter)
+    juicer.juicer.parser = parser
+
+    parser.add_argument('-v', action='count', \
+                            help='Increase the verbosity (up to 3x)')
 
 
+    ##################################################################
+    # Keep the different commands separate
+    subparsers = parser.add_subparsers(title='Commands', \
+                                           dest='command', \
+                                           description='\'%(prog)s COMMAND -h\' for individual help topics')
 
-while [ ${1} ]; do
-    if [ "${1}" = "-h" -o "${1}" = "--help" ]; then
-	usage
-	exit;
-    fi
-done
 
-echo "done!"
+    ##################################################################
+    # Create the 'create' sub-parser
+    parser_create = subparsers.add_parser('create', help="""Create CART-NAME from items to install into REPO-NAME.
+
+'-r' may be given multiple times for updating several repos.""")
+
+    parser_create.add_argument('cart-name', metavar='cartname', \
+                                 help='Cart name')
+
+    parser_create.add_argument('-r', metavar='reponame', \
+                                 help='Repo name')
+
+    parser_create.add_argument('items', metavar='items', \
+                                 nargs="+", \
+                                 help='Cart name')
+
+    parser_create.set_defaults(ja=juicer.juicer.create)
+
+
+    ##################################################################
+    # Create the 'edit' sub-parser
+    parser_edit = subparsers.add_parser('edit', help='Interactively edit a release cart.')
+
+    parser_edit.add_argument('cart-name', metavar='cartname', \
+                                 help='The name of your release cart')
+
+    parser_edit.set_defaults(ja=juicer.juicer.edit)
+
+
+    ##################################################################
+    # Create the 'show' sub-parser
+    parser_show = subparsers.add_parser('show', help='Print the contents of a cart.')
+
+    parser_show.add_argument('cart-name', metavar='name', \
+                                 help='The name of your cart')
+
+    parser_show.set_defaults(ja=juicer.juicer.show)
+
+
+    ##################################################################
+    # Create the 'update' sub-parser
+    parser_update = subparsers.add_parser('update', help='Update a release cart with items.')
+
+    parser_update.add_argument('cart-name', metavar='cartname', \
+                                 help='The name of your release cart')
+
+    parser_show.add_argument('items', metavar='items', \
+                                 nargs="+", \
+                                 help='Cart name')
+
+    parser_update.set_defaults(ja=juicer.juicer.update)
+
+    ##################################################################
+    # Create the 'create-like' sub-parser
+    parser_createlike = subparsers.add_parser('create-like', help='Creates NEW-CART-NAME from OLD-CART-NAME with new items.')
+
+    parser_createlike.add_argument('cart-name', metavar='cartname', \
+                                 help='The name of your new release cart')
+
+    parser_createlike.add_argument('old-cart-name', metavar='oldcartname', \
+                                 help='Cart to copy')
+
+    parser_createlike.add_argument('items', metavar='items', \
+                                 nargs="+", \
+                                 help='Cart name')
+
+    parser_createlike.set_defaults(ja=juicer.juicer.createlike)
+
+    ##################################################################
+    # Create the 'publish' sub-parser
+    parser_publish = subparsers.add_parser('publish', help='Publishes CART-NAME to the pulp server (updates existing carts).')
+
+    parser_publish.add_argument('cart-name', metavar='cartname', \
+                                 help='The name of your new release cart')
+
+    parser_publish.set_defaults(ja=juicer.juicer.publish)
+
+
+    ##################################################################
+    args = parser.parse_args()
+    args.ja(args)
+
+if __name__ == '__main__':
+    main()
