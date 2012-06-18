@@ -3,7 +3,31 @@ Nushus -> Pulp Migration Planning
 https://docspace.corp.redhat.com/docs/DOC-104668
 
 
----
+DESCRIPTION
+===========
 
 This repo is a collection of tools for managing RPM promotion and
 repositories in the new pulp setup.
+
+
+CONFIG FILE
+===========
+
+    # ~/.juicer.conf
+    [base]
+    user: admin
+    password: admin
+    base_url: https://snarl.rdu.redhat.com/pulp/api
+
+    [re]
+    base_url: https://snarl.rdu.redhat.com/pulp/api
+
+    [qa]
+    base_url: https://snarl.rdu.redhat.com/pulp/api
+
+    [stage]
+    base_url: https://snarl.rdu.redhat.com/pulp/api
+
+    [prod]
+    base_url: https://snarl.rdu.redhat.com/pulp/api
+
