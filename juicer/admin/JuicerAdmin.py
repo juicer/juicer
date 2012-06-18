@@ -41,11 +41,6 @@ class JuicerAdmin(object):
     def show_repo(self, query='/repositories/'):
         for env in self.envs:
             url = "%s%s%s-%s/" % (self.base_url, query, self.args.name, env)
-            print url
-            print "base_url", self.base_url
-            print "query", query
-            print "name", self.args.name
-            print "env", env
             r = self.get(url)
             print r.status_code, r.content
 
