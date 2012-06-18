@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import Juicer.utils
 import JuicerAdmin
 import json
 import requests
@@ -9,10 +10,7 @@ class JuicerAdmin(object):
         self.args = args
         self.envs = self.args.envs
 
-        # Some default shit, read this in from yaml in util.py
-        connect_params = {'user': 'admin',
-                          'password': 'admin',
-                          'base_url': 'https://snarl.rdu.redhat.com/pulp/api'}
+        connect_params = Juicer.utils.get_login_info(self.args)
 
         self.base_url = connect_params['base_url']
         self.auth = (connect_params['user'], connect_params['password'])
