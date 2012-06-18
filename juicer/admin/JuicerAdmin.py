@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import Juicer.utils
-import JuicerAdmin
+import juicer.utils
+import juicer.admin
 import json
 import requests
 
@@ -10,7 +10,7 @@ class JuicerAdmin(object):
         self.args = args
         self.envs = self.args.envs
 
-        connect_params = Juicer.utils.get_login_info(self.args)
+        connect_params = juicer.utils.get_login_info(self.args)
 
         self.base_url = connect_params['base_url']
         self.auth = (connect_params['username'], connect_params['password'])

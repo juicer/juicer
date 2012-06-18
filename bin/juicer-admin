@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 import argparse
-import JuicerAdmin
+import juicer.admin
 
 def main():
 
     parser = argparse.ArgumentParser(description='Manage pulp')
-    JuicerAdmin.parser = parser
+    juicer.admin.parser = parser
 
     parser.add_argument('-v', action='count', \
                             help='Increase the verbosity (up to 3x)')
@@ -30,7 +30,7 @@ def main():
                                  default=['re', 'qa', 'stage', 'prod'], \
                                  help='The environments in which to create your repository')
 
-    parser_show.set_defaults(ja=JuicerAdmin.create)
+    parser_show.set_defaults(ja=juicer.admin.create)
 
     args = parser.parse_args()
     args.ja(args)

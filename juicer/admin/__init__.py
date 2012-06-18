@@ -1,4 +1,4 @@
-from JuicerAdmin import JuicerAdmin as ja
+from juicer.admin import admin as ja
 
 def create(args):
     pulp = ja(args)
