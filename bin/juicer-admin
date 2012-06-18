@@ -18,8 +18,24 @@ def main():
                                            description='\'%(prog)s COMMAND -h\' for individual help topics')
 
     ##################################################################
+    # Create the 'create' sub-parser
+    parser_create = subparsers.add_parser('create-repo', help='Create pulp repository')
+
+    parser_create.add_argument('name', metavar='name', \
+                                 help='The name of your repo')
+
+    parser_create.add_argument('--in', metavar='envs', \
+                                 nargs="+", \
+                                 dest='envs', \
+                                 default=['re', 'qa', 'stage', 'prod'], \
+                                 help='The environments in which to create your repository')
+
+    parser_create.set_defaults(ja=juicer.admin.create)
+
+
+    ##################################################################
     # Create the 'show' sub-parser
-    parser_show = subparsers.add_parser('create-repo', help='Create pulp repository')
+    parser_show = subparsers.add_parser('show-repo', help='Show pulp repository')
 
     parser_show.add_argument('name', metavar='name', \
                                  help='The name of your repo')
@@ -28,9 +44,25 @@ def main():
                                  nargs="+", \
                                  dest='envs', \
                                  default=['re', 'qa', 'stage', 'prod'], \
-                                 help='The environments in which to create your repository')
+                                 help='The environments in which to show your repository')
 
-    parser_show.set_defaults(ja=juicer.admin.create)
+    parser_show.set_defaults(ja=juicer.admin.show)
+
+
+    ##################################################################
+    # Create the 'delete' sub-parser
+    parser_delete = subparsers.add_parser('delete-repo', help='Delete pulp repository')
+
+    parser_delete.add_argument('name', metavar='name', \
+                                 help='The name of your repo')
+
+    parser_delete.add_argument('--in', metavar='envs', \
+                                 nargs="+", \
+                                 dest='envs', \
+                                 default=['re', 'qa', 'stage', 'prod'], \
+                                 help='The environments in which to delete your repository')
+
+    parser_delete.set_defaults(ja=juicer.admin.delete)
 
     args = parser.parse_args()
     args.ja(args)

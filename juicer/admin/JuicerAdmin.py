@@ -17,13 +17,16 @@ class JuicerAdmin(object):
         self.headers = {'content-type': 'application/json'}
 
     def put(self, url="", data={}):
-        # Returns (response, content)
         return requests.put(url, json.dumps(data), auth=self.auth,
                             headers=self.headers, verify=False)
 
     def get(self, url=""):
-        # Returns (response, content)
-        return requests.get(url, self.auth, self.headers)
+        return requests.get(url, auth=self.auth, headers=self.headers,
+                            verify=False)
+
+    def delete(self, url=""):
+        return requests.delete(url, auth=self.auth, headers=self.headers,
+                               verify=False)
 
     def create_repo(self, query='/repositories/'):
         data = {'name': self.args.name,
@@ -33,3 +36,21 @@ class JuicerAdmin(object):
             data['id'] = '-'.join([self.args.name, env])
             url = self.base_url + query
             r = self.put(url, data)
+            print r.status_code, r.content
+
+    def show_repo(self, query='/repositories/'):
+        for env in self.envs:
+            url = "%s%s%s-%s/" % (self.base_url, query, self.args.name, env)
+            print url
+            print "base_url", self.base_url
+            print "query", query
+            print "name", self.args.name
+            print "env", env
+            r = self.get(url)
+            print r.status_code, r.content
+
+    def delete_repo(self, query='/repositories/'):
+        for env in self.envs:
+            url = "%s%s%s-%s/" % (self.base_url, query, self.args.name, env)
+            r = self.delete(url)
+            print r.status_code, r.content
