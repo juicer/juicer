@@ -18,51 +18,98 @@ def main():
                                            description='\'%(prog)s COMMAND -h\' for individual help topics')
 
     ##################################################################
-    # Create the 'create' sub-parser
-    parser_create = subparsers.add_parser('create-repo', help='Create pulp repository')
+    # Create the 'create_repo' sub-parser
+    parser_create_repo = subparsers.add_parser('create-repo', help='Create pulp repository')
 
-    parser_create.add_argument('name', metavar='name', \
+    parser_create_repo.add_argument('name', metavar='name', \
                                  help='The name of your repo')
 
-    parser_create.add_argument('--in', metavar='envs', \
+    parser_create_repo.add_argument('--in', metavar='envs', \
                                  nargs="+", \
                                  dest='envs', \
                                  default=['re', 'qa', 'stage', 'prod'], \
                                  help='The environments in which to create your repository')
 
-    parser_create.set_defaults(ja=juicer.admin.create)
+    parser_create_repo.set_defaults(ja=juicer.admin.create_repo)
 
 
     ##################################################################
-    # Create the 'show' sub-parser
-    parser_show = subparsers.add_parser('show-repo', help='Show pulp repository')
+    # Create the 'create_user' sub-parser
+    parser_create_user = subparsers.add_parser('create-user', help='Create pulp user')
 
-    parser_show.add_argument('name', metavar='name', \
+    parser_create_user.add_argument('--name', metavar='name', \
+                                        dest='name', \
+                                        help='Full name of user')
+
+    parser_create_user.add_argument('--login', metavar='login', \
+                                        dest='login', \
+                                        help='Login user id for user')
+
+    parser_create_user.add_argument('--password', metavar='password', \
+                                        dest='password', \
+                                        help='Plain text password for user')
+
+    parser_create_user.set_defaults(ja=juicer.admin.create_user)
+
+
+    ##################################################################
+    # Create the 'list_repos' sub-parser
+    parser_list_repos = subparsers.add_parser('list-repos', help='List all repos')
+
+    parser_list_repos.set_defaults(ja=juicer.admin.list_repos)
+
+
+    ##################################################################
+    # Create the 'show_repo' sub-parser
+    parser_show_repo = subparsers.add_parser('show-repo', help='Show pulp repository')
+
+    parser_show_repo.add_argument('name', metavar='name', \
                                  help='The name of your repo')
 
-    parser_show.add_argument('--in', metavar='envs', \
+    parser_show_repo.add_argument('--in', metavar='envs', \
                                  nargs="+", \
                                  dest='envs', \
                                  default=['re', 'qa', 'stage', 'prod'], \
                                  help='The environments in which to show your repository')
 
-    parser_show.set_defaults(ja=juicer.admin.show)
+    parser_show_repo.set_defaults(ja=juicer.admin.show_repo)
 
 
     ##################################################################
-    # Create the 'delete' sub-parser
-    parser_delete = subparsers.add_parser('delete-repo', help='Delete pulp repository')
+    # Create the 'show_user' sub-parser
+    parser_show_user = subparsers.add_parser('show-user', help='Show pulp user')
 
-    parser_delete.add_argument('name', metavar='name', \
+    parser_show_user.add_argument('login', metavar='login', \
+                                        help='Login user id for user')
+
+    parser_show_user.set_defaults(ja=juicer.admin.show_user)
+
+
+    ##################################################################
+    # Create the 'delete_repo' sub-parser
+    parser_delete_repo = subparsers.add_parser('delete-repo', help='Delete pulp repository')
+
+    parser_delete_repo.add_argument('name', metavar='name', \
                                  help='The name of your repo')
 
-    parser_delete.add_argument('--in', metavar='envs', \
+    parser_delete_repo.add_argument('--in', metavar='envs', \
                                  nargs="+", \
                                  dest='envs', \
                                  default=['re', 'qa', 'stage', 'prod'], \
                                  help='The environments in which to delete your repository')
 
-    parser_delete.set_defaults(ja=juicer.admin.delete)
+    parser_delete_repo.set_defaults(ja=juicer.admin.delete_repo)
+
+
+    ##################################################################
+    # Create the 'delete_user' sub-parser
+    parser_delete_user = subparsers.add_parser('delete-user', help='Delete pulp user')
+
+    parser_delete_user.add_argument('login', metavar='login', \
+                                        help='Login user id for user')
+
+    parser_delete_user.set_defaults(ja=juicer.admin.delete_user)
+
 
     args = parser.parse_args()
     args.ja(args)
@@ -125,8 +172,8 @@ EOF
 
 while [ ${1} ]; do
     if [ "${1}" = "-h" -o "${1}" = "--help" ]; then
-	usage
-	exit;
+        usage
+        exit;
     fi
 done
 
