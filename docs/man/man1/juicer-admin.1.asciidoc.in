@@ -1,0 +1,64 @@
+juicer-admin(1)
+===============
+:doctype:manpage
+:man source:   Juicer
+:man version:  %VERSION%
+:man manual:   Pulp repos and release carts
+
+NAME
+----
+juicer-admin - manage pulp repos and promote release carts
+
+
+
+SYNOPSIS
+--------
+juicer-admin [ --op --ti --on -s]
+
+
+
+DESCRIPTION
+-----------
+Manage pulp repositories and release carts.
+
+
+
+OPTIONS
+-------
+*FILE*::
+
+Release file in YAML format. Instructions are read from stdin if
+'FILE' is '-' or not given. Multiple __FILE__s can be given.
+
+
+
+*-h*, *--help*::
+
+Show this help message and exit.
+
+
+
+FILES
+-----
+~/.juicer.conf -- Juicer configuration file
+
+
+
+AUTHOR
+------
+Juicer was written by GCA-PC, Red Hat, Inc..
+
+
+
+COPYRIGHT
+---------
+Copyright © 2012, Red Hat, Inc..
+
+Juicer is released under the terms of the GPLv3+ License.
+
+
+
+SEE ALSO
+--------
+*juicer*(1), *juicer.conf*(5)
+
