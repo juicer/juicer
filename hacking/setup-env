@@ -1,6 +1,6 @@
 # -*- mode: shell-script -*-
 
-PREFIX_PYTHONPATH="`pwd`:`pwd`/taboot/"
+PREFIX_PYTHONPATH="`pwd`:`pwd`/Juicer/:`pwd`/JuicerAdmin/"
 PREFIX_PATH="`pwd`/bin"
 PREFIX_MANPATH="`pwd`/docs/man"
 
