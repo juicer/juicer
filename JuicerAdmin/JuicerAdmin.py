@@ -13,7 +13,7 @@ class JuicerAdmin(object):
         connect_params = Juicer.utils.get_login_info(self.args)
 
         self.base_url = connect_params['base_url']
-        self.auth = (connect_params['user'], connect_params['password'])
+        self.auth = (connect_params['username'], connect_params['password'])
         self.headers = {'content-type': 'application/json'}
 
     def put(self, url="", data={}):
