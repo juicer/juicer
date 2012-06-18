@@ -21,7 +21,7 @@ def main():
     # Create the 'show' sub-parser
     parser_show = subparsers.add_parser('create-repo', help='Create pulp repository')
 
-    parser_show.add_argument('name', metavar='host', \
+    parser_show.add_argument('name', metavar='name', \
                                  help='The name of your repo')
 
     parser_show.add_argument('--in', metavar='envs', \
