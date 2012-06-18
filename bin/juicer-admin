@@ -27,6 +27,7 @@ def main():
     parser_show.add_argument('--in', metavar='envs', \
                                  nargs="+", \
                                  dest='envs', \
+                                 default=['re', 'qa', 'stage', 'prod'], \
                                  help='The environments in which to create your repository')
 
     parser_show.set_defaults(ja=JuicerAdmin.create)
