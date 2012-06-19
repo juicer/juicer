@@ -44,4 +44,4 @@ class Juicer(object):
         if _r.status_code != 200:
             _r.raise_for_status
             
-        r.text
+        _r.text
