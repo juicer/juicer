@@ -10,3 +10,7 @@ def createlike():
     pass
 def publish():
     pass
+def cartsearch(cart):
+    pass
+def rpmsearch(rpm):
+    pass

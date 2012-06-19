@@ -128,6 +128,23 @@ Examples:
 
     parser_publish.set_defaults(ja=juicer.juicer.publish)
 
+    ##################################################################
+    # Create the 'cart_search' sub-parser
+    parser_cartsearch = subparsers.add_parser('cart-search', help='Search for CART in pulp')
+
+    parser_cartsearch.add_argument('cart-name', metavar='cart_name', \
+                                    help='The name of the cart to search for')
+
+    parser_cartsearch.set_defaults(ja=juicer.juicer.cartsearch)
+
+    ##################################################################
+    # Create the 'rpm_search' sub-parser
+    parser_rpmsearch = subparsers.add_parser('rpm-search', help='Search for RPM in pulp')
+
+    parser_rpmsearch.add_argument('rpm-name', metavar='rpm_name', \
+                                    help='The name of the rpm to search for')
+
+    parser_rpmsearch.set_defaults(ja=juicer.juicer.rpmsearch)
 
     ##################################################################
     args = parser.parse_args()
