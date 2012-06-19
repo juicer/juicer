@@ -67,7 +67,7 @@ Examples:
                                  nargs="+", \
                                  help='Cart name')
 
-    parser_create.set_defaults(ja=juicer.juicer.create)
+    parser_create.set_defaults(j=juicer.juicer.create)
 
 
     ##################################################################
@@ -77,7 +77,7 @@ Examples:
     parser_edit.add_argument('cart-name', metavar='cartname', \
                                  help='The name of your release cart')
 
-    parser_edit.set_defaults(ja=juicer.juicer.edit)
+    parser_edit.set_defaults(j=juicer.juicer.edit)
 
 
     ##################################################################
@@ -87,7 +87,7 @@ Examples:
     parser_show.add_argument('cart-name', metavar='name', \
                                  help='The name of your cart')
 
-    parser_show.set_defaults(ja=juicer.juicer.show)
+    parser_show.set_defaults(j=juicer.juicer.show)
 
 
     ##################################################################
@@ -101,7 +101,7 @@ Examples:
                                  nargs="+", \
                                  help='Cart name')
 
-    parser_update.set_defaults(ja=juicer.juicer.update)
+    parser_update.set_defaults(j=juicer.juicer.update)
 
     ##################################################################
     # Create the 'create-like' sub-parser
@@ -117,7 +117,7 @@ Examples:
                                  nargs="+", \
                                  help='Cart name')
 
-    parser_createlike.set_defaults(ja=juicer.juicer.createlike)
+    parser_createlike.set_defaults(j=juicer.juicer.createlike)
 
     ##################################################################
     # Create the 'publish' sub-parser
@@ -126,7 +126,7 @@ Examples:
     parser_publish.add_argument('cart-name', metavar='cartname', \
                                  help='The name of your new release cart')
 
-    parser_publish.set_defaults(ja=juicer.juicer.publish)
+    parser_publish.set_defaults(j=juicer.juicer.publish)
 
     ##################################################################
     # Create the 'cart_search' sub-parser
@@ -135,7 +135,7 @@ Examples:
     parser_cartsearch.add_argument('cartname', metavar='cartname', \
                                     help='The name of the cart to search for')
 
-    parser_cartsearch.set_defaults(ja=juicer.juicer.cartsearch)
+    parser_cartsearch.set_defaults(j=juicer.juicer.cartsearch)
 
     ##################################################################
     # Create the 'rpm_search' sub-parser
@@ -144,11 +144,11 @@ Examples:
     parser_rpmsearch.add_argument('rpmname', metavar='rpmname', \
                                     help='The name of the rpm to search for')
 
-    parser_rpmsearch.set_defaults(ja=juicer.juicer.rpmsearch)
+    parser_rpmsearch.set_defaults(j=juicer.juicer.rpmsearch)
 
     ##################################################################
     args = parser.parse_args()
-    args.ja(args)
+    args.j(args)
 
 if __name__ == '__main__':
     main()

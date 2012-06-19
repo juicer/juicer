@@ -1,3 +1,6 @@
+from juicer.juicer.Juicer import Juicer as j
+from pprint import pprint as pp
+
 def create():
     pass
 def edit():
@@ -10,7 +13,10 @@ def createlike():
     pass
 def publish():
     pass
-def cartsearch(cart):
+
+def cartsearch(args):
     pass
-def rpmsearch(rpm):
-    pass
+
+def rpmsearch(args):
+    pulp = j(args)
+    pp(pulp.search_rpm(name=args.rpmname))
