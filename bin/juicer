@@ -132,7 +132,7 @@ Examples:
     # Create the 'cart_search' sub-parser
     parser_cartsearch = subparsers.add_parser('cart-search', help='Search for CART in pulp')
 
-    parser_cartsearch.add_argument('cart-name', metavar='cart_name', \
+    parser_cartsearch.add_argument('cartname', metavar='cartname', \
                                     help='The name of the cart to search for')
 
     parser_cartsearch.set_defaults(ja=juicer.juicer.cartsearch)
@@ -141,7 +141,7 @@ Examples:
     # Create the 'rpm_search' sub-parser
     parser_rpmsearch = subparsers.add_parser('rpm-search', help='Search for RPM in pulp')
 
-    parser_rpmsearch.add_argument('rpm-name', metavar='rpm_name', \
+    parser_rpmsearch.add_argument('rpmname', metavar='rpmname', \
                                     help='The name of the rpm to search for')
 
     parser_rpmsearch.set_defaults(ja=juicer.juicer.rpmsearch)
