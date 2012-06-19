@@ -3,7 +3,7 @@ import juicer.utils
 import juicer.admin
 import json
 import requests
-
+import simplejson
 
 class JuicerAdmin(object):
     def __init__(self, args):
@@ -76,11 +76,12 @@ class JuicerAdmin(object):
             _r.raise_for_status()
         return output
 
-    def list_repos(self, query='/repositories/', output=""):
+    def list_repos(self, query='/repositories/', output=[]):
         url = "%s%s" % (self.base_url, query)
         _r = self.get(url)
         if _r.status_code == 200:
-            output=str(_r.content)
+            for repo in simplejson.loads(str(_r.content)):
+                output.append(repo['id'])
         else:
             _r.raise_for_status()
         return output
@@ -90,7 +91,7 @@ class JuicerAdmin(object):
             url = "%s%s%s-%s/" % (self.base_url, query, self.args.name, env)
             _r = self.get(url)
             if _r.status_code == 200:
-                output.append(str(_r.content))
+                output.append(simplejson.loads(str(_r.content)))
             else:
                 _r.raise_for_status()
         return output
@@ -99,7 +100,7 @@ class JuicerAdmin(object):
         url = "%s%s%s/" % (self.base_url, query, self.args.login)
         _r = self.get(url)
         if _r.status_code == 200:
-            output = str(_r.content)
+            output = simplejson.loads(str(_r.content))
         else:
             _r.raise_for_status()
         return output
