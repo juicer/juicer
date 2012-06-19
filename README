@@ -15,7 +15,7 @@ CONFIG FILE
 
     # ~/.juicer.conf
     [base]
-    user: admin
+    username: admin
     password: admin
     base_url: https://snarl.rdu.redhat.com/pulp/api
 
