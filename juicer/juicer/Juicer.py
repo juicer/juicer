@@ -35,7 +35,7 @@ class Juicer(object):
         pass
 
     def search_rpm(self, name='', version='', query='/services/search/packages/', output=[]):
-        data = {'name':name,
+        data = {'regex':name,
                 'version':version}
         url = self.base_url + query
 
