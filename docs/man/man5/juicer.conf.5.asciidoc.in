@@ -1,0 +1,64 @@
+juicer.conf(5)
+==============
+:doctype:manpage
+:man source:   Juicer
+:man version:  %VERSION%
+:man manual:   Pulp repos and release carts
+
+NAME
+----
+juicer.conf - juicer configuration file
+
+
+DESCRIPTION
+-----------
+Sections and variables to use in your juicer configuration file. This
+file is broken into 2 or more parts. The first is *base* and the rest
+are named after your environments.
+
+Assuming you have __re__, __qa__, __stage__, and __prod__,
+environments, you might have a configuration file that looks like
+this:
+
+
+    [base]
+    username: packager
+    password: s7r0ngP@55
+    
+    [re]
+    base_url: https://pulp.util.phx1.redhat.com/re/pulp/api
+    
+    [qa]
+    base_url: https://pulp.util.phx1.redhat.com/qa/pulp/api
+    
+    [stage]
+    base_url: https://pulp.util.phx2.redhat.com/stage/pulp/api
+    
+    [prod]
+    base_url: https://pulp.util.phx2.redhat.com/stage/prod/api
+
+
+
+FILES
+-----
+~/.juicer.conf -- Juicer configuration file
+
+
+
+AUTHOR
+------
+Juicer was written by GCA-PC, Red Hat, Inc..
+
+
+
+COPYRIGHT
+---------
+Copyright © 2012, Red Hat, Inc..
+
+Juicer is released under the terms of the GPLv3+ License.
+
+
+SEE ALSO
+--------
+*juicer*(1), *juicer-admin*(1)
+
