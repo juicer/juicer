@@ -139,10 +139,15 @@ Examples:
 
     ##################################################################
     # Create the 'rpm_search' sub-parser
-    parser_rpmsearch = subparsers.add_parser('rpm-search', help='Search for RPM in pulp')
+    parser_rpmsearch = subparsers.add_parser('rpm-search', help='Search for RPM in pulp', \
+                        usage='%(prog)s [-r repo [repo]] [-i environment [environment]] [-h]')
 
     parser_rpmsearch.add_argument('rpmname', metavar='rpmname', \
                                     help='The name of the rpm to search for')
+
+    parser_rpmsearch.add_argument('-i', '--in', nargs='+', metavar='environment', \
+                                    help='check for an rpm only in the listed environments. \
+                                    this is a logical or, not logical and.', dest='environment')
 
     parser_rpmsearch.set_defaults(j=juicer.juicer.rpmsearch)
 

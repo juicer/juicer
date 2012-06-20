@@ -4,6 +4,7 @@ import juicer.juicer
 import json
 import requests
 import simplejson
+import re
 
 class Juicer(object):
     def __init__(self, args):
@@ -34,19 +35,46 @@ class Juicer(object):
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
 
-    def search_rpm(self, name='', version='', query='/services/search/packages/', output=[]):
-        data = {'regex':name,
-                'version':version}
-        url = self.base_url + query
-
-        _r = self.post(url, data)
-
-        if _r.status_code != 200:
-            _r.raise_for_status
-
+    def search_rpm(self, name='', envs=[], query='/services/search/packages/', output=[]):
         output.append('Packages:')
 
-        for pkg in json.loads(_r.text):
-            output.append(pkg['filename'])
+        # if no envs listed, check all repositories
+        if envs == None:
+            data = {'regex':name}
+            url = self.base_url + query
 
-        return output
+            _r = self.post(url, data)
+
+            if _r.status_code != 200:
+                _r.raise_for_status
+
+            for pkg in json.loads(_r.text):
+                output.append(pkg['filename'])
+
+            return output
+        else:
+            output.append('Repository:')
+
+            # get list of all repos, then parse down to the ones we want
+            url = self.base_url + '/repositories/'
+            _r = self.get(url)
+
+            repo_list = json.loads(_r.text)
+
+            for repo in repo_list:
+                for enviro in envs:
+                    if re.match(".*-{0}$".format(enviro), repo['id']):
+                        data = {'regex':name,
+                                'repoid':repo['id']}
+                        url = self.base_url + query
+
+                        _r = self.post(url, data)
+
+                        if _r.status_code != 200:
+                            _r.raise_for_status
+
+                        for pkg in json.loads(_r.text):
+                            output.append(pkg['filename'])
+                            output.append(repo['id'])
+
+            return output

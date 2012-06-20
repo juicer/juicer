@@ -19,4 +19,4 @@ def cartsearch(args):
 
 def rpmsearch(args):
     pulp = j(args)
-    pp(pulp.search_rpm(name=args.rpmname))
+    pp(pulp.search_rpm(name=args.rpmname, envs=args.environment))
