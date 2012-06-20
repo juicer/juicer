@@ -43,5 +43,10 @@ class Juicer(object):
 
         if _r.status_code != 200:
             _r.raise_for_status
-            
-        _r.text
+
+        output.append('Packages:')
+
+        for pkg in json.loads(_r.text):
+            output.append(pkg['filename'])
+
+        return output
