@@ -10,22 +10,23 @@ class JuicerAdmin(object):
     def __init__(self, args):
         self.args = args
 
-        self.connectors = {}
-        for env in self.args.envs:
-            connect_params = juicer.utils.get_login_info(self.args, env)
-            self.connectors[env] = juicer.common.JuicerCommon(connect_params)
+        self.connectors = juicer.utils.get_login_info()
 
     def create_repo(self, query='/repositories/', output=[]):
         data = {'name': self.args.name,
                 'arch': 'noarch'}
+
         for env in self.args.envs:
             data['relative_path'] = '/%s/%s/' % (env, self.args.name)
             data['id'] = '-'.join([self.args.name, env])
+
             _r = self.connectors[env].put(query, data)
+
             if _r.status_code == 201:
                 output.append("Created repository %s-%s" % (self.args.name, env))
             else:
                 _r.raise_for_status()
+
         return output
 
     def create_user(self, query='/users/', output=[]):
@@ -90,7 +91,7 @@ class JuicerAdmin(object):
 
     def show_user(self, query='/users/', output=[]):
         for env in self.args.envs:
-            if not juicer.utils.user_exists_p(self.args, self.base_urls[env], self.connectors[env]):
+            if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
                 output.append("User with login `%s` doesn't exist in %s" % (self.args.login, env))
                 continue
             else:

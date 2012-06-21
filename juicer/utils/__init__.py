@@ -29,11 +29,11 @@ def get_login_info():
 
     return connections
 
-def user_exists_p(args, base_url, connector):
+def user_exists_p(args, connector):
     """
     Determine if user exists in specified environment
     """
-    url = base_url + '/users/' + args.login + '/'
+    url = connector.base_url + '/users/' + args.login + '/'
     _r = connector.get(url)
     print _r.status_code
     return (_r.status_code == 200)
