@@ -34,7 +34,7 @@ class JuicerAdmin(object):
                 'password': self.args.password,
                 'name': self.args.name}
         for env in self.args.envs:
-            if juicer.utils.user_exists_p(self.args, self.base_urls[env], self.connectors[env]):
+            if juicer.utils.user_exists_p(self.args, self.connectors[env]):
                 output.append("User with login `%s` aleady exists in %s" % (self.args.login, env))
                 continue
             else:
@@ -57,7 +57,7 @@ class JuicerAdmin(object):
 
     def delete_user(self, query='/users/', output=[]):
         for env in self.args.envs:
-            if not juicer.utils.user_exists_p(self.args, self.base_urls[env], self.connectors[env]):
+            if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
                 output.append("User with login `%s` doesn't exist in %s" % (self.args.login, env))
                 continue
             else:
