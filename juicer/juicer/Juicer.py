@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import juicer.common
 import juicer.utils
 import juicer.juicer
 import json
@@ -11,52 +10,37 @@ class Juicer(object):
     def __init__(self, args):
         self.args = args
 
-        connect_params = juicer.utils.get_login_info(self.args)
-
-        self.jc = juicer.common.JuicerCommon(connect_params)
+        self.connectors = juicer.utils.get_login_info()
 
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
 
     def search_rpm(self, name='', envs=[], query='/services/search/packages/', output=[]):
         output.append('Packages:')
+        output.append('Repository:')
 
         # if no envs listed, check all repositories
         if envs == None:
-            data = {'regex':name}
+            envs = ['re', 'qa', 'stage', 'prod']
 
-            _r = self.jc.post(query, data)
-
-            if _r.status_code != 200:
-                _r.raise_for_status
-
-            for pkg in simplejson.loads(str(_r.content)):
-                output.append(pkg['filename'])
-
-            return output
-        else:
-            output.append('Repository:')
-
+        for enviro in envs:
             # get list of all repos, then parse down to the ones we want
-            url = self.base_url + '/repositories/'
-            _r = self.get(query)
+            _r = self.connectors[enviro].get('/repositories/')
 
             repo_list = simplejson.loads(str(_r.content))
 
             for repo in repo_list:
-                for enviro in envs:
-                    if re.match(".*-{0}$".format(enviro), repo['id']):
-                        data = {'regex':name,
-                                'repoid':repo['id']}
-                        url = self.base_url + query
+                if re.match(".*-{0}$".format(enviro), repo['id']):
+                    data = {'regex':name,
+                            'repoid':repo['id']}
 
-                        _r = self.jc.post(url, data)
+                    _r = self.connectors[enviro].post(query, data)
 
-                        if _r.status_code != 200:
-                            _r.raise_for_status
+                    if _r.status_code != 200:
+                        _r.raise_for_status
 
-                        for pkg in simplejson.loads(str(_r.content)):
-                            output.append(pkg['filename'])
-                            output.append(repo['id'])
+                    for pkg in simplejson.loads(str(_r.content)):
+                        output.append(pkg['filename'])
+                        output.append(repo['id'])
 
-            return output
+        return output
