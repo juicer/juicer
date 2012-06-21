@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import juicer.common
 import juicer.utils
 import juicer.juicer
 import json
@@ -12,25 +13,9 @@ class Juicer(object):
 
         connect_params = juicer.utils.get_login_info(self.args)
 
+        self.jc = juicer.common.JuicerCommon(connect_params)
+
         self.base_url = connect_params['base_url']
-        self.auth = (connect_params['username'], connect_params['password'])
-        self.headers = {'content-type': 'application/json'}
-
-    def delete(self, url=""):
-        return requests.delete(url, auth=self.auth, headers=self.headers,
-                               verify=False)
-
-    def get(self, url=""):
-        return requests.get(url, auth=self.auth, headers=self.headers,
-                            verify=False)
-
-    def post(self, url="", data={}):
-        return requests.post(url, json.dumps(data), auth=self.auth,
-                             headers=self.headers, verify=False)
-
-    def put(self, url="", data={}):
-        return requests.put(url, json.dumps(data), auth=self.auth,
-                            headers=self.headers, verify=False)
 
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
@@ -43,12 +28,12 @@ class Juicer(object):
             data = {'regex':name}
             url = self.base_url + query
 
-            _r = self.post(url, data)
+            _r = self.jc.post(url, data)
 
             if _r.status_code != 200:
                 _r.raise_for_status
 
-            for pkg in json.loads(_r.text):
+            for pkg in simplejson.loads(str(_r.content)):
                 output.append(pkg['filename'])
 
             return output
@@ -59,7 +44,7 @@ class Juicer(object):
             url = self.base_url + '/repositories/'
             _r = self.get(url)
 
-            repo_list = json.loads(_r.text)
+            repo_list = simplejson.loads(str(_r.content))
 
             for repo in repo_list:
                 for enviro in envs:
@@ -68,12 +53,12 @@ class Juicer(object):
                                 'repoid':repo['id']}
                         url = self.base_url + query
 
-                        _r = self.post(url, data)
+                        _r = self.jc.post(url, data)
 
                         if _r.status_code != 200:
                             _r.raise_for_status
 
-                        for pkg in json.loads(_r.text):
+                        for pkg in simplejson.loads(str(_r.content)):
                             output.append(pkg['filename'])
                             output.append(repo['id'])
 
