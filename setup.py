@@ -16,6 +16,7 @@ setup(name='juicer',
          'juicer',
          'juicer.juicer',
          'juicer.admin',
+         'juicer.common',
       ],
       scripts=[
          'bin/juicer',
