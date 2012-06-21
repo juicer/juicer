@@ -15,8 +15,6 @@ class Juicer(object):
 
         self.jc = juicer.common.JuicerCommon(connect_params)
 
-        self.base_url = connect_params['base_url']
-
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
 
@@ -26,9 +24,8 @@ class Juicer(object):
         # if no envs listed, check all repositories
         if envs == None:
             data = {'regex':name}
-            url = self.base_url + query
 
-            _r = self.jc.post(url, data)
+            _r = self.jc.post(query, data)
 
             if _r.status_code != 200:
                 _r.raise_for_status
@@ -42,7 +39,7 @@ class Juicer(object):
 
             # get list of all repos, then parse down to the ones we want
             url = self.base_url + '/repositories/'
-            _r = self.get(url)
+            _r = self.get(query)
 
             repo_list = simplejson.loads(str(_r.content))
 
