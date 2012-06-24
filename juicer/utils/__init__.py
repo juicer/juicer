@@ -38,6 +38,5 @@ def user_exists_p(args, base_url, connector):
     """
     url = base_url + '/users/' + args.login + '/'
     _r = connector.get(url)
-    print _r.status_code
     return (_r.status_code == 200)
 
