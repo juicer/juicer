@@ -97,6 +97,17 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return sorted(list(set(output)))
 
+    def role_add(self, query='/roles/', output=[]):
+        data = {'username': self.args.login}
+        for env in self.args.envs:
+            url = "%s%s/add/" % (query, self.args.role)
+            _r = self.connectors[env].post(url, data)
+            if _r.status_code == 200:
+                output.append("Successfuly added user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
+            else:
+                output.append("Could not add user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
+        return output
+
     def show_repo(self, query='/repositories/', output=[]):
         for env in self.args.envs:
             url = "%s%s%s-%s/" % (self.base_urls[env], query, self.args.name, env)
