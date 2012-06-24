@@ -18,6 +18,9 @@ class JuicerAdmin(object):
             self.base_urls[env] = connect_params['base_url']
 
     def create_repo(self, query='/repositories/', output=[]):
+        """
+        Create repository in specified environments
+        """
         data = {'name': self.args.name,
                 'arch': 'noarch'}
         for env in self.args.envs:
@@ -32,6 +35,9 @@ class JuicerAdmin(object):
         return output
 
     def create_user(self, query='/users/', output=[]):
+        """
+        Create user in specified environments
+        """
         data = {'login': self.args.login,
                 'password': self.args.password,
                 'name': self.args.name}
@@ -49,6 +55,9 @@ class JuicerAdmin(object):
         return output
 
     def delete_repo(self, query='/repositories/', output=[]):
+        """
+        Delete repo in specified environments
+        """
         for env in self.args.envs:
             url = "%s%s%s-%s/" % (self.base_urls[env], query, self.args.name, env)
             _r = self.connectors[env].delete(url)
@@ -59,6 +68,9 @@ class JuicerAdmin(object):
         return output
 
     def delete_user(self, query='/users/', output=[]):
+        """
+        Delete user in specified environments
+        """
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.base_urls[env], self.connectors[env]):
                 output.append("User with login `%s` doesn't exist in %s" % (self.args.login, env))
@@ -73,6 +85,9 @@ class JuicerAdmin(object):
         return output
 
     def list_repos(self, query='/repositories/', output=[]):
+        """
+        List repositories in specified environments
+        """
         for env in self.args.envs:
             url = "%s%s" % (self.base_urls[env], query)
             _r = self.connectors[env].get(url)
@@ -84,6 +99,9 @@ class JuicerAdmin(object):
         return sorted(list(set(output)))
 
     def show_repo(self, query='/repositories/', output=[]):
+        """
+        Show repositories in specified environments
+        """
         for env in self.args.envs:
             url = "%s%s%s-%s/" % (self.base_urls[env], query, self.args.name, env)
             _r = self.connectors[env].get(url)
@@ -94,6 +112,9 @@ class JuicerAdmin(object):
         return output
 
     def show_user(self, query='/users/', output=[]):
+        """
+        Show user in specified environments
+        """
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.base_urls[env], self.connectors[env]):
                 output.append("User with login `%s` doesn't exist in %s" % (self.args.login, env))
