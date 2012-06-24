@@ -40,3 +40,7 @@ def user_exists_p(args, base_url, connector):
     _r = connector.get(url)
     return (_r.status_code == 200)
 
+def role_exists_p(args, connector):
+    url = connector.base_url + '/roles/' + args.role + '/'
+    _r = connector.get(url)
+    return (_r.status_code == 200)
