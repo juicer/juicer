@@ -54,6 +54,20 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return output
 
+    # Do we want this or should puppet manage it? I think puppet.
+    def create_role(self, query='/roles/', output=[]):
+        data = {'name': self.args.name}
+        for env in self.args.envs:
+            if juicer.utils.role_exists_p(self.args, self.connectors[env]):
+                output += "Role `%s` already exists in %s" % (self.args.name, env)
+            else:
+                _r = self.connectors[env].post(query, data)
+                if _r.status_code == 200:
+                    output.append("Successfully created role `` in %s" % (self.args.name, env))
+                else:
+                    _r.raise_for_status()
+        return output
+
     def delete_repo(self, query='/repositories/', output=[]):
         """
         Delete repo in specified environments
@@ -98,6 +112,17 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return sorted(list(set(output)))
 
+    def role_add(self, query='/roles/', output=[]):
+        data = {'username': self.args.login}
+        for env in self.args.envs:
+            url = "%s%s/add/" % (query, self.args.role)
+            _r = self.connectors[env].post(url, data)
+            if _r.status_code == 200:
+                output.append("Successfuly added user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
+            else:
+                output.append("Could not add user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
+        return output
+
     def show_repo(self, query='/repositories/', output=[]):
         """
         Show repositories in specified environments
@@ -126,4 +151,14 @@ class JuicerAdmin(object):
                     output.append(simplejson.loads(str(_r.content)))
                 else:
                     _r.raise_for_status()
+        return output
+
+    def show_roles(self, query='/roles/', output=[]):
+        for env in self.args.envs:
+            url = query
+            _r = self.connectors[env].get(url)
+            if _r.status_code == 200:
+                output.append(simplejson.loads(str(_r.content)))
+            else:
+                _r.raise_for_status()
         return output

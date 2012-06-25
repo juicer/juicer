@@ -134,6 +134,24 @@ def main():
 
     parser_delete_user.set_defaults(ja=juicer.admin.delete_user)
 
+    ##################################################################
+    # Create the 'role_add' sub-parser
+    parser_role_add = subparsers.add_parser('role-add', help='Add user to role')
+
+    parser_role_add.add_argument('--login', metavar='login', \
+                                        help='Login user id for user')
+
+    parser_role_add.add_argument('--role', metavar='role', \
+                                        help='Role to add user to')
+
+    parser_role_add.add_argument('--in', metavar='envs', \
+                                 nargs="+", \
+                                 dest='envs', \
+                                 default=['re', 'qa', 'stage', 'prod'], \
+                                 help='The environments in which to add user to role')
+
+    parser_role_add.set_defaults(ja=juicer.admin.role_add)
+
 
     args = parser.parse_args()
     args.ja(args)

@@ -28,3 +28,7 @@ def delete_repo(args):
 def delete_user(args):
     pulp = ja(args)
     pp(pulp.delete_user())
+
+def role_add(args):
+    pulp = ja(args)
+    pp(pulp.role_add())
