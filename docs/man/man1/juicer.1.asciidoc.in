@@ -13,7 +13,7 @@ juicer - create, edit, update, and publish release carts
 
 SYNOPSIS
 --------
-juicer [ --op --ti --on -s]
+juicer sub-command [OPTIONS ...] [PARAMETERS ...]
 
 
 
@@ -22,58 +22,110 @@ DESCRIPTION
 Create, edit, update, and publish release carts.
 
 
-COMMANDS
---------
-*CREATE*::
+CREATE
+------
+juicer create CARTNAME -r REPONAME item1 [ item2, [ ...]]
 
-Create CART-NAME from items to install into REPO-NAME. __-r__ may be
-given multiple times for updating several repos.
+Create a cart with the items specified.
 
-*EDIT*::
+*CARTNAME*::
+The name of the new release cart.
+
+*ITEMS*::
+Items to add to the cart.
+
+*-r* 'REPONAME'::
+Install a group of 'ITEMS' into 'REPONAME'.
+
+
+
+EDIT
+----
+juicer edit CARTNAME
 
 Interactively edit a release cart.
 
-*SHOW*::
+*CARTNAME*::
+The name of your release cart.
+
+
+
+SHOW
+----
+juicer show CARTNAME
 
 Print the contents of a cart.
 
-*UPDATE*::
+*CARTNAME*::
+The release cart to show.
+
+
+
+UPDATE
+------
+juicer update CARTNAME item1 [ item2 [ ... ] ]
 
 Update a release cart with items.
 
-*CREATE-LIKE*::
+*CARTNAME*::
+The name of the release cart to update.
 
-Creates NEW-CART-NAME from OLD-CART-NAME with new items.
-
-*PUBLISH*::
-
-Publishes CART-NAME to the pulp server (updates existing carts).
-
-*CART-SEARCH*::
-
-Search for CART in pulp
-
-*RPM-SEARCH*::
-
-Search for RPM in pulp
+*ITEMS*::
+The items to update in the cart.
 
 
 
-OPTIONS
+CREATE-LIKE
+-----------
+juicer create-list CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
+
+Create a new cart based off an existing one.
+
+*CARTNAME*::
+The name of your new release cart.
+
+*OLDCARTNAME*::
+Cart to copy from.
+
+*ITEMS*::
+Items to update in the cart.
+
+
+
+PUBLISH
 -------
-*FILE*::
+juicer publish CARTNAME
 
-Release file in YAML format. Instructions are read from stdin if
-'FILE' is '-' or not given. Multiple __FILE__s can be given.
+Publishes/Updates a cart on the pulp server.
+
+*CARTNAME*::
+The name of the cart to publish.
 
 
-*-h*, *--help*::
 
-Show this help message and exit.
+CART-SEARCH
+-----------
+juicer cart-search CARTNAME
 
-*-v*::
+Search for a cart in pulp.
 
-Increase the verbosity. Give up to 3x.
+*CARTNAME*::
+The name of the cart to search for.
+
+
+
+RPM-SEARCH
+----------
+juicer rpm-search [-r REPO [...]] [--in ENVIRONMENT [...]]
+
+Search for an RPM in pulp
+
+*-r* 'repos' ['repos' ...]::
+The repo(s) to limit search scope to.
+
+
+*--in* 'environment' ['environment' ...]::
+The environments to limit search scope to.
 
 
 

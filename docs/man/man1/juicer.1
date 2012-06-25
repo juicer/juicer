@@ -31,73 +31,122 @@
 juicer \- create, edit, update, and publish release carts
 .SH "SYNOPSIS"
 .sp
-juicer [ \-\-op \-\-ti \-\-on \-s]
+juicer sub\-command [OPTIONS \&...] [PARAMETERS \&...]
 .SH "DESCRIPTION"
 .sp
 Create, edit, update, and publish release carts\&.
-.SH "COMMANDS"
+.SH "CREATE"
+.sp
+juicer create CARTNAME \-r REPONAME item1 [ item2, [ \&...]]
+.sp
+Create a cart with the items specified\&.
 .PP
-\fBCREATE\fR
+\fBCARTNAME\fR
 .RS 4
-Create CART\-NAME from items to install into REPO\-NAME\&.
-\fI\-r\fR
-may be given multiple times for updating several repos\&.
+The name of the new release cart\&.
 .RE
 .PP
-\fBEDIT\fR
+\fBITEMS\fR
 .RS 4
+Items to add to the cart\&.
+.RE
+.PP
+\fB\-r\fR \fIREPONAME\fR
+.RS 4
+Install a group of
+\fIITEMS\fR
+into
+\fIREPONAME\fR\&.
+.RE
+.SH "EDIT"
+.sp
+juicer edit CARTNAME
+.sp
 Interactively edit a release cart\&.
-.RE
 .PP
-\fBSHOW\fR
+\fBCARTNAME\fR
 .RS 4
+The name of your release cart\&.
+.RE
+.SH "SHOW"
+.sp
+juicer show CARTNAME
+.sp
 Print the contents of a cart\&.
-.RE
 .PP
-\fBUPDATE\fR
+\fBCARTNAME\fR
 .RS 4
+The release cart to show\&.
+.RE
+.SH "UPDATE"
+.sp
+juicer update CARTNAME item1 [ item2 [ \&... ] ]
+.sp
 Update a release cart with items\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The name of the release cart to update\&.
 .RE
 .PP
-\fBCREATE\-LIKE\fR
+\fBITEMS\fR
 .RS 4
-Creates NEW\-CART\-NAME from OLD\-CART\-NAME with new items\&.
+The items to update in the cart\&.
+.RE
+.SH "CREATE-LIKE"
+.sp
+juicer create\-list CARTNAME OLDCARTNAME item1 [ item2 [ \&...] ]
+.sp
+Create a new cart based off an existing one\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The name of your new release cart\&.
 .RE
 .PP
-\fBPUBLISH\fR
+\fBOLDCARTNAME\fR
 .RS 4
-Publishes CART\-NAME to the pulp server (updates existing carts)\&.
+Cart to copy from\&.
 .RE
 .PP
-\fBCART\-SEARCH\fR
+\fBITEMS\fR
 .RS 4
-Search for CART in pulp
+Items to update in the cart\&.
+.RE
+.SH "PUBLISH"
+.sp
+juicer publish CARTNAME
+.sp
+Publishes/Updates a cart on the pulp server\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The name of the cart to publish\&.
+.RE
+.SH "CART-SEARCH"
+.sp
+juicer cart\-search CARTNAME
+.sp
+Search for a cart in pulp\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The name of the cart to search for\&.
+.RE
+.SH "RPM-SEARCH"
+.sp
+juicer rpm\-search [\-r REPO [\&...]] [\-\-in ENVIRONMENT [\&...]]
+.sp
+Search for an RPM in pulp
+.PP
+\fB\-r\fR \fIrepos\fR [\fIrepos\fR \&...]
+.RS 4
+The repo(s) to limit search scope to\&.
 .RE
 .PP
-\fBRPM\-SEARCH\fR
+\fB\-\-in\fR \fIenvironment\fR [\fIenvironment\fR \&...]
 .RS 4
-Search for RPM in pulp
-.RE
-.SH "OPTIONS"
-.PP
-\fBFILE\fR
-.RS 4
-Release file in YAML format\&. Instructions are read from stdin if
-\fIFILE\fR
-is
-\fI\-\fR
-or not given\&. Multiple
-\fIFILE\fRs can be given\&.
-.RE
-.PP
-\fB\-h\fR, \fB\-\-help\fR
-.RS 4
-Show this help message and exit\&.
-.RE
-.PP
-\fB\-v\fR
-.RS 4
-Increase the verbosity\&. Give up to 3x\&.
+The environments to limit search scope to\&.
 .RE
 .SH "PARAMETERS FORMAT"
 .sp
