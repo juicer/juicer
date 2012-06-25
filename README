@@ -12,22 +12,28 @@ repositories in the new pulp setup.
 
 CONFIG FILE
 ===========
+Each section listed represents a pulp server, complete with username,
+password and base_url. Order matters! The farther down each section
+is, the more prod-like it is.
 
     # ~/.juicer.conf
-    [base]
+    [re]
     username: admin
     password: admin
     base_url: https://snarl.rdu.redhat.com/pulp/api
 
-    [re]
-    base_url: https://snarl.rdu.redhat.com/pulp/api
-
     [qa]
+    username: admin
+    password: admin
     base_url: https://snarl.rdu.redhat.com/pulp/api
 
     [stage]
+    username: admin
+    password: admin
     base_url: https://snarl.rdu.redhat.com/pulp/api
 
     [prod]
+    username: admin
+    password: admin
     base_url: https://snarl.rdu.redhat.com/pulp/api
 

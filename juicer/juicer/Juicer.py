@@ -42,7 +42,7 @@ class Juicer(object):
 
             # get list of all repos, then parse down to the ones we want
             url = self.base_url + '/repositories/'
-            _r = self.get(url)
+            _r = self.jc.get(url)
 
             repo_list = simplejson.loads(str(_r.content))
 

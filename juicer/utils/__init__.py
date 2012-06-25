@@ -3,7 +3,7 @@ import ConfigParser
 import juicer.common
 import os
 
-def get_login_info(args, env):
+def get_login_info(args, env=None):
     """
     Give back a dict with the default connection information
     """
@@ -15,6 +15,9 @@ def get_login_info(args, env):
         config.read(config_file)
     else:
         raise IOError("Can not read %s" % config_file)
+
+    if env == None:
+        env = config.sections()[0]
 
     if config.has_section(env):
         cfg = dict(config.items(env))
