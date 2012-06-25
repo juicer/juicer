@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 06/18/2012
+.\"      Date: 06/25/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.0.1
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "06/18/2012" "Juicer 0\&.0\&.1" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "06/25/2012" "Juicer 0\&.0\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -35,6 +35,49 @@ juicer [ \-\-op \-\-ti \-\-on \-s]
 .SH "DESCRIPTION"
 .sp
 Create, edit, update, and publish release carts\&.
+.SH "COMMANDS"
+.PP
+\fBCREATE\fR
+.RS 4
+Create CART\-NAME from items to install into REPO\-NAME\&.
+\fI\-r\fR
+may be given multiple times for updating several repos\&.
+.RE
+.PP
+\fBEDIT\fR
+.RS 4
+Interactively edit a release cart\&.
+.RE
+.PP
+\fBSHOW\fR
+.RS 4
+Print the contents of a cart\&.
+.RE
+.PP
+\fBUPDATE\fR
+.RS 4
+Update a release cart with items\&.
+.RE
+.PP
+\fBCREATE\-LIKE\fR
+.RS 4
+Creates NEW\-CART\-NAME from OLD\-CART\-NAME with new items\&.
+.RE
+.PP
+\fBPUBLISH\fR
+.RS 4
+Publishes CART\-NAME to the pulp server (updates existing carts)\&.
+.RE
+.PP
+\fBCART\-SEARCH\fR
+.RS 4
+Search for CART in pulp
+.RE
+.PP
+\fBRPM\-SEARCH\fR
+.RS 4
+Search for RPM in pulp
+.RE
 .SH "OPTIONS"
 .PP
 \fBFILE\fR
@@ -51,12 +94,84 @@ or not given\&. Multiple
 .RS 4
 Show this help message and exit\&.
 .RE
+.PP
+\fB\-v\fR
+.RS 4
+Increase the verbosity\&. Give up to 3x\&.
+.RE
+.SH "PARAMETERS FORMAT"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Items given may be any number and combination of the following
+input resource types:
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+http[s]://rpms/directory/ | http[s]://website/some\-thing\&.rpm
+    URL to an HTTP directory index or an RPM\&. RPM paths are parsed
+    from the index and then sent to the pulp server to be
+    downloaded\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&./directory/of/items | \&./path/to/item\&.rpm
+    The items given are directly uploaded to the pulp server\&.
+.fi
+.if n \{\
+.RE
+.\}
+.SH "EXAMPLES"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Create and publish cart CRQ1337:
+  $ %(prog)s create CRQ1337 \-r ruby http://file\&.derp/~smunilla/crq1337/ \e\e
+      \-r services \&./new\-services\-rpms \e\e
+      \-r candlepin /var/lib/mock/epel\-6\-x86_64/result/candlepin\&.el6\&.rpm
+  Created new cart, CRQ1337\&.
+  $ %(prog)s publish CRQ1337
+  Cart published at http://juicer\&.util\&.phx1\&.redhat\&.com/carts/CRQ1337
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Update the existing cart, CRQ1337
+  $ %(prog)s update CRQ1337 http://loki01:9001/builders/master\-candlepin/builds/0
+  Updated xyz items in CRQ1337\&.
+  $ %(prog)s publish CRQ1337
+  Cart published at http://juicer\&.util\&.phx1\&.redhat\&.com/carts/CRQ1337
+.fi
+.if n \{\
+.RE
+.\}
 .SH "FILES"
 .sp
 ~/\&.juicer\&.conf \(em Juicer configuration file
 .SH "AUTHOR"
 .sp
-Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.
+Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com\&.
 .SH "COPYRIGHT"
 .sp
 Copyright \(co 2012, Red Hat, Inc\&.\&.

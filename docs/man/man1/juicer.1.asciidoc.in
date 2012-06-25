@@ -22,6 +22,42 @@ DESCRIPTION
 Create, edit, update, and publish release carts.
 
 
+COMMANDS
+--------
+*CREATE*::
+
+Create CART-NAME from items to install into REPO-NAME. __-r__ may be
+given multiple times for updating several repos.
+
+*EDIT*::
+
+Interactively edit a release cart.
+
+*SHOW*::
+
+Print the contents of a cart.
+
+*UPDATE*::
+
+Update a release cart with items.
+
+*CREATE-LIKE*::
+
+Creates NEW-CART-NAME from OLD-CART-NAME with new items.
+
+*PUBLISH*::
+
+Publishes CART-NAME to the pulp server (updates existing carts).
+
+*CART-SEARCH*::
+
+Search for CART in pulp
+
+*RPM-SEARCH*::
+
+Search for RPM in pulp
+
+
 
 OPTIONS
 -------
@@ -31,10 +67,51 @@ Release file in YAML format. Instructions are read from stdin if
 'FILE' is '-' or not given. Multiple __FILE__s can be given.
 
 
-
 *-h*, *--help*::
 
 Show this help message and exit.
+
+*-v*::
+
+Increase the verbosity. Give up to 3x.
+
+
+
+
+
+PARAMETERS FORMAT
+-----------------
+
+    Items given may be any number and combination of the following
+    input resource types:
+
+    http[s]://rpms/directory/ | http[s]://website/some-thing.rpm
+        URL to an HTTP directory index or an RPM. RPM paths are parsed
+        from the index and then sent to the pulp server to be
+        downloaded.
+
+    ./directory/of/items | ./path/to/item.rpm
+        The items given are directly uploaded to the pulp server.
+
+EXAMPLES
+--------
+
+
+  Create and publish cart CRQ1337:
+    $ %(prog)s create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
+        -r services ./new-services-rpms \\
+        -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
+    Created new cart, CRQ1337.
+    $ %(prog)s publish CRQ1337
+    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
+
+
+  Update the existing cart, CRQ1337
+    $ %(prog)s update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
+    Updated xyz items in CRQ1337.
+    $ %(prog)s publish CRQ1337
+    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
+
 
 
 
@@ -46,7 +123,8 @@ FILES
 
 AUTHOR
 ------
-Juicer was written by GCA-PC, Red Hat, Inc..
+Juicer was written by GCA-PC, Red Hat, Inc.. This man page was written
+by Tim Bielawa <tbielawa@redhat.com.
 
 
 

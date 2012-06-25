@@ -4,40 +4,7 @@ import argparse
 import juicer.juicer
 
 def main():
-
-    epilog = """
-Parameters Format
-    Items given may be any number and combination of the following
-    input resource types:
-
-    http[s]://rpms/directory/ | http[s]://website/some-thing.rpm
-        URL to an HTTP directory index or an RPM. RPM paths are parsed
-        from the index and then sent to the pulp server to be
-        downloaded.
-
-    ./directory/of/items | ./path/to/item.rpm
-        The items given are directly uploaded to the pulp server.
-
-Examples:
-  Create and publish cart CRQ1337:
-    $ %(prog)s create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
-        -r services ./new-services-rpms \\
-        -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
-    Created new cart, CRQ1337.
-    $ %(prog)s publish CRQ1337
-    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
-
-
-  Update the existing cart, CRQ1337
-    $ %(prog)s update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
-    Updated xyz items in CRQ1337.
-    $ %(prog)s publish CRQ1337
-    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337"""
-
-
-    parser = argparse.ArgumentParser(description='Manage release carts', \
-                                         epilog=epilog, \
-                                         formatter_class=argparse.RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Manage release carts')
     juicer.juicer.parser = parser
 
     parser.add_argument('-v', action='count', \
@@ -53,9 +20,7 @@ Examples:
 
     ##################################################################
     # Create the 'create' sub-parser
-    parser_create = subparsers.add_parser('create', help="""Create CART-NAME from items to install into REPO-NAME.
-
-'-r' may be given multiple times for updating several repos.""")
+    parser_create = subparsers.add_parser('create', help='Create a cart with the items specified.')
 
     parser_create.add_argument('cart-name', metavar='cartname', \
                                  help='Cart name')
@@ -65,7 +30,7 @@ Examples:
 
     parser_create.add_argument('items', metavar='items', \
                                  nargs="+", \
-                                 help='Cart name')
+                                 help='ITEM')
 
     parser_create.set_defaults(j=juicer.juicer.create)
 
@@ -105,7 +70,7 @@ Examples:
 
     ##################################################################
     # Create the 'create-like' sub-parser
-    parser_createlike = subparsers.add_parser('create-like', help='Creates NEW-CART-NAME from OLD-CART-NAME with new items.')
+    parser_createlike = subparsers.add_parser('create-like', help='Create a new cart based off an existing one.')
 
     parser_createlike.add_argument('cart-name', metavar='cartname', \
                                  help='The name of your new release cart')
@@ -121,7 +86,7 @@ Examples:
 
     ##################################################################
     # Create the 'publish' sub-parser
-    parser_publish = subparsers.add_parser('publish', help='Publishes CART-NAME to the pulp server (updates existing carts).')
+    parser_publish = subparsers.add_parser('publish', help='Publishes/Updates a cart on the pulp server.')
 
     parser_publish.add_argument('cart-name', metavar='cartname', \
                                  help='The name of your new release cart')
@@ -130,7 +95,7 @@ Examples:
 
     ##################################################################
     # Create the 'cart_search' sub-parser
-    parser_cartsearch = subparsers.add_parser('cart-search', help='Search for CART in pulp')
+    parser_cartsearch = subparsers.add_parser('cart-search', help='Search for a cart in pulp.')
 
     parser_cartsearch.add_argument('cartname', metavar='cartname', \
                                     help='The name of the cart to search for')
@@ -139,15 +104,19 @@ Examples:
 
     ##################################################################
     # Create the 'rpm_search' sub-parser
-    parser_rpmsearch = subparsers.add_parser('rpm-search', help='Search for RPM in pulp', \
-                        usage='%(prog)s [-r repo [repo]] [-i environment [environment]] [-h]')
+    parser_rpmsearch = subparsers.add_parser('rpm-search', help='Search for an RPM in pulp', \
+                        usage='%(prog)s rpmname [...] [-r repo [repo]] [--in environment [environment]] [-h]', \
+                        description='durrr')
 
     parser_rpmsearch.add_argument('rpmname', metavar='rpmname', \
-                                    help='The name of the rpm to search for')
+                                      nargs='+', \
+                                      help='The name of the rpm(s) to search for.')
 
-    parser_rpmsearch.add_argument('-i', '--in', nargs='+', metavar='environment', \
-                                    help='check for an rpm only in the listed environments. \
-                                    this is a logical or, not logical and.', dest='environment')
+    parser_rpmsearch.add_argument('-r', nargs='*', metavar='repos', default=[], \
+                                      help='The repo(s) to limit search scope to.')
+
+    parser_rpmsearch.add_argument('--in', nargs='*', metavar='environment', \
+                                    help='The environments to limit search scope to.', dest='environment')
 
     parser_rpmsearch.set_defaults(j=juicer.juicer.rpmsearch)
 
