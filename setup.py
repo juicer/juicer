@@ -4,7 +4,7 @@ import sys
 from distutils.core import setup
 
 setup(name='juicer',
-      version='0',
+      version='0.1.0',
       description='Administer Pulp and Release Carts',
       author='GCA-PC',
       author_email='it-pc-list@redhat.com',
@@ -17,6 +17,7 @@ setup(name='juicer',
          'juicer.juicer',
          'juicer.admin',
          'juicer.common',
+         'juicer.utils',
       ],
       scripts=[
          'bin/juicer',
