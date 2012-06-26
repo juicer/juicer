@@ -4,9 +4,7 @@ import argparse
 import juicer.admin
 
 def main():
-
     parser = juicer.admin.Parser()
-
     args = parser.parser.parse_args()
     args.ja(args)
 

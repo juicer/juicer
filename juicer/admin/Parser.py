@@ -13,13 +13,13 @@ class Parser(object):
         
         ##################################################################
         # Keep the different commands separate
-        subparsers = self.parser.add_subparsers(title='Commands', \
+        self.subparsers = self.parser.add_subparsers(title='Commands', \
                                                dest='command', \
                                                description='\'%(prog)s COMMAND -h\' for individual help topics')
         
         ##################################################################
         # Create the 'create_repo' sub-parser
-        parser_create_repo = subparsers.add_parser('create-repo', help='Create pulp repository')
+        parser_create_repo = self.subparsers.add_parser('create-repo', help='Create pulp repository')
         
         parser_create_repo.add_argument('name', metavar='name', \
                                             help='The name of your repo')
@@ -35,7 +35,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'create_user' sub-parser
-        parser_create_user = subparsers.add_parser('create-user', help='Create pulp user')
+        parser_create_user = self.subparsers.add_parser('create-user', help='Create pulp user')
         
         parser_create_user.add_argument('--name', metavar='name', \
                                             dest='name', \
@@ -60,7 +60,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'list_repos' sub-parser
-        parser_list_repos = subparsers.add_parser('list-repos', help='List all repos')
+        parser_list_repos = self.subparsers.add_parser('list-repos', help='List all repos')
         
         parser_list_repos.add_argument('--in', metavar='envs', \
                                            nargs="+", \
@@ -73,7 +73,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'show_repo' sub-parser
-        parser_show_repo = subparsers.add_parser('show-repo', help='Show pulp repository')
+        parser_show_repo = self.subparsers.add_parser('show-repo', help='Show pulp repository')
         
         parser_show_repo.add_argument('name', metavar='name', \
                                           help='The name of your repo')
@@ -89,7 +89,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'show_user' sub-parser
-        parser_show_user = subparsers.add_parser('show-user', help='Show pulp user')
+        parser_show_user = self.subparsers.add_parser('show-user', help='Show pulp user')
 
         parser_show_user.add_argument('login', metavar='login', \
                                           help='Login user id for user')
@@ -105,7 +105,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'delete_repo' sub-parser
-        parser_delete_repo = subparsers.add_parser('delete-repo', help='Delete pulp repository')
+        parser_delete_repo = self.subparsers.add_parser('delete-repo', help='Delete pulp repository')
 
         parser_delete_repo.add_argument('name', metavar='name', \
                                             help='The name of your repo')
@@ -121,7 +121,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'delete_user' sub-parser
-        parser_delete_user = subparsers.add_parser('delete-user', help='Delete pulp user')
+        parser_delete_user = self.subparsers.add_parser('delete-user', help='Delete pulp user')
         
         parser_delete_user.add_argument('login', metavar='login', \
                                             help='Login user id for user')
@@ -136,7 +136,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'role_add' sub-parser
-        parser_role_add = subparsers.add_parser('role-add', help='Add user to role')
+        parser_role_add = self.subparsers.add_parser('role-add', help='Add user to role')
         
         parser_role_add.add_argument('--login', metavar='login', \
                                          help='Login user id for user')
@@ -155,7 +155,7 @@ class Parser(object):
         
         ##################################################################
         # Create the 'list_roles' sub-parser
-        parser_list_roles = subparsers.add_parser('list-roles', help='List all roles')
+        parser_list_roles = self.subparsers.add_parser('list-roles', help='List all roles')
 
         parser_list_roles.add_argument('--in', metavar='envs', \
                                            nargs="+", \

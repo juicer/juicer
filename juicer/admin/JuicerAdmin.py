@@ -99,7 +99,7 @@ class JuicerAdmin(object):
     def role_add(self, query='/roles/', output=[]):
         data = {'username': self.args.login}
         for env in self.args.envs:
-            url = "%s%s%s/add/" % (self.base_urls[env], query, self.args.role)
+            url = "%s%s/add/" % (query, self.args.role)
             _r = self.connectors[env].post(url, data)
             if _r.status_code == 200:
                 output.append("Successfuly added user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
@@ -139,8 +139,7 @@ class JuicerAdmin(object):
 
     def list_roles(self, query='/roles/', output=[]):
         for env in self.args.envs:
-            url = self.base_urls[env] + query
-            _r = self.connectors[env].get(url)
+            _r = self.connectors[env].get(query)
             if _r.status_code == 200:
                 output.append(simplejson.loads(str(_r.content)))
             else:
