@@ -19,7 +19,7 @@ def create_json_str(input_ds):
     Load a native Python datastructure into a json formatted string
     and return it.
     """
-    return json.dumps(input_string)
+    return json.dumps(input_ds)
 
 def get_login_info():
     """
