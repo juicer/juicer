@@ -1,4 +1,6 @@
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
+from juicer.admin.Parser import Parser
+
 from pprint import pprint as pp
 
 def create_repo(args):
