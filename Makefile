@@ -13,9 +13,21 @@
 #   make pyflakes, make pep8 -- source code checks  
 
 ########################################################
-# variable section
 
-NAME = "juicer"
+# > VARIABLE = value
+#
+# Normal setting of a variable - values within it are recursively
+# expanded when the variable is USED, not when it's declared.
+#
+# > VARIABLE := value
+#
+# Setting of a variable with simple expansion of the values inside -
+# values within it are expanded at DECLARATION time.
+
+########################################################
+
+# variable section
+NAME := "juicer"
 
 # This doesn't evaluate until it's called. The -D argument is the
 # directory of the target file ($@), kinda like `dirname`.
@@ -23,16 +35,14 @@ ASCII2MAN = a2x -D $(dir $@) -d manpage -f manpage $<
 ASCII2HTMLMAN = a2x -D docs/html/man/ -d manpage -f xhtml
 MANPAGES := docs/man/man1/juicer.1 docs/man/man1/juicer-admin.1 docs/man/man5/juicer.conf.5
 
-SITELIB = $(shell python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
-
 # VERSION file provides one place to update the software version
 VERSION := $(shell cat VERSION)
 
 # RPM build parameters
-RPMSPECDIR= ./
-RPMSPEC = $(RPMSPECDIR)/juicer.spec
-RPMVERSION := $(shell awk '/Version/{print $$2; exit}' < $(RPMSPEC) | cut -d "%" -f1)
-RPMRELEASE := $(shell awk '/Release/{print $$2; exit}' < $(RPMSPEC) | cut -d "%" -f1)
+RPMSPECDIR := .
+RPMSPEC := $(RPMSPECDIR)/juicer.spec
+RPMVERSION := $(VERSION)
+RPMRELEASE = $(shell awk '/Release/{print $$2; exit}' < $(RPMSPEC).in | cut -d "%" -f1)
 RPMDIST = $(shell rpm --eval '%dist')
 RPMNVR = "$(NAME)-$(RPMVERSION)-$(RPMRELEASE)$(RPMDIST)"
 
@@ -63,14 +73,24 @@ docs: $(MANPAGES)
 %.5: %.5.asciidoc VERSION
 	$(ASCII2MAN)
 
+# Build the spec file on the fly. Substitute version numbers from the
+# canonical VERSION file.
+juicer.spec: juicer.spec.in
+	sed "s/%VERSION%/$(VERSION)/" $< > $@
+
 pep8:
 	@echo "#############################################"
 	@echo "# Running PEP8 Compliance Tests"
 	@echo "#############################################"
-	pep8 -r --ignore=E501,E221,W291,W391,E302,E251,E203,W293,E231,E303,E201,E225,E261 juicer/ bin/
+# --ignore=E501,E221,W291,W391,E302,E251,E203,W293,E231,E303,E201,E225,E261
+	pep8 -r juicer/ bin/
 
 pyflakes:
-	pyflakes juicer/*.py bin/*
+	@echo "#############################################"
+	@echo "# Running Pyflakes Sanity Tests"
+	@echo "#############################################"
+	-pyflakes juicer/
+	pyflakes bin/
 
 clean:
 	@echo "Cleaning up distutils stuff"
@@ -85,6 +105,7 @@ clean:
 	find ./docs/man -type f -name "*.xml" -delete
 	find ./docs/man -type f -name "*.asciidoc" -delete
 	@echo "Cleaning up RPM building stuff"
+	rm -f $(RPMSPEC)
 	rm -rf MANIFEST rpm-build
 
 python:
@@ -96,7 +117,7 @@ install:
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: sdist
+rpmcommon: sdist juicer.spec
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
@@ -125,3 +146,6 @@ rpm: rpmcommon
 	@echo "Juicer RPM is built:"
 	@echo "    rpm-build/noarch/$(RPMNVR).noarch.rpm"
 	@echo "#############################################"
+
+koji: srpm
+	koji build --scratch $(RPMDIST) rpm-build/$(RPMNVR).src.rpm

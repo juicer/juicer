@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
+import juicer.utils
 import requests
 
 class JuicerCommon(object):
     def __init__(self, connect_params):
         self.base_url = connect_params['base_url']
         self.auth = (connect_params['username'], connect_params['password'])
-        self.headers = {'content-type': 'application/json'}        
+        self.headers = {'content-type': 'application/json'}
 
     def delete(self, url=""):
         url = self.base_url + url
@@ -20,10 +20,10 @@ class JuicerCommon(object):
 
     def post(self, url="", data={}):
         url = self.base_url + url
-        return requests.post(url, json.dumps(data), auth=self.auth,
+        return requests.post(url, juicer.utils.create_json_str(data), auth=self.auth,
                              headers=self.headers, verify=False)
 
     def put(self, url="", data={}):
         url = self.base_url + url
-        return requests.put(url, json.dumps(data), auth=self.auth,
+        return requests.put(url, juicer.utils.create_json_str(data), auth=self.auth,
                             headers=self.headers, verify=False)

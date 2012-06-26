@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import juicer.utils
 import juicer.juicer
-import json
 import requests
-import simplejson
 import re
 
 class Juicer(object):
@@ -27,19 +25,19 @@ class Juicer(object):
             # get list of all repos, then parse down to the ones we want
             _r = self.connectors[enviro].get('/repositories/')
 
-            repo_list = simplejson.loads(str(_r.content))
+            repo_list = juicer.utils.load_json_string(_r.content)
 
             for repo in repo_list:
                 if re.match(".*-{0}$".format(enviro), repo['id']):
-                    data = {'regex':name,
-                            'repoid':repo['id']}
+                    data = {'regex': name,
+                            'repoid': repo['id']}
 
                     _r = self.connectors[enviro].post(query, data)
 
                     if _r.status_code != 200:
                         _r.raise_for_status
 
-                    for pkg in simplejson.loads(str(_r.content)):
+                    for pkg in juicer.utils.load_json_string(_r.content):
                         output.append(pkg['filename'])
                         output.append(repo['id'])
 
