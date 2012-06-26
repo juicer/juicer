@@ -5,6 +5,7 @@ import juicer.admin
 import json
 import requests
 import simplejson
+import re
 
 class JuicerAdmin(object):
     def __init__(self, args):
@@ -89,7 +90,8 @@ class JuicerAdmin(object):
             _r = self.connectors[env].get(query)
             if _r.status_code == 200:
                 for repo in simplejson.loads(str(_r.content)):
-                    output.append(repo['id'])
+                    if re.match(".*-{0}$".format(env), repo['id']):
+                        output.append(repo['id'])
             else:
                 _r.raise_for_status()
         return sorted(list(set(output)))
