@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
+import juicer.utils
 import requests
 
 class JuicerCommon(object):
@@ -20,10 +20,10 @@ class JuicerCommon(object):
 
     def post(self, url="", data={}):
         url = self.base_url + url
-        return requests.post(url, json.dumps(data), auth=self.auth,
+        return requests.post(url, juicer.utils.create_json_str(data), auth=self.auth,
                              headers=self.headers, verify=False)
 
     def put(self, url="", data={}):
         url = self.base_url + url
-        return requests.put(url, json.dumps(data), auth=self.auth,
+        return requests.put(url, juicer.utils.create_json_str(data), auth=self.auth,
                             headers=self.headers, verify=False)
