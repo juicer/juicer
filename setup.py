@@ -10,7 +10,6 @@ setup(name='juicer',
       author_email='it-pc-list@redhat.com',
       url='https://docspace.corp.redhat.com/docs/DOC-104668',
       license='GPLv3+',
-      install_requires=['python-requests'],
       package_dir={ 'juicer': 'juicer' },
       packages=[
          'juicer',
