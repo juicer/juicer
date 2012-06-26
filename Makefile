@@ -75,7 +75,11 @@ docs: $(MANPAGES)
 
 # Build the spec file on the fly. Substitute version numbers from the
 # canonical VERSION file.
-juicer.spec: juicer.spec.in
+juicer.spec: juicer.spec.in VERSION
+	sed "s/%VERSION%/$(VERSION)/" $< > $@
+
+# Build the distutils setup file on the fly.
+setup.py: setup.py.in VERSION
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
 pep8:
@@ -117,7 +121,7 @@ install:
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: sdist juicer.spec
+rpmcommon: sdist juicer.spec setup.py
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
