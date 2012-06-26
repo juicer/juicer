@@ -6,7 +6,7 @@ class JuicerCommon(object):
     def __init__(self, connect_params):
         self.base_url = connect_params['base_url']
         self.auth = (connect_params['username'], connect_params['password'])
-        self.headers = {'content-type': 'application/json'}        
+        self.headers = {'content-type': 'application/json'}
 
     def delete(self, url=""):
         url = self.base_url + url

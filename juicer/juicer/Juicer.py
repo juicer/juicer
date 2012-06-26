@@ -29,8 +29,8 @@ class Juicer(object):
 
             for repo in repo_list:
                 if re.match(".*-{0}$".format(enviro), repo['id']):
-                    data = {'regex':name,
-                            'repoid':repo['id']}
+                    data = {'regex': name,
+                            'repoid': repo['id']}
 
                     _r = self.connectors[enviro].post(query, data)
 
