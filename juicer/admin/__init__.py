@@ -32,3 +32,7 @@ def delete_user(args):
 def role_add(args):
     pulp = ja(args)
     pp(pulp.role_add())
+
+def list_roles(args):
+    pulp = ja(args)
+    pp(pulp.list_roles())

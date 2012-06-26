@@ -153,6 +153,19 @@ def main():
     parser_role_add.set_defaults(ja=juicer.admin.role_add)
 
 
+    ##################################################################
+    # Create the 'list_roles' sub-parser
+    parser_list_roles = subparsers.add_parser('list-roles', help='List all roles')
+
+    parser_list_roles.add_argument('--in', metavar='envs', \
+                                       nargs="+", \
+                                       dest='envs', \
+                                       default=['re', 'qa', 'stage', 'prod'], \
+                                       help='The environments in which to list roles')
+    
+    parser_list_roles.set_defaults(ja=juicer.admin.list_roles)
+
+
     args = parser.parse_args()
     args.ja(args)
 
