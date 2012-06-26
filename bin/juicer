@@ -19,10 +19,12 @@
 import argparse
 import juicer.juicer
 import juicer.juicer.Parser
+import juicer.utils.Log
 
 def main():
     parser = juicer.juicer.Parser()
     args = parser.parser.parse_args()
+    juicer.utils.Log.LOG_LEVEL_CURRENT = args.v
     args.j(args)
 
 if __name__ == '__main__':
