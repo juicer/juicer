@@ -51,20 +51,6 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return output
 
-    # Do we want this or should puppet manage it? I think puppet.
-    def create_role(self, query='/roles/', output=[]):
-        data = {'name': self.args.name}
-        for env in self.args.envs:
-            if juicer.utils.role_exists_p(self.args, self.connectors[env]):
-                output += "Role `%s` already exists in %s" % (self.args.name, env)
-            else:
-                _r = self.connectors[env].post(query, data)
-                if _r.status_code == 200:
-                    output.append("Successfully created role `` in %s" % (self.args.name, env))
-                else:
-                    _r.raise_for_status()
-        return output
-
     def delete_repo(self, query='/repositories/', output=[]):
         """
         Delete repo in specified environments
