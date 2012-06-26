@@ -33,8 +33,7 @@ def user_exists_p(args, connector):
     """
     Determine if user exists in specified environment
     """
-    url = connector.base_url + '/users/' + args.login + '/'
+    url = '/users/' + args.login + '/'
     _r = connector.get(url)
-    print _r.status_code
     return (_r.status_code == 200)
 
