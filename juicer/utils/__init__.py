@@ -17,6 +17,7 @@
 
 import ConfigParser
 import juicer.common
+import sys
 import os
 try:
     import json
@@ -75,3 +76,20 @@ def role_exists_p(args, connector):
     url = connector.base_url + '/roles/' + args.role + '/'
     _r = connector.get(url)
     return (_r.status_code == 200)
+
+def flatten(x):
+    """
+    Flatten an arbitrary depth nested list.
+    """
+    # Lifted from: http://stackoverflow.com/a/406822/263969
+    result = []
+    for el in x:
+        if hasattr(el, "__iter__") and not isinstance(el, basestring):
+            result.extend(flatten(el))
+        else:
+            result.append(el)
+    return result
+
+def print_stderr(msg):
+    sys.stderr.write(msg)
+    sys.stderr.flush()
