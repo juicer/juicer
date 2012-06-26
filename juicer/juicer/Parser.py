@@ -5,16 +5,16 @@ import juicer.juicer
 class Parser(object):
     def __init__(self):
 
-        parser = argparse.ArgumentParser(description='Manage release carts')
-        juicer.juicer.parser = parser
+        self.parser = argparse.ArgumentParser(description='Manage release carts')
+        juicer.juicer.parser = self.parser
 
-        parser.add_argument('-v', action='count', \
+        self.parser.add_argument('-v', action='count', \
                                 help='Increase the verbosity (up to 3x)')
 
 
        ##################################################################
        # Keep the different commands separate
-        subparsers = parser.add_subparsers(title='Commands', \
+        subparsers = self.parser.add_subparsers(title='Commands', \
                                                dest='command', \
                                                description='\'%(prog)s COMMAND -h\' for individual help topics')
 
