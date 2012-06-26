@@ -7,17 +7,24 @@ try:
 except ImportError:
     import simplejson as json
 
-def load_json_string(jstr):
+def load_json_str(jstr):
     """
-    Internalize the string (`jstr`) into a native Python datastructure
-    and return it.
+    Internalize the json content object (`jstr`) into a native Python
+    datastructure and return it.
     """
     return json.loads(str(jstr))
+
+def create_json_str(input_ds):
+    """
+    Load a native Python datastructure into a json formatted string
+    and return it.
+    """
+    return json.dumps(input_string)
 
 def get_login_info():
     """
     Give back an array of dicts with the connection
-    information for all the environments
+    information for all the environments.
     """
     config = ConfigParser.SafeConfigParser()
     config_file = os.path.expanduser('~/.juicer.conf')
@@ -42,7 +49,7 @@ def get_login_info():
 
 def user_exists_p(args, connector):
     """
-    Determine if user exists in specified environment
+    Determine if user exists in specified environment.
     """
     url = '/users/' + args.login + '/'
     _r = connector.get(url)
