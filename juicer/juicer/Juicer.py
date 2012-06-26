@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import juicer.utils
 import juicer.juicer
-import json
 import requests
-import simplejson
 import re
 
 class Juicer(object):

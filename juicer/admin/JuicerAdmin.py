@@ -2,9 +2,7 @@
 import juicer.common
 import juicer.utils
 import juicer.admin
-import json
 import requests
-import simplejson
 import re
 
 class JuicerAdmin(object):

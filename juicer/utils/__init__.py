@@ -2,6 +2,17 @@
 import ConfigParser
 import juicer.common
 import os
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+def load_json_string(jstr):
+    """
+    Internalize the string (`jstr`) into a native Python datastructure
+    and return it.
+    """
+    return json.loads(str(jstr))
 
 def get_login_info():
     """
