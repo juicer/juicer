@@ -18,10 +18,11 @@
 
 import argparse
 import juicer.admin
+from juicer.admin.Parser import Parser
 import juicer.utils.Log
 
 def main():
-    parser = juicer.admin.Parser()
+    parser = Parser()
     args = parser.parser.parse_args()
     juicer.utils.Log.LOG_LEVEL_CURRENT = args.v
     args.ja(args)

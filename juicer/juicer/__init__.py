@@ -16,7 +16,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.juicer.Juicer import Juicer as j
-from juicer.juicer.Parser import Parser
 from pprint import pprint as pp
 
 def create():

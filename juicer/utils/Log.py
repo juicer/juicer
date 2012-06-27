@@ -18,7 +18,6 @@
 import inspect
 import juicer.utils
 import os.path
-import pprint
 
 LOG_DEBUG = 3
 LOG_WARN = 2
