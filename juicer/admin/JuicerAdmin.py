@@ -56,12 +56,14 @@ class JuicerAdmin(object):
                 'name': self.args.name}
         for env in self.args.envs:
             if juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output.append("User with login `%s` aleady exists in %s" % (self.args.login, env))
+                output.append("User with login `%s` aleady exists in %s" %
+                              (self.args.login, env))
                 continue
             else:
                 _r = self.connectors[env].post(query, data)
                 if _r.status_code == 201:
-                    output.append("Successfully created user `%s` with login `%s` in %s" % (self.args.name, self.args.login, env))
+                    output.append("Successfully created user `%s` with login `%s` in %s" %
+                                  (self.args.name, self.args.login, env))
                 else:
                     _r.raise_for_status()
         return output
@@ -85,13 +87,15 @@ class JuicerAdmin(object):
         """
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output.append("User with login `%s` doesn't exist in %s" % (self.args.login, env))
+                output.append("User with login `%s` doesn't exist in %s" %
+                              (self.args.login, env))
                 continue
             else:
                 url = "%s%s/" % (query, self.args.login)
                 _r = self.connectors[env].delete(url)
                 if _r.status_code == 200:
-                    output.append("Successfuly deleted user with login `%s` in %s" % (self.args.login, env))
+                    output.append("Successfuly deleted user with login `%s` in %s" %
+                                  (self.args.login, env))
                 else:
                     _r.raise_for_status()
         return output
@@ -116,9 +120,11 @@ class JuicerAdmin(object):
             url = "%s%s/add/" % (query, self.args.role)
             _r = self.connectors[env].post(url, data)
             if _r.status_code == 200:
-                output.append("Successfuly added user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
+                output.append("Successfuly added user `%s` to role `%s` in %s" %
+                              (self.args.login, self.args.role, env))
             else:
-                output.append("Could not add user `%s` to role `%s` in %s" % (self.args.login, self.args.role, env))
+                output.append("Could not add user `%s` to role `%s` in %s" %
+                              (self.args.login, self.args.role, env))
         return output
 
     def show_repo(self, query='/repositories/', output=[]):
@@ -140,7 +146,8 @@ class JuicerAdmin(object):
         """
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output.append("User with login `%s` doesn't exist in %s" % (self.args.login, env))
+                output.append("User with login `%s` doesn't exist in %s" %
+                              (self.args.login, env))
                 continue
             else:
                 url = "%s%s/" % (query, self.args.login)
@@ -152,6 +159,9 @@ class JuicerAdmin(object):
         return output
 
     def list_roles(self, query='/roles/', output=[]):
+        """
+        List roles in specified environments
+        """
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
             if _r.status_code == 200:
