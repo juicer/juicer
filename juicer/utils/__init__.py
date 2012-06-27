@@ -16,11 +16,12 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import ConfigParser
-import juicer.common
+from juicer.common.JuicerCommon import JuicerCommon as jc
 import sys
 import os
 try:
     import json
+    json
 except ImportError:
     import simplejson as json
 
@@ -60,7 +61,7 @@ def get_login_info():
             raise Exception("Missing values in config file: %s" % \
                                 ", ".join(list(required_keys - set(cfg.keys()))))
 
-        connections[section] = juicer.common.JuicerCommon(cfg)
+        connections[section] = jc(cfg)
 
     return connections
 

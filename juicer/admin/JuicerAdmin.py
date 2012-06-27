@@ -20,7 +20,6 @@ import juicer.common
 import juicer.utils
 import juicer.utils.Log
 import re
-import requests
 
 class JuicerAdmin(object):
     def __init__(self, args):

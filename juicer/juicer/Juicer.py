@@ -17,7 +17,6 @@
 
 import juicer.utils
 import juicer.juicer
-import requests
 import re
 
 class Juicer(object):
