@@ -21,6 +21,7 @@ import sys
 import os
 try:
     import json
+    json
 except ImportError:
     import simplejson as json
 
