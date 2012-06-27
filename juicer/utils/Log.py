@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Taboot - Client utility for performing deployments with Func.
+# Juicer - Administer Pulp and Release Carts
 # Copyright © 2011-2012, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
