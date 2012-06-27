@@ -157,3 +157,5 @@ koji: srpm
 test:
 	. ./hacking/setup-env
 	python juicer/tests/TestJuicerAdmin.py
+	python juicer/tests/TestJuicer.py
+
