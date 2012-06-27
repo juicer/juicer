@@ -125,7 +125,8 @@ class JuicerAdmin(object):
             url = "%s%s/add/" % (query, self.args.role)
             _r = self.connectors[env].post(url, data)
             if _r.status_code == 200:
-            output.append("Successfuly added user `%s` to role `%s` in %s" %
+                output.append(
+                        "Successfuly added user `%s` to role `%s` in %s" %
                               (self.args.login, self.args.role, env))
             else:
                 output.append("Could not add user `%s` to role `%s` in %s" %
