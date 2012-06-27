@@ -104,7 +104,7 @@ class JuicerAdmin(object):
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
             if _r.status_code == 200:
-                for repo in juicer.utils.load_json_string(_r.content):
+                for repo in juicer.utils.load_json_str(_r.content):
                     if re.match(".*-{0}$".format(env), repo['id']):
                         output.append(repo['id'])
             else:
@@ -130,7 +130,7 @@ class JuicerAdmin(object):
             url = "%s%s-%s/" % (query, self.args.name, env)
             _r = self.connectors[env].get(url)
             if _r.status_code == 200:
-                output.append(juicer.utils.load_json_string(_r.content))
+                output.append(juicer.utils.load_json_str(_r.content))
             else:
                 _r.raise_for_status()
         return output
@@ -147,7 +147,7 @@ class JuicerAdmin(object):
                 url = "%s%s/" % (query, self.args.login)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == 200:
-                    output.append(juicer.utils.load_json_string(_r.content))
+                    output.append(juicer.utils.load_json_str(_r.content))
                 else:
                     _r.raise_for_status()
         return output
@@ -156,7 +156,7 @@ class JuicerAdmin(object):
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
             if _r.status_code == 200:
-                output.append(juicer.utils.load_json_string(_r.content))
+                output.append(juicer.utils.load_json_str(_r.content))
             else:
                 _r.raise_for_status()
         return output
