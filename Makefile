@@ -153,3 +153,7 @@ rpm: rpmcommon
 
 koji: srpm
 	koji build --scratch $(RPMDIST) rpm-build/$(RPMNVR).src.rpm
+
+test:
+	. ./hacking/setup-env
+	python juicer/tests/TestJuicerAdmin.py
