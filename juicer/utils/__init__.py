@@ -25,6 +25,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 def load_json_str(jstr):
     """
     Internalize the json content object (`jstr`) into a native Python
@@ -32,12 +33,14 @@ def load_json_str(jstr):
     """
     return json.loads(str(jstr))
 
+
 def create_json_str(input_ds):
     """
     Load a native Python datastructure into a json formatted string
     and return it.
     """
     return json.dumps(input_ds)
+
 
 def get_login_info():
     """
@@ -59,11 +62,12 @@ def get_login_info():
 
         if not required_keys == set(cfg.keys()):
             raise Exception("Missing values in config file: %s" % \
-                                ", ".join(list(required_keys - set(cfg.keys()))))
+                            ", ".join(list(required_keys - set(cfg.keys()))))
 
         connections[section] = jc(cfg)
 
     return connections
+
 
 def user_exists_p(args, connector):
     """
@@ -73,10 +77,12 @@ def user_exists_p(args, connector):
     _r = connector.get(url)
     return (_r.status_code == 200)
 
+
 def role_exists_p(args, connector):
     url = connector.base_url + '/roles/' + args.role + '/'
     _r = connector.get(url)
     return (_r.status_code == 200)
+
 
 def flatten(x):
     """
@@ -90,6 +96,7 @@ def flatten(x):
         else:
             result.append(el)
     return result
+
 
 def print_stderr(msg):
     sys.stderr.write(msg)

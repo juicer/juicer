@@ -3,13 +3,15 @@ import unittest
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pmoney
 
+
 class TestJuicerAdmin(unittest.TestCase):
 
     def setUp(self):
         self.parser = pmoney()
 
     def create_test_user(self):
-        args = 'create-user --login cjesop --password cjesop --name "ColonelJesop"'
+        args = 'create-user --login cjesop --password cjesop \
+                --name "ColonelJesop"'
         pulp = ja(self.parser.parser.parse_args(args.split()))
         pulp.create_user()
 
@@ -55,7 +57,8 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_repo()
 
     def test_create_user(self):
-        args = 'create-user --login cjesop --password cjesop --name "ColonelJesop"'
+        args = 'create-user --login cjesop --password cjesop \
+                --name "ColonelJesop"'
         pulp = ja(self.parser.parser.parse_args(args.split()))
         self.assertTrue(any('Success' in k for k in pulp.create_user()))
         self.delete_test_user()

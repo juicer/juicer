@@ -18,6 +18,7 @@
 import juicer.utils
 import requests
 
+
 class JuicerCommon(object):
     def __init__(self, connect_params):
         self.base_url = connect_params['base_url']
@@ -36,10 +37,10 @@ class JuicerCommon(object):
 
     def post(self, url="", data={}):
         url = self.base_url + url
-        return requests.post(url, juicer.utils.create_json_str(data), auth=self.auth,
-                             headers=self.headers, verify=False)
+        return requests.post(url, juicer.utils.create_json_str(data), \
+                auth=self.auth, headers=self.headers, verify=False)
 
     def put(self, url="", data={}):
         url = self.base_url + url
-        return requests.put(url, juicer.utils.create_json_str(data), auth=self.auth,
-                            headers=self.headers, verify=False)
+        return requests.put(url, juicer.utils.create_json_str(data), \
+                auth=self.auth, headers=self.headers, verify=False)

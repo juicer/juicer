@@ -21,6 +21,7 @@ import juicer.utils
 import juicer.utils.Log
 import re
 
+
 class JuicerAdmin(object):
     def __init__(self, args):
         self.args = args
@@ -41,7 +42,8 @@ class JuicerAdmin(object):
             _r = self.connectors[env].put(query, data)
 
             if _r.status_code == 201:
-                output.append("Created repository %s-%s" % (self.args.name, env))
+                output.append("Created repository %s-%s" %\
+                        (self.args.name, env))
             else:
                 _r.raise_for_status()
 
@@ -62,7 +64,8 @@ class JuicerAdmin(object):
             else:
                 _r = self.connectors[env].post(query, data)
                 if _r.status_code == 201:
-                    output.append("Successfully created user `%s` with login `%s` in %s" %
+                    output.append(
+                    "Successfully created user `%s` with login `%s` in %s" %
                                   (self.args.name, self.args.login, env))
                 else:
                     _r.raise_for_status()
@@ -76,7 +79,8 @@ class JuicerAdmin(object):
             url = "%s%s-%s/" % (query, self.args.name, env)
             _r = self.connectors[env].delete(url)
             if _r.status_code == 202:
-                output.append("Deleted repository %s-%s" % (self.args.name, env))
+                output.append("Deleted repository %s-%s" %\
+                        (self.args.name, env))
             else:
                 _r.raise_for_status()
         return output
@@ -94,7 +98,8 @@ class JuicerAdmin(object):
                 url = "%s%s/" % (query, self.args.login)
                 _r = self.connectors[env].delete(url)
                 if _r.status_code == 200:
-                    output.append("Successfuly deleted user with login `%s` in %s" %
+                    output.append(
+                        "Successfuly deleted user with login `%s` in %s" %
                                   (self.args.login, env))
                 else:
                     _r.raise_for_status()
@@ -120,7 +125,7 @@ class JuicerAdmin(object):
             url = "%s%s/add/" % (query, self.args.role)
             _r = self.connectors[env].post(url, data)
             if _r.status_code == 200:
-                output.append("Successfuly added user `%s` to role `%s` in %s" %
+            output.append("Successfuly added user `%s` to role `%s` in %s" %
                               (self.args.login, self.args.role, env))
             else:
                 output.append("Could not add user `%s` to role `%s` in %s" %

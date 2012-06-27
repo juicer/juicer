@@ -108,7 +108,8 @@ def print_log_msg(log_level, msg):
             if ll in Log.LOG_TO_STDOUT:
                 print "%s: %s" % (log_level, l)
             else:
-                juicer.utils.print_stderr("%s[%s]: %s\n" % (log_level, debug_info, l))
+                juicer.utils.print_stderr("%s[%s]: %s\n" %\
+                        (log_level, debug_info, l))
     except Exception as e:
         # A logging mechanism should never cause a script to abort if
         # you can't expand all formatting markers

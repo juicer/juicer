@@ -19,6 +19,7 @@ import juicer.utils
 import juicer.juicer
 import re
 
+
 class Juicer(object):
     def __init__(self, args):
         self.args = args
@@ -28,7 +29,8 @@ class Juicer(object):
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
 
-    def search_rpm(self, name='', envs=[], query='/services/search/packages/', output=[]):
+    def search_rpm(self, name='', envs=[], \
+            query='/services/search/packages/', output=[]):
         output.append('Packages:')
         output.append('Repository:')
 
