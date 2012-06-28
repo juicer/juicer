@@ -109,7 +109,6 @@ clean:
 	find ./docs/man -type f -name "*.xml" -delete
 	find ./docs/man -type f -name "*.asciidoc" -delete
 	@echo "Cleaning up RPM building stuff"
-	rm -f $(RPMSPEC) setup.py
 	rm -rf MANIFEST rpm-build
 
 python:
@@ -121,7 +120,7 @@ install:
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: sdist juicer.spec setup.py
+rpmcommon: juicer.spec setup.py sdist
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
