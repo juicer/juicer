@@ -109,7 +109,7 @@ clean:
 	find ./docs/man -type f -name "*.xml" -delete
 	find ./docs/man -type f -name "*.asciidoc" -delete
 	@echo "Cleaning up RPM building stuff"
-	rm -f $(RPMSPEC)
+	rm -f $(RPMSPEC) setup.py
 	rm -rf MANIFEST rpm-build
 
 python:
