@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/juicer*
 #%{_datadir}/juicer
 #%config(noreplace) %{_sysconfdir}/juicer
-%doc README PKG-INFO
+%doc README.md PKG-INFO
 %doc %{_mandir}/man1/juicer*
 %doc %{_mandir}/man5/juicer*
 

@@ -152,7 +152,7 @@ rpm: rpmcommon
 	@echo "#############################################"
 
 koji: srpm
-	koji build --scratch $(RPMDIST) rpm-build/$(RPMNVR).src.rpm
+	koji build --scratch f17 rpm-build/$(RPMNVR).src.rpm
 
 test:
 	. ./hacking/setup-env
