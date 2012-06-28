@@ -16,13 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import argparse
 import juicer.juicer
 import juicer.juicer.Parser
 import juicer.utils.Log
 
 def main():
-    parser = juicer.juicer.Parser()
+    parser = juicer.juicer.Parser.Parser()
     args = parser.parser.parse_args()
     juicer.utils.Log.LOG_LEVEL_CURRENT = args.v
     args.j(args)
