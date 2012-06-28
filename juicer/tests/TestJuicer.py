@@ -12,13 +12,13 @@ class TestJuicer(unittest.TestCase):
     def test_rpm_search(self):
         self.args = self.parser.parser.parse_args('rpm-search ruby'.split())
         pulp = j(self.args)
-        print pulp.search_rpm(name=self.args.rpmname, \
+        pulp.search_rpm(name=self.args.rpmname, \
                 envs=self.args.environment)
 
         self.args = self.parser.parser.parse_args(\
                 'rpm-search ruby --in qa'.split())
         pulp = j(self.args)
-        print pulp.search_rpm(name=self.args.rpmname, \
+        pulp.search_rpm(name=self.args.rpmname, \
                 envs=self.args.environment)
 
 if __name__ == '__main__':
