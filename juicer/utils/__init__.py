@@ -19,6 +19,8 @@ import ConfigParser
 from juicer.common.JuicerCommon import JuicerCommon as jc
 import sys
 import os
+from juicer.common import Constants
+
 try:
     import json
     json
@@ -75,13 +77,13 @@ def user_exists_p(args, connector):
     """
     url = '/users/' + args.login + '/'
     _r = connector.get(url)
-    return (_r.status_code == 200)
+    return (_r.status_code == Constants.PULP_GET_OK)
 
 
 def role_exists_p(args, connector):
     url = connector.base_url + '/roles/' + args.role + '/'
     _r = connector.get(url)
-    return (_r.status_code == 200)
+    return (_r.status_code == Constants.PULP_GET_OK)
 
 
 def flatten(x):

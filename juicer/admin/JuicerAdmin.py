@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from juicer.common import Constants
 import juicer.admin
 import juicer.common
 import juicer.utils
@@ -39,9 +40,9 @@ class JuicerAdmin(object):
             data['relative_path'] = '/%s/%s/' % (env, self.args.name)
             data['id'] = '-'.join([self.args.name, env])
 
-            _r = self.connectors[env].put(query, data)
+            _r = self.connectors[env].post(query, data)
 
-            if _r.status_code == 201:
+            if _r.status_code == Constants.PULP_POST_CREATED:
                 output.append("Created repository %s-%s" %\
                         (self.args.name, env))
             else:
@@ -63,7 +64,7 @@ class JuicerAdmin(object):
                 continue
             else:
                 _r = self.connectors[env].post(query, data)
-                if _r.status_code == 201:
+                if _r.status_code == Constants.PULP_POST_CREATED:
                     output.append(
                     "Successfully created user `%s` with login `%s` in %s" %
                                   (self.args.name, self.args.login, env))
@@ -78,7 +79,7 @@ class JuicerAdmin(object):
         for env in self.args.envs:
             url = "%s%s-%s/" % (query, self.args.name, env)
             _r = self.connectors[env].delete(url)
-            if _r.status_code == 202:
+            if _r.status_code == Constants.PULP_DELETE_ACCEPTED:
                 output.append("Deleted repository %s-%s" %\
                         (self.args.name, env))
             else:
@@ -97,7 +98,7 @@ class JuicerAdmin(object):
             else:
                 url = "%s%s/" % (query, self.args.login)
                 _r = self.connectors[env].delete(url)
-                if _r.status_code == 200:
+                if _r.status_code == Constants.PULP_DELETE_OK:
                     output.append(
                         "Successfuly deleted user with login `%s` in %s" %
                                   (self.args.login, env))
@@ -111,7 +112,7 @@ class JuicerAdmin(object):
         """
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
-            if _r.status_code == 200:
+            if _r.status_code == Constants.PULP_GET_OK:
                 for repo in juicer.utils.load_json_str(_r.content):
                     if re.match(".*-{0}$".format(env), repo['id']):
                         output.append(repo['id'])
@@ -124,7 +125,7 @@ class JuicerAdmin(object):
         for env in self.args.envs:
             url = "%s%s/add/" % (query, self.args.role)
             _r = self.connectors[env].post(url, data)
-            if _r.status_code == 200:
+            if _r.status_code == Constants.PULP_POST_OK:
                 output.append(
                         "Successfuly added user `%s` to role `%s` in %s" %
                               (self.args.login, self.args.role, env))
@@ -140,7 +141,7 @@ class JuicerAdmin(object):
         for env in self.args.envs:
             url = "%s%s-%s/" % (query, self.args.name, env)
             _r = self.connectors[env].get(url)
-            if _r.status_code == 200:
+            if _r.status_code == Constants.PULP_GET_OK:
                 output.append(juicer.utils.load_json_str(_r.content))
             else:
                 _r.raise_for_status()
@@ -158,7 +159,7 @@ class JuicerAdmin(object):
             else:
                 url = "%s%s/" % (query, self.args.login)
                 _r = self.connectors[env].get(url)
-                if _r.status_code == 200:
+                if _r.status_code == Constants.PULP_GET_OK:
                     output.append(juicer.utils.load_json_str(_r.content))
                 else:
                     _r.raise_for_status()
@@ -170,7 +171,7 @@ class JuicerAdmin(object):
         """
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
-            if _r.status_code == 200:
+            if _r.status_code == Constants.PULP_GET_OK:
                 output.append(juicer.utils.load_json_str(_r.content))
             else:
                 _r.raise_for_status()

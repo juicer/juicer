@@ -15,8 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import juicer.utils
+from juicer.common import Constants
 import juicer.juicer
+import juicer.utils
 import re
 
 
@@ -51,8 +52,8 @@ class Juicer(object):
 
                     _r = self.connectors[enviro].post(query, data)
 
-                    if _r.status_code != 200:
-                        _r.raise_for_status
+                    if _r.status_code != Constants.PULP_POST_OK:
+                        _r.raise_for_status()
 
                     for pkg in juicer.utils.load_json_str(_r.content):
                         output.append(pkg['filename'])
