@@ -4,6 +4,7 @@
 .SUFFIXES:
 
 ########################################################
+
 # Makefile for Juicer
 #
 # useful targets:
@@ -27,7 +28,7 @@
 ########################################################
 
 # variable section
-NAME := "juicer"
+NAME := juicer
 
 # This doesn't evaluate until it's called. The -D argument is the
 # directory of the target file ($@), kinda like `dirname`.
@@ -35,51 +36,53 @@ ASCII2MAN = a2x -D $(dir $@) -d manpage -f manpage $<
 ASCII2HTMLMAN = a2x -D docs/html/man/ -d manpage -f xhtml
 MANPAGES := docs/man/man1/juicer.1 docs/man/man1/juicer-admin.1 docs/man/man5/juicer.conf.5
 
-# VERSION file provides one place to update the software version
+# VERSION file provides one place to update the software version.
 VERSION := $(shell cat VERSION)
+# All of these targets are rebuilt when the VERSION file is updated.
+juicer.spec setup.py: VERSION
 
-# RPM build parameters
+# RPM build parameters.
 RPMSPECDIR := .
 RPMSPEC := $(RPMSPECDIR)/juicer.spec
 RPMVERSION := $(VERSION)
 RPMRELEASE = $(shell awk '/Release/{print $$2; exit}' < $(RPMSPEC).in | cut -d "%" -f1)
 RPMDIST = $(shell rpm --eval '%dist')
-RPMNVR = "$(NAME)-$(RPMVERSION)-$(RPMRELEASE)$(RPMDIST)"
+RPMNVR = $(NAME)-$(RPMVERSION)-$(RPMRELEASE)$(RPMDIST)
 
 ########################################################
 
-all: clean python
+all: rpm
 
 # To force a rebuild of the docs run 'touch VERSION && make docs'
 docs: $(MANPAGES)
 
 # Regenerate %.1.asciidoc if %.1.asciidoc.in has been modified more
 # recently than %.1.asciidoc.
-%.1.asciidoc: %.1.asciidoc.in
+%.1.asciidoc: %.1.asciidoc.in VERSION
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
 # Regenerate %.1 if %.1.asciidoc or VERSION has been modified more
 # recently than %.1. (Implicitly runs the %.1.asciidoc recipe)
-%.1: %.1.asciidoc VERSION
+%.1: %.1.asciidoc
 	$(ASCII2MAN)
 
 # Regenerate %.5.asciidoc if %.5.asciidoc.in has been modified more
 # recently than %.5.asciidoc.
-%.5.asciidoc: %.5.asciidoc.in
+%.5.asciidoc: %.5.asciidoc.in VERSION
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
 # Regenerate %.5 if %.5.asciidoc or VERSION has been modified more
 # recently than %.5. (Implicitly runs the %.5.asciidoc recipe)
-%.5: %.5.asciidoc VERSION
+%.5: %.5.asciidoc
 	$(ASCII2MAN)
 
 # Build the spec file on the fly. Substitute version numbers from the
 # canonical VERSION file.
-juicer.spec: juicer.spec.in VERSION
+juicer.spec: juicer.spec.in
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
 # Build the distutils setup file on the fly.
-setup.py: setup.py.in VERSION
+setup.py: setup.py.in
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
 pep8:
@@ -98,8 +101,7 @@ pyflakes:
 
 clean:
 	@echo "Cleaning up distutils stuff"
-	rm -rf build
-	rm -rf dist
+	rm -rf build dist MANIFEST
 	@echo "Cleaning up byte compiled python stuff"
 	find . -type f -regex ".*\.py[co]$$" -delete
 	@echo "Cleaning up editor backup files"
@@ -111,6 +113,10 @@ clean:
 	@echo "Cleaning up RPM building stuff"
 	rm -rf MANIFEST rpm-build
 
+cleaner:
+	@echo "Cleaning up harder"
+	rm -f setup.py juicer.spec
+
 python:
 	python setup.py build
 
@@ -120,7 +126,7 @@ install:
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: juicer.spec setup.py sdist
+rpmcommon: juicer.spec setup.py sdist docs
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
