@@ -143,3 +143,24 @@ class Parser(object):
                 dest='environment')
 
         parser_rpmsearch.set_defaults(j=juicer.juicer.rpmsearch)
+
+        ##################################################################
+        # create the 'upload' sub-parser
+        parser_upload = subparsers.add_parser('upload', \
+                help='Upload an item into pulp', \
+                usage='%(prog)s item [item ...] [-r repo [repo ...]] [--in environment [environment ...]]')
+
+        parser_upload.add_argument('item', metavar='item', \
+                nargs = '+', \
+                help = 'an item (rpm, directory or url) to be uploaded')
+
+        parser_upload.add_argument('-r', nargs='*', metavar='repo', \
+                dest = 'repos', \
+                default=[], help='The repo(s) to upload into.')
+
+        parser_upload.add_argument('--in', nargs='*', \
+                metavar='environment', \
+                help='The environments to upload into.', \
+                dest='environment')
+
+        parser_upload.set_defaults(j=juicer.juicer.upload)
