@@ -79,6 +79,31 @@ class Parser(object):
         parser_create_user.set_defaults(ja=juicer.admin.create_user)
 
         ##################################################################
+        # Create the 'update-user' sub-parser
+        parser_update_user = self.subparsers.add_parser('update-user',\
+                help='Change user information')
+
+        parser_update_user.add_argument('--name', metavar='name', \
+                                            dest='name', \
+                                            help='Updated name of user')
+
+        parser_update_user.add_argument('--login', metavar='login', \
+                                            dest='login', \
+                                            help='Login user id for user to update')
+
+        parser_update_user.add_argument('--password', metavar='password', \
+                                        dest='password', \
+                                        help='Updated password for user')
+
+        parser_update_user.add_argument('--in', metavar='envs', \
+                        nargs="+", \
+                        dest='envs', \
+                        default=['re', 'qa', 'stage', 'prod'], \
+                        help='The environments in which to create pulp user')
+
+        parser_update_user.set_defaults(ja=juicer.admin.update_user)
+
+        ##################################################################
         # Create the 'list_repos' sub-parser
         parser_list_repos = self.subparsers.add_parser('list-repos', \
                 help='List all repos')
