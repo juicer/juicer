@@ -20,7 +20,7 @@
 ######################################################################
 #
 # For a full list of return codes with complete descriptions see the
-# official pulp documentation: 
+# official pulp documentation:
 # https://fedorahosted.org/pulp/wiki/RestApiDevelopment#HTTPResponses
 #
 ######################################################################
@@ -54,4 +54,3 @@ PULP_DELETE_NOT_FOUND = 404
 ######################################################################
 # OPTIONS
 PULP_OPTIONS_OK = 200
-
