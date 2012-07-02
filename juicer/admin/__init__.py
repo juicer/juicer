@@ -62,3 +62,7 @@ def role_add(args):
 def list_roles(args):
     pulp = ja(args)
     pp(pulp.list_roles())
+
+def update_user(args):
+    pulp = ja(args)
+    pp(pulp.update_user())

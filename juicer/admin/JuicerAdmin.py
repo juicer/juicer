@@ -195,3 +195,26 @@ class JuicerAdmin(object):
             else:
                 _r.raise_for_status()
         return output
+
+    def update_user(self, query='/users/', output={}):
+        """
+        Update user information
+        """
+        juicer.utils.Log.log_debug("Update user information %s" % (self.args.login))
+
+        data = {'login': self.args.login,
+                'name': self.args.name,
+                'password': self.args.password}
+        
+        query = "%s%s/" % (query, self.args.login)
+
+        for env in self.args.envs:
+            if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
+                output[env] = "User `%s` does not exist in %s" % (self.args.login, env)
+            else:
+                _r = self.connectors[env].put(query, data)
+                if _r.status_code == Constants.PULP_PUT_OK:
+                    output[env] = juicer.utils.load_json_str(_r.content)
+                else:
+                    _r.raise_for_status()
+        return output
