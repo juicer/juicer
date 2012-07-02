@@ -36,6 +36,8 @@ class JuicerAdmin(object):
         data = {'name': self.args.name,
                 'arch': 'noarch'}
 
+        juicer.utils.Log.log_debug("Create Repo: %s", self.args.name)
+
         for env in self.args.envs:
             data['relative_path'] = '/%s/%s/' % (env, self.args.name)
             data['id'] = '-'.join([self.args.name, env])
@@ -57,6 +59,9 @@ class JuicerAdmin(object):
         data = {'login': self.args.login,
                 'password': self.args.password,
                 'name': self.args.name}
+
+        juicer.utils.Log.log_debug("Create User: %s ('%s')", self.args.login, self.args.name)
+
         for env in self.args.envs:
             if juicer.utils.user_exists_p(self.args, self.connectors[env]):
                 output.append("User with login `%s` aleady exists in %s" %
@@ -76,6 +81,8 @@ class JuicerAdmin(object):
         """
         Delete repo in specified environments
         """
+        juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
+
         for env in self.args.envs:
             url = "%s%s-%s/" % (query, self.args.name, env)
             _r = self.connectors[env].delete(url)
@@ -90,6 +97,8 @@ class JuicerAdmin(object):
         """
         Delete user in specified environments
         """
+        juicer.utils.Log.log_debug("Delete User: %s", self.args.login)
+
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
                 output.append("User with login `%s` doesn't exist in %s" %
@@ -110,6 +119,8 @@ class JuicerAdmin(object):
         """
         List repositories in specified environments
         """
+        juicer.utils.Log.log_debug("List Repos In: %s", ", ".join(self.args.envs))
+
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
@@ -122,6 +133,8 @@ class JuicerAdmin(object):
 
     def role_add(self, query='/roles/', output=[]):
         data = {'username': self.args.login}
+        juicer.utils.Log.log_debug("Add Role '%s' to '%s'", self.args.role, self.args.login)
+
         for env in self.args.envs:
             url = "%s%s/add/" % (query, self.args.role)
             _r = self.connectors[env].post(url, data)
@@ -138,6 +151,8 @@ class JuicerAdmin(object):
         """
         Show repositories in specified environments
         """
+        juicer.utils.Log.log_debug("Show Repo: %s", self.args.name)
+
         for env in self.args.envs:
             url = "%s%s-%s/" % (query, self.args.name, env)
             _r = self.connectors[env].get(url)
@@ -151,6 +166,8 @@ class JuicerAdmin(object):
         """
         Show user in specified environments
         """
+        juicer.utils.Log.log_debug("Show User: %s", self.args.login)
+
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
                 output.append("User with login `%s` doesn't exist in %s" %
@@ -169,6 +186,8 @@ class JuicerAdmin(object):
         """
         List roles in specified environments
         """
+        juicer.utils.Log.log_debug("List Roles %s", ", ".join(self.args.envs))
+
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
