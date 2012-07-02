@@ -36,6 +36,9 @@ class JuicerAdmin(object):
         data = {'name': self.args.name,
                 'arch': self.args.arch}
 
+        if self.args.feed:
+            data['feed'] = self.args.feed
+
         juicer.utils.Log.log_debug("Create Repo: %s", self.args.name)
 
         for env in self.args.envs:
