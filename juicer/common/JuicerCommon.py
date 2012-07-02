@@ -16,8 +16,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import juicer.utils
+import juicer.utils.Log
 import requests
-
 
 class JuicerCommon(object):
     def __init__(self, connect_params):
@@ -27,20 +27,28 @@ class JuicerCommon(object):
 
     def delete(self, url=""):
         url = self.base_url + url
+        juicer.utils.Log.log_debug("[REST:DELETE:%s]", url)
+
         return requests.delete(url, auth=self.auth, headers=self.headers,
                                verify=False)
 
     def get(self, url=""):
         url = self.base_url + url
+
+        juicer.utils.Log.log_debug("[REST:GET:%s]", url)
         return requests.get(url, auth=self.auth, headers=self.headers,
                             verify=False)
 
     def post(self, url="", data={}):
         url = self.base_url + url
+        juicer.utils.Log.log_debug("[REST:POST:%s] [Data:%s]", url, str(data))
+
         return requests.post(url, juicer.utils.create_json_str(data), \
                 auth=self.auth, headers=self.headers, verify=False)
 
     def put(self, url="", data={}):
         url = self.base_url + url
+        juicer.utils.Log.log_debug("[REST:PUT:%s] [Data:%s]", url, str(data))
+
         return requests.put(url, juicer.utils.create_json_str(data), \
                 auth=self.auth, headers=self.headers, verify=False)

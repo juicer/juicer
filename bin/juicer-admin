@@ -16,15 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from juicer.admin.Parser import Parser
 import argparse
 import juicer.admin
-from juicer.admin.Parser import Parser
 import juicer.utils.Log
 
 def main():
     parser = Parser()
     args = parser.parser.parse_args()
     juicer.utils.Log.LOG_LEVEL_CURRENT = args.v
+    juicer.utils.Log.log_debug(args)
     args.ja(args)
 
 if __name__ == '__main__':

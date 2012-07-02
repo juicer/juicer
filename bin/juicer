@@ -24,6 +24,7 @@ def main():
     parser = juicer.juicer.Parser.Parser()
     args = parser.parser.parse_args()
     juicer.utils.Log.LOG_LEVEL_CURRENT = args.v
+    juicer.utils.Log.log_debug(args)
     args.j(args)
 
 if __name__ == '__main__':
