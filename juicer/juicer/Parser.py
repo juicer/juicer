@@ -126,7 +126,7 @@ class Parser(object):
         ##################################################################
         # Create the 'rpm_search' sub-parser
         parser_rpmsearch = subparsers.add_parser('rpm-search', \
-                help='Search for an RPM in pulp', \
+                help='Search for an RPM in pulp.', \
                 usage='%(prog)s rpmname [...] [-r repo [repo]] \
                 [--in environment [environment]] [-h]')
 
