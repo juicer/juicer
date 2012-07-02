@@ -6,9 +6,9 @@ from distutils.core import setup
 setup(name='juicer',
       version='%VERSION%',
       description='Administer Pulp and Release Carts',
-      author='GCA-PC',
-      author_email='it-pc-list@redhat.com',
-      url='https://docspace.corp.redhat.com/docs/DOC-104668',
+      maintainer='Tim Bielawa',
+      maintainer_email='tim@redhat.com',
+      url='https://github.com/abutcher/juicer',
       license='GPLv3+',
       package_dir={ 'juicer': 'juicer' },
       packages=[

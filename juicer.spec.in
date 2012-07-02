@@ -10,8 +10,8 @@ Version: %VERSION%
 
 Group: Development/Libraries
 License: GPLv3+
-Source0: https://docspace.corp.redhat.com/docs/DOC-104668/%{name}-%{version}.tar.gz
-Url: https://docspace.corp.redhat.com/docs/DOC-104668
+Source0: %{name}-%{version}.tar.gz
+Url: https://github.com/abutcher/juicer
 
 BuildArch: noarch
 BuildRequires: python2-devel
