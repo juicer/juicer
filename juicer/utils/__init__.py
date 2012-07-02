@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import ConfigParser
-from juicer.common.JuicerCommon import JuicerCommon as jc
-import sys
-import os
 from juicer.common import Constants
-
+from juicer.common.JuicerCommon import JuicerCommon as jc
+import ConfigParser
+import juicer.utils.Log
+import os
+import sys
 try:
     import json
     json
@@ -59,6 +59,7 @@ def get_login_info():
     else:
         raise IOError("Can not read %s" % config_file)
 
+    juicer.utils.Log.log_debug("Loading connection information:")
     for section in config.sections():
         cfg = dict(config.items(section))
 
@@ -66,6 +67,10 @@ def get_login_info():
             raise Exception("Missing values in config file: %s" % \
                             ", ".join(list(required_keys - set(cfg.keys()))))
 
+        juicer.utils.Log.log_debug("    [%s] username: %s, base_url: %s" % \
+                                       (section, \
+                                            cfg['username'], \
+                                            cfg['base_url']))
         connections[section] = jc(cfg)
 
     return connections
