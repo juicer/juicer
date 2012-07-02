@@ -162,7 +162,7 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return output
 
-    def show_user(self, query='/users/', output=[]):
+    def show_user(self, query='/users/', output={}):
         """
         Show user in specified environments
         """
@@ -170,19 +170,19 @@ class JuicerAdmin(object):
 
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output.append("User with login `%s` doesn't exist in %s" %
-                              (self.args.login, env))
+                output[env] = ("User with login `%s` doesn't exist in %s" %
+                                (self.args.login, env))
                 continue
             else:
                 url = "%s%s/" % (query, self.args.login)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == Constants.PULP_GET_OK:
-                    output.append(juicer.utils.load_json_str(_r.content))
+                    output[env] = juicer.utils.load_json_str(_r.content)
                 else:
                     _r.raise_for_status()
         return output
 
-    def list_roles(self, query='/roles/', output=[]):
+    def list_roles(self, query='/roles/', output={}):
         """
         List roles in specified environments
         """
@@ -191,7 +191,7 @@ class JuicerAdmin(object):
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
-                output.append(juicer.utils.load_json_str(_r.content))
+                output[env] = juicer.utils.load_json_str(_r.content)
             else:
                 _r.raise_for_status()
         return output
