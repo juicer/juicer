@@ -47,7 +47,7 @@ class Juicer(object):
     def _append_up(self, query='/services/upload/append/', uid='', fdata='', env='re'):
         uri = query + uid + '/'
         data = {'file-id':uid,
-                'file-data':fdata}
+                'file-data':fdata.decode('utf-8', 'replace')}
 
         _r = self.connectors[env].put(uri, data)
 
@@ -84,7 +84,7 @@ class Juicer(object):
         for item in items:
             if os.path.isfile(item):
                 # process individual file
-                rpm_fd = open(item)
+                rpm_fd = open(item, 'rb')
                 pkg = ts.hdrFromFdno(rpm_fd)
                 name = pkg['name']
                 version = pkg['version']
@@ -99,8 +99,13 @@ class Juicer(object):
                 upload_id = self._init_up(name=name, cksum=cksum, size=size)
 
                 # read in rpm
-                rpm_data = unicode(rpm_fd.readlines())
-                upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
+                while True:
+                    rpm_data = rpm_fd.read(10485760)
+
+                    if not rpm_data:
+                        break
+
+                    upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
 
                 # finalize upload
                 if upload_flag == True:
