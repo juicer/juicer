@@ -34,7 +34,7 @@ class JuicerAdmin(object):
         Create repository in specified environments
         """
         data = {'name': self.args.name,
-                'arch': 'noarch'}
+                'arch': self.args.arch}
 
         juicer.utils.Log.log_debug("Create Repo: %s", self.args.name)
 

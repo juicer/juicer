@@ -41,6 +41,10 @@ class Parser(object):
         parser_create_repo.add_argument('name', metavar='name', \
                                             help='The name of your repo')
 
+        parser_create_repo.add_argument('--arch', metavar='arch', \
+                                            default='noarch', \
+                                            help='The architecture of your repo')
+
         parser_create_repo.add_argument('--in', metavar='envs', \
                     nargs="+", \
                     dest='envs', \
