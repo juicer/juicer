@@ -119,6 +119,9 @@ class Juicer(object):
             # path/to/package.rpm
             if os.path.isfile(item):
                 # process individual file
+                if not re.match('.*\.rpm', item):
+                    raise TypeError("{0} is not an rpm".format(item))
+
                 self._upload_rpm(item)
 
             # path/to/packages/
@@ -136,6 +139,9 @@ class Juicer(object):
             # https://path.to/package.rpm
             elif re.match('https?://.*', item):
                 # download item and upload
+                if not re.match('.*\.rpm', item):
+                    raise TypeError('{0} is not an rpm'.format(item))
+
                 filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
                 remote = requests.get(item)
 
@@ -147,9 +153,7 @@ class Juicer(object):
                 os.remove(filename)
 
             else:
-                # TODO raise an actual error
-                output.append('No! Bad!')
-                break
+                raise TypeError("what even is this?")
 
         return output
 
