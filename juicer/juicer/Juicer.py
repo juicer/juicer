@@ -22,6 +22,7 @@ import re
 import os
 import rpm
 import hashlib
+import requests
 
 
 class Juicer(object):
@@ -135,7 +136,15 @@ class Juicer(object):
             # https://path.to/package.rpm
             elif re.match('https?://.*', item):
                 # download item and upload
-                output.append('url')
+                filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
+                remote = requests.get(item)
+
+                with open(filename, 'wb') as data:
+                    data.write(remote.content())
+
+                self._upload_rpm(filename)
+
+                os.remove(filename)
 
             else:
                 # TODO raise an actual error
