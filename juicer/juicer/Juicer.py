@@ -57,9 +57,8 @@ class Juicer(object):
 
     # finalizes the 3-step upload process. this is where metadata is set
     def _import_up(self, query='/services/upload/import/', uid='', name='', \
-                    ftype='rpm', \ cksum='', htype='md5', nvrea='', size='', \
-                    lic='', group='', vendor='', \
-                    req='', env='re'):
+                    ftype='rpm', cksum='', htype='md5', nvrea='', size='', \
+                    lic='', group='', vendor='', req='', env='re'):
         data = {'uploadid': uid,
                 'metadata': {
                     'type': ftype,
