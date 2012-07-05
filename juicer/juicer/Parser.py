@@ -127,11 +127,10 @@ class Parser(object):
         # Create the 'rpm_search' sub-parser
         parser_rpmsearch = subparsers.add_parser('rpm-search', \
                 help='Search for an RPM in pulp.', \
-                usage='%(prog)s rpmname [...] [-r repo [repo]] \
+                usage='%(prog)s rpmname [-r repo [repo]] \
                 [--in environment [environment]] [-h]')
 
         parser_rpmsearch.add_argument('rpmname', metavar='rpmname', \
-                                          nargs='+', \
                                   help='The name of the rpm(s) to search for.')
 
         parser_rpmsearch.add_argument('-r', nargs='*', metavar='repos', \

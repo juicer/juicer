@@ -163,9 +163,8 @@ class Juicer(object):
         pass
 
     def search_rpm(self, name='', envs=[], \
-            query='/services/search/packages/', output=[]):
+            query='/packages/', output=[]):
         output.append('Packages:')
-        output.append('Repository:')
 
         # if no envs listed, check all repositories
         if envs == None:
@@ -173,22 +172,17 @@ class Juicer(object):
 
         for enviro in envs:
             # get list of all repos, then parse down to the ones we want
-            _r = self.connectors[enviro].get('/repositories/')
+            _r = self.connectors[enviro].get(query)
 
-            repo_list = juicer.utils.load_json_str(_r.content)
+            pkg_list = juicer.utils.load_json_str(_r.content)
 
-            for repo in repo_list:
-                if re.match(".*-{0}$".format(enviro), repo['id']):
-                    data = {'regex': name,
-                            'repoid': repo['id']}
+            regex = re.compile("%s" % (name))
 
-                    _r = self.connectors[enviro].post(query, data)
+            for pkg in pkg_list:
+                if _r.status_code != Constants.PULP_POST_OK:
+                    _r.raise_for_status()
 
-                    if _r.status_code != Constants.PULP_POST_OK:
-                        _r.raise_for_status()
-
-                    for pkg in juicer.utils.load_json_str(_r.content):
-                        output.append(pkg['filename'])
-                        output.append(repo['id'])
+                if regex.search(pkg['name']):
+                    output.append(pkg['name'])
 
         return output
