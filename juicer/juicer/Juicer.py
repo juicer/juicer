@@ -74,52 +74,69 @@ class Juicer(object):
 
         return juicer.utils.load_json_str(_r.content)
 
+    # provides a simple interface for the pulp upload API
+    def _upload_rpm(self, package):
+        ts = rpm.TransactionSet()
+        ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+
+        rpm_fd = open(package, 'rb')
+        pkg = ts.hdrFromFdno(rpm_fd)
+        name = pkg['name']
+        version = pkg['version']
+        release = pkg['release']
+        epoch = 0
+        arch = pkg['arch']
+        nvrea = tuple((name, version, release, epoch, arch))
+        cksum = hashlib.md5(package).hexdigest()
+        size = os.path.getsize(package)
+
+        # initiate uploade
+        upload_id = self._init_up(name=name, cksum=cksum, size=size)
+
+        # read in rpm
+        while True:
+            rpm_data = rpm_fd.read(10485760)
+
+            if not rpm_data:
+                break
+
+            upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
+
+        # finalize upload
+        if upload_flag == True:
+            code = self._import_up(uid=upload_id, name=name, cksum=cksum, \
+                nvrea=nvrea, size=size)
+
+        rpm_fd.close()
+
     # this is used to upload files to pulp
     def upload(self, items=[], repos=[], envs=[], output=[]):
         if envs == None:
             envs = ['re']
 
-        ts = rpm.TransactionSet()
-
         for item in items:
+            # path/to/package.rpm
             if os.path.isfile(item):
                 # process individual file
-                rpm_fd = open(item, 'rb')
-                pkg = ts.hdrFromFdno(rpm_fd)
-                name = pkg['name']
-                version = pkg['version']
-                release = pkg['release']
-                epoch = 0
-                arch = pkg['arch']
-                nvrea = tuple((name, version, release, epoch, arch))
-                cksum = hashlib.md5(item).hexdigest()
-                size = os.path.getsize(item)
+                self._upload_rpm(item)
 
-                # initiate uploade
-                upload_id = self._init_up(name=name, cksum=cksum, size=size)
-
-                # read in rpm
-                while True:
-                    rpm_data = rpm_fd.read(10485760)
-
-                    if not rpm_data:
-                        break
-
-                    upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
-
-                # finalize upload
-                if upload_flag == True:
-                    code = self._import_up(uid=upload_id, name=name, cksum=cksum, \
-                        nvrea=nvrea, size=size)
-
-                rpm_fd.close()
-
+            # path/to/packages/
             elif os.path.isdir(item):
-                # process dir
-                output.append('dir')
+                # process files in dir
+                for package in os.listdir(item):
+                    if not re.match('.*\.rpm$', package):
+                        output.append('{} is not an rpm. skipping!'.format(package))
+                        continue
+
+                    full_path = item + package
+
+                    self._upload_rpm(full_path)
+
+            # https://path.to/package.rpm
             elif re.match('https?://.*', item):
                 # download item and upload
                 output.append('url')
+
             else:
                 # TODO raise an actual error
                 output.append('No! Bad!')
