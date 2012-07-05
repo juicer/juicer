@@ -34,42 +34,44 @@ class Juicer(object):
     # starts the 3-step upload process
     def _init_up(self, query='/services/upload/', name='', cksum='', size='', \
             env='re'):
-        data = {'name':name,
-                'checksum':cksum,
-                'size':size}
+        data = {'name': name,
+                'checksum': cksum,
+                'size': size}
 
         _r = self.connectors[env].post(query, data)
         uid = juicer.utils.load_json_str(_r.content)['id']
 
         return uid
- 
+
     # continues 3-step upload process. this is where actual data transfer
     # occurs!
-    def _append_up(self, query='/services/upload/append/', uid='', fdata='', env='re'):
+    def _append_up(self, query='/services/upload/append/', uid='', fdata='', \
+                    env='re'):
         uri = query + uid + '/'
-        data = {'file-id':uid,
-                'file-data':fdata.decode('utf-8', 'replace')}
+        data = {'file-id': uid,
+                'file-data': fdata.decode('utf-8', 'replace')}
 
         _r = self.connectors[env].put(uri, data)
 
         return juicer.utils.load_json_str(_r.content)
 
     # finalizes the 3-step upload process. this is where metadata is set
-    def _import_up(self, query='/services/upload/import/', uid='', name='', ftype='rpm', \
-            cksum='', htype='md5', nvrea='', size='', lic='', group='', vendor='', \
-            req='', env='re'):
-        data = {'uploadid':uid,
-                'metadata':{
-                    'type':ftype,
-                    'checksum':cksum,
-                    'hashtype':htype,
-                    'pkgname':name,
-                    'nvrea':nvrea,
-                    'size':size,
-                    'license':lic,
-                    'group':group,
-                    'vendor':vendor,
-                    'requires':req}}
+    def _import_up(self, query='/services/upload/import/', uid='', name='', \
+                    ftype='rpm', \ cksum='', htype='md5', nvrea='', size='', \
+                    lic='', group='', vendor='', \
+                    req='', env='re'):
+        data = {'uploadid': uid,
+                'metadata': {
+                    'type': ftype,
+                    'checksum': cksum,
+                    'hashtype': htype,
+                    'pkgname': name,
+                    'nvrea': nvrea,
+                    'size': size,
+                    'license': lic,
+                    'group': group,
+                    'vendor': vendor,
+                    'requires': req}}
 
         _r = self.connectors[env].post(query, data)
 
@@ -129,7 +131,8 @@ class Juicer(object):
                 # process files in dir
                 for package in os.listdir(item):
                     if not re.match('.*\.rpm$', package):
-                        output.append('{} is not an rpm. skipping!'.format(package))
+                        output.append('{0} is not an rpm. skipping!'.format(
+                            package))
                         continue
 
                     full_path = item + package

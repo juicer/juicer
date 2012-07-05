@@ -148,14 +148,15 @@ class Parser(object):
         # create the 'upload' sub-parser
         parser_upload = subparsers.add_parser('upload', \
                 help='Upload an item into pulp', \
-                usage='%(prog)s item [item ...] [-r repo [repo ...]] [--in environment [environment ...]]')
+                usage='%(prog)s item [item ...] [-r repo [repo ...]] \
+                [--in environment [environment ...]]')
 
         parser_upload.add_argument('item', metavar='item', \
-                nargs = '+', \
-                help = 'an item (rpm, directory or url) to be uploaded')
+                nargs='+', \
+                help='an item (rpm, directory or url) to be uploaded')
 
         parser_upload.add_argument('-r', nargs='*', metavar='repo', \
-                dest = 'repos', \
+                dest='repos', \
                 default=[], help='The repo(s) to upload into.')
 
         parser_upload.add_argument('--in', nargs='*', \

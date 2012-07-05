@@ -19,6 +19,7 @@ import juicer.utils
 import juicer.utils.Log
 import requests
 
+
 class JuicerCommon(object):
     def __init__(self, connect_params):
         self.base_url = connect_params['base_url']

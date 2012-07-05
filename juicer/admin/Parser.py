@@ -42,8 +42,8 @@ class Parser(object):
                                             help='The name of your repo')
 
         parser_create_repo.add_argument('--arch', metavar='arch', \
-                                            default='noarch', \
-                                            help='The architecture of your repo')
+                                        default='noarch', \
+                                        help='The architecture of your repo')
 
         parser_create_repo.add_argument('--feed', metavar='feed', \
                                             help='A feed repo for your repo')
@@ -91,8 +91,8 @@ class Parser(object):
                                             help='Updated name of user')
 
         parser_update_user.add_argument('--login', metavar='login', \
-                                            dest='login', \
-                                            help='Login user id for user to update')
+                                    dest='login', \
+                                    help='Login user id for user to update')
 
         parser_update_user.add_argument('--password', metavar='password', \
                                         dest='password', \

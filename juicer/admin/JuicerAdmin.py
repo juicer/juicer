@@ -63,7 +63,8 @@ class JuicerAdmin(object):
                 'password': self.args.password,
                 'name': self.args.name}
 
-        juicer.utils.Log.log_debug("Create User: %s ('%s')", self.args.login, self.args.name)
+        juicer.utils.Log.log_debug("Create User: %s ('%s')", self.args.login, \
+                self.args.name)
 
         for env in self.args.envs:
             if juicer.utils.user_exists_p(self.args, self.connectors[env]):
@@ -122,7 +123,8 @@ class JuicerAdmin(object):
         """
         List repositories in specified environments
         """
-        juicer.utils.Log.log_debug("List Repos In: %s", ", ".join(self.args.envs))
+        juicer.utils.Log.log_debug(
+                "List Repos In: %s", ", ".join(self.args.envs))
 
         for env in self.args.envs:
             _r = self.connectors[env].get(query)
@@ -136,7 +138,8 @@ class JuicerAdmin(object):
 
     def role_add(self, query='/roles/', output=[]):
         data = {'username': self.args.login}
-        juicer.utils.Log.log_debug("Add Role '%s' to '%s'", self.args.role, self.args.login)
+        juicer.utils.Log.log_debug(
+                "Add Role '%s' to '%s'", self.args.role, self.args.login)
 
         for env in self.args.envs:
             url = "%s%s/add/" % (query, self.args.role)
@@ -203,17 +206,19 @@ class JuicerAdmin(object):
         """
         Update user information
         """
-        juicer.utils.Log.log_debug("Update user information %s" % (self.args.login))
+        juicer.utils.Log.log_debug(
+                "Update user information %s" % (self.args.login))
 
         data = {'login': self.args.login,
                 'name': self.args.name,
                 'password': self.args.password}
-        
+
         query = "%s%s/" % (query, self.args.login)
 
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output[env] = "User `%s` does not exist in %s" % (self.args.login, env)
+                output[env] = "User `%s` does not exist in %s" % \
+                        (self.args.login, env)
             else:
                 _r = self.connectors[env].put(query, data)
                 if _r.status_code == Constants.PULP_PUT_OK:
