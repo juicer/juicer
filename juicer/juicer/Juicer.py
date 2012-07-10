@@ -179,9 +179,9 @@ class Juicer(object):
                     repo_items_hash[repo].append(match)
 
         output.append(repo_items_hash)
-        output.append("Writing cart to disk: %s.json" % cart_name)
+        juicer.utils.Log.log_info("Writing cart (%s) to disk" % cart_name)
 
-        juicer.utils.write_json_document(cart_name + ".json", repo_items_hash)
+        juicer.utils.write_json_document(cart_name, repo_items_hash)
 
         return output
 

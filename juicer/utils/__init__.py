@@ -145,7 +145,11 @@ def read_json_document(title):
     datastructure.
     """
     if not title.endswith('.json'):
+        juicer.utils.Log.log_warn("File name (%s) does not end with '.json', appending it automatically." % title)
         title += '.json'
+
+    if not os.path.exists(title):
+        raise IOError("Could not find file: '%s'" % title)
 
     try:
         f = open(title, 'r')

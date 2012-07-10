@@ -27,6 +27,7 @@ class Parser(object):
         juicer.juicer.parser = self.parser
 
         self.parser.add_argument('-v', action='count', \
+                                default=1, \
                                 help='Increase the verbosity (up to 3x)')
 
         ##################################################################
