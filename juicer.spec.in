@@ -17,6 +17,7 @@ BuildArch: noarch
 BuildRequires: python2-devel
 
 Requires: python-requests >= 0.13.1
+Requires: rpm-python
 
 
 %description
