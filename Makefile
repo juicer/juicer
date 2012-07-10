@@ -116,7 +116,7 @@ clean:
 	@echo "Cleaning up RPM building stuff"
 	rm -rf MANIFEST rpm-build
 
-cleaner:
+cleaner: clean
 	@echo "Cleaning up harder"
 	rm -f setup.py juicer.spec juicer/__init__.py
 
@@ -129,7 +129,7 @@ install:
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: juicer.spec setup.py sdist docs juicer/__init__.py
+rpmcommon: juicer/__init__.py juicer.spec setup.py sdist docs 
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
