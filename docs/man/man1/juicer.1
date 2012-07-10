@@ -37,7 +37,7 @@ juicer sub\-command [OPTIONS \&...] [PARAMETERS \&...]
 Create, edit, update, and publish release carts\&.
 .SH "CREATE"
 .sp
-juicer create CARTNAME \-r REPONAME item1 [ item2, [ \&...]]
+usage: juicer create CARTNAME \-r REPONAME item1 [ item2, [ \&...]]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -60,7 +60,7 @@ into
 .RE
 .SH "EDIT"
 .sp
-juicer edit CARTNAME
+usage: juicer edit CARTNAME
 .sp
 Interactively edit a release cart\&.
 .PP
@@ -70,7 +70,7 @@ The name of your release cart\&.
 .RE
 .SH "SHOW"
 .sp
-juicer show CARTNAME
+usage: juicer show CARTNAME
 .sp
 Print the contents of a cart\&.
 .PP
@@ -80,7 +80,7 @@ The release cart to show\&.
 .RE
 .SH "UPDATE"
 .sp
-juicer update CARTNAME item1 [ item2 [ \&... ] ]
+usage: juicer update CARTNAME item1 [ item2 [ \&... ] ]
 .sp
 Update a release cart with items\&.
 .PP
@@ -95,7 +95,7 @@ The items to update in the cart\&.
 .RE
 .SH "CREATE-LIKE"
 .sp
-juicer create\-like CARTNAME OLDCARTNAME item1 [ item2 [ \&...] ]
+usage: juicer create\-like CARTNAME OLDCARTNAME item1 [ item2 [ \&...] ]
 .sp
 Create a new cart based off an existing one\&.
 .PP
@@ -115,7 +115,7 @@ Items to update in the cart\&.
 .RE
 .SH "PUBLISH"
 .sp
-juicer publish CARTNAME
+usage: juicer publish CARTNAME
 .sp
 Publishes/Updates a cart on the pulp server\&.
 .PP
@@ -125,7 +125,7 @@ The name of the cart to publish\&.
 .RE
 .SH "CART-SEARCH"
 .sp
-juicer cart\-search CARTNAME
+usage: juicer cart\-search CARTNAME
 .sp
 Search for a cart in pulp\&.
 .PP
@@ -135,7 +135,7 @@ The name of the cart to search for\&.
 .RE
 .SH "RPM-SEARCH"
 .sp
-juicer rpm\-search [\-r REPO [\&...]] [\-\-in ENVIRONMENT [\&...]]
+usage: juicer rpm\-search [\-r REPO [\&...]] [\-\-in ENVIRONMENT [\&...]]
 .sp
 Search for an RPM in pulp
 .PP
