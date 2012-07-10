@@ -104,21 +104,21 @@ pyflakes:
 
 clean:
 	@echo "Cleaning up distutils stuff"
-	rm -rf build dist MANIFEST
+	@rm -rf build dist MANIFEST
 	@echo "Cleaning up byte compiled python stuff"
-	find . -type f -regex ".*\.py[co]$$" -delete
+	@find . -type f -regex ".*\.py[co]$$" -delete
 	@echo "Cleaning up editor backup files"
-	find . -type f \( -name "*~" -or -name "#*" \) -delete
-	find . -type f \( -name "*.swp" \) -delete
+	@find . -type f \( -name "*~" -or -name "#*" \) -delete
+	@find . -type f \( -name "*.swp" \) -delete
 	@echo "Cleaning up asciidoc to man transformations and results"
-	find ./docs/man -type f -name "*.xml" -delete
-	find ./docs/man -type f -name "*.asciidoc" -delete
+	@find ./docs/man -type f -name "*.xml" -delete
+	@find ./docs/man -type f -name "*.asciidoc" -delete
 	@echo "Cleaning up RPM building stuff"
-	rm -rf MANIFEST rpm-build
+	@rm -rf MANIFEST rpm-build
 
 cleaner: clean
 	@echo "Cleaning up harder"
-	rm -f setup.py juicer.spec juicer/__init__.py
+	@rm -f setup.py juicer.spec juicer/__init__.py
 
 python:
 	python setup.py build
