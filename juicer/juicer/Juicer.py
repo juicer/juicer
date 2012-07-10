@@ -159,6 +159,22 @@ class Juicer(object):
 
         return output
 
+    def create(self, cart_name, payload, output=[]):
+        """
+        `name` - Name of this release cart
+        `payload` - list of ['reponame', item1, ..., itemN] lists
+        """
+        output.append("Creating cart " + cart_name)
+        repo_items_hash = {}
+
+        for repo_items in payload:
+            repo = repo_items[0]
+            rpms = repo_items[1:]
+            repo_items_hash[repo] = rpms
+            output.append(repo_items_hash)
+
+        return output
+
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
 

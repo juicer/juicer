@@ -38,17 +38,20 @@ class Parser(object):
        ##################################################################
        # Create the 'create' sub-parser
         parser_create = subparsers.add_parser('create', \
-                help='Create a cart with the items specified.')
+                help='Create a cart with the items specified.', \
+                usage='%(prog)s CARTNAME -r REPONAME items ... [ -r REPONAME items ...]')
 
-        parser_create.add_argument('cart-name', metavar='cartname', \
+        parser_create.add_argument('cartname', metavar='cart-name', \
                                        help='Cart name')
 
         parser_create.add_argument('-r', metavar='reponame', \
-                                       help='Repo name')
+                                       action='append', \
+                                       nargs='+', \
+                                       help='Destination repo name')
 
-        parser_create.add_argument('items', metavar='items', \
-                                       nargs="+", \
-                                       help='ITEM')
+        # parser_create.add_argument('items', metavar='items', \
+        #                                nargs="+", \
+        #                                help='RPMs')
 
         parser_create.set_defaults(j=juicer.juicer.create)
 

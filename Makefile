@@ -173,3 +173,7 @@ test:
 	else \
 		./hacking/tests; \
 	fi
+
+rpminstall: rpm
+	rpm -e juicer
+	rpm -Uvh rpm-build/noarch/$(RPMNVR).noarch.rpm

@@ -19,8 +19,9 @@ from juicer.juicer.Juicer import Juicer as j
 from pprint import pprint as pp
 
 
-def create():
-    pass
+def create(args):
+    pulp = j(args)
+    pp(pulp.create(args.cartname, args.r))
 
 
 def edit():
