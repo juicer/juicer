@@ -122,7 +122,7 @@ clean:
 
 cleaner: clean
 	@echo "Cleaning up harder"
-	@rm -f setup.py juicer.spec juicer/__init__.py
+	@rm -f setup.py juicer.spec
 
 python:
 	python setup.py build
