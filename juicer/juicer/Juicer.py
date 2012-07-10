@@ -75,7 +75,10 @@ class Juicer(object):
 
         _r = self.connectors[env].post(query, data)
 
-        return juicer.utils.load_json_str(_r.content)
+        if not _r.status_code == Constants.PULP_POST_OK:
+            _r.raise_for_status()
+
+        return juicer.utils.load_json_str(_r.content)['id']
 
     # provides a simple interface for the pulp upload API
     def _upload_rpm(self, package, env):
@@ -105,70 +108,85 @@ class Juicer(object):
 
             upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
 
+        rpm_fd.close()
+
         # finalize upload
         if upload_flag == True:
-            code = self._import_up(uid=upload_id, name=name, cksum=cksum, \
+            rpm_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
                 nvrea=nvrea, size=size)
 
-        # create a package in pulp
-        data = {'name': name,
-                'epoch': epoch,
-                'version': version,
-                'release': release,
-                'arch': arch,
-                'filename': package}
+        return rpm_id
 
-        _r = self.envs[env].post('/packages/', data)
+    # provides a simple interface to include an rpm in a pulp repo
+    def _include_rpm(self, pkgid, env, repoid):
+        query = '/repositories/' + repoid + '/add_package/'
+        data = {'packageid': pkgid}
 
-        if not juicer.common.load_json_str(_r.content) == Constants.PULP_POST_CREATED:
+        _r = self.connectors[env].post(query, data)
+
+        if not _r.status_code == Constants.PULP_POST_OK:
+            print _r.content
             _r.raise_for_status()
 
-        rpm_fd.close()
+    def _generate_metadata(self, env, repoid):
+        query = '/repositories/' + repoid + '/generate_metadata/'
+
+        _r = self.connectors[env].post(query)
+
+        if (not _r.status_code == Constants.PULP_POST_ACCEPTED) or (not _r.status_code == Constants.PULP_POST_CONFLICT):
+            _r.raise_for_status()
 
     # this is used to upload files to pulp
     def upload(self, items=[], repos=[], envs=[], output=[]):
 
         for env in envs:
-            for item in items:
-                # path/to/package.rpm
-                if os.path.isfile(item):
-                    # process individual file
-                    if not re.match('.*\.rpm', item):
-                        raise TypeError("{0} is not an rpm".format(item))
+            self.connectors[env].delete('/packages/de68218d-7e1d-4498-bd63-ac1a11570a06/')
+            for repo in repos:
+                for item in items:
+                    # path/to/package.rpm
+                    if os.path.isfile(item):
+                        # process individual file
+                        if not re.match('.*\.rpm', item):
+                            raise TypeError("{0} is not an rpm".format(item))
 
-                    self._upload_rpm(item, env)
+                        rpm_id = self._upload_rpm(item, env)
+                        self._include_rpm(rpm_id, env, repo)
 
-                # path/to/packages/
-                elif os.path.isdir(item):
-                    # process files in dir
-                    for package in os.listdir(item):
-                        if not re.match('.*\.rpm$', package):
-                            output.append('{0} is not an rpm. skipping!'.format(
-                                package))
-                            continue
+                    # path/to/packages/
+                    elif os.path.isdir(item):
+                        # process files in dir
+                        for package in os.listdir(item):
+                            if not re.match('.*\.rpm$', package):
+                                output.append('{0} is not an rpm. skipping!'.format(
+                                    package))
+                                continue
 
-                        full_path = item + package
+                            full_path = item + package
 
-                        self._upload_rpm(full_path, env)
+                            rpm_id = self._upload_rpm(full_path, env)
+                            self._include_rpm(rpm_id, env, repo)
 
-                # https://path.to/package.rpm
-                elif re.match('https?://.*', item):
-                    # download item and upload
-                    if not re.match('.*\.rpm', item):
-                        raise TypeError('{0} is not an rpm'.format(item))
+                    # https://path.to/package.rpm
+                    elif re.match('https?://.*', item):
+                        # download item and upload
+                        if not re.match('.*\.rpm', item):
+                            raise TypeError('{0} is not an rpm'.format(item))
 
-                    filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
-                    remote = requests.get(item, env)
+                        filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
+                        remote = requests.get(item, env)
 
-                    with open(filename, 'wb') as data:
-                        data.write(remote.content())
+                        with open(filename, 'wb') as data:
+                            data.write(remote.content())
 
-                    self._upload_rpm(filename)
+                        rpm_id = self._upload_rpm(filename)
+                        self._include_rpm(rpm_id, env, repo)
 
-                    os.remove(filename)
+                        os.remove(filename)
 
-                else:
-                    raise TypeError("what even is this?")
+                    else:
+                        raise TypeError("what even is this?")
+                
+                self._generate_metadata(env, repo)
 
         return output
 

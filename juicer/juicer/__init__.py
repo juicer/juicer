@@ -61,7 +61,7 @@ def rpmsearch(args):
 
 def upload(args):
     pulp = j(args)
-    pp(pulp.upload(items=args.item))
+    pp(pulp.upload(items=args.item, repos=args.repos, envs=args.environment))
 
 
 def hello(args):
