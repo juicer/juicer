@@ -106,7 +106,10 @@ def print_log_msg(log_level, msg):
     try:
         for l in msg.split("\n"):
             if ll in Log.LOG_TO_STDOUT:
-                print "%s: %s" % (log_level, l)
+                if log_level == "info":
+                    print l
+                else:
+                    print "%s: %s" % (log_level, l)
             else:
                 juicer.utils.print_stderr("%s[%s]: %s\n" %\
                         (log_level, debug_info, l))

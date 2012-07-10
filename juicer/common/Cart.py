@@ -15,3 +15,50 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import juicer.utils
+
+
+class Cart(object):
+    def __init__(self, name):
+        self.name = name
+        self.repo_items_hash = {}
+
+    def add_repo(self, name, items):
+        """
+        Build up repos
+
+        `name` - Name of this repo.
+        `items` - List of paths to rpm.
+        """
+        self.repo_items_hash[name] = []
+
+        for item in items:
+            for match in juicer.utils.find_pattern(item):
+                self.repo_items_hash[name].append(match)
+
+        self.repo_items_hash[name] = juicer.utils.dedupe(self.repo_items_hash[name])
+
+    def load(self, json_file):
+        """
+        Build a cart from a json file
+        """
+        cart_body = juicer.utils.read_json_document(json_file)
+
+        for cart, items in cart_body.iteritems():
+            self.add_repo(cart, items)
+
+    def save(self):
+        juicer.utils.write_json_document(self.name, self.repo_items_hash)
+
+    def __str__(self):
+        output = []
+
+        for repo, items in self.repo_items_hash.iteritems():
+            output.append(repo.upper())
+            # Underline the repo name
+            output.append("-" * len(repo))
+            # Add all the RPMs
+            output.extend(items)
+            output.append('')
+
+        return "\n".join(output)

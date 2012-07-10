@@ -15,13 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import juicer.utils.Log
 from juicer.juicer.Juicer import Juicer as j
 from pprint import pprint as pp
 
 
 def create(args):
     pulp = j(args)
-    pp(pulp.create(args.cartname, args.r))
+    juicer.utils.Log.log_info("Creating cart '%s'." % args.cartname)
+    cart = pulp.create(args.cartname, args.r)
+    juicer.utils.Log.log_info("Saved cart '%s'." % args.cartname)
+    print cart
 
 
 def edit():
@@ -30,7 +34,8 @@ def edit():
 
 def show(args):
     pulp = j(args)
-    pulp.show(args.cartname)
+    cart = pulp.show(args.cartname)
+    print cart
 
 
 def update():
@@ -57,6 +62,7 @@ def rpmsearch(args):
 def upload(args):
     pulp = j(args)
     pp(pulp.upload(items=args.item))
+
 
 def hello(args):
     pulp = j(args)

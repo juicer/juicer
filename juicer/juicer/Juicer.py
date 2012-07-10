@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
+import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
 import re
@@ -159,47 +160,30 @@ class Juicer(object):
 
         return output
 
-    def create(self, cart_name, payload):
+    def create(self, cart_name, cart_description):
         """
         `name` - Name of this release cart
-        `payload` - list of ['reponame', item1, ..., itemN] lists
+        `cart_description` - list of ['reponame', item1, ..., itemN] lists
         """
-        juicer.utils.Log.log_info("Creating cart '%s'." % cart_name)
-        repo_items_hash = {}
+        cart = juicer.common.Cart.Cart(cart_name)
 
         # repo_items is a list that starts with the REPO name,
         # followed by the ITEMS going into the repo.
-        for repo_items in payload:
+        for repo_items in cart_description:
             repo = repo_items[0]
             items = repo_items[1:]
             juicer.utils.Log.log_debug("Processing %s input items for repo '%s'." % (len(items), repo))
-            repo_items_hash[repo] = []
 
-            for item in items:
-                for match in juicer.utils.find_pattern(item):
-                    repo_items_hash[repo].append(match)
+            cart.add_repo(repo, items)
 
-            repo_items_hash[repo] = juicer.utils.dedupe(repo_items_hash[repo])
+        cart.save()
 
-        output = repo_items_hash
-        juicer.utils.Log.log_info("Writing cart '%s' to disk with items:" % cart_name)
+        return cart
 
-        juicer.utils.write_json_document(cart_name, repo_items_hash)
-
-        return output
-
-    def show(self, cart_name, output=[]):
-        cart_body = juicer.utils.read_json_document(cart_name)
-
-        for repo, items in cart_body.iteritems():
-            output.append(repo.upper())
-            # Underline the repo name
-            output.append("-" * len(repo))
-            # Add all the RPMs
-            output.extend(items)
-            output.append('')
-
-        print "\n".join(output)
+    def show(self, cart_name):
+        cart = juicer.common.Cart.Cart(cart_name)
+        cart.load(cart_name)
+        return str(cart)
 
     def search_cart(self, query='/services/search/cart', output=[]):
         pass
