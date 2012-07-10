@@ -24,7 +24,7 @@ Create, edit, update, and publish release carts.
 
 CREATE
 ------
-juicer create CARTNAME -r REPONAME item1 [ item2, [ ...]]
+usage: juicer create CARTNAME -r REPONAME item1 [ item2, [ ...]]
 
 Create a cart with the items specified.
 
@@ -41,7 +41,7 @@ Install a group of 'ITEMS' into 'REPONAME'.
 
 EDIT
 ----
-juicer edit CARTNAME
+usage: juicer edit CARTNAME
 
 Interactively edit a release cart.
 
@@ -52,7 +52,7 @@ The name of your release cart.
 
 SHOW
 ----
-juicer show CARTNAME
+usage: juicer show CARTNAME
 
 Print the contents of a cart.
 
@@ -63,7 +63,7 @@ The release cart to show.
 
 UPDATE
 ------
-juicer update CARTNAME item1 [ item2 [ ... ] ]
+usage: juicer update CARTNAME item1 [ item2 [ ... ] ]
 
 Update a release cart with items.
 
@@ -77,7 +77,7 @@ The items to update in the cart.
 
 CREATE-LIKE
 -----------
-juicer create-list CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
+usage: juicer create-like CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
 
 Create a new cart based off an existing one.
 
@@ -94,7 +94,7 @@ Items to update in the cart.
 
 PUBLISH
 -------
-juicer publish CARTNAME
+usage: juicer publish CARTNAME
 
 Publishes/Updates a cart on the pulp server.
 
@@ -105,7 +105,7 @@ The name of the cart to publish.
 
 CART-SEARCH
 -----------
-juicer cart-search CARTNAME
+usage: juicer cart-search CARTNAME
 
 Search for a cart in pulp.
 
@@ -116,7 +116,7 @@ The name of the cart to search for.
 
 RPM-SEARCH
 ----------
-juicer rpm-search [-r REPO [...]] [--in ENVIRONMENT [...]]
+usage: juicer rpm-search [-r REPO [...]] [--in ENVIRONMENT [...]]
 
 Search for an RPM in pulp
 
