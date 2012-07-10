@@ -171,8 +171,8 @@ class Juicer(object):
             repo = repo_items[0]
             rpms = repo_items[1:]
             repo_items_hash[repo] = rpms
-            output.append(repo_items_hash)
 
+        output.append(repo_items_hash)
         return output
 
     def search_cart(self, query='/services/search/cart', output=[]):
