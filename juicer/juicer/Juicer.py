@@ -159,12 +159,12 @@ class Juicer(object):
 
         return output
 
-    def create(self, cart_name, payload, output=[]):
+    def create(self, cart_name, payload):
         """
         `name` - Name of this release cart
         `payload` - list of ['reponame', item1, ..., itemN] lists
         """
-        output.append("Creating cart " + cart_name)
+        juicer.utils.Log.log_info("Creating cart '%s'." % cart_name)
         repo_items_hash = {}
 
         # repo_items is a list that starts with the REPO name,
@@ -172,14 +172,17 @@ class Juicer(object):
         for repo_items in payload:
             repo = repo_items[0]
             items = repo_items[1:]
+            juicer.utils.Log.log_debug("Processing %s input items for repo '%s'." % (len(items), repo))
             repo_items_hash[repo] = []
 
             for item in items:
                 for match in juicer.utils.find_pattern(item):
                     repo_items_hash[repo].append(match)
 
-        output.append(repo_items_hash)
-        juicer.utils.Log.log_info("Writing cart (%s) to disk" % cart_name)
+            repo_items_hash[repo] = juicer.utils.dedupe(repo_items_hash[repo])
+
+        output = repo_items_hash
+        juicer.utils.Log.log_info("Writing cart '%s' to disk with items:" % cart_name)
 
         juicer.utils.write_json_document(cart_name, repo_items_hash)
 

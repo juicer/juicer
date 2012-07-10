@@ -134,15 +134,10 @@ def write_json_document(title, body):
     if os.path.exists(title):
         juicer.utils.Log.log_warn("Cart file '%s' already exists, overwriting with new data." % title)
 
-    try:
-        f = open(title, 'w')
-        f.write(json_body)
-        f.flush()
-        f.close()
-    except e:
-        # TODO: Something helpful
-        print e
-        raise
+    f = open(title, 'w')
+    f.write(json_body)
+    f.flush()
+    f.close()
 
 
 def read_json_document(title):
@@ -157,14 +152,9 @@ def read_json_document(title):
     if not os.path.exists(title):
         raise IOError("Could not find file: '%s'" % title)
 
-    try:
-        f = open(title, 'r')
-        doc = f.read()
-        f.close()
-    except e:
-        # TODO: Something helpful
-        print e
-        raise
+    f = open(title, 'r')
+    doc = f.read()
+    f.close()
 
     return load_json_str(doc)
 
@@ -185,3 +175,10 @@ def find_pattern(search_base, pattern='*.rpm'):
         for root, dirs, files in os.walk(search_base):
             for filename in fnmatch.filter(files, pattern):
                 yield os.path.join(root, filename)
+
+
+def dedupe(l):
+    """
+    Remove duplicates from a list.
+    """
+    return list(set(l))
