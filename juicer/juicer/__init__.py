@@ -56,3 +56,7 @@ def rpmsearch(args):
 def upload(args):
     pulp = j(args)
     pp(pulp.upload(items=args.item))
+
+def hello(args):
+    pulp = j(args)
+    pp(pulp.hello(envs=args.environment))

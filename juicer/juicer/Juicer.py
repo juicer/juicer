@@ -207,3 +207,6 @@ class Juicer(object):
                     output.append(pkg['name'])
 
         return output
+
+    def hello(self, envs=[], output=[]):
+        pass

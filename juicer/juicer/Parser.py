@@ -29,14 +29,14 @@ class Parser(object):
         self.parser.add_argument('-v', action='count', \
                                 help='Increase the verbosity (up to 3x)')
 
-       ##################################################################
-       # Keep the different commands separate
+        ##################################################################
+        # Keep the different commands separate
         subparsers = self.parser.add_subparsers(title='Commands', \
            dest='command', \
            description='\'%(prog)s COMMAND -h\' for individual help topics')
 
-       ##################################################################
-       # Create the 'create' sub-parser
+        ##################################################################
+        # Create the 'create' sub-parser
         parser_create = subparsers.add_parser('create', \
                 help='Create a cart with the items specified.', \
                 usage='%(prog)s CARTNAME -r REPONAME items ... [ -r REPONAME items ...]')
@@ -48,10 +48,6 @@ class Parser(object):
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name')
-
-        # parser_create.add_argument('items', metavar='items', \
-        #                                nargs="+", \
-        #                                help='RPMs')
 
         parser_create.set_defaults(j=juicer.juicer.create)
 
@@ -149,7 +145,7 @@ class Parser(object):
         ##################################################################
         # create the 'upload' sub-parser
         parser_upload = subparsers.add_parser('upload', \
-                help='Upload an item into pulp', \
+                help='Upload an item into pulp.', \
                 usage='%(prog)s item [item ...] [-r repo [repo ...]] \
                 [--in environment [environment ...]]')
 
@@ -167,3 +163,17 @@ class Parser(object):
                 dest='environment')
 
         parser_upload.set_defaults(j=juicer.juicer.upload)
+
+        ##################################################################
+        # create the 'hello' sub-parser
+        parser_hello = subparsers.add_parser('hello', \
+                help='Test your connection to the pulp server', \
+                usage='%(prog)s hello [--in env ...]')
+
+        parser_hello.add_argument('--in', nargs='*', \
+                metavar='environment', \
+                help='The environments to test the connection to.', \
+                default=['re', 'qa', 'stage', 'prod'], \
+                dest='environment')
+
+        parser_hello.set_defaults(j=juicer.juicer.hello)
