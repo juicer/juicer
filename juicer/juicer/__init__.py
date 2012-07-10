@@ -28,8 +28,9 @@ def edit():
     pass
 
 
-def show():
-    pass
+def show(args):
+    pulp = j(args)
+    pulp.show(args.cartname)
 
 
 def update():

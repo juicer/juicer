@@ -173,12 +173,24 @@ class Juicer(object):
             repo_items_hash[repo] = rpms
 
         output.append(repo_items_hash)
+        output.append("Writing cart to disk: %s.json" % cart_name)
 
-        for repo, items in repo_items_hash.iteritems():
-            out = self.upload(items, repos=[repo], envs=['re'])
-            output.append(out)
+        juicer.utils.write_json_document(cart_name + ".json", repo_items_hash)
 
         return output
+
+    def show(self, cart_name, output=[]):
+        cart_body = juicer.utils.read_json_document(cart_name + '.json')
+
+        for repo, items in cart_body.iteritems():
+            output.append(repo.upper())
+            # Underline the repo name
+            output.append("-" * len(repo))
+            # Add all the RPMs
+            output.extend(items)
+            output.append('')
+
+        print "\n".join(output)
 
     def search_cart(self, query='/services/search/cart', output=[]):
         pass

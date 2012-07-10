@@ -66,8 +66,8 @@ class Parser(object):
         parser_show = subparsers.add_parser('show', \
                 help='Print the contents of a cart.')
 
-        parser_show.add_argument('cart-name', metavar='name', \
-                                     help='The name of your cart')
+        parser_show.add_argument('cartname', metavar='name', \
+                                 help='The name of your cart')
 
         parser_show.set_defaults(j=juicer.juicer.show)
 
@@ -79,7 +79,7 @@ class Parser(object):
         parser_update.add_argument('cart-name', metavar='cartname', \
                                        help='The name of your release cart')
 
-        parser_show.add_argument('items', metavar='items', \
+        parser_update.add_argument('items', metavar='items', \
                                      nargs="+", \
                                      help='Cart name')
 

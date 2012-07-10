@@ -108,3 +108,40 @@ def flatten(x):
 def print_stderr(msg):
     sys.stderr.write(msg)
     sys.stderr.flush()
+
+
+def write_json_document(title, body):
+    """
+    `title` - Name of the file to write.
+    `body` - Python datastructure representing the document.
+
+    This method handles transforming the body into a proper json
+    string, and then writing the file to disk.
+    """
+    json_body = create_json_str(body)
+
+    try:
+        f = open(title, 'w')
+        f.write(json_body)
+        f.flush()
+        f.close()
+    except e:
+        # TODO: Something helpful
+        print e
+        raise
+
+def read_json_document(title):
+    """
+    Reads in a json document and returns a native python
+    datastructure.
+    """
+    try:
+        f = open(title, 'r')
+        doc = f.read()
+        f.close()
+    except e:
+        # TODO: Something helpful
+        print e
+        raise
+
+    return load_json_str(doc)
