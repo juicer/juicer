@@ -41,7 +41,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.create_test_repo()
         args = 'delete-repo test-repo-456'
         pulp = ja(self.parser.parser.parse_args(args.split()))
-        self.assertTrue(any('Deleted' in k for k in pulp.delete_repo()))
+        self.assertTrue(any('deleted' in k for k in pulp.delete_repo()))
 
     def test_list_repos(self):
         self.create_test_repo()
@@ -53,21 +53,21 @@ class TestJuicerAdmin(unittest.TestCase):
     def test_create_repo(self):
         args = 'create-repo test-repo-456'
         pulp = ja(self.parser.parser.parse_args(args.split()))
-        self.assertTrue(any('Created' in k for k in pulp.create_repo()))
+        self.assertTrue(any('created' in k for k in pulp.create_repo()))
         self.delete_test_repo()
 
     def test_create_user(self):
         args = 'create-user --login cjesop --password cjesop \
                 --name "ColonelJesop"'
         pulp = ja(self.parser.parser.parse_args(args.split()))
-        self.assertTrue(any('Success' in k for k in pulp.create_user()))
+        self.assertTrue(any('created' in k for k in pulp.create_user()))
         self.delete_test_user()
 
     def test_delete_user(self):
         self.create_test_user()
         args = 'delete-user cjesop'
         pulp = ja(self.parser.parser.parse_args(args.split()))
-        self.assertTrue(any('Success' in k for k in pulp.delete_user()))
+        self.assertTrue(any('deleted' in k for k in pulp.delete_user()))
 
     def test_show_user(self):
         self.create_test_user()
@@ -85,7 +85,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.create_test_user()
         args = 'role-add --login cjesop --role super-users'
         pulp = ja(self.parser.parser.parse_args(args.split()))
-        self.assertTrue(any('Success' in k for k in pulp.role_add()))
+        self.assertTrue(any('added' in k for k in pulp.role_add()))
         self.delete_test_user()
 
 if __name__ == '__main__':

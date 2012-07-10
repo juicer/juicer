@@ -42,17 +42,19 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug("Create Repo: %s", self.args.name)
 
         for env in self.args.envs:
-            data['relative_path'] = '/%s/%s/' % (env, self.args.name)
-            data['id'] = '-'.join([self.args.name, env])
-
-            _r = self.connectors[env].post(query, data)
-
-            if _r.status_code == Constants.PULP_POST_CREATED:
-                output.append("Created repository %s-%s" %\
-                        (self.args.name, env))
+            if juicer.utils.repo_exists_p(self.args, self.connectors[env], env):
+                output.append("repo `%s` already exists in %s... skipping!" %
+                              (self.args.name, env))
+                continue
             else:
-                _r.raise_for_status()
-
+                data['relative_path'] = '/%s/%s/' % (env, self.args.name)
+                data['id'] = '-'.join([self.args.name, env])
+                _r = self.connectors[env].post(query, data)
+                if _r.status_code == Constants.PULP_POST_CREATED:
+                    output.append("created repository `%s` in %s" %\
+                                      (self.args.name, env))
+                else:
+                    _r.raise_for_status()
         return output
 
     def create_user(self, query='/users/', output=[]):
@@ -68,15 +70,15 @@ class JuicerAdmin(object):
 
         for env in self.args.envs:
             if juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output.append("User with login `%s` aleady exists in %s" %
+                output.append("user `%s` aleady exists in %s... skipping!" %
                               (self.args.login, env))
                 continue
             else:
                 _r = self.connectors[env].post(query, data)
                 if _r.status_code == Constants.PULP_POST_CREATED:
                     output.append(
-                    "Successfully created user `%s` with login `%s` in %s" %
-                                  (self.args.name, self.args.login, env))
+                        "created user `%s` with login `%s` in %s" %
+                        (self.args.name, self.args.login, env))
                 else:
                     _r.raise_for_status()
         return output
@@ -88,13 +90,18 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
 
         for env in self.args.envs:
-            url = "%s%s-%s/" % (query, self.args.name, env)
-            _r = self.connectors[env].delete(url)
-            if _r.status_code == Constants.PULP_DELETE_ACCEPTED:
-                output.append("Deleted repository %s-%s" %\
-                        (self.args.name, env))
+            if not juicer.utils.repo_exists_p(self.args, self.connectors[env], env):
+                output.append("repo `%s` doesn't exist in %s... skipping!" %
+                              (self.args.name, env))
+                continue
             else:
-                _r.raise_for_status()
+                url = "%s%s-%s/" % (query, self.args.name, env)
+                _r = self.connectors[env].delete(url)
+                if _r.status_code == Constants.PULP_DELETE_ACCEPTED:
+                    output.append("deleted repository `%s` in %s" %\
+                                      (self.args.name, env))
+                else:
+                    _r.raise_for_status()
         return output
 
     def delete_user(self, query='/users/', output=[]):
@@ -105,7 +112,7 @@ class JuicerAdmin(object):
 
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output.append("User with login `%s` doesn't exist in %s" %
+                output.append("user `%s` doesn't exist in %s... skipping!" %
                               (self.args.login, env))
                 continue
             else:
@@ -113,7 +120,7 @@ class JuicerAdmin(object):
                 _r = self.connectors[env].delete(url)
                 if _r.status_code == Constants.PULP_DELETE_OK:
                     output.append(
-                        "Successfuly deleted user with login `%s` in %s" %
+                        "deleted user `%s` in %s" %
                                   (self.args.login, env))
                 else:
                     _r.raise_for_status()
@@ -142,15 +149,22 @@ class JuicerAdmin(object):
                 "Add Role '%s' to '%s'", self.args.role, self.args.login)
 
         for env in self.args.envs:
-            url = "%s%s/add/" % (query, self.args.role)
-            _r = self.connectors[env].post(url, data)
-            if _r.status_code == Constants.PULP_POST_OK:
-                output.append(
-                        "Successfuly added user `%s` to role `%s` in %s" %
-                              (self.args.login, self.args.role, env))
+            if not juicer.utils.role_exists_p(self.args, self.connectors[env]):
+                output.append("role `%s` doesn't exist in %s... skipping!" %
+                              (self.args.role, env))
+                continue
+            elif not juicer.utils.user_exists_p(self.args, self.connectors[env]):
+                output.append("user `%s` doesn't exist in %s... skipping!" %
+                              (self.args.login, env))
             else:
-                output.append("Could not add user `%s` to role `%s` in %s" %
-                              (self.args.login, self.args.role, env))
+                url = "%s%s/add/" % (query, self.args.role)
+                _r = self.connectors[env].post(url, data)
+                if _r.status_code == Constants.PULP_POST_OK:
+                    output.append(
+                        "added user `%s` to role `%s` in %s" %
+                        (self.args.login, self.args.role, env))
+                else:
+                    _r.raise_for_status()
         return output
 
     def show_repo(self, query='/repositories/', output=[]):
@@ -176,7 +190,7 @@ class JuicerAdmin(object):
 
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output[env] = ("User with login `%s` doesn't exist in %s" %
+                output[env] = ("user `%s` doesn't exist in %s... skipping!" %
                                 (self.args.login, env))
                 continue
             else:
@@ -217,8 +231,9 @@ class JuicerAdmin(object):
 
         for env in self.args.envs:
             if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
-                output[env] = "User `%s` does not exist in %s" % \
+                output[env] = "user `%s` does not exist in %s... skipping!" % \
                         (self.args.login, env)
+                continue
             else:
                 _r = self.connectors[env].put(query, data)
                 if _r.status_code == Constants.PULP_PUT_OK:

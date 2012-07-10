@@ -87,8 +87,14 @@ def user_exists_p(args, connector):
     return (_r.status_code == Constants.PULP_GET_OK)
 
 
+def repo_exists_p(args, connector, env):
+    url = '/repositories/' + args.name + '-' + env + '/'
+    _r = connector.get(url)
+    return (_r.status_code == Constants.PULP_GET_OK)
+
+
 def role_exists_p(args, connector):
-    url = connector.base_url + '/roles/' + args.role + '/'
+    url = '/roles/' + args.role + '/'
     _r = connector.get(url)
     return (_r.status_code == Constants.PULP_GET_OK)
 
