@@ -173,6 +173,11 @@ class Juicer(object):
             repo_items_hash[repo] = rpms
 
         output.append(repo_items_hash)
+
+        for repo, items in repo_items_hash.iteritems():
+            out = self.upload(items, repos=[repo], envs=['re'])
+            output.append(out)
+
         return output
 
     def search_cart(self, query='/services/search/cart', output=[]):
