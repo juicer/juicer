@@ -77,7 +77,7 @@ The items to update in the cart.
 
 CREATE-LIKE
 -----------
-juicer create-list CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
+juicer create-like CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
 
 Create a new cart based off an existing one.
 
