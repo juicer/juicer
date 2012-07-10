@@ -39,7 +39,7 @@ MANPAGES := docs/man/man1/juicer.1 docs/man/man1/juicer-admin.1 docs/man/man5/ju
 # VERSION file provides one place to update the software version.
 VERSION := $(shell cat VERSION)
 # All of these targets are rebuilt when the VERSION file is updated.
-juicer.spec setup.py: VERSION
+juicer/__init__.py juicer.spec setup.py: VERSION
 
 # RPM build parameters.
 RPMSPECDIR := .
@@ -85,6 +85,9 @@ juicer.spec: juicer.spec.in
 setup.py: setup.py.in
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
+juicer/__init__.py: juicer/__init__.py.in
+	sed "s/%VERSION%/$(VERSION)/" $< > $@
+
 pep8:
 	@echo "#############################################"
 	@echo "# Running PEP8 Compliance Tests"
@@ -115,7 +118,7 @@ clean:
 
 cleaner:
 	@echo "Cleaning up harder"
-	rm -f setup.py juicer.spec
+	rm -f setup.py juicer.spec juicer/__init__.py
 
 python:
 	python setup.py build
@@ -126,7 +129,7 @@ install:
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: juicer.spec setup.py sdist docs
+rpmcommon: juicer.spec setup.py sdist docs juicer/__init__.py
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
