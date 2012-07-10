@@ -12,6 +12,7 @@
 #   make rpm  ----------------- produce RPMs
 #   make docs ----------------- rebuild the manpages (results are checked in)
 #   make pyflakes, make pep8 -- source code checks  
+#   make test ----------------- run all unit tests (export LOG=true for /tmp/ logging)
 
 ########################################################
 
@@ -48,6 +49,9 @@ RPMVERSION := $(VERSION)
 RPMRELEASE = $(shell awk '/Release/{print $$2; exit}' < $(RPMSPEC).in | cut -d "%" -f1)
 RPMDIST = $(shell rpm --eval '%dist')
 RPMNVR = $(NAME)-$(RPMVERSION)-$(RPMRELEASE)$(RPMDIST)
+
+# Testing parameters.
+LOG ?= false
 
 ########################################################
 
@@ -161,6 +165,8 @@ koji: srpm
 
 test:
 	. ./hacking/setup-env
-	python juicer/tests/TestJuicerAdmin.py
-	python juicer/tests/TestJuicer.py
-
+	if [ "$(LOG)" = "true" ]; then \
+		./hacking/tests | tee /tmp/juicer_tests.log; \
+	else \
+		./hacking/tests; \
+	fi
