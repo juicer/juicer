@@ -78,7 +78,7 @@ class Juicer(object):
         return juicer.utils.load_json_str(_r.content)
 
     # provides a simple interface for the pulp upload API
-    def _upload_rpm(self, package):
+    def _upload_rpm(self, package, env):
         ts = rpm.TransactionSet()
         ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
 
@@ -110,51 +110,65 @@ class Juicer(object):
             code = self._import_up(uid=upload_id, name=name, cksum=cksum, \
                 nvrea=nvrea, size=size)
 
+        # create a package in pulp
+        data = {'name': name,
+                'epoch': epoch,
+                'version': version,
+                'release': release,
+                'arch': arch,
+                'filename': package}
+
+        _r = self.envs[env].post('/packages/', data)
+
+        if not juicer.common.load_json_str(_r.content) == Constants.PULP_POST_CREATED:
+            _r.raise_for_status()
+
         rpm_fd.close()
 
     # this is used to upload files to pulp
     def upload(self, items=[], repos=[], envs=[], output=[]):
 
-        for item in items:
-            # path/to/package.rpm
-            if os.path.isfile(item):
-                # process individual file
-                if not re.match('.*\.rpm', item):
-                    raise TypeError("{0} is not an rpm".format(item))
+        for env in envs:
+            for item in items:
+                # path/to/package.rpm
+                if os.path.isfile(item):
+                    # process individual file
+                    if not re.match('.*\.rpm', item):
+                        raise TypeError("{0} is not an rpm".format(item))
 
-                self._upload_rpm(item)
+                    self._upload_rpm(item, env)
 
-            # path/to/packages/
-            elif os.path.isdir(item):
-                # process files in dir
-                for package in os.listdir(item):
-                    if not re.match('.*\.rpm$', package):
-                        output.append('{0} is not an rpm. skipping!'.format(
-                            package))
-                        continue
+                # path/to/packages/
+                elif os.path.isdir(item):
+                    # process files in dir
+                    for package in os.listdir(item):
+                        if not re.match('.*\.rpm$', package):
+                            output.append('{0} is not an rpm. skipping!'.format(
+                                package))
+                            continue
 
-                    full_path = item + package
+                        full_path = item + package
 
-                    self._upload_rpm(full_path)
+                        self._upload_rpm(full_path, env)
 
-            # https://path.to/package.rpm
-            elif re.match('https?://.*', item):
-                # download item and upload
-                if not re.match('.*\.rpm', item):
-                    raise TypeError('{0} is not an rpm'.format(item))
+                # https://path.to/package.rpm
+                elif re.match('https?://.*', item):
+                    # download item and upload
+                    if not re.match('.*\.rpm', item):
+                        raise TypeError('{0} is not an rpm'.format(item))
 
-                filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
-                remote = requests.get(item)
+                    filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
+                    remote = requests.get(item, env)
 
-                with open(filename, 'wb') as data:
-                    data.write(remote.content())
+                    with open(filename, 'wb') as data:
+                        data.write(remote.content())
 
-                self._upload_rpm(filename)
+                    self._upload_rpm(filename)
 
-                os.remove(filename)
+                    os.remove(filename)
 
-            else:
-                raise TypeError("what even is this?")
+                else:
+                    raise TypeError("what even is this?")
 
         return output
 
