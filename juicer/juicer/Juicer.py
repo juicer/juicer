@@ -167,10 +167,16 @@ class Juicer(object):
         output.append("Creating cart " + cart_name)
         repo_items_hash = {}
 
+        # repo_items is a list that starts with the REPO name,
+        # followed by the ITEMS going into the repo.
         for repo_items in payload:
             repo = repo_items[0]
-            rpms = repo_items[1:]
-            repo_items_hash[repo] = rpms
+            items = repo_items[1:]
+            repo_items_hash[repo] = []
+
+            for item in items:
+                for match in juicer.utils.find_pattern(item):
+                    repo_items_hash[repo].append(match)
 
         output.append(repo_items_hash)
         output.append("Writing cart to disk: %s.json" % cart_name)
@@ -180,7 +186,7 @@ class Juicer(object):
         return output
 
     def show(self, cart_name, output=[]):
-        cart_body = juicer.utils.read_json_document(cart_name + '.json')
+        cart_body = juicer.utils.read_json_document(cart_name)
 
         for repo, items in cart_body.iteritems():
             output.append(repo.upper())

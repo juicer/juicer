@@ -18,8 +18,10 @@
 from juicer.common import Constants
 from juicer.common.JuicerCommon import JuicerCommon as jc
 import ConfigParser
+import fnmatch
 import juicer.utils.Log
 import os
+import os.path
 import sys
 try:
     import json
@@ -118,7 +120,13 @@ def write_json_document(title, body):
     This method handles transforming the body into a proper json
     string, and then writing the file to disk.
     """
+    if not title.endswith('.json'):
+        title += '.json'
+
     json_body = create_json_str(body)
+
+    if os.path.exists(title):
+        juicer.utils.Log.log_warn("Cart file '%s' already exists, overwriting with new data." % title)
 
     try:
         f = open(title, 'w')
@@ -130,11 +138,15 @@ def write_json_document(title, body):
         print e
         raise
 
+
 def read_json_document(title):
     """
     Reads in a json document and returns a native python
     datastructure.
     """
+    if not title.endswith('.json'):
+        title += '.json'
+
     try:
         f = open(title, 'r')
         doc = f.read()
@@ -145,3 +157,21 @@ def read_json_document(title):
         raise
 
     return load_json_str(doc)
+
+
+def find_pattern(search_base, pattern='*.rpm'):
+    """
+    `search_base` - The directory to begin walking down.
+    `pattern` - File pattern to match for.
+
+    This is a generator which yields the full path to files (one at a
+    time) which match the given glob (`pattern`).
+    """
+    # Stolen from http://rosettacode.org/wiki/Walk_a_directory/Recursively#Python
+    if not os.path.isdir(search_base):
+        # Adapt the algorithm to gracefully handle non-directory search paths
+        yield search_base
+    else:
+        for root, dirs, files in os.walk(search_base):
+            for filename in fnmatch.filter(files, pattern):
+                yield os.path.join(root, filename)
