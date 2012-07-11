@@ -17,7 +17,7 @@
 
 import argparse
 import juicer.juicer
-
+import juicer.utils
 
 class Parser(object):
     def __init__(self):
@@ -25,6 +25,8 @@ class Parser(object):
         self.parser = argparse.ArgumentParser(\
                 description='Manage release carts')
         juicer.juicer.parser = self.parser
+        
+        self._default_envs = juicer.utils.get_environments()
 
         self.parser.add_argument('-v', action='count', \
                                 default=1, \
@@ -138,6 +140,7 @@ class Parser(object):
 
         parser_rpmsearch.add_argument('--in', nargs='*', \
                 metavar='environment', \
+                default=self._default_envs, \
                 help='The environments to limit search scope to.', \
                 dest='environment')
 
@@ -160,6 +163,7 @@ class Parser(object):
 
         parser_upload.add_argument('--in', nargs='*', \
                 metavar='environment', \
+                default=self._default_envs[1], \
                 help='The environments to upload into.', \
                 dest='environment')
 
@@ -174,7 +178,7 @@ class Parser(object):
         parser_hello.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 help='The environments to test the connection to.', \
-                default=['re', 'qa', 'stage', 'prod'], \
+                default=self._default_envs, \
                 dest='environment')
 
         parser_hello.set_defaults(j=juicer.juicer.hello)

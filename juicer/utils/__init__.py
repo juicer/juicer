@@ -78,6 +78,26 @@ def get_login_info():
     return connections
 
 
+def get_environments():
+    """
+    Return defined environments from config file for default
+    environment values.
+    """
+    config = ConfigParser.SafeConfigParser()
+    config_file = os.path.expanduser('~/.juicer.conf')
+
+    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
+        config.read(config_file)
+    else:
+        raise IOError("Can not read %s" % config_file)
+
+    juicer.utils.Log.log_debug("Reading environment sections:")
+    
+    environments = config.sections()
+    environments.remove('base')
+    return environments
+
+
 def user_exists_p(args, connector):
     """
     Determine if user exists in specified environment.

@@ -17,13 +17,15 @@
 
 import argparse
 import juicer.admin
-
+import juicer.utils
 
 class Parser(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Manage pulp')
         juicer.admin.parser = self.parser
 
+        self._default_envs = juicer.utils.get_environments()
+        
         self.parser.add_argument('-v', action='count', \
                                  default=1, \
                                  help='Increase the verbosity (up to 3x)')
@@ -52,7 +54,7 @@ class Parser(object):
         parser_create_repo.add_argument('--in', metavar='envs', \
                     nargs="+", \
                     dest='envs', \
-                    default=['re', 'qa', 'stage', 'prod'], \
+                    default=self._default_envs, \
                     help='The environments in which to create your repository')
 
         parser_create_repo.set_defaults(ja=juicer.admin.create_repo)
@@ -77,7 +79,7 @@ class Parser(object):
         parser_create_user.add_argument('--in', metavar='envs', \
                         nargs="+", \
                         dest='envs', \
-                        default=['re', 'qa', 'stage', 'prod'], \
+                        default=self._default_envs, \
                         help='The environments in which to create pulp user')
 
         parser_create_user.set_defaults(ja=juicer.admin.create_user)
@@ -102,7 +104,7 @@ class Parser(object):
         parser_update_user.add_argument('--in', metavar='envs', \
                         nargs="+", \
                         dest='envs', \
-                        default=['re', 'qa', 'stage', 'prod'], \
+                        default=self._default_envs, \
                         help='The environments in which to create pulp user')
 
         parser_update_user.set_defaults(ja=juicer.admin.update_user)
@@ -115,7 +117,7 @@ class Parser(object):
         parser_list_repos.add_argument('--in', metavar='envs', \
                                nargs="+", \
                                dest='envs', \
-                               default=['re', 'qa', 'stage', 'prod'], \
+                               default=self._default_envs, \
                                help='The environments in which to list repos')
 
         parser_list_repos.set_defaults(ja=juicer.admin.list_repos)
@@ -132,7 +134,7 @@ class Parser(object):
         parser_show_repo.add_argument('--in', metavar='envs', \
                       nargs="+", \
                       dest='envs', \
-                      default=['re', 'qa', 'stage', 'prod'], \
+                      default=self._default_envs, \
                       help='The environments in which to show your repository')
 
         parser_show_repo.set_defaults(ja=juicer.admin.show_repo)
@@ -148,7 +150,7 @@ class Parser(object):
         parser_show_user.add_argument('--in', metavar='envs', \
                               nargs="+", \
                               dest='envs', \
-                              default=['re', 'qa', 'stage', 'prod'], \
+                              default=self._default_envs, \
                               help='The environments in which to show user')
 
         parser_show_user.set_defaults(ja=juicer.admin.show_user)
@@ -164,7 +166,7 @@ class Parser(object):
         parser_delete_repo.add_argument('--in', metavar='envs', \
                     nargs="+", \
                     dest='envs', \
-                    default=['re', 'qa', 'stage', 'prod'], \
+                    default=self._default_envs, \
                     help='The environments in which to delete your repository')
 
         parser_delete_repo.set_defaults(ja=juicer.admin.delete_repo)
@@ -180,7 +182,7 @@ class Parser(object):
         parser_delete_user.add_argument('--in', metavar='envs', \
                             nargs="+", \
                             dest='envs', \
-                            default=['re', 'qa', 'stage', 'prod'], \
+                            default=self._default_envs, \
                             help='The environments in which to delete user')
 
         parser_delete_user.set_defaults(ja=juicer.admin.delete_user)
@@ -199,7 +201,7 @@ class Parser(object):
         parser_role_add.add_argument('--in', metavar='envs', \
                          nargs="+", \
                          dest='envs', \
-                         default=['re', 'qa', 'stage', 'prod'], \
+                         default=self._default_envs, \
                          help='The environments in which to add user to role')
 
         parser_role_add.set_defaults(ja=juicer.admin.role_add)
@@ -212,7 +214,7 @@ class Parser(object):
         parser_list_roles.add_argument('--in', metavar='envs', \
                                nargs="+", \
                                dest='envs', \
-                               default=['re', 'qa', 'stage', 'prod'], \
+                               default=self._default_envs, \
                                help='The environments in which to list roles')
 
         parser_list_roles.set_defaults(ja=juicer.admin.list_roles)

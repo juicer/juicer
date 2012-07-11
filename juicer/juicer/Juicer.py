@@ -114,8 +114,6 @@ class Juicer(object):
 
     # this is used to upload files to pulp
     def upload(self, items=[], repos=[], envs=[], output=[]):
-        if envs == None:
-            envs = ['re']
 
         for item in items:
             # path/to/package.rpm
@@ -191,10 +189,6 @@ class Juicer(object):
     def search_rpm(self, name='', envs=[], \
             query='/packages/', output=[]):
         output.append('Packages:')
-
-        # if no envs listed, check all repositories
-        if envs == None:
-            envs = ['re', 'qa', 'stage', 'prod']
 
         for enviro in envs:
             # get list of all repos, then parse down to the ones we want
