@@ -30,7 +30,7 @@ class Juicer(object):
     def __init__(self, args):
         self.args = args
 
-        (self.connectors, self._defaults) = juicer.utils.get_login_info()
+        self.connectors = juicer.utils.get_login_info()
 
     # starts the 3-step upload process
     def _init_up(self, query='/services/upload/', name='', cksum='', size='', \

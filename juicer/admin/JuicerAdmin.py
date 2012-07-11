@@ -27,7 +27,7 @@ class JuicerAdmin(object):
     def __init__(self, args):
         self.args = args
 
-        (self.connectors, self._defaults) = juicer.utils.get_login_info()
+        self.connectors = juicer.utils.get_login_info()
 
     def create_repo(self, query='/repositories/'):
         """

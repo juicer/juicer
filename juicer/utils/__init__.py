@@ -55,7 +55,6 @@ def get_login_info():
     config_file = os.path.expanduser('~/.juicer.conf')
     required_keys = set(['username', 'password', 'base_url'])
     connections = {}
-    _defaults = {}
 
     if os.path.exists(config_file) and os.access(config_file, os.R_OK):
         config.read(config_file)
@@ -76,10 +75,7 @@ def get_login_info():
                                             cfg['base_url']))
         connections[section] = jc(cfg)
 
-    _defaults['environments'] = config.sections()
-    _defaults['cart_dest'] = config.sections()[0]
-
-    return (connections, _defaults)
+    return connections
 
 
 def user_exists_p(args, connector):
