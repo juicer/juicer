@@ -4,23 +4,3 @@ typeset -A opt_args
 
 _arguments \
   "1:Subcommand:(create-repo create-user update-user list-repos show-repo show-user delete-repo delete-user role-add list-roles)" \
-  '(- 1 *)-v' \
-  '(- 1 *)-h' \
-  '(create-repo)--feed' \
-  '(create-repo)--arch' \
-  '(create-repo)--in' \
-  '(create-user)--login' \
-  '(create-user)--name' \
-  '(create-user)--password' \
-  '(create-user)--in' \
-  '(update-user)--login' \
-  '(update-user)--name' \
-  '(update-user)--password' \
-  '(update-user)--in' \
-  '(role-add)--login)' \
-  '(role-add)--role' \
-  '(role-add)--in' \
-  '(show-repo)--in' \
-  '(list-repos)--in' \
-  '(delete-user)--in' \
-  '(delete-repo)--in' \
