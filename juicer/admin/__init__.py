@@ -21,49 +21,49 @@ from pprint import pprint as pp
 
 def create_repo(args):
     pulp = ja(args)
-    pp(pulp.create_repo())
+    pulp.create_repo()
 
 
 def create_user(args):
     pulp = ja(args)
-    pp(pulp.create_user())
+    pulp.create_user()
 
 
 def list_repos(args):
     pulp = ja(args)
-    pp(pulp.list_repos())
+    pulp.list_repos()
 
 
 def show_repo(args):
     pulp = ja(args)
-    pp(pulp.show_repo())
+    pulp.show_repo()
 
 
 def show_user(args):
     pulp = ja(args)
-    pp(pulp.show_user())
+    pulp.show_user()
 
 
 def delete_repo(args):
     pulp = ja(args)
-    pp(pulp.delete_repo())
+    pulp.delete_repo()
 
 
 def delete_user(args):
     pulp = ja(args)
-    pp(pulp.delete_user())
+    pulp.delete_user()
 
 
 def role_add(args):
     pulp = ja(args)
-    pp(pulp.role_add())
+    pulp.role_add()
 
 
 def list_roles(args):
     pulp = ja(args)
-    pp(pulp.list_roles())
+    pulp.list_roles()
 
 
 def update_user(args):
     pulp = ja(args)
-    pp(pulp.update_user())
+    pulp.update_user()

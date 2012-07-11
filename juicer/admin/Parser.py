@@ -25,7 +25,8 @@ class Parser(object):
         juicer.admin.parser = self.parser
 
         self.parser.add_argument('-v', action='count', \
-                                help='Increase the verbosity (up to 3x)')
+                                 default=1, \
+                                 help='Increase the verbosity (up to 3x)')
 
         ##################################################################
         # Keep the different commands separate
