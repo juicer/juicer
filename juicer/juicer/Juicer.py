@@ -140,7 +140,6 @@ class Juicer(object):
     def upload(self, items=[], repos=[], envs=[], output=[]):
 
         for env in envs:
-            self.connectors[env].delete('/packages/de68218d-7e1d-4498-bd63-ac1a11570a06/')
             for repo in repos:
                 for item in items:
                     # path/to/package.rpm
