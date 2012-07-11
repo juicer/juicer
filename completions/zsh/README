@@ -1,0 +1,54 @@
+Instructions For How ZShell User Should Use These Completion Scripts
+====================================================================
+
+What you need:
+
+- A place to store the scripts in. This is already taken care of if
+  you are using juicer from a package.
+
+- Auto completion enabled in ZSH.
+
+- The location of the scripts is in your ZSH 'fpath'.
+
+
+Script Locations
+----------------
+
+If you are using Juicer from a package then the scripts should already
+be present on your system. Generally speaking they will be in
+/usr/share/juicer/completions/zsh/.
+
+If you are using Juicer from a source checkout you will need to make a
+place for them yourself, using ~/.zsh-completions is good.
+
+
+Enable Autocomplete in ZSH
+---------------------------
+
+Ensure the following lines are present in your ~/.zshrc file:
+
+    autoload -U compinit
+    compinit
+
+For extra style, add these lines too
+
+    zstyle ':completion:*' menu select=2 
+    zstyle ':completion:' verbose yes
+    zstyle ':completion:' :descriptions format %B%d%b
+    zstyle ':completion:' :messages format %d
+    zstyle ':completion:' :warnings format No matches for: %d
+    zstyle ':completion:' group-name 
+    zstyle ':completion:*:descriptions' format "%B%d%b"
+
+
+Update the ZSH 'fpath' variable
+-------------------------------
+
+Add the following* to your ~/.zshrc
+
+    fpath=(~/.zsh-completions $fpath)
+
+* Substitute ~/.zsh-completions with whatever path the scripts are
+actually in. RPM packages will install them into:
+
+    /usr/share/juicer/completions/zsh/
