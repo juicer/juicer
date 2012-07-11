@@ -16,6 +16,11 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import juicer.utils
+import os
+import os.path
+
+
+CART_LOCATION = os.path.expanduser("~/.juicer-carts")
 
 
 class Cart(object):
@@ -42,13 +47,21 @@ class Cart(object):
         """
         Build a cart from a json file
         """
-        cart_body = juicer.utils.read_json_document(json_file)
+        if not os.path.exists(CART_LOCATION):
+            raise IOError("No carts currently exist (%s does not exist)" % CART_LOCATION)
+
+        cart_file = os.path.join(CART_LOCATION, json_file)
+        cart_body = juicer.utils.read_json_document(cart_file)
 
         for cart, items in cart_body.iteritems():
             self.add_repo(cart, items)
 
     def save(self):
-        juicer.utils.write_json_document(self.name, self.repo_items_hash)
+        if not os.path.exists(CART_LOCATION):
+            os.mkdir(CART_LOCATION)
+
+        cart_file = os.path.join(CART_LOCATION, self.name)
+        juicer.utils.write_json_document(cart_file, self.repo_items_hash)
 
     def __str__(self):
         output = []
