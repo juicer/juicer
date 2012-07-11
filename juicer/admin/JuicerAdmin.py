@@ -120,7 +120,7 @@ class JuicerAdmin(object):
                 else:
                     _r.raise_for_status()
 
-    def list_repos(self, query='/repositories/', output=[]):
+    def list_repos(self, query='/repositories/'):
         """
         List repositories in specified environments
         """
@@ -128,15 +128,14 @@ class JuicerAdmin(object):
                 "List Repos In: %s", ", ".join(self.args.envs))
 
         for env in self.args.envs:
+            juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
                 for repo in juicer.utils.load_json_str(_r.content):
                     if re.match(".*-{0}$".format(env), repo['id']):
-                        output.append(repo['id'])
+                        juicer.utils.Log.log_info("\t" + repo['name'])
             else:
                 _r.raise_for_status()
-        for repo in sorted(list(set(output))):
-            juicer.utils.Log.log_info(repo)
 
     def role_add(self, query='/roles/'):
         data = {'username': self.args.login}
