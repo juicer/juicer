@@ -1,0 +1,6 @@
+#compdef juicer-admin
+
+typeset -A opt_args
+
+_arguments \
+  "1:Subcommand:(create-repo create-user update-user list-repos show-repo show-user delete-repo delete-user role-add list-roles)" \
