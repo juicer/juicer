@@ -38,8 +38,8 @@ mkdir -p $RPM_BUILD_ROOT/%{_mandir}/{man1,man5}/
 cp -v docs/man/man1/*.1 $RPM_BUILD_ROOT/%{_mandir}/man1/
 cp -v docs/man/man5/*.5 $RPM_BUILD_ROOT/%{_mandir}/man5/
 # usr/share/juicer/ --> examples?
-#mkdir -p $RPM_BUILD_ROOT/%{_datadir}/juicer
-#cp -v library/* $RPM_BUILD_ROOT/%{_datadir}/juicer/
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/juicer
+cp -vr completions/ $RPM_BUILD_ROOT/%{_datadir}/juicer/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -48,6 +48,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{python_sitelib}/juicer*
 %{_bindir}/juicer*
+%{_datadir}/juicer*
 #%{_datadir}/juicer
 #%config(noreplace) %{_sysconfdir}/juicer
 %doc README.md PKG-INFO
