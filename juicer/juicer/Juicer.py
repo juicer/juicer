@@ -21,6 +21,7 @@ import juicer.juicer
 import juicer.utils
 import re
 import os
+import time
 import rpm
 import hashlib
 import requests
@@ -115,25 +116,33 @@ class Juicer(object):
             rpm_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
                 nvrea=nvrea, size=size)
 
-        return rpm_id
+        return rpm_id, cksum
 
     # provides a simple interface to include an rpm in a pulp repo
-    def _include_rpm(self, pkgid, env, repoid):
-        query = '/repositories/' + repoid + '/add_package/'
-        data = {'packageid': pkgid}
+    def _include_rpm(self, filename, cksum, env, repoid, pkgid):
+        query = '/services/associate/packages/'
+        data = {'package_info':
+                [((filename, cksum),
+                    [repoid])]
+                }
 
         _r = self.connectors[env].post(query, data)
 
         if not _r.status_code == Constants.PULP_POST_OK:
-            print _r.content
+            self.connectors[env].delete('/packages/' + pkgid + '/')
             _r.raise_for_status()
 
+    # forces pulp to generate metadata for the given repo
     def _generate_metadata(self, env, repoid):
         query = '/repositories/' + repoid + '/generate_metadata/'
 
         _r = self.connectors[env].post(query)
 
-        if (not _r.status_code == Constants.PULP_POST_ACCEPTED) or (not _r.status_code == Constants.PULP_POST_CONFLICT):
+        if _r.status_code == Constants.PULP_POST_CONFLICT:
+            while _r.status_code == Constants.PULP_POST_CONFLICT:
+                time.sleep(3)
+                _r = self.connectors[env].post(query)
+        if not _r.status_code == Constants.PULP_POST_ACCEPTED:
             _r.raise_for_status()
 
     # this is used to upload files to pulp
@@ -148,8 +157,8 @@ class Juicer(object):
                         if not re.match('.*\.rpm', item):
                             raise TypeError("{0} is not an rpm".format(item))
 
-                        rpm_id = self._upload_rpm(item, env)
-                        self._include_rpm(rpm_id, env, repo)
+                        rpm_id, cksum = self._upload_rpm(item, env)
+                        self._include_rpm(os.path.basename(item), cksum, env, repo, rpm_id)
 
                     # path/to/packages/
                     elif os.path.isdir(item):
@@ -162,8 +171,8 @@ class Juicer(object):
 
                             full_path = item + package
 
-                            rpm_id = self._upload_rpm(full_path, env)
-                            self._include_rpm(rpm_id, env, repo)
+                            rpm_id, cksum = self._upload_rpm(full_path, env)
+                            self._include_rpm(rpm_id, cksum, env, repo)
 
                     # https://path.to/package.rpm
                     elif re.match('https?://.*', item):
@@ -177,8 +186,8 @@ class Juicer(object):
                         with open(filename, 'wb') as data:
                             data.write(remote.content())
 
-                        rpm_id = self._upload_rpm(filename)
-                        self._include_rpm(rpm_id, env, repo)
+                        rpm_id, cksum = self._upload_rpm(filename)
+                        self._include_rpm(rpm_id, cksum, env, repo)
 
                         os.remove(filename)
 
