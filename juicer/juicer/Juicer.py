@@ -97,7 +97,7 @@ class Juicer(object):
         cksum = hashlib.md5(package).hexdigest()
         size = os.path.getsize(package)
 
-        # initiate uploade
+        # initiate upload
         upload_id = self._init_up(name=name, cksum=cksum, size=size)
 
         # read in rpm
@@ -116,15 +116,13 @@ class Juicer(object):
             rpm_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
                 nvrea=nvrea, size=size)
 
-        return rpm_id, cksum
+        return rpm_id
 
     # provides a simple interface to include an rpm in a pulp repo
-    def _include_rpm(self, filename, cksum, env, repoid, pkgid):
-        query = '/services/associate/packages/'
-        data = {'package_info':
-                [((filename, cksum),
-                    [repoid])]
-                }
+    def _include_rpm(self, pkgid, env, repoid):
+        query = '/repositories/' + repoid + '/add_package/'
+        data = {'repoid': repoid,
+                'packageid': [pkgid]}
 
         _r = self.connectors[env].post(query, data)
 
@@ -157,8 +155,8 @@ class Juicer(object):
                         if not re.match('.*\.rpm', item):
                             raise TypeError("{0} is not an rpm".format(item))
 
-                        rpm_id, cksum = self._upload_rpm(item, env)
-                        self._include_rpm(os.path.basename(item), cksum, env, repo, rpm_id)
+                        rpm_id = self._upload_rpm(item, env)
+                        self._include_rpm(rpm_id, env, repo)
 
                     # path/to/packages/
                     elif os.path.isdir(item):
@@ -171,8 +169,8 @@ class Juicer(object):
 
                             full_path = item + package
 
-                            rpm_id, cksum = self._upload_rpm(full_path, env)
-                            self._include_rpm(rpm_id, cksum, env, repo)
+                            rpm_id = self._upload_rpm(full_path, env)
+                            self._include_rpm(rpm_id, env, repo)
 
                     # https://path.to/package.rpm
                     elif re.match('https?://.*', item):
@@ -186,8 +184,8 @@ class Juicer(object):
                         with open(filename, 'wb') as data:
                             data.write(remote.content())
 
-                        rpm_id, cksum = self._upload_rpm(filename)
-                        self._include_rpm(rpm_id, cksum, env, repo)
+                        rpm_id = self._upload_rpm(filename, env)
+                        self._include_rpm(rpm_id, env, repo)
 
                         os.remove(filename)
 
