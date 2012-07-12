@@ -98,9 +98,10 @@ class Juicer(object):
         size = os.path.getsize(package)
 
         # initiate upload
-        upload_id = self._init_up(name=name, cksum=cksum, size=size)
+        upload_id = self._init_up(name=os.path.basename(package), cksum=cksum, size=size)
 
         # read in rpm
+        upload_flag = False
         while True:
             rpm_data = rpm_fd.read(10485760)
 
@@ -112,6 +113,7 @@ class Juicer(object):
         rpm_fd.close()
 
         # finalize upload
+        rpm_id = ''
         if upload_flag == True:
             rpm_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
                 nvrea=nvrea, size=size)
