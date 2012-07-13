@@ -1,6 +1,39 @@
 #compdef juicer
 
-typeset -A opt_args
 
-_arguments \
-  "1:Subcommand:(create edit show update create-like push cart-search rpm-search upload hello)" \
+_juicer_commands()
+{
+    local -a juicer_commands
+    juicer_commands=(
+	'create:Create a cart with the items specified'
+	'edit:Interactively edit a release cart'
+	'show:Print the contents of a cart'
+	'update:Update a release crate'
+	'create-like:Create a new cart like an old one'
+	'push:Pushes/updates a cart on the pulp server'
+	'cart-search:Search for a cart in pulp'
+	'rpm-search:Search for an RPM in pulp'
+	'upload:Update an item to pulp server'
+	'hello:Test your connection to the pulp server'
+    )
+
+    _describe -t command 'command' juicer_commands
+}
+
+_juicer()
+{
+  if (( CURRENT > 2 )) ; then
+    local cmd=${words[2]}
+    curcontext="${curcontext%:*:*}:juicer-$cmd"
+    (( CURRENT-- ))
+    shift words
+    _call_function ret _juicer_$cmd
+    return ret
+  else
+    _juicer_commands
+  fi
+}
+
+# Do it?
+_juicer "$@"
+
