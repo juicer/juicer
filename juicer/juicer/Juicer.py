@@ -160,6 +160,7 @@ class Juicer(object):
             for repo in repos:
                 juicer.utils.Log.log_debug("Processing items for repository: '%s'" % repo)
                 for item in items:
+                    repoid = "%s-%s" % (repo, env)
                     juicer.utils.Log.log_debug("Processing item: '%s'" % item)
                     juicer.utils.Log.log_info("Initiating upload of '%s' into '%s-%s'" % (item, repo, env))
                     # path/to/package.rpm
@@ -169,7 +170,7 @@ class Juicer(object):
                             raise TypeError("{0} is not an rpm".format(item))
 
                         rpm_id = self._upload_rpm(item, env)
-                        self._include_rpm_in_repo(rpm_id, env, "%s-%s" % (repo, env))
+                        self._include_rpm_in_repo(rpm_id, env, repoid)
 
                     # path/to/packages/
                     elif os.path.isdir(item):
@@ -183,7 +184,7 @@ class Juicer(object):
                             full_path = item + package
 
                             rpm_id = self._upload_rpm(full_path, env)
-                            self._include_rpm_in_repo(rpm_id, env, repo)
+                            self._include_rpm_in_repo(rpm_id, env, repoid)
 
                     # https://path.to/package.rpm
                     elif re.match('https?://.*', item):
@@ -198,14 +199,14 @@ class Juicer(object):
                             data.write(remote.content())
 
                         rpm_id = self._upload_rpm(filename, env)
-                        self._include_rpm_in_repo(rpm_id, env, repo)
+                        self._include_rpm_in_repo(rpm_id, env, repoid)
 
                         os.remove(filename)
 
                     else:
                         raise TypeError("what even is this?")
 
-                self._generate_metadata(env, repo)
+                self._generate_metadata(env, repoid)
 
         return output
 
