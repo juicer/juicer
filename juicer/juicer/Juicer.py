@@ -43,6 +43,8 @@ class Juicer(object):
         _r = self.connectors[env].post(query, data)
         uid = juicer.utils.load_json_str(_r.content)['id']
 
+        juicer.utils.Log.log_debug("Initialized upload process. POST returned with data: %s" % str(_r.content))
+
         return uid
 
     # continues 3-step upload process. this is where actual data transfer
@@ -54,6 +56,8 @@ class Juicer(object):
                 'file-data': fdata.decode('utf-8', 'replace')}
 
         _r = self.connectors[env].put(uri, data)
+
+        juicer.utils.Log.log_debug("Continuing upload with append. PUT returned with data: %s" % str(_r.content))
 
         return juicer.utils.load_json_str(_r.content)
 
@@ -79,6 +83,7 @@ class Juicer(object):
         if not _r.status_code == Constants.PULP_POST_OK:
             _r.raise_for_status()
 
+        juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
         return juicer.utils.load_json_str(_r.content)['id']
 
     # provides a simple interface for the pulp upload API
@@ -103,7 +108,7 @@ class Juicer(object):
         # read in rpm
         upload_flag = False
         while True:
-            rpm_data = rpm_fd.read(10485760)
+            rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
 
             if not rpm_data:
                 break
@@ -118,10 +123,11 @@ class Juicer(object):
             rpm_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
                 nvrea=nvrea, size=size)
 
+        juicer.utils.Log.log_debug("RPM upload complete. New 'packageid': %s" % rpm_id)
         return rpm_id
 
     # provides a simple interface to include an rpm in a pulp repo
-    def _include_rpm(self, pkgid, env, repoid):
+    def _include_rpm_in_repo(self, pkgid, env, repoid):
         query = '/repositories/' + repoid + '/add_package/'
         data = {'repoid': repoid,
                 'packageid': [pkgid]}
@@ -129,6 +135,7 @@ class Juicer(object):
         _r = self.connectors[env].post(query, data)
 
         if not _r.status_code == Constants.PULP_POST_OK:
+            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
             self.connectors[env].delete('/packages/' + pkgid + '/')
             _r.raise_for_status()
 
@@ -149,8 +156,12 @@ class Juicer(object):
     def upload(self, items=[], repos=[], envs=[], output=[]):
 
         for env in envs:
+            juicer.utils.Log.log_debug("Beginning upload for environment: %s" % env)
             for repo in repos:
+                juicer.utils.Log.log_debug("Processing items for repository: '%s'" % repo)
                 for item in items:
+                    juicer.utils.Log.log_debug("Processing item: '%s'" % item)
+                    juicer.utils.Log.log_info("Initiating upload of '%s' into '%s-%s'" % (item, repo, env))
                     # path/to/package.rpm
                     if os.path.isfile(item):
                         # process individual file
@@ -158,7 +169,7 @@ class Juicer(object):
                             raise TypeError("{0} is not an rpm".format(item))
 
                         rpm_id = self._upload_rpm(item, env)
-                        self._include_rpm(rpm_id, env, repo)
+                        self._include_rpm_in_repo(rpm_id, env, "%s-%s" % (repo, env))
 
                     # path/to/packages/
                     elif os.path.isdir(item):
@@ -172,7 +183,7 @@ class Juicer(object):
                             full_path = item + package
 
                             rpm_id = self._upload_rpm(full_path, env)
-                            self._include_rpm(rpm_id, env, repo)
+                            self._include_rpm_in_repo(rpm_id, env, repo)
 
                     # https://path.to/package.rpm
                     elif re.match('https?://.*', item):
@@ -187,7 +198,7 @@ class Juicer(object):
                             data.write(remote.content())
 
                         rpm_id = self._upload_rpm(filename, env)
-                        self._include_rpm(rpm_id, env, repo)
+                        self._include_rpm_in_repo(rpm_id, env, repo)
 
                         os.remove(filename)
 
@@ -208,8 +219,8 @@ class Juicer(object):
         cart = juicer.common.Cart.Cart(cart_name, autoload=True)
 
         for repo, items in cart.iterrepos():
-            self.upload(items, [repo],
-            print items
+            juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
+            self.upload(items, [repo], [self._defaults['cart_dest']])
 
         return True
 

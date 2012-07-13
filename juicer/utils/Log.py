@@ -19,13 +19,14 @@ import inspect
 import juicer.utils
 import os.path
 
-LOG_DEBUG = 3
+LOG_DEBUG = 4
+LOG_NOTICE = 3
 LOG_WARN = 2
 LOG_INFO = 1
 LOG_ERROR = 0
 LOG_LEVEL_CURRENT = 1
             # error, info -> stdout
-LOG_TO_STDOUT = [LOG_ERROR, LOG_INFO]
+LOG_TO_STDOUT = [LOG_ERROR, LOG_INFO, LOG_NOTICE]
 LOG_TO_STDERR = [LOG_DEBUG, LOG_WARN]
 
 """
@@ -132,6 +133,11 @@ def log_warn(msg, LOG_WARN, *args):
 
 @log_wrap
 def log_info(msg, LOG_INFO, *args):
+    pass
+
+
+@log_wrap
+def log_notice(msg, LOG_NOTICE, *args):
     pass
 
 
