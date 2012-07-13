@@ -84,6 +84,8 @@ class Juicer(object):
             _r.raise_for_status()
 
         juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
+        from pprint import pprint as pp
+        pp(_r.content)
         return juicer.utils.load_json_str(_r.content)['id']
 
     # provides a simple interface for the pulp upload API
@@ -101,9 +103,10 @@ class Juicer(object):
         nvrea = tuple((name, version, release, epoch, arch))
         cksum = hashlib.md5(package).hexdigest()
         size = os.path.getsize(package)
+        package_basename = os.path.basename(package)
 
         # initiate upload
-        upload_id = self._init_up(name=os.path.basename(package), cksum=cksum, size=size)
+        upload_id = self._init_up(name=package_basename, cksum=cksum, size=size)
 
         # read in rpm
         upload_flag = False
@@ -120,7 +123,7 @@ class Juicer(object):
         # finalize upload
         rpm_id = ''
         if upload_flag == True:
-            rpm_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
+            rpm_id = self._import_up(uid=upload_id, name=package_basename, cksum=cksum, \
                 nvrea=nvrea, size=size)
 
         juicer.utils.Log.log_debug("RPM upload complete. New 'packageid': %s" % rpm_id)
