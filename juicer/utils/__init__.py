@@ -94,7 +94,6 @@ def get_environments():
     juicer.utils.Log.log_debug("Reading environment sections:")
 
     environments = config.sections()
-    environments.remove('base')
     return environments
 
 
