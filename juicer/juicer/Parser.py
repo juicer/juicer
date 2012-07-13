@@ -111,7 +111,7 @@ class Parser(object):
         parser_publish = subparsers.add_parser('publish', \
                 help='Publishes/Updates a cart on the pulp server.')
 
-        parser_publish.add_argument('cart-name', metavar='cartname', \
+        parser_publish.add_argument('cartname', metavar='cartname', \
                                     help='The name of your new release cart')
 
         parser_publish.set_defaults(j=juicer.juicer.publish)

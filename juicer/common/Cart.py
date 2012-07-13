@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import juicer.utils.Log
 import juicer.utils
 import os
 import os.path
@@ -24,9 +25,21 @@ CART_LOCATION = os.path.expanduser("~/.juicer-carts")
 
 
 class Cart(object):
-    def __init__(self, name):
+    def __init__(self, name, autoload=False):
+        """
+        After a cart is instantiated there are two ways to fill it.
+
+        1. Manually: Use the add_repo() method.
+        2. Automaticaly: From a json file with the load() method.
+
+        Setting `autoload` to `True` will call the load() method
+        automatically.
+        """
         self.name = name
         self.repo_items_hash = {}
+
+        if autoload:
+            self.load(name)
 
     def add_repo(self, name, items):
         """
@@ -35,6 +48,8 @@ class Cart(object):
         `name` - Name of this repo.
         `items` - List of paths to rpm.
         """
+        juicer.utils.Log.log_debug("[CART:%s] Adding %s items to repo '%s'" % \
+                                       (self.name, len(items), name))
         self.repo_items_hash[name] = []
 
         for item in items:
@@ -62,6 +77,15 @@ class Cart(object):
 
         cart_file = os.path.join(CART_LOCATION, self.name)
         juicer.utils.write_json_document(cart_file, self.repo_items_hash)
+
+    def iterrepos(self):
+        """
+        A generator function that yields a (repo, [items]) tuple for
+        each non-empty repo.
+        """
+        for repo, items in self.repo_items_hash.iteritems():
+            if items:
+                yield (repo, items)
 
     def __str__(self):
         output = []

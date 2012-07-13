@@ -201,3 +201,7 @@ def dedupe(l):
     Remove duplicates from a list.
     """
     return list(set(l))
+
+
+def filter_package_list():
+    pass

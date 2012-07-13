@@ -198,9 +198,24 @@ class Juicer(object):
 
         return output
 
+    def publish(self, cart_name):
+        """
+        `cart_name` - Name of the release cart to publish
+
+        Publishes a release cart to the pre-release environment.
+        """
+        juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart_name)
+        cart = juicer.common.Cart.Cart(cart_name, autoload=True)
+
+        for repo, items in cart.iterrepos():
+            self.upload(items, [repo],
+            print items
+
+        return True
+
     def create(self, cart_name, cart_description):
         """
-        `name` - Name of this release cart
+        `cart_name` - Name of this release cart
         `cart_description` - list of ['reponame', item1, ..., itemN] lists
         """
         cart = juicer.common.Cart.Cart(cart_name)
