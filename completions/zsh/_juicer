@@ -3,4 +3,4 @@
 typeset -A opt_args
 
 _arguments \
-  "1:Subcommand:(create edit show update create-like publish cart-search rpm-search upload hello)" \
+  "1:Subcommand:(create edit show update create-like push cart-search rpm-search upload hello)" \

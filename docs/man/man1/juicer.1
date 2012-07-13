@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/10/2012
+.\"      Date: 07/13/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.1.3
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "07/10/2012" "Juicer 0\&.1\&.3" "Pulp repos and release carts"
+.TH "JUICER" "1" "07/13/2012" "Juicer 0\&.1\&.3" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -28,13 +28,13 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-juicer \- create, edit, update, and publish release carts
+juicer \- create, edit, update, and push release carts
 .SH "SYNOPSIS"
 .sp
 juicer sub\-command [OPTIONS \&...] [PARAMETERS \&...]
 .SH "DESCRIPTION"
 .sp
-Create, edit, update, and publish release carts\&.
+Create, edit, update, and push release carts\&.
 .SH "CREATE"
 .sp
 usage: juicer create CARTNAME \-r REPONAME item1 [ item2, [ \&...]]
@@ -113,15 +113,15 @@ Cart to copy from\&.
 .RS 4
 Items to update in the cart\&.
 .RE
-.SH "PUBLISH"
+.SH "PUSH"
 .sp
-usage: juicer publish CARTNAME
+usage: juicer push CARTNAME
 .sp
-Publishes/Updates a cart on the pulp server\&.
+Pushes/Updates a cart on the pulp server\&.
 .PP
 \fBCARTNAME\fR
 .RS 4
-The name of the cart to publish\&.
+The name of the cart to push\&.
 .RE
 .SH "CART-SEARCH"
 .sp
@@ -190,13 +190,13 @@ http[s]://rpms/directory/ | http[s]://website/some\-thing\&.rpm
 .RS 4
 .\}
 .nf
-Create and publish cart CRQ1337:
+Create and push cart CRQ1337:
   $ %(prog)s create CRQ1337 \-r ruby http://file\&.derp/~smunilla/crq1337/ \e\e
       \-r services \&./new\-services\-rpms \e\e
       \-r candlepin /var/lib/mock/epel\-6\-x86_64/result/candlepin\&.el6\&.rpm
   Created new cart, CRQ1337\&.
-  $ %(prog)s publish CRQ1337
-  Cart published at http://juicer\&.util\&.phx1\&.redhat\&.com/carts/CRQ1337
+  $ %(prog)s push CRQ1337
+  Cart pushed to http://juicer\&.util\&.phx1\&.redhat\&.com/carts/CRQ1337
 .fi
 .if n \{\
 .RE
@@ -209,8 +209,8 @@ Create and publish cart CRQ1337:
 Update the existing cart, CRQ1337
   $ %(prog)s update CRQ1337 http://loki01:9001/builders/master\-candlepin/builds/0
   Updated xyz items in CRQ1337\&.
-  $ %(prog)s publish CRQ1337
-  Cart published at http://juicer\&.util\&.phx1\&.redhat\&.com/carts/CRQ1337
+  $ %(prog)s push CRQ1337
+  Cart pushed to http://juicer\&.util\&.phx1\&.redhat\&.com/carts/CRQ1337
 .fi
 .if n \{\
 .RE

@@ -107,14 +107,14 @@ class Parser(object):
         parser_createlike.set_defaults(j=juicer.juicer.createlike)
 
         ##################################################################
-        # Create the 'publish' sub-parser
-        parser_publish = subparsers.add_parser('publish', \
-                help='Publishes/Updates a cart on the pulp server.')
+        # Create the 'push' sub-parser
+        parser_push = subparsers.add_parser('push', \
+                help='Pushes/Updates a cart on the pulp server.')
 
-        parser_publish.add_argument('cartname', metavar='cartname', \
+        parser_push.add_argument('cartname', metavar='cartname', \
                                     help='The name of your new release cart')
 
-        parser_publish.set_defaults(j=juicer.juicer.publish)
+        parser_push.set_defaults(j=juicer.juicer.push)
 
         ##################################################################
         # Create the 'cart_search' sub-parser

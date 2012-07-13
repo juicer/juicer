@@ -7,7 +7,7 @@ juicer(1)
 
 NAME
 ----
-juicer - create, edit, update, and publish release carts
+juicer - create, edit, update, and push release carts
 
 
 
@@ -19,7 +19,7 @@ juicer sub-command [OPTIONS ...] [PARAMETERS ...]
 
 DESCRIPTION
 -----------
-Create, edit, update, and publish release carts.
+Create, edit, update, and push release carts.
 
 
 CREATE
@@ -92,14 +92,14 @@ Items to update in the cart.
 
 
 
-PUBLISH
--------
-usage: juicer publish CARTNAME
+PUSH
+----
+usage: juicer push CARTNAME
 
-Publishes/Updates a cart on the pulp server.
+Pushes/Updates a cart on the pulp server.
 
 *CARTNAME*::
-The name of the cart to publish.
+The name of the cart to push.
 
 
 
@@ -149,20 +149,20 @@ EXAMPLES
 --------
 
 
-  Create and publish cart CRQ1337:
+  Create and push cart CRQ1337:
     $ %(prog)s create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
         -r services ./new-services-rpms \\
         -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
     Created new cart, CRQ1337.
-    $ %(prog)s publish CRQ1337
-    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
+    $ %(prog)s push CRQ1337
+    Cart pushed to http://juicer.util.phx1.redhat.com/carts/CRQ1337
 
 
   Update the existing cart, CRQ1337
     $ %(prog)s update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
     Updated xyz items in CRQ1337.
-    $ %(prog)s publish CRQ1337
-    Cart published at http://juicer.util.phx1.redhat.com/carts/CRQ1337
+    $ %(prog)s push CRQ1337
+    Cart pushed to http://juicer.util.phx1.redhat.com/carts/CRQ1337
 
 
 

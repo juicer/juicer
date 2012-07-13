@@ -46,9 +46,9 @@ def createlike():
     pass
 
 
-def publish(args):
+def push(args):
     pulp = j(args)
-    published = pulp.publish(args.cartname)
+    pushed = pulp.push(args.cartname)
 
 
 def cartsearch(args):
