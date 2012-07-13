@@ -193,7 +193,7 @@ class Juicer(object):
 
                     else:
                         raise TypeError("what even is this?")
-                
+
                 self._generate_metadata(env, repo)
 
         return output

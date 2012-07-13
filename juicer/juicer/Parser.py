@@ -19,13 +19,14 @@ import argparse
 import juicer.juicer
 import juicer.utils
 
+
 class Parser(object):
     def __init__(self):
 
         self.parser = argparse.ArgumentParser(\
                 description='Manage release carts')
         juicer.juicer.parser = self.parser
-        
+
         self._default_envs = juicer.utils.get_environments()
 
         self.parser.add_argument('-v', action='count', \

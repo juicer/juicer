@@ -92,7 +92,7 @@ def get_environments():
         raise IOError("Can not read %s" % config_file)
 
     juicer.utils.Log.log_debug("Reading environment sections:")
-    
+
     environments = config.sections()
     environments.remove('base')
     return environments
