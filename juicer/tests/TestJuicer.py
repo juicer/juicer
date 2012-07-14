@@ -4,6 +4,7 @@ from juicer.juicer.Juicer import Juicer as j
 from juicer.juicer.Parser import Parser as pmoney
 from juicer.utils import mute
 
+
 class TestJuicer(unittest.TestCase):
 
     def setUp(self):

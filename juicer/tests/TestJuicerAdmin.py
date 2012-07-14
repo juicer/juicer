@@ -4,6 +4,7 @@ from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pmoney
 from juicer.utils import mute
 
+
 class TestJuicerAdmin(unittest.TestCase):
 
     def setUp(self):
@@ -88,7 +89,6 @@ class TestJuicerAdmin(unittest.TestCase):
         pulp = ja(self.parser.parser.parse_args(args.split()))
         output = mute(True)(pulp.list_roles)()
         self.assertTrue(any('super-users' in k for k in output))
-
 
     def test_role_add(self):
         self.create_test_user()
