@@ -17,7 +17,9 @@
 
 from juicer.common import Constants
 from juicer.common.JuicerCommon import JuicerCommon as jc
+from functools import wraps
 import ConfigParser
+import cStringIO
 import fnmatch
 import juicer.utils.Log
 import os
@@ -209,3 +211,20 @@ def dedupe(l):
 
 def filter_package_list():
     pass
+
+
+def mute(returns_output=False):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            saved_stdout = sys.stdout
+            sys.stdout = cStringIO.StringIO()
+            try:
+                out = func(*args, **kwargs)
+                if returns_output:
+                    out = sys.stdout.getvalue().strip().split()
+            finally:
+                sys.stdout = saved_stdout
+            return out
+        return wrapper
+    return decorator
