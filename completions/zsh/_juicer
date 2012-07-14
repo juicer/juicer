@@ -17,8 +17,54 @@ _juicer_commands()
 	'hello:Test your connection to the pulp server'
     )
 
-    _describe -t command 'command' juicer_commands
+    _describe -t command 'subcommand' juicer_commands
 }
+
+_juicer_create()
+{
+
+}
+
+_juicer_edit()
+{
+
+}
+
+_juicer_show()
+{
+
+}
+
+_juicer_update()
+{
+
+}
+
+_juicer_create-like()
+{
+
+}
+
+_juicer_push()
+{
+    _files -W ~/.juicer-carts -g "*.json(:r)"
+}
+
+_juicer_cart-search()
+{
+
+}
+
+_juicer_rpm-search()
+{
+
+}
+
+_juicer_upload()
+{
+
+}
+
 
 _juicer()
 {
