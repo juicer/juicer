@@ -27,12 +27,12 @@ _juicer_create()
 
 _juicer_edit()
 {
-
+    _files -W ~/.juicer-carts -g "*.json(:r)"
 }
 
 _juicer_show()
 {
-
+    _files -W ~/.juicer-carts -g "*.json(:r)"
 }
 
 _juicer_update()
