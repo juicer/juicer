@@ -57,7 +57,7 @@ def cartsearch(args):
 
 def rpmsearch(args):
     pulp = j(args)
-    pulp.search_rpm(name=args.rpmname, envs=args.environment)
+    pulp.search_rpm(name=args.rpmname)
 
 
 def upload(args):
@@ -67,4 +67,4 @@ def upload(args):
 
 def hello(args):
     pulp = j(args)
-    pulp.hello(envs=args.environment)
+    pulp.hello()

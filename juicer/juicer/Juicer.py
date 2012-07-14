@@ -156,9 +156,9 @@ class Juicer(object):
             _r.raise_for_status()
 
     # this is used to upload files to pulp
-    def upload(self, items=[], repos=[], envs=[]):
+    def upload(self, items=[], repos=[]):
 
-        for env in envs:
+        for env in self.args.environment:
             juicer.utils.Log.log_debug("Beginning upload for environment: %s" % env)
             for repo in repos:
                 juicer.utils.Log.log_debug("Processing items for repository: '%s'" % repo)
@@ -255,12 +255,12 @@ class Juicer(object):
     def search_cart(self, query='/services/search/cart'):
         pass
 
-    def search_rpm(self, name='', envs=[], query='/packages/'):
+    def search_rpm(self, name='', query='/packages/'):
         juicer.utils.Log.log_info('Packages:')
 
-        for enviro in envs:
+        for env in self.args.environment:
             # get list of all repos, then parse down to the ones we want
-            _r = self.connectors[enviro].get(query)
+            _r = self.connectors[env].get(query)
 
             pkg_list = juicer.utils.load_json_str(_r.content)
 
@@ -273,5 +273,25 @@ class Juicer(object):
                 if regex.search(pkg['name']):
                     juicer.utils.Log.log_info(pkg['name'])
 
-    def hello(self, envs=[]):
-        pass
+    def hello(self):
+        for env in self.args.environment:
+            juicer.utils.Log.log_info("Trying to open a connection to %s, %s ...",
+                                      env, self.connectors[env].base_url)
+            try:
+                _r = self.connectors[env].get()
+                juicer.utils.Log.log_info("OK")
+            except Exception, err:
+                juicer.utils.Log.log_info("FAILED")
+                continue
+
+            juicer.utils.Log.log_info("Attempting to authenticate as %s",
+                                      self.connectors[env].auth[0])
+
+            _r = self.connectors[env].get('/repositories/')
+
+            if _r.status_code == Constants.PULP_GET_OK:
+                juicer.utils.Log.log_info("OK")
+            else:
+                juicer.utils.Log.log_info("FAILED")
+                juicer.utils.Log.log_info("Server said: %s", _r.content)
+                continue
