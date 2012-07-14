@@ -156,7 +156,7 @@ class Juicer(object):
             _r.raise_for_status()
 
     # this is used to upload files to pulp
-    def upload(self, items=[], repos=[], envs=[], output=[]):
+    def upload(self, items=[], repos=[], envs=[]):
 
         for env in envs:
             juicer.utils.Log.log_debug("Beginning upload for environment: %s" % env)
@@ -180,8 +180,7 @@ class Juicer(object):
                         # process files in dir
                         for package in os.listdir(item):
                             if not re.match('.*\.rpm$', package):
-                                output.append('{0} is not an rpm. skipping!'.format(
-                                    package))
+                                juicer.utils.Log.log_info('{0} is not an rpm. skipping!'.format(package))
                                 continue
 
                             full_path = item + package
@@ -253,12 +252,11 @@ class Juicer(object):
         cart.load(cart_name)
         return str(cart)
 
-    def search_cart(self, query='/services/search/cart', output=[]):
+    def search_cart(self, query='/services/search/cart'):
         pass
 
-    def search_rpm(self, name='', envs=[], \
-            query='/packages/', output=[]):
-        output.append('Packages:')
+    def search_rpm(self, name='', envs=[], query='/packages/'):
+        juicer.utils.Log.log_info('Packages:')
 
         for enviro in envs:
             # get list of all repos, then parse down to the ones we want
@@ -273,9 +271,7 @@ class Juicer(object):
                     _r.raise_for_status()
 
                 if regex.search(pkg['name']):
-                    output.append(pkg['name'])
+                    juicer.utils.Log.log_info(pkg['name'])
 
-        return output
-
-    def hello(self, envs=[], output=[]):
+    def hello(self, envs=[]):
         pass

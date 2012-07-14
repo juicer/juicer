@@ -3,7 +3,6 @@ import unittest
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pmoney
 from juicer.utils import mute
-from juicer.utils import load_json_str
 
 class TestJuicerAdmin(unittest.TestCase):
 

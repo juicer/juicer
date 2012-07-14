@@ -2,7 +2,7 @@
 import unittest
 from juicer.juicer.Juicer import Juicer as j
 from juicer.juicer.Parser import Parser as pmoney
-
+from juicer.utils import mute
 
 class TestJuicer(unittest.TestCase):
 
@@ -12,14 +12,14 @@ class TestJuicer(unittest.TestCase):
     def test_rpm_search(self):
         self.args = self.parser.parser.parse_args('rpm-search ruby'.split())
         pulp = j(self.args)
-        pulp.search_rpm(name=self.args.rpmname, \
-                envs=self.args.environment)
+        output = mute()(pulp.search_rpm)(name=self.args.rpmname, \
+                                             envs=self.args.environment)
 
         self.args = self.parser.parser.parse_args(\
-                'rpm-search ruby --in qa'.split())
+            'rpm-search ruby --in qa'.split())
         pulp = j(self.args)
-        pulp.search_rpm(name=self.args.rpmname, \
-                envs=self.args.environment)
+        output = mute()(pulp.search_rpm)(name=self.args.rpmname, \
+                                             envs=self.args.environment)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJuicer)
