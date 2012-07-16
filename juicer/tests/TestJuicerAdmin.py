@@ -2,10 +2,26 @@
 import unittest
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pmoney
-from juicer.utils import mute
+from juicer.utils import mute, get_login_info, get_environments
 
 
 class TestJuicerAdmin(unittest.TestCase):
+
+    def __init(self):
+        try:
+            (self.connectors, self._defaults) = get_login_info()
+            for env in get_environments():
+                # remove user
+                users = self.connectors[env].get('/users/')
+                for user in users:
+                    if user['login'] == 'cjesop':
+                        self.connectors[env].delete('/users/%s/' % user['id'])
+                # remove repo
+                self.connectors[env].delete('/repositories/test-repo-456/')
+        except:
+            pass
+
+        super(__init__)
 
     def setUp(self):
         self.parser = pmoney()
