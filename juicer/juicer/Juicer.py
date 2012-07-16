@@ -24,7 +24,6 @@ import os
 import time
 import rpm
 import hashlib
-import requests
 
 
 class Juicer(object):
@@ -148,7 +147,12 @@ class Juicer(object):
 
         _r = self.connectors[env].post(query)
 
+        juicer.utils.Log.log_debug("Attempted metadata update for repo: %s -> %s" % \
+                                       (repoid, str(_r.content)))
+
         if _r.status_code == Constants.PULP_POST_CONFLICT:
+            juicer.utils.Log.log_debug("Metadata update in %s already in progress...: " % \
+                                           (repoid, str(_r.content)))
             while _r.status_code == Constants.PULP_POST_CONFLICT:
                 time.sleep(3)
                 _r = self.connectors[env].post(query)
@@ -156,74 +160,52 @@ class Juicer(object):
             _r.raise_for_status()
 
     # this is used to upload files to pulp
-    def upload(self, items=[], repos=[]):
-
-        for env in self.args.environment:
-            juicer.utils.Log.log_debug("Beginning upload for environment: %s" % env)
-            for repo in repos:
-                juicer.utils.Log.log_debug("Processing items for repository: '%s'" % repo)
-                for item in items:
-                    repoid = "%s-%s" % (repo, env)
-                    juicer.utils.Log.log_debug("Processing item: '%s'" % item)
-                    juicer.utils.Log.log_info("Initiating upload of '%s' into '%s-%s'" % (item, repo, env))
-                    # path/to/package.rpm
-                    if os.path.isfile(item):
-                        # process individual file
-                        if not re.match('.*\.rpm', item):
-                            raise TypeError("{0} is not an rpm".format(item))
-
-                        rpm_id = self._upload_rpm(item, env)
-                        self._include_rpm_in_repo(rpm_id, env, repoid)
-
-                    # path/to/packages/
-                    elif os.path.isdir(item):
-                        # process files in dir
-                        for package in os.listdir(item):
-                            if not re.match('.*\.rpm$', package):
-                                juicer.utils.Log.log_info('{0} is not an rpm. skipping!'.format(package))
-                                continue
-
-                            full_path = item + package
-
-                            rpm_id = self._upload_rpm(full_path, env)
-                            self._include_rpm_in_repo(rpm_id, env, repoid)
-
-                    # https://path.to/package.rpm
-                    elif re.match('https?://.*', item):
-                        # download item and upload
-                        if not re.match('.*\.rpm', item):
-                            raise TypeError('{0} is not an rpm'.format(item))
-
-                        filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
-                        remote = requests.get(item, env)
-
-                        with open(filename, 'wb') as data:
-                            data.write(remote.content())
-
-                        rpm_id = self._upload_rpm(filename, env)
-                        self._include_rpm_in_repo(rpm_id, env, repoid)
-
-                        os.remove(filename)
-
-                    else:
-                        raise TypeError("what even is this?")
-
-                self._generate_metadata(env, repoid)
-
-        return output
-
-    def publish(self, cart_name):
+    def upload(self, env, repo, items=[]):
         """
-        `cart_name` - Name of the release cart to publish
+        Nothing special happens here. This method recieves a
+        destination repo, and a payload of `items` which will be
+        uploaded into the target repo.
 
-        Publishes a release cart to the pre-release environment.
+        Preparation: To use this method you must pre-process your
+        upload list (`items`). Remotes must be fetched and saved
+        locally. Directories must be recursed and replaced with their
+        contents.
+
+        Warning: this method trusts you to Do The Right Thing (TM),
+        ahead of time and check file types before feeding them to it.
+
+        `env` - name of the environment with the cart destination
+        `repo` - should be a string, the detination repo name
+        `items` - should be a list of paths to RPM files
         """
-        juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart_name)
+        repoid = "%s-%s" % (repo, env)
+
+        juicer.utils.Log.log_debug("Beginning upload for %s" % repoid)
+
+        for item in items:
+            juicer.utils.Log.log_debug("Processing item: '%s'" % item)
+            juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
+
+            rpm_id = self._upload_rpm(item, env)
+            self._include_rpm_in_repo(rpm_id, env, repoid)
+
+        self._generate_metadata(env, repoid)
+
+        return True
+
+    def push(self, cart_name):
+        """
+        `cart_name` - Name of the release cart to push
+
+        Pushes a release cart to the pre-release environment.
+        """
+        juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart_name)
         cart = juicer.common.Cart.Cart(cart_name, autoload=True)
 
+        cart.sync_remotes()
         for repo, items in cart.iterrepos():
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
-            self.upload(items, [repo], [self._defaults['cart_dest']])
+            self.upload(self._defaults['cart_dest'], repo, items)
 
         return True
 

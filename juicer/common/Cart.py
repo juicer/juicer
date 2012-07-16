@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import juicer.common.RPM
 import juicer.utils.Log
 import juicer.utils
 import os
@@ -37,6 +38,7 @@ class Cart(object):
         """
         self.name = name
         self.repo_items_hash = {}
+        self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % name))
 
         if autoload:
             self.load(name)
@@ -50,13 +52,11 @@ class Cart(object):
         """
         juicer.utils.Log.log_debug("[CART:%s] Adding %s items to repo '%s'" % \
                                        (self.name, len(items), name))
-        self.repo_items_hash[name] = []
-
-        for item in items:
-            for match in juicer.utils.find_pattern(item):
-                self.repo_items_hash[name].append(match)
-
-        self.repo_items_hash[name] = juicer.utils.dedupe(self.repo_items_hash[name])
+        # We can't just straight-away add all of `items` to the
+        # repo. `items` may be composed of a mix of local files, local
+        # directories, remote files, and remote directories. We need
+        # to filter and validate each item.
+        self.repo_items_hash[name] = juicer.utils.filter_package_list(items)
 
     def load(self, json_file):
         """
@@ -87,6 +87,33 @@ class Cart(object):
             if items:
                 yield (repo, items)
 
+    def sync_remotes(self):
+        """
+        Pull down all non-local items and save them into remotes_storage.
+        """
+        synced_items = {}
+
+        for repo, items in self.iterrepos():
+            syncs = []
+            for rpm in items:
+                rpm_obj = juicer.common.RPM.RPM(rpm)
+                rpm_obj.sync(self.remotes_storage)
+
+                if rpm_obj.modified:
+                    syncs.append((rpm, rpm_obj.path))
+
+            if syncs:
+                synced_items[repo] = syncs
+
+        for repo in synced_items.keys():
+            for source, path in synced_items[repo]:
+                juicer.utils.Log.log_debug("Source RPM modified. New 'path': %s" % rpm)
+                self._update(repo, source, path)
+
+    def _update(self, repo, current, new):
+        self.repo_items_hash[repo].remove(current)
+        self.repo_items_hash[repo].append(new)
+
     def __str__(self):
         output = []
 
@@ -99,3 +126,20 @@ class Cart(object):
             output.append('')
 
         return "\n".join(output)
+
+
+# TODO: Refactor this fetching kind of logic
+# into... cart processing? Perhaps a prep type
+# action to sync remotes to local.
+# # https://path.to/package.rpm
+# elif re.match('https?://.*', item):
+#     # download item and upload
+#     if not re.match('.*\.rpm', item):
+#         raise TypeError('{0} is not an rpm'.format(item))
+#     filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
+#     remote = requests.get(item, env)
+#     with open(filename, 'wb') as data:
+#         data.write(remote.content())
+#     rpm_id = self._upload_rpm(filename, env)
+#     self._include_rpm_in_repo(rpm_id, env, repoid)
+#     os.remove(filename)

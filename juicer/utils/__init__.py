@@ -23,10 +23,12 @@ import ConfigParser
 import cStringIO
 import fnmatch
 import juicer.utils.Log
+import juicer.utils.Remotes
 import magic
 import os
 import os.path
 import sys
+import requests
 try:
     import json
     json
@@ -186,6 +188,13 @@ def read_json_document(title):
     return load_json_str(doc)
 
 
+def dedupe(l):
+    """
+    Remove duplicates from a list.
+    """
+    return list(set(l))
+
+
 def find_pattern(search_base, pattern='*.rpm'):
     """
     `search_base` - The directory to begin walking down.
@@ -195,7 +204,7 @@ def find_pattern(search_base, pattern='*.rpm'):
     time) which match the given glob (`pattern`).
     """
     # Stolen from http://rosettacode.org/wiki/Walk_a_directory/Recursively#Python
-    if not os.path.isdir(search_base):
+    if (not os.path.isdir(search_base)) and os.path.exists(search_base):
         # Adapt the algorithm to gracefully handle non-directory search paths
         yield search_base
     else:
@@ -204,15 +213,30 @@ def find_pattern(search_base, pattern='*.rpm'):
                 yield os.path.join(root, filename)
 
 
-def dedupe(l):
+def filter_package_list(package_list):
     """
-    Remove duplicates from a list.
+    Filter a list of packages into local and remotes.
     """
-    return list(set(l))
+    remote_pkgs = []
+    local_pkgs = []
 
+    possible_remotes = filter(lambda i: not os.path.exists(i), package_list)
+    juicer.utils.Log.log_debug("Considering %s possible remotes" % len(possible_remotes))
 
-def filter_package_list():
-    pass
+    for item in possible_remotes:
+        remote_pkgs.extend(juicer.utils.Remotes.assemble_remotes(item))
+    juicer.utils.Log.log_notice("Remote packages: %s" % str(remote_pkgs))
+
+    possible_locals = filter(os.path.exists, package_list)
+    juicer.utils.Log.log_debug("Considering %s possible locals" % len(possible_locals))
+
+    for item in possible_locals:
+        for match in find_pattern(item):
+            local_pkgs.append(match)
+    juicer.utils.Log.log_notice("Local packages: %s" % str(local_pkgs))
+
+    filtered_package_list = dedupe(remote_pkgs + local_pkgs)
+    return filtered_package_list
 
 
 def mute(returns_output=False):
@@ -234,11 +258,13 @@ def mute(returns_output=False):
 
 def is_rpm(path):
     """
-    Use the python 'magic' library to find the type of file we're dealing with.
+    Use the python 'magic' library to find the type of file we're
+    dealing with.
     """
     rpm_types = [Constants.MAGIC_RPM_BIN, Constants.MAGIC_RPM_SRC]
     m = magic.open(magic.NONE)
     m.load()
+
     path_type = m.file(path)
 
     if path_type in rpm_types:
@@ -247,3 +273,14 @@ def is_rpm(path):
     else:
         juicer.utils.Log.log_error("Type check failed for '%s': '%s'" % (path, path_type))
         return False
+
+
+def save_url_as(url, save_as):
+    """
+    Download the file `url` and save it to the local disk as
+    `save_as`.
+    """
+    remote = requests.get(url)
+
+    with open(save_as, 'wb') as data:
+        data.write(remote.content)
