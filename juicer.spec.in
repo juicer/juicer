@@ -16,8 +16,10 @@ Url: https://github.com/abutcher/juicer
 BuildArch: noarch
 BuildRequires: python2-devel
 
+Requires: python-BeautifulSoup
 Requires: python-requests >= 0.13.1
 Requires: rpm-python
+Requires: python >= 2.5
 
 
 %description

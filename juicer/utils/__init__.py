@@ -104,6 +104,8 @@ def get_environments():
     juicer.utils.Log.log_debug("Reading environment sections:")
 
     environments = config.sections()
+
+    juicer.utils.Log.log_notice("Read environment sections: %s", environments)
     return environments
 
 

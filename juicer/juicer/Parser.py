@@ -154,7 +154,7 @@ class Parser(object):
                 usage='%(prog)s item [item ...] [-r repo [repo ...]] \
                 [--in environment [environment ...]]')
 
-        parser_upload.add_argument('item', metavar='item', \
+        parser_upload.add_argument('items', metavar='items', \
                 nargs='+', \
                 help='an item (rpm, directory or url) to be uploaded')
 
@@ -164,7 +164,7 @@ class Parser(object):
 
         parser_upload.add_argument('--in', nargs='*', \
                 metavar='environment', \
-                default=self._default_envs[1], \
+                default=self._default_envs, \
                 help='The environments to upload into.', \
                 dest='environment')
 

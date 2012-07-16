@@ -1,3 +1,4 @@
+from __future__ import with_statement
 # -*- coding: utf-8 -*-
 # Juicer - Administer Pulp and Release Carts
 # Copyright © 2012, Red Hat, Inc.

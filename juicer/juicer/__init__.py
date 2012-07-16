@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import juicer.utils.Log
+import juicer.common.Cart
 from juicer.juicer.Juicer import Juicer as j
 from pprint import pprint as pp
 
@@ -62,7 +63,16 @@ def rpmsearch(args):
 
 def upload(args):
     pulp = j(args)
-    pulp.upload(items=args.item, repos=args.repos, envs=args.environment)
+    cart_description = []
+
+    for repo in args.repos:
+        items = args.items
+        cart_description.append([repo] + items)
+
+    cart = pulp.create("upload-cart", cart_description)
+
+    for env in args.environment:
+        pulp.push("upload-cart", env)
 
 
 def hello(args):

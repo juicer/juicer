@@ -34,7 +34,6 @@ class RPM(object):
             self.path = None
         else:
             self.synced = True
-            print "I AM SYNCED: %s" % self.source
             self.path = source
 
 

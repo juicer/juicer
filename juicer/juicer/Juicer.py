@@ -193,7 +193,7 @@ class Juicer(object):
 
         return True
 
-    def push(self, cart_name):
+    def push(self, cart_name, env=None):
         """
         `cart_name` - Name of the release cart to push
 
@@ -202,10 +202,13 @@ class Juicer(object):
         juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart_name)
         cart = juicer.common.Cart.Cart(cart_name, autoload=True)
 
+        if not env:
+            env = self._defaults['cart_dest']
+
         cart.sync_remotes()
         for repo, items in cart.iterrepos():
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
-            self.upload(self._defaults['cart_dest'], repo, items)
+            self.upload(env, repo, items)
 
         return True
 
