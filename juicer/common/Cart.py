@@ -23,7 +23,6 @@ import os.path
 
 CART_LOCATION = os.path.expanduser("~/.juicer-carts")
 
-
 class Cart(object):
     def __init__(self, name, autoload=False):
         """
@@ -37,6 +36,7 @@ class Cart(object):
         """
         self.name = name
         self.repo_items_hash = {}
+        self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % name))
 
         if autoload:
             self.load(name)
@@ -50,13 +50,11 @@ class Cart(object):
         """
         juicer.utils.Log.log_debug("[CART:%s] Adding %s items to repo '%s'" % \
                                        (self.name, len(items), name))
-        self.repo_items_hash[name] = []
-
-        for item in items:
-            for match in juicer.utils.find_pattern(item):
-                self.repo_items_hash[name].append(match)
-
-        self.repo_items_hash[name] = juicer.utils.dedupe(self.repo_items_hash[name])
+        # We can't just straight-away add all of `items` to the
+        # repo. `items` may be composed of a mix of local files, local
+        # directories, remote files, and remote directories. We need
+        # to filter and validate each item.
+        self.repo_items_hash[name] = juicer.utils.filter_package_list(items)
 
     def load(self, json_file):
         """
@@ -86,6 +84,16 @@ class Cart(object):
         for repo, items in self.repo_items_hash.iteritems():
             if items:
                 yield (repo, items)
+
+    def sync_remotes(self):
+        """
+        Pull down all non-local items and save them into remotes_storage.
+        """
+        sync_check = {'pass': [], 'fail': []}
+
+        if not os.path.is_dir(self.remotes_storage):
+            os.mkdir(self.remotes_storage)
+
 
     def __str__(self):
         output = []
