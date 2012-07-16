@@ -42,7 +42,8 @@ _juicer_edit()
 # the '.json' part of each match from the final result. E.g.,
 # "change123.json" is shown in the completion list as "change123".
 {
-    _files -W ~/.juicer-carts -g "*.json(:r)"
+    _arguments \
+	:cart:_carts
 }
 
 _juicer_show()

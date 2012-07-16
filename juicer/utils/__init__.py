@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+
 from juicer.common import Constants
 from juicer.common.JuicerCommon import JuicerCommon as jc
 from functools import wraps
@@ -22,6 +23,7 @@ import ConfigParser
 import cStringIO
 import fnmatch
 import juicer.utils.Log
+import magic
 import os
 import os.path
 import sys
@@ -228,3 +230,20 @@ def mute(returns_output=False):
             return out
         return wrapper
     return decorator
+
+
+def is_rpm(path):
+    """
+    Use the python 'magic' library to find the type of file we're dealing with.
+    """
+    rpm_types = [Constants.MAGIC_RPM_BIN, Constants.MAGIC_RPM_SRC]
+    m = magic.open(magic.NONE)
+    m.load()
+    path_type = m.file(path)
+
+    if path_type in rpm_types:
+        juicer.utils.Log.log_debug("Type check passed for '%s': '%s'" % (path, path_type))
+        return True
+    else:
+        juicer.utils.Log.log_error("Type check failed for '%s': '%s'" % (path, path_type))
+        return False
