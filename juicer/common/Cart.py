@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import juicer.common.RPM
 import juicer.utils.Log
 import juicer.utils
 import os
@@ -90,10 +91,28 @@ class Cart(object):
         """
         Pull down all non-local items and save them into remotes_storage.
         """
-        sync_check = {'pass': [], 'fail': []}
+        synced_items = {}
 
-        if not os.path.is_dir(self.remotes_storage):
-            os.mkdir(self.remotes_storage)
+        for repo, items in self.iterrepos():
+            syncs = []
+            for rpm in items:
+                rpm_obj = juicer.common.RPM.RPM(rpm)
+                rpm_obj.sync(self.remotes_storage)
+
+                if rpm_obj.modified:
+                    syncs.append((rpm, rpm_obj.path))
+
+            if syncs:
+                synced_items[repo] = syncs
+
+        for repo in synced_items.keys():
+            for source, path in synced_items[repo]:
+                juicer.utils.Log.log_debug("Source RPM modified. New 'path': %s" % rpm)
+                self._update(repo, source, path)
+
+    def _update(self, repo, current, new):
+        self.repo_items_hash[repo].remove(current)
+        self.repo_items_hash[repo].append(new)
 
     def __str__(self):
         output = []

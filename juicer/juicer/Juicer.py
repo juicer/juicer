@@ -147,7 +147,12 @@ class Juicer(object):
 
         _r = self.connectors[env].post(query)
 
+        juicer.utils.Log.log_debug("Attempted metadata update for repo: %s -> %s" % \
+                                       (repoid, str(_r.content)))
+
         if _r.status_code == Constants.PULP_POST_CONFLICT:
+            juicer.utils.Log.log_debug("Metadata update in %s already in progress...: " % \
+                                           (repoid, str(_r.content)))
             while _r.status_code == Constants.PULP_POST_CONFLICT:
                 time.sleep(3)
                 _r = self.connectors[env].post(query)
@@ -197,6 +202,7 @@ class Juicer(object):
         juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart_name)
         cart = juicer.common.Cart.Cart(cart_name, autoload=True)
 
+        cart.sync_remotes()
         for repo, items in cart.iterrepos():
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(self._defaults['cart_dest'], repo, items)
