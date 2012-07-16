@@ -23,6 +23,7 @@ import os.path
 
 CART_LOCATION = os.path.expanduser("~/.juicer-carts")
 
+
 class Cart(object):
     def __init__(self, name, autoload=False):
         """
@@ -93,7 +94,6 @@ class Cart(object):
 
         if not os.path.is_dir(self.remotes_storage):
             os.mkdir(self.remotes_storage)
-
 
     def __str__(self):
         output = []
