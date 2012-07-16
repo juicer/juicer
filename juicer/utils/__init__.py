@@ -195,7 +195,7 @@ def find_pattern(search_base, pattern='*.rpm'):
     time) which match the given glob (`pattern`).
     """
     # Stolen from http://rosettacode.org/wiki/Walk_a_directory/Recursively#Python
-    if not os.path.isdir(search_base):
+    if (not os.path.isdir(search_base)) and os.path.exists(search_base):
         # Adapt the algorithm to gracefully handle non-directory search paths
         yield search_base
     else:
@@ -234,11 +234,13 @@ def mute(returns_output=False):
 
 def is_rpm(path):
     """
-    Use the python 'magic' library to find the type of file we're dealing with.
+    Use the python 'magic' library to find the type of file we're
+    dealing with.
     """
     rpm_types = [Constants.MAGIC_RPM_BIN, Constants.MAGIC_RPM_SRC]
     m = magic.open(magic.NONE)
     m.load()
+
     path_type = m.file(path)
 
     if path_type in rpm_types:

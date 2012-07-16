@@ -99,3 +99,20 @@ class Cart(object):
             output.append('')
 
         return "\n".join(output)
+
+
+# TODO: Refactor this fetching kind of logic
+# into... cart processing? Perhaps a prep type
+# action to sync remotes to local.
+# # https://path.to/package.rpm
+# elif re.match('https?://.*', item):
+#     # download item and upload
+#     if not re.match('.*\.rpm', item):
+#         raise TypeError('{0} is not an rpm'.format(item))
+#     filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
+#     remote = requests.get(item, env)
+#     with open(filename, 'wb') as data:
+#         data.write(remote.content())
+#     rpm_id = self._upload_rpm(filename, env)
+#     self._include_rpm_in_repo(rpm_id, env, repoid)
+#     os.remove(filename)
