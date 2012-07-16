@@ -24,7 +24,6 @@ import os
 import time
 import rpm
 import hashlib
-import requests
 
 
 class Juicer(object):

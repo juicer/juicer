@@ -28,6 +28,7 @@ import magic
 import os
 import os.path
 import sys
+import requests
 try:
     import json
     json
@@ -272,3 +273,14 @@ def is_rpm(path):
     else:
         juicer.utils.Log.log_error("Type check failed for '%s': '%s'" % (path, path_type))
         return False
+
+
+def save_url_as(url, save_as):
+    """
+    Download the file `url` and save it to the local disk as
+    `save_as`.
+    """
+    remote = requests.get(item)
+
+    with open(save_as, 'wb') as data:
+        data.write(remote.content())
