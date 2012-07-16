@@ -111,6 +111,17 @@ class Cart(object):
                 juicer.utils.Log.log_debug("Source RPM modified. New 'path': %s" % rpm)
                 self._update(repo, source, path)
 
+        for repo, items in self.iterrepos():
+            juicer.utils.Log.log_info("Sanity checking items for repo '%s'" % repo)
+            not_rpms = filter(lambda r: not juicer.utils.is_rpm(r), items)
+
+            if not_rpms:
+                juicer.utils.Log.log_warn("The following items are not actually RPMs:")
+                for i in not_rpms:
+                    juicer.utils.Log.log_warn(i)
+
+
+
     def _update(self, repo, current, new):
         self.repo_items_hash[repo].remove(current)
         self.repo_items_hash[repo].append(new)

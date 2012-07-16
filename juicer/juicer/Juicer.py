@@ -48,13 +48,10 @@ class Juicer(object):
 
     # continues 3-step upload process. this is where actual data transfer
     # occurs!
-    def _append_up(self, query='/services/upload/append/', uid='', fdata='', \
-                    env='re'):
+    def _append_up(self, query='/services/upload/append/', uid='', fdata='', env='re'):
         uri = query + uid + '/'
-        data = {'file-id': uid,
-                'file-data': fdata.decode('utf-8', 'replace')}
-
-        _r = self.connectors[env].put(uri, data)
+        juicer.utils.Log.log_notice("Appending to: %s" % uri)
+        _r = self.connectors[env].put(uri, fdata, log_data=False, auto_create_json_str=False)
 
         juicer.utils.Log.log_debug("Continuing upload with append. PUT returned with data: %s" % str(_r.content))
 
@@ -104,20 +101,28 @@ class Juicer(object):
         size = os.path.getsize(package)
         package_basename = os.path.basename(package)
 
+        juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" % size)
+
         # initiate upload
         upload_id = self._init_up(name=package_basename, cksum=cksum, size=size)
 
         # read in rpm
         upload_flag = False
-        while True:
+        total_seeked = 0
+        rpm_fd.seek(0)
+        while total_seeked < size:
             rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
-
-            if not rpm_data:
-                break
+            total_seeked += len(rpm_data)
+            juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
+            # if not rpm_data:
+            #     break
 
             upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
 
+
         rpm_fd.close()
+
+        juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
 
         # finalize upload
         rpm_id = ''

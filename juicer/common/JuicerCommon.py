@@ -40,16 +40,24 @@ class JuicerCommon(object):
         return requests.get(url, auth=self.auth, headers=self.headers,
                             verify=False)
 
-    def post(self, url="", data={}):
+    def post(self, url="", data={}, log_data=True, auto_create_json_str=True):
         url = self.base_url + url
-        juicer.utils.Log.log_debug("[REST:POST:%s] [Data:%s]", url, str(data))
+        if log_data:
+            juicer.utils.Log.log_debug("[REST:POST:%s] [Data:%s]", url, str(data))
 
-        return requests.post(url, juicer.utils.create_json_str(data), \
+        if auto_create_json_str:
+            data = juicer.utils.create_json_str(data)
+
+        return requests.post(url, data, \
                 auth=self.auth, headers=self.headers, verify=False)
 
-    def put(self, url="", data={}):
+    def put(self, url="", data={}, log_data=True, auto_create_json_str=True):
         url = self.base_url + url
-        juicer.utils.Log.log_debug("[REST:PUT:%s] [Data:%s]", url, str(data))
+        if log_data:
+            juicer.utils.Log.log_debug("[REST:PUT:%s] [Data:%s]", url, str(data))
 
-        return requests.put(url, juicer.utils.create_json_str(data), \
+        if auto_create_json_str:
+            data = juicer.utils.create_json_str(data)
+
+        return requests.put(url, data, \
                 auth=self.auth, headers=self.headers, verify=False)
