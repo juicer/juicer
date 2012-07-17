@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
+from juicer.common.StatusBar import StatusBar
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
@@ -106,6 +107,10 @@ class Juicer(object):
         # initiate upload
         upload_id = self._init_up(name=package_basename, cksum=cksum, size=size)
 
+        #create a statusbar
+        if self.args.v == 1:
+            statusbar = StatusBar()
+
         # read in rpm
         upload_flag = False
         total_seeked = 0
@@ -114,12 +119,11 @@ class Juicer(object):
             rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
             total_seeked += len(rpm_data)
             juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
-            # if not rpm_data:
-            #     break
-
             upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
-
-
+            if self.args.v == 1:
+                statusbar.update(len(rpm_data), size)
+        if self.args.v == 1:
+            statusbar.close()
         rpm_fd.close()
 
         juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
