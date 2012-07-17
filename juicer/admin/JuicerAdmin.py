@@ -42,7 +42,7 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug("Create Repo: %s", self.args.name)
 
         for env in self.args.envs:
-            if juicer.utils.repo_exists_p(self.args, self.connectors[env], env):
+            if juicer.utils.repo_exists_p(self.args.name, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo `%s` already exists in %s... skipping!",
                                           (self.args.name, env))
                 continue
@@ -87,7 +87,7 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
 
         for env in self.args.envs:
-            if not juicer.utils.repo_exists_p(self.args, self.connectors[env], env):
+            if not juicer.utils.repo_exists_p(self.args.name, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo `%s` doesn't exist in %s... skipping!",
                                            (self.args.name, env))
                 continue

@@ -27,7 +27,7 @@ CART_LOCATION = os.path.expanduser("~/.juicer-carts")
 
 
 class Cart(object):
-    def __init__(self, name, autoload=False):
+    def __init__(self, name, autoload=False, autosync=False):
         """
         After a cart is instantiated there are two ways to fill it.
 
@@ -42,7 +42,14 @@ class Cart(object):
         self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % name))
 
         if autoload:
+            juicer.utils.Log.log_notice("[CART:%s] Auto-loading cart items" % self.name)
             self.load(name)
+
+            if autosync:
+                juicer.utils.Log.log_notice("[CART:%s] Auto-syncing remote cart items" % self.name)
+                self.sync_remotes()
+        elif (not autoload) and autosync:
+            juicer.utils.Log.log_warn("[CART:%s] Auto-sync requested, but autoload not enabled. Skipping..." % self.name)
 
     def add_repo(self, name, items):
         """
@@ -87,6 +94,12 @@ class Cart(object):
         for repo, items in self.repo_items_hash.iteritems():
             if items:
                 yield (repo, items)
+
+    def sign_items(self, key):
+        """
+        Sign the items in the cart with a GPG key.
+        """
+        pass
 
     def sync_remotes(self):
         """

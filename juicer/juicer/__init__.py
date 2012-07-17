@@ -49,7 +49,9 @@ def createlike():
 
 def push(args):
     pulp = j(args)
-    pushed = pulp.push(args.cartname)
+    cart = juicer.common.Cart.Cart(args.cartname, autoload=True, autosync=True)
+    for env in args.environment:
+        pushed = pulp.push(cart, env)
 
 
 def cartsearch(args):
@@ -63,16 +65,11 @@ def rpmsearch(args):
 
 def upload(args):
     pulp = j(args)
-    cart_description = []
 
-    for repo in args.repos:
-        items = args.items
-        cart_description.append([repo] + items)
-
-    cart = pulp.create("upload-cart", cart_description)
+    cart = pulp.create("upload-cart", args.r)
 
     for env in args.environment:
-        pulp.push("upload-cart", env)
+        pulp.push(cart, env)
 
 
 def hello(args):

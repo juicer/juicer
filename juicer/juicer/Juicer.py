@@ -202,20 +202,23 @@ class Juicer(object):
 
         return True
 
-    def push(self, cart_name, env=None):
+    def push(self, cart, env=None):
         """
-        `cart_name` - Name of the release cart to push
+        `cart` - Release cart to push
 
         Pushes a release cart to the pre-release environment.
         """
-        juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart_name)
-        cart = juicer.common.Cart.Cart(cart_name, autoload=True)
+        juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart.name)
+        #cart = juicer.common.Cart.Cart(cart_name, autoload=True, autosync=True)
 
         if not env:
             env = self._defaults['cart_dest']
 
-        cart.sync_remotes()
         for repo, items in cart.iterrepos():
+            if not juicer.utils.repo_exists_p(repo, self.connectors[env], env):
+                juicer.utils.Log.log_info("repo '%s' doesn't exist in %s environment... skipping!",
+                                           (repo, env))
+                continue
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
 

@@ -27,6 +27,7 @@ class Parser(object):
                 description='Manage release carts')
         juicer.juicer.parser = self.parser
 
+        self._default_cart_dest = juicer.utils.get_login_info()[1]['cart_dest']
         self._default_envs = juicer.utils.get_environments()
 
         self.parser.add_argument('-v', action='count', \
@@ -57,13 +58,13 @@ class Parser(object):
 
         ##################################################################
         # Create the 'edit' sub-parser
-        parser_edit = subparsers.add_parser('edit', \
-                help='Interactively edit a release cart.')
+        # parser_edit = subparsers.add_parser('edit', \
+        #         help='Interactively edit a release cart.')
 
-        parser_edit.add_argument('cart-name', metavar='cartname', \
-                                     help='The name of your release cart')
+        # parser_edit.add_argument('cart-name', metavar='cartname', \
+        #                              help='The name of your release cart')
 
-        parser_edit.set_defaults(j=juicer.juicer.edit)
+        # parser_edit.set_defaults(j=juicer.juicer.edit)
 
         ##################################################################
         # Create the 'show' sub-parser
@@ -91,20 +92,20 @@ class Parser(object):
 
         ##################################################################
         # Create the 'create-like' sub-parser
-        parser_createlike = subparsers.add_parser('create-like', \
-                help='Create a new cart based off an existing one.')
+        # parser_createlike = subparsers.add_parser('create-like', \
+        #         help='Create a new cart based off an existing one.')
 
-        parser_createlike.add_argument('cart-name', metavar='cartname', \
-                                   help='The name of your new release cart')
+        # parser_createlike.add_argument('cart-name', metavar='cartname', \
+        #                            help='The name of your new release cart')
 
-        parser_createlike.add_argument('old-cart-name', \
-                metavar='oldcartname', help='Cart to copy')
+        # parser_createlike.add_argument('old-cart-name', \
+        #         metavar='oldcartname', help='Cart to copy')
 
-        parser_createlike.add_argument('items', metavar='items', \
-                                           nargs="+", \
-                                           help='Cart name')
+        # parser_createlike.add_argument('items', metavar='items', \
+        #                                    nargs="+", \
+        #                                    help='Cart name')
 
-        parser_createlike.set_defaults(j=juicer.juicer.createlike)
+        # parser_createlike.set_defaults(j=juicer.juicer.createlike)
 
         ##################################################################
         # Create the 'push' sub-parser
@@ -114,17 +115,23 @@ class Parser(object):
         parser_push.add_argument('cartname', metavar='cartname', \
                                     help='The name of your new release cart')
 
+        parser_push.add_argument('--in', nargs='*', \
+                metavar='environment', \
+                default=[self._default_cart_dest], \
+                help='The environments to push into.', \
+                dest='environment')
+
         parser_push.set_defaults(j=juicer.juicer.push)
 
         ##################################################################
         # Create the 'cart_search' sub-parser
-        parser_cartsearch = subparsers.add_parser('cart-search', \
-                help='Search for a cart in pulp.')
+        # parser_cartsearch = subparsers.add_parser('cart-search', \
+        #         help='Search for a cart in pulp.')
 
-        parser_cartsearch.add_argument('cartname', metavar='cartname', \
-                                   help='The name of the cart to search for')
+        # parser_cartsearch.add_argument('cartname', metavar='cartname', \
+        #                            help='The name of the cart to search for')
 
-        parser_cartsearch.set_defaults(j=juicer.juicer.cartsearch)
+        # parser_cartsearch.set_defaults(j=juicer.juicer.cartsearch)
 
         ##################################################################
         # Create the 'rpm_search' sub-parser
@@ -141,7 +148,7 @@ class Parser(object):
 
         parser_rpmsearch.add_argument('--in', nargs='*', \
                 metavar='environment', \
-                default=self._default_envs, \
+                default=[self._default_cart_dest], \
                 help='The environments to limit search scope to.', \
                 dest='environment')
 
@@ -150,21 +157,17 @@ class Parser(object):
         ##################################################################
         # create the 'upload' sub-parser
         parser_upload = subparsers.add_parser('upload', \
-                help='Upload an item into pulp.', \
-                usage='%(prog)s item [item ...] [-r repo [repo ...]] \
-                [--in environment [environment ...]]')
+                help='Upload the items specified into repos.', \
+                usage='%(prog)s -r REPONAME items ... [ -r REPONAME items ...] [--in ENV ...]')
 
-        parser_upload.add_argument('items', metavar='items', \
-                nargs='+', \
-                help='an item (rpm, directory or url) to be uploaded')
-
-        parser_upload.add_argument('-r', nargs='*', metavar='repo', \
-                dest='repos', \
-                default=[], help='The repo(s) to upload into.')
+        parser_upload.add_argument('-r', metavar='reponame', \
+                                       action='append', \
+                                       nargs='+', \
+                                       help='Destination repo name, items...')
 
         parser_upload.add_argument('--in', nargs='*', \
                 metavar='environment', \
-                default=self._default_envs, \
+                default=[self._default_cart_dest], \
                 help='The environments to upload into.', \
                 dest='environment')
 
