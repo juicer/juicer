@@ -22,10 +22,7 @@ import sys
 class StatusBar(object):
     def __init__(self):
         rows, columns = os.popen('stty size', 'r').read().split()
-
         self.width = int(columns) - 2
-        self.percentage = 0.0
-
         sys.stdout.write("[%s]" % (" " * self.width))
         sys.stdout.flush()
         sys.stdout.write("\b" * (self.width + 1))
