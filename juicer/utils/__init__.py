@@ -72,7 +72,7 @@ def get_login_info():
     for section in config.sections():
         cfg = dict(config.items(section))
 
-        if not required_keys == set(cfg.keys()):
+        if not required_keys.issubset(set(cfg.keys())):
             raise Exception("Missing values in config file: %s" % \
                             ", ".join(list(required_keys - set(cfg.keys()))))
 
