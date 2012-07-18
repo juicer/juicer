@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer-admin
-.\"    Author: :doctype:manpage
+.\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/17/2012
+.\"      Date: 07/18/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.1.7
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "07/17/2012" "Juicer 0\&.1\&.7" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "07/18/2012" "Juicer 0\&.1\&.7" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -83,50 +83,6 @@ Plain text password for user\&.
 .RS 4
 Environments to create user in\&.
 .RE
-.SH "UPDATE-USER"
-.sp
-usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD \-\-in env1 [ env2, [ \&...]]
-.PP
-\fBLOGIN\fR
-.RS 4
-Login or username of user to update\&.
-.RE
-.PP
-\fBFULLNAME\fR
-.RS 4
-Updated full name of user\&.
-.RE
-.PP
-\fBPASSWORD\fR
-.RS 4
-Updated plain text password\&.
-.RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments to update user in\&.
-.RE
-.SH "LIST-REPOS"
-.sp
-usage: juicer\-admin list\-repos \-\-in env1 [ env2, [ \&...]]
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments to show repos from\&.
-.RE
-.SH "SHOW-USER"
-.sp
-usage: juicer\-admin LOGIN \-\-in env1 [ env2, [ \&...]]
-.PP
-\fBLOGIN\fR
-.RS 4
-Login or username for user\&.
-.RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments to show user from\&.
-.RE
 .SH "DELETE-REPO"
 .sp
 usage: juicer\-admin REPONAME \-\-in env1 [ env2, [ \&...]]
@@ -153,6 +109,22 @@ Login or username of user to delete\&.
 .RS 4
 Environments to delete user in\&.
 .RE
+.SH "LIST-REPOS"
+.sp
+usage: juicer\-admin list\-repos \-\-in env1 [ env2, [ \&...]]
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to show repos from\&.
+.RE
+.SH "LIST-ROLES"
+.sp
+usage: juicer\-admin list\-roles \-\-in env1 [ env2, [ \&...]]
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to delete user in\&.
+.RE
 .SH "ROLE-ADD"
 .sp
 usage: juicer\-admin role\-add \-\-role ROLE \-\-login LOGIN \-\-in env1 [ env2, [ \&...]]
@@ -166,13 +138,41 @@ The role which we will assign to login or username\&.
 .RS 4
 Login or username of user to add to role\&.
 .RE
-.SH "LIST-ROLES"
+.SH "SHOW-USER"
 .sp
-usage: juicer\-admin list\-roles \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin LOGIN \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username for user\&.
+.RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to delete user in\&.
+Environments to show user from\&.
+.RE
+.SH "UPDATE-USER"
+.sp
+usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username of user to update\&.
+.RE
+.PP
+\fBFULLNAME\fR
+.RS 4
+Updated full name of user\&.
+.RE
+.PP
+\fBPASSWORD\fR
+.RS 4
+Updated plain text password\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to update user in\&.
 .RE
 .SH "FILES"
 .sp
@@ -188,9 +188,3 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"
 .sp
 \fBjuicer\fR(1), \fBjuicer\&.conf\fR(5)
-.SH "AUTHOR"
-.PP
-\fB:doctype:manpage\fR
-.RS 4
-Author.
-.RE
