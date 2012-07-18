@@ -16,7 +16,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
-from pprint import pprint as pp
 
 
 def create_repo(args):

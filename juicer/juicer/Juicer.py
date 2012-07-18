@@ -277,7 +277,7 @@ class Juicer(object):
             try:
                 _r = self.connectors[env].get()
                 juicer.utils.Log.log_info("OK")
-            except Exception, err:
+            except Exception:
                 juicer.utils.Log.log_info("FAILED")
                 continue
 

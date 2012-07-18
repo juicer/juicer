@@ -14,7 +14,6 @@ Functions for handling remote package resources
 """
 from BeautifulSoup import BeautifulSoup as bs
 from os.path import exists, expanduser
-import os
 import re
 import urllib2
 import juicer.utils.Log

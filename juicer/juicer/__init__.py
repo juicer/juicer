@@ -18,7 +18,6 @@
 import juicer.utils.Log
 import juicer.common.Cart
 from juicer.juicer.Juicer import Juicer as j
-from pprint import pprint as pp
 
 
 def create(args):
@@ -51,7 +50,7 @@ def push(args):
     pulp = j(args)
     cart = juicer.common.Cart.Cart(args.cartname, autoload=True, autosync=True)
     for env in args.environment:
-        pushed = pulp.push(cart, env)
+        pulp.push(cart, env)
 
 
 def cartsearch(args):
