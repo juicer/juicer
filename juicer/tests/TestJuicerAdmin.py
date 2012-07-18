@@ -27,7 +27,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.parser = pmoney()
 
     def create_test_user(self):
-        args = 'create-user --login cjesop --password cjesop \
+        args = 'create-user cjesop --password cjesop \
                 --name "ColonelJesop"'
         pulp = ja(self.parser.parser.parse_args(args.split()))
         mute()(pulp.create_user)()
@@ -78,7 +78,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_repo()
 
     def test_create_user(self):
-        args = 'create-user --login cjesop --password cjesop \
+        args = 'create-user cjesop --password cjesop \
                 --name "ColonelJesop"'
         pulp = ja(self.parser.parser.parse_args(args.split()))
         output = mute(True)(pulp.create_user)()
