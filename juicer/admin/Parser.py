@@ -65,13 +65,13 @@ class Parser(object):
         parser_create_user = self.subparsers.add_parser('create-user',\
                 help='Create pulp user')
 
+        parser_create_user.add_argument('login', metavar='login', \
+                                            dest='login', \
+                                            help='Login user id for user')
+
         parser_create_user.add_argument('--name', metavar='name', \
                                             dest='name', \
                                             help='Full name of user')
-
-        parser_create_user.add_argument('--login', metavar='login', \
-                                            dest='login', \
-                                            help='Login user id for user')
 
         parser_create_user.add_argument('--password', metavar='password', \
                                         dest='password', \
@@ -90,13 +90,13 @@ class Parser(object):
         parser_update_user = self.subparsers.add_parser('update-user',\
                 help='Change user information')
 
+        parser_update_user.add_argument('login', metavar='login', \
+                                    dest='login', \
+                                    help='Login user id for user to update')
+
         parser_update_user.add_argument('--name', metavar='name', \
                                             dest='name', \
                                             help='Updated name of user')
-
-        parser_update_user.add_argument('--login', metavar='login', \
-                                    dest='login', \
-                                    help='Login user id for user to update')
 
         parser_update_user.add_argument('--password', metavar='password', \
                                         dest='password', \
