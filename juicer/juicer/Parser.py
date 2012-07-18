@@ -160,7 +160,7 @@ class Parser(object):
                 help='Upload the items specified into repos.', \
                 usage='%(prog)s -r REPONAME items ... [ -r REPONAME items ...] [--in ENV ...]')
 
-        parser_upload.add_argument('-r', metavar='reponame', \
+        parser_upload.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name, items...')
