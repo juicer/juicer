@@ -16,7 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
-from juicer.common.StatusBar import StatusBar
+from juicer.utils.StatusBar import StatusBar
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
