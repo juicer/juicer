@@ -133,8 +133,6 @@ class Cart(object):
                 for i in not_rpms:
                     juicer.utils.Log.log_warn(i)
 
-
-
     def _update(self, repo, current, new):
         self.repo_items_hash[repo].remove(current)
         self.repo_items_hash[repo].append(new)

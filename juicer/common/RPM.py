@@ -19,6 +19,7 @@ import os.path
 import juicer.utils
 import juicer.utils.Log
 
+
 class RPM(object):
     def __init__(self, source):
         self.name = os.path.basename(source)
@@ -35,7 +36,6 @@ class RPM(object):
         else:
             self.synced = True
             self.path = source
-
 
     def sync(self, destination):
         dest_file = os.path.join(destination, self.name)

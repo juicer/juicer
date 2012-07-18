@@ -26,14 +26,14 @@ class StatusBar(object):
         sys.stdout.write("[%s]" % (" " * self.width))
         sys.stdout.flush()
         sys.stdout.write("\b" * (self.width + 1))
-    
+
     def update(self, chunksize, totalsize):
         if chunksize > totalsize:
             sys.stdout.write("=" * self.columns)
             sys.stdout.flush()
         else:
-            sys.stdout.write("=" * int((float(chunksize)*self.width) / float(totalsize)))
+            sys.stdout.write("=" * int((float(chunksize) * self.width) / float(totalsize)))
             sys.stdout.flush()
-        
+
     def close(self):
         sys.stdout.write("\n")
