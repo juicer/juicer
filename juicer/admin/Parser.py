@@ -66,7 +66,6 @@ class Parser(object):
                 help='Create pulp user')
 
         parser_create_user.add_argument('login', metavar='login', \
-                                            dest='login', \
                                             help='Login user id for user')
 
         parser_create_user.add_argument('--name', metavar='name', \
@@ -91,7 +90,6 @@ class Parser(object):
                 help='Change user information')
 
         parser_update_user.add_argument('login', metavar='login', \
-                                    dest='login', \
                                     help='Login user id for user to update')
 
         parser_update_user.add_argument('--name', metavar='name', \
