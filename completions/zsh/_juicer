@@ -2,7 +2,7 @@
 
 _carts()
 {
-    for cart in `ls -1 ~/.juicer-carts | sed "s/.json//"`; do
+    for cart in `find ~/.juicer-carts -maxdepth 1 -type f | grep -v "upload-cart" | awk -F/ '{print $NF}' | sed "s/.json//"`; do
 	_wanted 'cart' expl 'cart' compadd $cart
     done
 }
@@ -13,12 +13,12 @@ _juicer_commands()
     local -a juicer_commands
     juicer_commands=(
 	'create:Create a cart with the items specified'
-	'edit:Interactively edit a release cart'
+#	'edit:Interactively edit a release cart'
 	'show:Print the contents of a cart'
-	'update:Update a release crate'
-	'create-like:Create a new cart like an old one'
+#	'update:Update a release crate'
+#	'create-like:Create a new cart like an old one'
 	'push:Pushes/updates a cart on the pulp server'
-	'cart-search:Search for a cart in pulp'
+#	'cart-search:Search for a cart in pulp'
 	'rpm-search:Search for an RPM in pulp'
 	'upload:Update an item to pulp server'
 	'hello:Test your connection to the pulp server'
