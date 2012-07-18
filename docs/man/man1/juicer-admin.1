@@ -1,6 +1,6 @@
 '\" t
 .\"     Title: juicer-admin
-.\"    Author: [see the "AUTHOR" section]
+.\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
 .\"      Date: 07/17/2012
 .\"    Manual: Pulp repos and release carts
@@ -28,35 +28,158 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-juicer-admin \- manage pulp repos and promote release carts
+juicer-admin \- manage pulp repos, users, and roles
 .SH "SYNOPSIS"
 .sp
-juicer\-admin [ \-\-op \-\-ti \-\-on \-s]
+juicer\-admin subcommand [OPTIONS \&...] [PARAMETERS \&...]
 .SH "DESCRIPTION"
 .sp
-Manage pulp repositories and release carts\&.
-.SH "OPTIONS"
+Manage pulp repositories, users, and roles\&.
+.SH "CREATE-REPO"
+.sp
+usage: juicer\-admin creat\-repo REPONAME \-\-arch ARCH \-\-feed FEED \-\-in env1 [ env2, [ \&...]]
+.sp
+Create a repo with the options specified\&.
 .PP
-\fBFILE\fR
+\fBREPONAME\fR
 .RS 4
-Release file in YAML format\&. Instructions are read from stdin if
-\fIFILE\fR
-is
-\fI\-\fR
-or not given\&. Multiple
-\fIFILE\fRs can be given\&.
+The name of the repo you wish to create\&.
 .RE
 .PP
-\fB\-h\fR, \fB\-\-help\fR
+\fBARCH\fR
 .RS 4
-Show this help message and exit\&.
+The architecture which packages will be built for in repo\&.
+.RE
+.PP
+\fBFEED\fR
+.RS 4
+A feed url from which to sync yum repository meta\-data and packages\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to create repo in\&.
+.RE
+.SH "CREATE-USER"
+.sp
+usage: juicer\-admin create\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username for user\&.
+.RE
+.PP
+\fBFULLNAME\fR
+.RS 4
+Users full name\&.
+.RE
+.PP
+\fBPASSWORD\fR
+.RS 4
+Plain text password for user\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to create user in\&.
+.RE
+.SH "UPDATE-USER"
+.sp
+usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username of user to update\&.
+.RE
+.PP
+\fBFULLNAME\fR
+.RS 4
+Updated full name of user\&.
+.RE
+.PP
+\fBPASSWORD\fR
+.RS 4
+Updated plain text password\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to update user in\&.
+.RE
+.SH "LIST-REPOS"
+.sp
+usage: juicer\-admin list\-repos \-\-in env1 [ env2, [ \&...]]
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to show repos from\&.
+.RE
+.SH "SHOW-USER"
+.sp
+usage: juicer\-admin LOGIN \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username for user\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to show user from\&.
+.RE
+.SH "DELETE-REPO"
+.sp
+usage: juicer\-admin REPONAME \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBREPONAME\fR
+.RS 4
+Name of repo to delete\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to delete repo in\&.
+.RE
+.SH "DELETE-USER"
+.sp
+usage: juicer\-admin LOGIN \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username of user to delete\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to delete user in\&.
+.RE
+.SH "ROLE-ADD"
+.sp
+usage: juicer\-admin role\-add \-\-role ROLE \-\-login LOGIN \-\-in env1 [ env2, [ \&...]]
+.PP
+\fBROLE\fR
+.RS 4
+The role which we will assign to login or username\&.
+.RE
+.PP
+\fBLOGIN\fR
+.RS 4
+Login or username of user to add to role\&.
+.RE
+.SH "LIST-ROLES"
+.sp
+usage: juicer\-admin list\-roles \-\-in env1 [ env2, [ \&...]]
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments to delete user in\&.
 .RE
 .SH "FILES"
 .sp
 ~/\&.juicer\&.conf \(em Juicer configuration file
 .SH "AUTHOR"
 .sp
-Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com>\&.
+Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com> and Andrew Butcher <abutcher@redhat\&.com>
 .SH "COPYRIGHT"
 .sp
 Copyright \(co 2012, Red Hat, Inc\&.\&.
@@ -65,3 +188,9 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"
 .sp
 \fBjuicer\fR(1), \fBjuicer\&.conf\fR(5)
+.SH "AUTHOR"
+.PP
+\fB:doctype:manpage\fR
+.RS 4
+Author.
+.RE

@@ -7,34 +7,132 @@ juicer-admin(1)
 
 NAME
 ----
-juicer-admin - manage pulp repos and promote release carts
+juicer-admin - manage pulp repos, users, and roles
 
 
 
 SYNOPSIS
 --------
-juicer-admin [ --op --ti --on -s]
+juicer-admin subcommand [OPTIONS ...] [PARAMETERS ...]
 
 
 
 DESCRIPTION
 -----------
-Manage pulp repositories and release carts.
+Manage pulp repositories, users, and roles.
 
 
+CREATE-REPO
+-----------
+usage: juicer-admin creat-repo REPONAME --arch ARCH --feed FEED --in env1 [ env2, [ ...]]
 
-OPTIONS
--------
-*FILE*::
+Create a repo with the options specified.
 
-Release file in YAML format. Instructions are read from stdin if
-'FILE' is '-' or not given. Multiple __FILE__s can be given.
+*REPONAME*::
+The name of the repo you wish to create.
+
+*ARCH*::
+The architecture which packages will be built for in repo.
+
+*FEED*::
+A feed url from which to sync yum repository meta-data and packages.
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to create repo in.
 
 
+CREATE-USER
+-----------
+usage: juicer-admin create-user LOGIN --name FULLNAME --password PASSWORD --in env1 [ env2, [ ...]]
 
-*-h*, *--help*::
+*LOGIN*::
+Login or username for user.
 
-Show this help message and exit.
+*FULLNAME*::
+Users full name.
+
+*PASSWORD*::
+Plain text password for user.
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to create user in.
+
+
+DELETE-REPO
+-----------
+usage: juicer-admin REPONAME --in env1 [ env2, [ ...]]
+
+*REPONAME*::
+Name of repo to delete.
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to delete repo in.
+
+
+DELETE-USER
+-----------
+usage: juicer-admin LOGIN --in env1 [ env2, [ ...]]
+
+*LOGIN*::
+Login or username of user to delete.
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to delete user in.
+
+
+LIST-REPOS
+----------
+usage: juicer-admin list-repos --in env1 [ env2, [ ...]]
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to show repos from.
+
+
+LIST-ROLES
+----------
+usage: juicer-admin list-roles --in env1 [ env2, [ ...]]
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to delete user in.
+
+
+ROLE-ADD
+--------
+usage: juicer-admin role-add --role ROLE --login LOGIN --in env1 [ env2, [ ...]]
+
+*ROLE*::
+The role which we will assign to login or username.
+
+*LOGIN*::
+Login or username of user to add to role.
+
+
+SHOW-USER
+---------
+usage: juicer-admin LOGIN --in env1 [ env2, [ ...]]
+
+*LOGIN*::
+Login or username for user.
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to show user from.
+
+
+UPDATE-USER
+-----------
+usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD --in env1 [ env2, [ ...]]
+
+*LOGIN*::
+Login or username of user to update.
+
+*FULLNAME*::
+Updated full name of user.
+
+*PASSWORD*::
+Updated plain text password.
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments to update user in.
 
 
 
@@ -47,7 +145,7 @@ FILES
 AUTHOR
 ------
 Juicer was written by GCA-PC, Red Hat, Inc.. This man page was written
-by Tim Bielawa <tbielawa@redhat.com>.
+by Tim Bielawa <tbielawa@redhat.com> and Andrew Butcher <abutcher@redhat.com>
 
 
 
