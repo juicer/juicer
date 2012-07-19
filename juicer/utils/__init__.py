@@ -52,38 +52,96 @@ def create_json_str(input_ds):
     return json.dumps(input_ds)
 
 
+def _config_file():
+    """
+    check that the config file is present and readable. if not,
+    dump a template in place
+    """
+    config_file = os.path.expanduser('~/.juicer.conf')
+
+    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
+        return config_file
+    elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
+        raise IOError("Can not read %s" % config_file)
+    else:
+        config = ConfigParser.RawConfigParser({'username': 'user', \
+                'password': 'pword', \
+                'base_url': 'https://localhost/pulp/api/', \
+                'base': 'False', \
+                'requires_signature': 'False'})
+        config.add_section('qa')
+        config.set('qa', 'base', 'True')
+        config.set('qa', 'promotes_to', 'stage')
+        config.add_section('stage')
+        config.set('stage', 'requires_signature', 'True')
+        config.set('stage', 'promotes_to', 'prod')
+        config.add_section('prod')
+        config.set('prod', 'requires_signature', 'True')
+        config.set('prod', 'promotes_to', 'False')
+
+        with open(config_file, 'w') as conf:
+            config.write(conf)
+
+        raise Exception('default config file created')
+
+
+def _config_test(config):
+    """
+    confirm the provided config has the required attributes and
+    has a valid promotion path
+    """
+    required_keys = set(['username', 'password', 'base_url', 'promotes_to'])
+    base_count = 0
+
+    for section in config.sections():
+        cfg = dict(config.items(section))
+
+        if cfg['base'] == 'True':
+            base_count += 1
+
+        # ensure required keys are present in each section
+        if not required_keys.issubset(set(cfg.keys())):
+            raise Exception("Missing values in config file: %s" % \
+                            ", ".join(list(required_keys - set(cfg.keys()))))
+
+        # ensure promotion path exists
+        if cfg['promotes_to'] not in config.sections() and cfg['promotes_to'] != 'False':
+            raise Exception("promotion_path: %s is not a config section" \
+                    % cfg['promotes_to'])
+
+    if base_count != 1:
+        raise Exception("there must be one and only one base section")
+
+
 def get_login_info():
     """
     Give back an array of dicts with the connection
     information for all the environments.
     """
     config = ConfigParser.SafeConfigParser()
-    config_file = os.path.expanduser('~/.juicer.conf')
-    required_keys = set(['username', 'password', 'base_url'])
     connections = {}
     _defaults = {}
+    _defaults['cart_dest'] = ''
 
-    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
-        config.read(config_file)
-    else:
-        raise IOError("Can not read %s" % config_file)
+    config.read(_config_file())
+
+    _config_test(config)
 
     juicer.utils.Log.log_debug("Loading connection information:")
     for section in config.sections():
         cfg = dict(config.items(section))
 
-        if not required_keys.issubset(set(cfg.keys())):
-            raise Exception("Missing values in config file: %s" % \
-                            ", ".join(list(required_keys - set(cfg.keys()))))
+        connections[section] = jc(cfg)
 
-        juicer.utils.Log.log_debug("    [%s] username: %s, base_url: %s" % \
+        if cfg['base'] == True:
+            _defaults['cart_dest'] = section
+
+        juicer.utils.Log.log_debug("[%s] username: %s, base_url: %s" % \
                                        (section, \
                                             cfg['username'], \
                                             cfg['base_url']))
-        connections[section] = jc(cfg)
 
     _defaults['environments'] = config.sections()
-    _defaults['cart_dest'] = config.sections()[0]
 
     return (connections, _defaults)
 
@@ -94,12 +152,8 @@ def get_environments():
     environment values.
     """
     config = ConfigParser.SafeConfigParser()
-    config_file = os.path.expanduser('~/.juicer.conf')
 
-    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
-        config.read(config_file)
-    else:
-        raise IOError("Can not read %s" % config_file)
+    config.read(_config_file())
 
     juicer.utils.Log.log_debug("Reading environment sections:")
 
