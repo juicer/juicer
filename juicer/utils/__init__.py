@@ -52,6 +52,34 @@ def create_json_str(input_ds):
     return json.dumps(input_ds)
 
 
+def _config_test(config):
+    """
+    confirm the provided config has the required attributes and
+    has a valid promotion path
+    """
+    required_keys = set(['username', 'password', 'base_url', 'promotes_to'])
+    base_count = 0
+
+    for section in config.sections():
+        cfg = dict(config.items(section))
+
+        if cfg['base'] == 'True':
+            base_count += 1
+
+        # ensure required keys are present in each section
+        if not required_keys.issubset(set(cfg.keys())):
+            raise Exception("Missing values in config file: %s" % \
+                            ", ".join(list(required_keys - set(cfg.keys()))))
+
+        # ensure promotion path exists
+        if cfg['promotes_to'] not in config.sections() and cfg['promotes_to'] != 'False':
+            raise Exception("promotion_path: %s is not a config section" \
+                    % cfg['promotes_to'])
+
+    if base_count != 1:
+        raise Exception("there must be one and only one base section")
+
+
 def get_login_info():
     """
     Give back an array of dicts with the connection
@@ -59,31 +87,32 @@ def get_login_info():
     """
     config = ConfigParser.SafeConfigParser()
     config_file = os.path.expanduser('~/.juicer.conf')
-    required_keys = set(['username', 'password', 'base_url'])
     connections = {}
     _defaults = {}
+    _defaults['cart_dest'] = ''
 
     if os.path.exists(config_file) and os.access(config_file, os.R_OK):
         config.read(config_file)
     else:
         raise IOError("Can not read %s" % config_file)
 
+    _config_test(config)
+
     juicer.utils.Log.log_debug("Loading connection information:")
     for section in config.sections():
         cfg = dict(config.items(section))
 
-        if not required_keys.issubset(set(cfg.keys())):
-            raise Exception("Missing values in config file: %s" % \
-                            ", ".join(list(required_keys - set(cfg.keys()))))
+        connections[section] = jc(cfg)
 
-        juicer.utils.Log.log_debug("    [%s] username: %s, base_url: %s" % \
+        if cfg['base'] == True:
+            _defaults['cart_dest'] = section
+
+        juicer.utils.Log.log_debug("[%s] username: %s, base_url: %s" % \
                                        (section, \
                                             cfg['username'], \
                                             cfg['base_url']))
-        connections[section] = jc(cfg)
 
     _defaults['environments'] = config.sections()
-    _defaults['cart_dest'] = config.sections()[0]
 
     return (connections, _defaults)
 
