@@ -52,6 +52,39 @@ def create_json_str(input_ds):
     return json.dumps(input_ds)
 
 
+def _config_file():
+    """
+    check that the config file is present and readable. if not,
+    dump a template in place
+    """
+    config_file = os.path.expanduser('~/.juicer.conf')
+
+    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
+        return config_file
+    elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
+        raise IOError("Can not read %s" % config_file)
+    else:
+        config = ConfigParser.RawConfigParser({'username': 'user', \
+                'password': 'pword', \
+                'base_url': 'https://localhost/pulp/api/', \
+                'base': 'False', \
+                'requires_signature': 'False'})
+        config.add_section('qa')
+        config.set('qa', 'base', 'True')
+        config.set('qa', 'promotes_to', 'stage')
+        config.add_section('stage')
+        config.set('stage', 'requires_signature', 'True')
+        config.set('stage', 'promotes_to', 'prod')
+        config.add_section('prod')
+        config.set('prod', 'requires_signature', 'True')
+        config.set('prod', 'promotes_to', 'False')
+
+        with open(config_file, 'w') as conf:
+            config.write(conf)
+
+        raise Exception('default config file created')
+
+
 def _config_test(config):
     """
     confirm the provided config has the required attributes and
@@ -86,15 +119,11 @@ def get_login_info():
     information for all the environments.
     """
     config = ConfigParser.SafeConfigParser()
-    config_file = os.path.expanduser('~/.juicer.conf')
     connections = {}
     _defaults = {}
     _defaults['cart_dest'] = ''
 
-    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
-        config.read(config_file)
-    else:
-        raise IOError("Can not read %s" % config_file)
+    config.read(_config_file())
 
     _config_test(config)
 
@@ -123,12 +152,8 @@ def get_environments():
     environment values.
     """
     config = ConfigParser.SafeConfigParser()
-    config_file = os.path.expanduser('~/.juicer.conf')
 
-    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
-        config.read(config_file)
-    else:
-        raise IOError("Can not read %s" % config_file)
+    config.read(_config_file())
 
     juicer.utils.Log.log_debug("Reading environment sections:")
 
