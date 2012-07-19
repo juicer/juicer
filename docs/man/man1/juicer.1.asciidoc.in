@@ -7,24 +7,38 @@ juicer(1)
 
 NAME
 ----
-juicer - create, edit, update, and push release carts
+juicer - create and push release carts, upload items to pulp
 
 
 
 SYNOPSIS
 --------
-juicer sub-command [OPTIONS ...] [PARAMETERS ...]
+juicer sub-command [PARAMETERS ...] [OPTIONS ...]
 
 
 
 DESCRIPTION
 -----------
-Create, edit, update, and push release carts.
+Juicer lets you create and push release carts, and directly upload
+items to a pulp repository.
+
+A release cart is a description of what RPMs you want to push into a
+specific repository. A single cart can specify multiple repos and
+associated items. Release cart descriptions are saved so you can
+easily "promote" a cart to another environment.
+
+RPMs ('items') need not be stored on your local machine. Juicer can
+handle remote resources as well. Anywhere an option argument is
+described as 'item' you can give the path to a local directory, or
+rpm, as well as an RPM available over HTTP. HTTP directory indexes
+work as well, the page is parsed and links to rpm files are added to
+your cart.
+
 
 
 CREATE
 ------
-usage: juicer create CARTNAME -r REPONAME item1 [ item2, [ ...]]
+usage: juicer create 'CARTNAME' -r 'REPONAME' 'item1' [ 'item2', [ ...]]
 
 Create a cart with the items specified.
 
@@ -32,13 +46,13 @@ Create a cart with the items specified.
 The name of the new release cart.
 
 *ITEMS*::
-Items to add to the cart.
+Items to add to the cart in repository 'REPONAME'.
 
 *-r* 'REPONAME'::
-Install a group of 'ITEMS' into 'REPONAME'.
+Name of the reopsitory to install 'ITEMS' into.
 
 
-
+////////////////////////////////////////
 EDIT
 ----
 usage: juicer edit CARTNAME
@@ -47,12 +61,12 @@ Interactively edit a release cart.
 
 *CARTNAME*::
 The name of your release cart.
-
+////////////////////////////////////////
 
 
 SHOW
 ----
-usage: juicer show CARTNAME
+usage: juicer show 'CARTNAME'
 
 Print the contents of a cart.
 
@@ -60,7 +74,7 @@ Print the contents of a cart.
 The release cart to show.
 
 
-
+////////////////////////////////////////////////////////////////////////
 UPDATE
 ------
 usage: juicer update CARTNAME item1 [ item2 [ ... ] ]
@@ -72,9 +86,10 @@ The name of the release cart to update.
 
 *ITEMS*::
 The items to update in the cart.
+////////////////////////////////////////////////////////////////////////
 
 
-
+////////////////////////////////////////////////////////////////////////
 CREATE-LIKE
 -----------
 usage: juicer create-like CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
@@ -89,12 +104,12 @@ Cart to copy from.
 
 *ITEMS*::
 Items to update in the cart.
-
+////////////////////////////////////////////////////////////////////////
 
 
 PUSH
 ----
-usage: juicer push CARTNAME
+usage: juicer push 'CARTNAME'
 
 Pushes/Updates a cart on the pulp server.
 
@@ -102,7 +117,7 @@ Pushes/Updates a cart on the pulp server.
 The name of the cart to push.
 
 
-
+////////////////////////////////////////////////////////////////////////
 CART-SEARCH
 -----------
 usage: juicer cart-search CARTNAME
@@ -111,14 +126,17 @@ Search for a cart in pulp.
 
 *CARTNAME*::
 The name of the cart to search for.
-
+////////////////////////////////////////////////////////////////////////
 
 
 RPM-SEARCH
 ----------
-usage: juicer rpm-search [-r REPO [...]] [--in ENVIRONMENT [...]]
+usage: juicer rpm-search 'ITEM' [-r 'REPO' [...]] [--in 'ENVIRONMENT' [...]]
 
-Search for an RPM in pulp
+Search for an RPM ('item') in pulp
+
+*ITEM*::
+Name of the RPM to search for.
 
 *-r* 'repos' ['repos' ...]::
 The repo(s) to limit search scope to.
@@ -131,46 +149,79 @@ The environments to limit search scope to.
 
 
 
-PARAMETERS FORMAT
------------------
-
-    Items given may be any number and combination of the following
-    input resource types:
-
-    http[s]://rpms/directory/ | http[s]://website/some-thing.rpm
-        URL to an HTTP directory index or an RPM. RPM paths are parsed
-        from the index and then sent to the pulp server to be
-        downloaded.
-
-    ./directory/of/items | ./path/to/item.rpm
-        The items given are directly uploaded to the pulp server.
-
 EXAMPLES
 --------
 
+'items' given may be any number and combination of the following input
+resource types:
 
-  Create and push cart CRQ1337:
-    $ %(prog)s create CRQ1337 -r ruby http://file.derp/~smunilla/crq1337/ \\
-        -r services ./new-services-rpms \\
-        -r candlepin /var/lib/mock/epel-6-x86_64/result/candlepin.el6.rpm
-    Created new cart, CRQ1337.
-    $ %(prog)s push CRQ1337
-    Cart pushed to http://juicer.util.phx1.redhat.com/carts/CRQ1337
+*local*::
+    ./directory/of/items | ./path/to/item.rpm | /path/to/item*
 
+    The items given are directly uploaded to the pulp server.
 
-  Update the existing cart, CRQ1337
-    $ %(prog)s update CRQ1337 http://loki01:9001/builders/master-candlepin/builds/0
-    Updated xyz items in CRQ1337.
-    $ %(prog)s push CRQ1337
-    Cart pushed to http://juicer.util.phx1.redhat.com/carts/CRQ1337
+Here is an example of how you would specify a directory of *local*
+RPMs and a direct path:
+
+    $ juicer upload -r javastuff ~/my-java-app/rpmbuild/noarch/ \
+        ~/misc-java-rpms/megafrobber-0.8.0.noarch.rpm
 
 
+*remote*::
+
+    http[s]://rpms/directory/ | http[s]://website/some-thing.rpm
+
+    URL to an HTTP directory index or an RPM. RPM paths are parsed
+    from the index and then added to your cart. All remote items are
+    synced when you upload or push.
+
+Here is an example of how you would specify a directory of *remote*
+RPMs and a specific remote RPM:
+
+    $ juicer upload -r javastuff http://jenkins.foo/job/results/ \
+        http://foo.bar/rpms/megafrobber-0.8.0.noarch.rpm
+
+*create and show a cart*:
+
+    $ juicer create juicer-0.1.7 \
+        -r juicer \
+        http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm \
+        -r juicer-deps \
+        ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
+    Creating cart 'juicer-0.1.7'.
+    Saved cart 'juicer-0.1.7'.
+    JUICER
+    ------
+    http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm
+    
+    JUICER-DEPS
+    -----------
+    ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
+
+The cart description is saved into *~/.juicer-carts/* as
+*juicer-0.1.7.json*. We could show it again simply:
+
+    $ juicer show juicer-0.1.7
+    JUICER
+    ------
+    http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm
+    
+    JUICER-DEPS
+    -----------
+    ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
+
+Remote items will be synced automatically when we push this cart the
+repositories. Items synced are saved into
+*~/.juicer-carts/*'CART-NAME'*-remotes/*.
+
+Similarly, when using the *upload* command, remotes are also synced.
 
 
 FILES
 -----
-~/.juicer.conf -- Juicer configuration file
+*~/.juicer.conf* -- Juicer configuration file
 
+*~/.juicer-carts/* -- Cart storage location
 
 
 AUTHOR
