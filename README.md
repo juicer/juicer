@@ -14,9 +14,9 @@ rpm packages through a Pulp installation.
 
 ## Setting Up and Contributing
 
-1. [Installation](juicer/docs/install.md)
-2. [Configuration](juicer/docs/config.md)
-3. [Hacking](juicer/docs/hacking.md)
+1. [Installation](https://github.com/abutcher/juicer/blob/master/docs/install.md)
+2. [Configuration](https://github.com/abutcher/juicer/blob/master/docs/config.md)
+3. [Hacking](https://github.com/abutcher/juicer/blob/master/docs/hacking.md)
 
 ## Examples
 
