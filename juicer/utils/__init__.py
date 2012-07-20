@@ -96,8 +96,11 @@ def _config_test(config):
     for section in config.sections():
         cfg = dict(config.items(section))
 
-        if cfg['base'] == 'True':
-            base_count += 1
+        try:
+            if cfg['base'] == 'True':
+                base_count += 1
+        except KeyError:
+            config.set(section, 'base', 'False')
 
         # ensure required keys are present in each section
         if not required_keys.issubset(set(cfg.keys())):
