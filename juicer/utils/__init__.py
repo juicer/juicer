@@ -133,7 +133,7 @@ def get_login_info():
 
         connections[section] = jc(cfg)
 
-        if cfg['base'] == True:
+        if cfg['base'] == 'True':
             _defaults['cart_dest'] = section
 
         juicer.utils.Log.log_debug("[%s] username: %s, base_url: %s" % \
