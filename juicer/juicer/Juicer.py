@@ -252,23 +252,33 @@ class Juicer(object):
     def search_cart(self, query='/services/search/cart'):
         pass
 
-    def search_rpm(self, name='', query='/packages/'):
+    def search_rpm(self, name='', query='/services/search/packages/'):
+        data = {'regex': True,
+                'name': name}
+
         juicer.utils.Log.log_info('Packages:')
 
         for env in self.args.environment:
-            # get list of all repos, then parse down to the ones we want
-            _r = self.connectors[env].get(query)
+            _r = self.connectors[env].post(query, data)
+
+            if not _r.status_code == Constants.PULP_POST_OK:
+                juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
+                _r.raise_for_status()
+
+            juicer.utils.Log.log_info('%s:' % str.upper(env))
 
             pkg_list = juicer.utils.load_json_str(_r.content)
+            dl_base = self.connectors[env].base_url.replace('/pulp/api', '/pulp/repos')
 
-            regex = re.compile("%s" % (name))
-
-            for pkg in pkg_list:
-                if _r.status_code != Constants.PULP_POST_OK:
+            for package in pkg_list:
+                # get the name of a repo the package is in (vs the repoid)
+                _r = self.connectors[env].get('/repositories/%s/' % package['repoids'][0])
+                if not _r.status_code == Constants.PULP_GET_OK:
                     _r.raise_for_status()
 
-                if regex.search(pkg['name']):
-                    juicer.utils.Log.log_info(pkg['name'])
+                repo = juicer.utils.load_json_str(_r.content)['name']
+                link = '%s/%s/%s/%s' % (dl_base, env, repo, package['filename'])
+                juicer.utils.Log.log_info('%s %s %s' % (package['name'], package['version'], link))
 
     def hello(self):
         for env in self.args.environment:
