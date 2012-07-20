@@ -24,12 +24,12 @@ See [Config File Setup](config.md) to create a config file
 
 To set up your PYTHONPATH, PATH, and MANPATH simply run the following:
 
-   cd juicer
-   . ./hacking/setup-env
+        cd juicer
+        . ./hacking/setup-env
 
 ## Test Your Connections
 
 After you've created a config file and exported your paths you can
 test your connections out by running:
 
-   juicer hello
+        juicer hello
