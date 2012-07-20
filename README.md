@@ -12,9 +12,12 @@ rpm packages through a Pulp installation.
 
 [1] Pulp  https://fedorahosted.org/pulp/
 
-## Documentation
+## Setting Up and Contributing
 
 1. [Installation](docs/install.md)
 2. [Configuration](docs/config.md)
 3. [Hacking](docs/hacking.md)
 
+## Examples
+
+Add some examples.
