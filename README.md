@@ -20,4 +20,11 @@ rpm packages through a Pulp installation.
 
 ## Examples
 
-Add some examples.
+### Example workflow
+
+1. Upload an rpm into a repository
+    * juicer upload -r juicy-software ~/Downloads/juicer-0.1.7-1.fc17.noarch.rpm
+2. Create a release cart
+    * juicer create -r juicy-software https://my.sweet.host/pulp/repos/dev/juicy-software/juicer-0.1.7-1.fc17.noarch.rpm
+3. Promote a cart
+    * juicer promote ...
