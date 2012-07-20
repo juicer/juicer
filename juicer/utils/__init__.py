@@ -89,7 +89,7 @@ def _config_test(config):
     confirm the provided config has the required attributes and
     has a valid promotion path
     """
-    required_keys = set(['username', 'password', 'base_url', 'promotes_to'])
+    required_keys = set(['username', 'password', 'base_url'])
     base_count = 0
 
     for section in config.sections():
@@ -104,7 +104,7 @@ def _config_test(config):
                             ", ".join(list(required_keys - set(cfg.keys()))))
 
         # ensure promotion path exists
-        if cfg['promotes_to'] not in config.sections() and cfg['promotes_to'] != 'False':
+        if 'promotes_to' in cfg and cfg['promotes_to'] not in config.sections():
             raise Exception("promotion_path: %s is not a config section" \
                     % cfg['promotes_to'])
 

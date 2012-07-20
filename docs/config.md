@@ -31,7 +31,6 @@ prod.
     # username already defined in DEFAULT
     password: 5w33t_AdM!n_P@ssw04d
     base_url: https://pulp.prod.int.tux.org/pulp/api
-    promotes_to: False
     requires_signature
 
 See also: `man 5 juicer.conf`
