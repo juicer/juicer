@@ -271,13 +271,18 @@ class Juicer(object):
             dl_base = self.connectors[env].base_url.replace('/pulp/api', '/pulp/repos')
 
             for package in pkg_list:
-                # get the name of a repo the package is in (vs the repoid)
-                _r = self.connectors[env].get('/repositories/%s/' % package['repoids'][0])
-                if not _r.status_code == Constants.PULP_GET_OK:
-                    _r.raise_for_status()
+                # if the package is in a repo, show a link to the package in said repo
+                # otherwise, show nothing
+                if len(package['repoids']) > 0:
+                    _r = self.connectors[env].get('/repositories/%s/' % package['repoids'][0])
+                    if not _r.status_code == Constants.PULP_GET_OK:
+                        _r.raise_for_status()
 
-                repo = juicer.utils.load_json_str(_r.content)['name']
-                link = '%s/%s/%s/%s' % (dl_base, env, repo, package['filename'])
+                    repo = juicer.utils.load_json_str(_r.content)['name']
+                    link = '%s/%s/%s/%s' % (dl_base, env, repo, package['filename'])
+                else:
+                    link = ''
+
                 juicer.utils.Log.log_info('%s %s %s' % (package['name'], package['version'], link))
 
     def hello(self):
