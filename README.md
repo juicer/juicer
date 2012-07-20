@@ -14,9 +14,9 @@ rpm packages through a Pulp installation.
 
 ## Setting Up and Contributing
 
-1. [Installation](docs/install.md)
-2. [Configuration](docs/config.md)
-3. [Hacking](docs/hacking.md)
+1. [Installation](juicer/docs/install.md)
+2. [Configuration](juicer/docs/config.md)
+3. [Hacking](juicer/docs/hacking.md)
 
 ## Examples
 
