@@ -66,17 +66,16 @@ def _config_file():
     else:
         config = ConfigParser.RawConfigParser({'username': 'user', \
                 'password': 'pword', \
-                'base_url': 'https://localhost/pulp/api/', \
-                'base': 'False', \
-                'requires_signature': 'False'})
+                'base_url': 'https://localhost/pulp/api/'}, \
+                allow_no_value=True)
         config.add_section('qa')
-        config.set('qa', 'base', 'True')
+        config.set('qa', 'base')
         config.set('qa', 'promotes_to', 'stage')
         config.add_section('stage')
-        config.set('stage', 'requires_signature', 'True')
+        config.set('stage', 'requires_signature')
         config.set('stage', 'promotes_to', 'prod')
         config.add_section('prod')
-        config.set('prod', 'requires_signature', 'True')
+        config.set('prod', 'requires_signature')
         config.set('prod', 'promotes_to', 'False')
 
         with open(config_file, 'w') as conf:
@@ -96,11 +95,8 @@ def _config_test(config):
     for section in config.sections():
         cfg = dict(config.items(section))
 
-        try:
-            if cfg['base'] == 'True':
-                base_count += 1
-        except KeyError:
-            config.set(section, 'base', 'False')
+        if 'base' in cfg:
+            base_count += 1
 
         # ensure required keys are present in each section
         if not required_keys.issubset(set(cfg.keys())):
@@ -121,7 +117,7 @@ def get_login_info():
     Give back an array of dicts with the connection
     information for all the environments.
     """
-    config = ConfigParser.SafeConfigParser()
+    config = ConfigParser.SafeConfigParser(allow_no_value=True)
     connections = {}
     _defaults = {}
     _defaults['cart_dest'] = ''
@@ -136,7 +132,7 @@ def get_login_info():
 
         connections[section] = jc(cfg)
 
-        if cfg['base'] == 'True':
+        if 'base' in cfg:
             _defaults['cart_dest'] = section
 
         juicer.utils.Log.log_debug("[%s] username: %s, base_url: %s" % \
@@ -154,7 +150,7 @@ def get_environments():
     Return defined environments from config file for default
     environment values.
     """
-    config = ConfigParser.SafeConfigParser()
+    config = ConfigParser.SafeConfigParser(allow_no_value=True)
 
     config.read(_config_file())
 

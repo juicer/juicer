@@ -19,21 +19,19 @@ prod.
     username: tux
     password: 5w33tP@ssw04d
     base_url: https://pulp.devel.int.tux.org/pulp/api
-    requires_signature: False
-    base: False
 
     [devel]
     # Most of our configuration for this environment lives the DEFAULT
     # section already but we do need to tell Juicer where we promote
     # to from devel and also that devel is the base environment.
     promotes_to: prod
-    base: True
+    base
 
     [prod]
     # username already defined in DEFAULT
     password: 5w33t_AdM!n_P@ssw04d
     base_url: https://pulp.prod.int.tux.org/pulp/api
     promotes_to: False
-    requires_signature: True
+    requires_signature
 
 See also: `man 5 juicer.conf`
