@@ -45,7 +45,7 @@ class JuicerAdmin(object):
             data['feed'] = feed
 
         if type:
-            data['content_types'] = types
+            data['content_types'] = type
 
         juicer.utils.Log.log_debug("Create Repo: %s", name)
 

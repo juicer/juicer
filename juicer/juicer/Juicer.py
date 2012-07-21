@@ -17,7 +17,8 @@
 
 from juicer.common import Constants
 from juicer.utils.StatusBar import StatusBar
-import juicer.admin
+from juicer.admin.Parser import Parser
+from juicer.admin.JuicerAdmin import JuicerAdmin
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
@@ -285,6 +286,8 @@ class Juicer(object):
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
 
+        self.publish(cart, env)
+
         return True
 
 
@@ -300,12 +303,19 @@ class Juicer(object):
         if not env:
             env = self._defaults['cart_dest']
 
-        if not juicer.utils.cart_repo_exists_p(cart.name, self.connectors[env], env):
+        if not juicer.utils.cart_repo_exists_p('carts', self.connectors[env], env):
             juicer.utils.Log.log_debug("Cart repo does not exist in '%s', creating it..." % env)
-            juicer.admin.create_repo(arch='noarch', name=cart.name, type='file', envs=[env])
+            parser = juicer.admin.Parser.Parser()
+            args = parser.parser.parse_args(("create-repo carts --type file --in %s" % env).split())
+            juicer.admin.JuicerAdmin.JuicerAdmin(args).create_repo(arch=args.arch, name=args.name, \
+                                                                       type=args.type, envs=args.envs)
+        cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cart.name)
 
-        # Upload json cart file
-        # Add json cart file to cart repo
+        if not cart_file.endswith('.json'):
+            cart_file += '.json'
+
+        juicer.utils.Log.log_debug("Initializing upload of cart '%s' to cart repository" % cart.name)
+        self.upload(env, 'carts', [cart_file])
 
         return True
 

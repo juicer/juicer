@@ -52,7 +52,7 @@ def create_json_str(input_ds):
     return json.dumps(input_ds)
 
 def cart_repo_exists_p(name, connector, env):
-    return repo_exists_p(name + '-' + env, connector, env)
+    return repo_exists_p(name, connector, env)
 
 def _config_file():
     """
@@ -318,7 +318,7 @@ def is_rpm(path):
     Use the python 'magic' library to find the type of file we're
     dealing with.
     """
-    rpm_types = [Constants.MAGIC_RPM_BIN, Constants.MAGIC_RPM_SRC]
+    rpm_types = [Constants.MAGIC_RPM_BIN, Constants.MAGIC_RPM_NOARCH_BIN, Constants.MAGIC_RPM_SRC]
     m = magic.open(magic.NONE)
     m.load()
 

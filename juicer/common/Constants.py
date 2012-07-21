@@ -66,4 +66,5 @@ UPLOAD_AT_ONCE = 10485760
 ######################################################################
 # Strings which represent binary and src rpms in the 'magic' module
 MAGIC_RPM_BIN = "RPM v3.0 bin i386/x86_64"
+MAGIC_RPM_NOARCH_BIN = "RPM v3.0 bin noarch"
 MAGIC_RPM_SRC = "RPM v3.0 src"
