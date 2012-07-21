@@ -17,6 +17,7 @@
 
 from juicer.common import Constants
 from juicer.utils.StatusBar import StatusBar
+import juicer.admin
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
@@ -60,12 +61,13 @@ class Juicer(object):
 
     # finalizes the 3-step upload process. this is where metadata is set
     def _import_up(self, query='/services/upload/import/', uid='', name='', \
-                    ftype='rpm', cksum='', htype='md5', nvrea='', size='', \
+                    ftype='rpm', cksum='', desc='', htype='md5', nvrea='', size='', \
                     lic='', group='', vendor='', req='', env='re'):
         data = {'uploadid': uid,
                 'metadata': {
                     'type': ftype,
                     'checksum': cksum,
+                    'description': desc,
                     'hashtype': htype,
                     'pkgname': name,
                     'nvrea': nvrea,
@@ -78,6 +80,8 @@ class Juicer(object):
         _r = self.connectors[env].post(query, data)
 
         if not _r.status_code == Constants.PULP_POST_OK:
+            juicer.utils.Log.log_debug("Import error importing '%s'... server said: \n %s", name,
+                                       juicer.utils.load_json_str(_r.content))
             _r.raise_for_status()
 
         juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
@@ -108,7 +112,7 @@ class Juicer(object):
         upload_id = self._init_up(name=package_basename, cksum=cksum, size=size)
 
         #create a statusbar
-        if self.args.v == 1:
+        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
             statusbar = StatusBar()
 
         # read in rpm
@@ -120,9 +124,9 @@ class Juicer(object):
             total_seeked += len(rpm_data)
             juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
             upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
-            if self.args.v == 1:
+            if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
                 statusbar.update(len(rpm_data), size)
-        if self.args.v == 1:
+        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
             statusbar.close()
         rpm_fd.close()
 
@@ -150,6 +154,18 @@ class Juicer(object):
             self.connectors[env].delete('/packages/' + pkgid + '/')
             _r.raise_for_status()
 
+    def _include_file_in_repo(self, fileid, env, repoid):
+        query = '/repositories/' + repoid + '/add_file/'
+        data = {'fileids': [fileid]}
+
+        _r = self.connectors[env].post(query, data)
+
+        if not _r.status_code == Constants.PULP_POST_OK:
+            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
+            print juicer.utils.load_json_str(_r.content)
+            #self.connectors[env].delete('/files/' + fileid + '/')
+            _r.raise_for_status()
+
     # forces pulp to generate metadata for the given repo
     def _generate_metadata(self, env, repoid):
         query = '/repositories/' + repoid + '/generate_metadata/'
@@ -167,6 +183,49 @@ class Juicer(object):
                 _r = self.connectors[env].post(query)
         if not _r.status_code == Constants.PULP_POST_ACCEPTED:
             _r.raise_for_status()
+
+    def _upload_file(self, file, env):
+        fd = open(file, 'rb')
+        name = os.path.basename(file)
+        cksum = hashlib.sha256(file).hexdigest()
+        size = os.path.getsize(file)
+        nvrea = tuple((name, 0, 0, 0, 'noarch'))
+
+        juicer.utils.Log.log_notice("Expected amount to seek: %s (file size by os.path.getsize)", size)
+
+        # initiate upload
+        upload_id = self._init_up(name=name, cksum=cksum, size=size)
+
+        # create a statusbar
+        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
+            statusbar = StatusBar()
+
+        # read in file
+        upload_flag = False
+        total_seeked = 0
+        fd.seek(0)
+
+        while total_seeked < size:
+            file_data = fd.read(Constants.UPLOAD_AT_ONCE)
+            total_seeked += len(file_data)
+            juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
+            upload_flag = self._append_up(uid=upload_id, fdata=file_data)
+            if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
+                statusbar.update(len(file_data), size)
+        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
+            statusbar.close()
+        fd.close()
+
+        juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
+
+        # finalize upload
+        file_id = ''
+        if upload_flag == True:
+            file_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
+                                          ftype='file', nvrea=nvrea, size=size, htype='sha256')
+        juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
+        return file_id
+
 
     # this is used to upload files to pulp
     def upload(self, env, repo, items=[]):
@@ -195,8 +254,12 @@ class Juicer(object):
             juicer.utils.Log.log_debug("Processing item: '%s'" % item)
             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
 
-            rpm_id = self._upload_rpm(item, env)
-            self._include_rpm_in_repo(rpm_id, env, repoid)
+            if juicer.utils.is_rpm(item):
+                rpm_id = self._upload_rpm(item, env)
+                self._include_rpm_in_repo(rpm_id, env, repoid)
+            else:
+                file_id = self._upload_file(item, env)
+                self._include_file_in_repo(file_id, env, repoid)
 
         self._generate_metadata(env, repoid)
 
@@ -221,6 +284,28 @@ class Juicer(object):
                 continue
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
+
+        return True
+
+
+    def publish(self, cart, env=None):
+        """
+        `cart` - Release cart to publish
+
+        Publish a release cart to the pre-release environment.
+        """
+
+        juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart.name)
+
+        if not env:
+            env = self._defaults['cart_dest']
+
+        if not juicer.utils.cart_repo_exists_p(cart.name, self.connectors[env], env):
+            juicer.utils.Log.log_debug("Cart repo does not exist in '%s', creating it..." % env)
+            juicer.admin.create_repo(arch='noarch', name=cart.name, type='file', envs=[env])
+
+        # Upload json cart file
+        # Add json cart file to cart repo
 
         return True
 

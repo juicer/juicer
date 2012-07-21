@@ -17,7 +17,7 @@
 
 
 from juicer.common import Constants
-from juicer.common.JuicerCommon import JuicerCommon as jc
+from juicer.common.Connectors import Connectors
 from functools import wraps
 import ConfigParser
 import cStringIO
@@ -132,7 +132,7 @@ def get_login_info():
     for section in config.sections():
         cfg = dict(config.items(section))
 
-        connections[section] = jc(cfg)
+        connections[section] = Connectors(cfg)
 
         if 'base' in cfg:
             _defaults['cart_dest'] = section

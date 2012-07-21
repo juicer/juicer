@@ -20,7 +20,7 @@ import juicer.utils.Log
 import requests
 
 
-class JuicerCommon(object):
+class Connectors(object):
     def __init__(self, connect_params):
         self.base_url = connect_params['base_url']
         self.auth = (connect_params['username'], connect_params['password'])

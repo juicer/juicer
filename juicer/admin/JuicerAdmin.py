@@ -29,8 +29,13 @@ class JuicerAdmin(object):
 
         (self.connectors, self._defaults) = juicer.utils.get_login_info()
 
-    def create_repo(self, arch=None, name=None, feed=None, envs=None, query='/repositories/'):
+    def create_repo(self, arch=None, name=None, feed=None, envs=None, type=None, query='/repositories/'):
         """
+        `arch` - Architecture of repository content
+        `name` - Name of repository to create
+        `feed` - Repo URL to feed from
+        `type` - Repository type (yum, file)
+
         Create repository in specified environments
         """
         data = {'name': name,
@@ -38,6 +43,9 @@ class JuicerAdmin(object):
 
         if feed:
             data['feed'] = feed
+
+        if type:
+            data['content_types'] = types
 
         juicer.utils.Log.log_debug("Create Repo: %s", name)
 
@@ -58,6 +66,10 @@ class JuicerAdmin(object):
 
     def create_user(self, login=None, password=None, name=None, envs=None, query='/users/'):
         """
+        `login` - Login or username for user
+        `password` - Plain text password for user
+        `name` - Full name of user
+
         Create user in specified environments
         """
         data = {'login': login,
@@ -82,6 +94,8 @@ class JuicerAdmin(object):
 
     def delete_repo(self, name=None, envs=None, query='/repositories/'):
         """
+        `name` - Name of repository to delete
+
         Delete repo in specified environments
         """
         juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
@@ -103,6 +117,8 @@ class JuicerAdmin(object):
 
     def delete_user(self, login=None, envs=None, query='/users/'):
         """
+        `login` - Login or username of user to delete
+
         Delete user in specified environments
         """
         juicer.utils.Log.log_debug("Delete User: %s", login)
@@ -141,6 +157,12 @@ class JuicerAdmin(object):
         return True
 
     def role_add(self, role=None, login=None, envs=None, query='/roles/'):
+        """
+        `login` - Login or username of user to add to `role`
+        `role` - Role to add user to
+
+        Add user to role
+        """
         data = {'username': self.args.login}
         juicer.utils.Log.log_debug(
                 "Add Role '%s' to '%s'", role, login)
@@ -165,6 +187,8 @@ class JuicerAdmin(object):
 
     def show_repo(self, name=None, envs=None, query='/repositories/'):
         """
+        `name` - Name of repository to show
+
         Show repositories in specified environments
         """
         juicer.utils.Log.log_debug("Show Repo: %s", name)
@@ -181,6 +205,8 @@ class JuicerAdmin(object):
 
     def show_user(self, login=None, envs=None, query='/users/'):
         """
+        `login` - Login or username of user
+
         Show user in specified environments
         """
         juicer.utils.Log.log_debug("Show User: %s", login)
@@ -217,6 +243,10 @@ class JuicerAdmin(object):
 
     def update_user(self, login=None, name=None, password=None, envs=None, query='/users/'):
         """
+        `login` - Login or username of user to update
+        `name` - Updated full name of user
+        `password` - Updated plain text password for user
+
         Update user information
         """
         juicer.utils.Log.log_debug("Update user information %s" % login)
