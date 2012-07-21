@@ -20,49 +20,49 @@ from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 
 def create_repo(args):
     pulp = ja(args)
-    pulp.create_repo()
+    pulp.create_repo(args.arch, args.name, args.feed, args.envs)
 
 
 def create_user(args):
     pulp = ja(args)
-    pulp.create_user()
+    pulp.create_user(args.login, args.password, args.name, args.envs)
 
 
 def list_repos(args):
     pulp = ja(args)
-    pulp.list_repos()
+    pulp.list_repos(args.envs)
 
 
 def show_repo(args):
     pulp = ja(args)
-    pulp.show_repo()
+    pulp.show_repo(args.name, args.envs)
 
 
 def show_user(args):
     pulp = ja(args)
-    pulp.show_user()
+    pulp.show_user(args.login, args.envs)
 
 
 def delete_repo(args):
     pulp = ja(args)
-    pulp.delete_repo()
+    pulp.delete_repo(args.name, args.envs)
 
 
 def delete_user(args):
     pulp = ja(args)
-    pulp.delete_user()
+    pulp.delete_user(args.login, args.envs)
 
 
 def role_add(args):
     pulp = ja(args)
-    pulp.role_add()
+    pulp.role_add(args.role, args.login, args.envs)
 
 
 def list_roles(args):
     pulp = ja(args)
-    pulp.list_roles()
+    pulp.list_roles(args.envs)
 
 
 def update_user(args):
     pulp = ja(args)
-    pulp.update_user()
+    pulp.update_user(args.login, args.name, args.password, args.envs)

@@ -29,105 +29,107 @@ class JuicerAdmin(object):
 
         (self.connectors, self._defaults) = juicer.utils.get_login_info()
 
-    def create_repo(self, query='/repositories/'):
+    def create_repo(self, arch=None, name=None, feed=None, envs=None, query='/repositories/'):
         """
         Create repository in specified environments
         """
-        data = {'name': self.args.name,
-                'arch': self.args.arch}
+        data = {'name': name,
+                'arch': arch}
 
-        if self.args.feed:
-            data['feed'] = self.args.feed
+        if feed:
+            data['feed'] = feed
 
-        juicer.utils.Log.log_debug("Create Repo: %s", self.args.name)
+        juicer.utils.Log.log_debug("Create Repo: %s", name)
 
-        for env in self.args.envs:
-            if juicer.utils.repo_exists_p(self.args.name, self.connectors[env], env):
+        for env in envs:
+            if juicer.utils.repo_exists_p(name, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo `%s` already exists in %s... skipping!",
-                                          (self.args.name, env))
+                                          (name, env))
                 continue
             else:
-                data['relative_path'] = '/%s/%s/' % (env, self.args.name)
-                data['id'] = '-'.join([self.args.name, env])
+                data['relative_path'] = '/%s/%s/' % (env, name)
+                data['id'] = '-'.join([name, env])
                 _r = self.connectors[env].post(query, data)
                 if _r.status_code == Constants.PULP_POST_CREATED:
-                    juicer.utils.Log.log_info("created repo `%s` in %s",
-                                              (self.args.name, env))
+                    juicer.utils.Log.log_info("created repo `%s` in %s", name, env)
                 else:
                     _r.raise_for_status()
+        return True
 
-    def create_user(self, query='/users/'):
+    def create_user(self, login=None, password=None, name=None, envs=None, query='/users/'):
         """
         Create user in specified environments
         """
-        data = {'login': self.args.login,
-                'password': self.args.password,
-                'name': self.args.name}
+        data = {'login': login,
+                'password': password,
+                'name': name}
 
-        juicer.utils.Log.log_debug("Create User: %s ('%s')", self.args.login, \
-                self.args.name)
+        juicer.utils.Log.log_debug("Create User: %s ('%s')", login, name)
 
-        for env in self.args.envs:
-            if juicer.utils.user_exists_p(self.args, self.connectors[env]):
+        for env in envs:
+            if juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` already exists in %s... skipping!",
-                                          (self.args.login, env))
+                                          (login, env))
                 continue
             else:
                 _r = self.connectors[env].post(query, data)
                 if _r.status_code == Constants.PULP_POST_CREATED:
                     juicer.utils.Log.log_info("created user `%s` with login `%s` in %s",
-                                              (self.args.name, self.args.login, env))
+                                              (name, login, env))
                 else:
                     _r.raise_for_status()
+        return True
 
-    def delete_repo(self, query='/repositories/'):
+    def delete_repo(self, name=None, envs=None, query='/repositories/'):
         """
         Delete repo in specified environments
         """
         juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
 
         for env in self.args.envs:
-            if not juicer.utils.repo_exists_p(self.args.name, self.connectors[env], env):
+            if not juicer.utils.repo_exists_p(name, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo `%s` doesn't exist in %s... skipping!",
-                                           (self.args.name, env))
+                                           (name, env))
                 continue
             else:
-                url = "%s%s-%s/" % (query, self.args.name, env)
+                url = "%s%s-%s/" % (query, name, env)
                 _r = self.connectors[env].delete(url)
                 if _r.status_code == Constants.PULP_DELETE_ACCEPTED:
                     juicer.utils.Log.log_info("deleted repo `%s` in %s",
-                                              (self.args.name, env))
+                                              (name, env))
                 else:
                     _r.raise_for_status()
+        return True
 
-    def delete_user(self, query='/users/'):
+    def delete_user(self, login=None, envs=None, query='/users/'):
         """
         Delete user in specified environments
         """
-        juicer.utils.Log.log_debug("Delete User: %s", self.args.login)
+        juicer.utils.Log.log_debug("Delete User: %s", login)
 
-        for env in self.args.envs:
-            if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
+        for env in envs:
+            if not juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` doesn't exist in %s... skipping!",
-                                          (self.args.login, env))
+                                          (login, env))
                 continue
             else:
-                url = "%s%s/" % (query, self.args.login)
+                url = "%s%s/" % (query, login)
                 _r = self.connectors[env].delete(url)
                 if _r.status_code == Constants.PULP_DELETE_OK:
                     juicer.utils.Log.log_info("deleted user `%s` in %s",
-                                              (self.args.login, env))
+                                              (login, env))
                 else:
                     _r.raise_for_status()
+        return True
 
-    def list_repos(self, query='/repositories/'):
+    def list_repos(self, envs=None, query='/repositories/'):
         """
         List repositories in specified environments
         """
         juicer.utils.Log.log_debug(
-                "List Repos In: %s", ", ".join(self.args.envs))
+                "List Repos In: %s", ", ".join(envs))
 
-        for env in self.args.envs:
+        for env in envs:
             juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
@@ -136,96 +138,100 @@ class JuicerAdmin(object):
                         juicer.utils.Log.log_info("\t" + repo['name'])
             else:
                 _r.raise_for_status()
+        return True
 
-    def role_add(self, query='/roles/'):
+    def role_add(self, role=None, login=None, envs=None, query='/roles/'):
         data = {'username': self.args.login}
         juicer.utils.Log.log_debug(
-                "Add Role '%s' to '%s'", self.args.role, self.args.login)
+                "Add Role '%s' to '%s'", role, login)
 
         for env in self.args.envs:
-            if not juicer.utils.role_exists_p(self.args, self.connectors[env]):
+            if not juicer.utils.role_exists_p(role, self.connectors[env]):
                 juicer.utils.Log.log_info("role `%s` doesn't exist in %s... skipping!",
-                                          (self.args.role, env))
+                                          (role, env))
                 continue
-            elif not juicer.utils.user_exists_p(self.args, self.connectors[env]):
+            elif not juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` doesn't exist in %s... skipping!",
-                                          (self.args.login, env))
+                                          (login, env))
             else:
-                url = "%s%s/add/" % (query, self.args.role)
+                url = "%s%s/add/" % (query, role)
                 _r = self.connectors[env].post(url, data)
                 if _r.status_code == Constants.PULP_POST_OK:
                     juicer.utils.Log.log_info("added user `%s` to role `%s` in %s",
-                                              (self.args.login, self.args.role, env))
+                                              (login, role, env))
                 else:
                     _r.raise_for_status()
+        return True
 
-    def show_repo(self, query='/repositories/'):
+    def show_repo(self, name=None, envs=None, query='/repositories/'):
         """
         Show repositories in specified environments
         """
-        juicer.utils.Log.log_debug("Show Repo: %s", self.args.name)
+        juicer.utils.Log.log_debug("Show Repo: %s", name)
 
-        for env in self.args.envs:
+        for env in envs:
             juicer.utils.Log.log_info("%s:", env)
-            url = "%s%s-%s/" % (query, self.args.name, env)
+            url = "%s%s-%s/" % (query, name, env)
             _r = self.connectors[env].get(url)
             if _r.status_code == Constants.PULP_GET_OK:
                 juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
             else:
                 _r.raise_for_status()
+        return True
 
-    def show_user(self, query='/users/'):
+    def show_user(self, login=None, envs=None, query='/users/'):
         """
         Show user in specified environments
         """
-        juicer.utils.Log.log_debug("Show User: %s", self.args.login)
+        juicer.utils.Log.log_debug("Show User: %s", login)
 
         for env in self.args.envs:
             juicer.utils.Log.log_info("%s:", env)
-            if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
+            if not juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` doesn't exist in %s... skipping!",
-                                          (self.args.login, env))
+                                          (login, env))
                 continue
             else:
-                url = "%s%s/" % (query, self.args.login)
+                url = "%s%s/" % (query, login)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == Constants.PULP_GET_OK:
                     juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
                 else:
                     _r.raise_for_status()
+        return True
 
-    def list_roles(self, query='/roles/'):
+    def list_roles(self, envs=None, query='/roles/'):
         """
         List roles in specified environments
         """
-        juicer.utils.Log.log_debug("List Roles %s", ", ".join(self.args.envs))
+        juicer.utils.Log.log_debug("List Roles %s", ", ".join(envs))
 
-        for env in self.args.envs:
+        for env in envs:
             juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
                 juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
             else:
                 _r.raise_for_status()
+        return True
 
-    def update_user(self, query='/users/'):
+    def update_user(self, login=None, name=None, password=None, envs=None, query='/users/'):
         """
         Update user information
         """
-        juicer.utils.Log.log_debug(
-                "Update user information %s" % (self.args.login))
+        juicer.utils.Log.log_debug("Update user information %s" % login)
 
-        data = {'login': self.args.login,
-                'name': self.args.name,
-                'password': self.args.password}
+        data = {'login': login,
+                'name': name,
+                'password': password}
 
-        query = "%s%s/" % (query, self.args.login)
+        query = "%s%s/" % (query, login)
 
-        for env in self.args.envs:
+        for env in envs:
             juicer.utils.Log.log_info("%s:", env)
-            if not juicer.utils.user_exists_p(self.args, self.connectors[env]):
+            if not juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` does not exist in %s... skipping!",
-                                          (self.args.login, env))
+                                          (login, env))
                 continue
             else:
                 _r = self.connectors[env].put(query, data)
@@ -233,3 +239,4 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
                 else:
                     _r.raise_for_status()
+        return True

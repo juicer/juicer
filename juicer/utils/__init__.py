@@ -51,6 +51,8 @@ def create_json_str(input_ds):
     """
     return json.dumps(input_ds)
 
+def cart_repo_exists_p(name, connector, env):
+    return repo_exists_p(name + '-' + env, connector, env)
 
 def _config_file():
     """
@@ -162,11 +164,11 @@ def get_environments():
     return environments
 
 
-def user_exists_p(args, connector):
+def user_exists_p(login, connector):
     """
     Determine if user exists in specified environment.
     """
-    url = '/users/' + args.login + '/'
+    url = '/users/' + login + '/'
     _r = connector.get(url)
     return (_r.status_code == Constants.PULP_GET_OK)
 
@@ -177,8 +179,8 @@ def repo_exists_p(repo, connector, env):
     return (_r.status_code == Constants.PULP_GET_OK)
 
 
-def role_exists_p(args, connector):
-    url = '/roles/' + args.role + '/'
+def role_exists_p(role, connector):
+    url = '/roles/' + role + '/'
     _r = connector.get(url)
     return (_r.status_code == Constants.PULP_GET_OK)
 

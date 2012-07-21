@@ -50,6 +50,7 @@ class Parser(object):
                                         help='The architecture of your repo')
 
         parser_create_repo.add_argument('--feed', metavar='feed', \
+                                            default=None, \
                                             help='A feed repo for your repo')
 
         parser_create_repo.add_argument('--in', metavar='envs', \
