@@ -281,10 +281,17 @@ class Juicer(object):
         for repo, items in cart.iterrepos():
             if not juicer.utils.repo_exists_p(repo, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo '%s' doesn't exist in %s environment... skipping!",
-                                           (repo, env))
+                                          (repo, env))
                 continue
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
+
+            dl_base = self.connectors[env].base_url.replace('/pulp/api', '/pulp/repos')
+            for item in items:
+                link = '%s/%s/%s/%s' % (dl_base, env, repo, os.path.basename(item))
+                cart._update(repo, item, link)
+
+        cart.save()
 
         self.publish(cart, env)
 
