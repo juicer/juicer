@@ -20,7 +20,6 @@ from juicer.utils.StatusBar import StatusBar
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
-import re
 import os
 import time
 import rpm
