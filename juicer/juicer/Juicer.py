@@ -22,7 +22,6 @@ from juicer.admin.JuicerAdmin import JuicerAdmin
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
-import re
 import os
 import time
 import rpm

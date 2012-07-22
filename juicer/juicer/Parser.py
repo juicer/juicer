@@ -78,17 +78,17 @@ class Parser(object):
 
         ##################################################################
         # Create the 'update' sub-parser
-        parser_update = subparsers.add_parser('update', \
-                help='Update a release cart with items.')
+        # parser_update = subparsers.add_parser('update', \
+        #         help='Update a release cart with items.')
 
-        parser_update.add_argument('cart-name', metavar='cartname', \
-                                       help='The name of your release cart')
+        # parser_update.add_argument('cart-name', metavar='cartname', \
+        #                                help='The name of your release cart')
 
-        parser_update.add_argument('items', metavar='items', \
-                                     nargs="+", \
-                                     help='Cart name')
+        # parser_update.add_argument('items', metavar='items', \
+        #                              nargs="+", \
+        #                              help='Cart name')
 
-        parser_update.set_defaults(j=juicer.juicer.update)
+        # parser_update.set_defaults(j=juicer.juicer.update)
 
         ##################################################################
         # Create the 'create-like' sub-parser

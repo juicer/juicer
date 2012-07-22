@@ -78,7 +78,6 @@ def _config_file():
         config.set('stage', 'promotes_to', 'prod')
         config.add_section('prod')
         config.set('prod', 'requires_signature')
-        config.set('prod', 'promotes_to', 'False')
 
         with open(config_file, 'w') as conf:
             config.write(conf)

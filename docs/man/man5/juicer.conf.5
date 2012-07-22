@@ -2,12 +2,12 @@
 .\"     Title: juicer.conf
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/17/2012
+.\"      Date: 07/21/2012
 .\"    Manual: Pulp repos and release carts
-.\"    Source: Juicer 0.1.7
+.\"    Source: Juicer 0.2.0
 .\"  Language: English
 .\"
-.TH "JUICER\&.CONF" "5" "07/17/2012" "Juicer 0\&.1\&.7" "Pulp repos and release carts"
+.TH "JUICER\&.CONF" "5" "07/21/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,17 +31,16 @@
 juicer.conf \- juicer configuration file
 .SH "DESCRIPTION"
 .sp
-Sections and variables to use in your juicer configuration file\&. This file is broken into 2 or more parts\&. The first is \fBbase\fR and the rest are named after your environments\&.
+Sections and variables to use in your juicer configuration file\&. This file is broken into 2 or more parts\&. The first is \fBDEFAULT\fR and the rest are named after your environments, e\&.g\&., \fIqa\fR, \fIstage\fR, or \fIprod\fR\&.
 .sp
-Assuming you have \fIre\fR, \fIqa\fR, \fIstage\fR, and \fIprod\fR, environments, you might have a configuration file that looks like this:
+Assuming you have a \fIdevel\fR and \fIprod\fR environment, you might have a configuration file that looks like this:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-[base]
-username: packager
-password: s7r0ngP@55
+# ~/\&.juicer\&.conf \- In this example config file we maintain two
+# environments: devel and prod\&.
 .fi
 .if n \{\
 .RE
@@ -51,8 +50,10 @@ password: s7r0ngP@55
 .RS 4
 .\}
 .nf
-[re]
-base_url: https://pulp\&.util\&.phx1\&.redhat\&.com/re/pulp/api
+[DEFAULT]
+username: tux
+password: 5w33tP@ssw04d
+base_url: https://pulp\&.devel\&.int\&.tux\&.org/pulp/api
 .fi
 .if n \{\
 .RE
@@ -62,8 +63,11 @@ base_url: https://pulp\&.util\&.phx1\&.redhat\&.com/re/pulp/api
 .RS 4
 .\}
 .nf
-[qa]
-base_url: https://pulp\&.util\&.phx1\&.redhat\&.com/qa/pulp/api
+[devel]
+# Most of our configuration for this environment lives the DEFAULT
+# section already but we do need to tell Juicer where we promote
+# to from devel and also that devel is the base environment\&.
+promotes_to: prod
 .fi
 .if n \{\
 .RE
@@ -73,8 +77,10 @@ base_url: https://pulp\&.util\&.phx1\&.redhat\&.com/qa/pulp/api
 .RS 4
 .\}
 .nf
-[stage]
-base_url: https://pulp\&.util\&.phx2\&.redhat\&.com/stage/pulp/api
+# This is the base environment\&. This means juicer will default to
+# using \*(Aqdevel\*(Aq when commands are not specified with an explicit
+# environment(s)\&.
+base
 .fi
 .if n \{\
 .RE
@@ -85,14 +91,39 @@ base_url: https://pulp\&.util\&.phx2\&.redhat\&.com/stage/pulp/api
 .\}
 .nf
 [prod]
-base_url: https://pulp\&.util\&.phx2\&.redhat\&.com/stage/prod/api
+# username already defined in DEFAULT\&.
+password: 5w33t_AdM!n_P@ssw04d
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# Note that this is a different pulp server, so we must specify
+the base_url once again\&.
+base_url: https://pulp\&.prod\&.int\&.tux\&.org/pulp/api
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# We specify that the production environment requires packages to
+# be signed\&.
+requires_signature
 .fi
 .if n \{\
 .RE
 .\}
 .SH "FILES"
 .sp
-~/\&.juicer\&.conf \(em Juicer configuration file
+\fB~/\&.juicer\&.conf\fR \(em Juicer configuration file
 .SH "AUTHOR"
 .sp
 Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com>\&.
@@ -104,3 +135,5 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"
 .sp
 \fBjuicer\fR(1), \fBjuicer\-admin\fR(1)
+.sp
+The Juicer Homepage: http://github\&.com/abutcher/juicer/
