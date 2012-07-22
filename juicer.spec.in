@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 22 2012 Tim Bielawa <tim@redhat.com> - 0.2.0-1
+- First actual release!
+
 * Sun Jul 22 2012 Tim Bielawa <tim@redhat.com> - 0.1.9-1
 - Prepare for 0.2.0 release.
 
