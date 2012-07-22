@@ -12,13 +12,14 @@ juicer.conf - juicer configuration file
 
 DESCRIPTION
 -----------
-Sections and variables to use in your juicer configuration file. This
-file is broken into 2 or more parts. The first is *base* and the rest
-are named after your environments.
 
-Assuming you have __re__, __qa__, __stage__, and __prod__,
-environments, you might have a configuration file that looks like
-this:
+Sections and variables to use in your juicer configuration file. This
+file is broken into 2 or more parts. The first is *DEFAULT* and the
+rest are named after your environments, e.g., __qa__, __stage__, or
+__prod__.
+
+Assuming you have __qa__, __stage__, and __prod__, environments, you
+might have a configuration file that looks like this:
 
 
     [base]
@@ -41,7 +42,7 @@ this:
 
 FILES
 -----
-~/.juicer.conf -- Juicer configuration file
+*~/.juicer.conf* -- Juicer configuration file
 
 
 
@@ -63,3 +64,4 @@ SEE ALSO
 --------
 *juicer*(1), *juicer-admin*(1)
 
+The Juicer Homepage: http://github.com/abutcher/juicer/

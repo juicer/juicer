@@ -31,9 +31,9 @@
 juicer.conf \- juicer configuration file
 .SH "DESCRIPTION"
 .sp
-Sections and variables to use in your juicer configuration file\&. This file is broken into 2 or more parts\&. The first is \fBbase\fR and the rest are named after your environments\&.
+Sections and variables to use in your juicer configuration file\&. This file is broken into 2 or more parts\&. The first is \fBDEFAULT\fR and the rest are named after your environments, e\&.g\&., \fIqa\fR, \fIstage\fR, or \fIprod\fR\&.
 .sp
-Assuming you have \fIre\fR, \fIqa\fR, \fIstage\fR, and \fIprod\fR, environments, you might have a configuration file that looks like this:
+Assuming you have \fIqa\fR, \fIstage\fR, and \fIprod\fR, environments, you might have a configuration file that looks like this:
 .sp
 .if n \{\
 .RS 4
@@ -92,7 +92,7 @@ base_url: https://pulp\&.util\&.phx2\&.redhat\&.com/stage/prod/api
 .\}
 .SH "FILES"
 .sp
-~/\&.juicer\&.conf \(em Juicer configuration file
+\fB~/\&.juicer\&.conf\fR \(em Juicer configuration file
 .SH "AUTHOR"
 .sp
 Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com>\&.
@@ -104,3 +104,5 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"
 .sp
 \fBjuicer\fR(1), \fBjuicer\-admin\fR(1)
+.sp
+The Juicer Homepage: http://github\&.com/abutcher/juicer/
