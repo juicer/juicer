@@ -29,6 +29,16 @@ class JuicerAdmin(object):
 
         (self.connectors, self._defaults) = juicer.utils.get_login_info()
 
+        if 'envs' in self.args:
+            for env in self.args.envs:
+                try:
+                    self.connectors[env].get()
+                except Exception:
+                    juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
+                    juicer.utils.Log.log_debug("Exiting...")
+                    exit(1)
+
+
     def create_repo(self, arch=None, name=None, feed=None, envs=None, type=None, query='/repositories/'):
         """
         `arch` - Architecture of repository content
@@ -200,7 +210,11 @@ class JuicerAdmin(object):
             if _r.status_code == Constants.PULP_GET_OK:
                 juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
             else:
-                _r.raise_for_status()
+                if _r.status_code == Constants.PULP_GET_NOT_FOUND:
+                    juicer.utils.Log.log_error("repo '%s' was not found" % name)
+                    exit(1)
+                else:
+                    _r.raise_for_status()
         return True
 
     def show_user(self, login=None, envs=None, query='/users/'):
