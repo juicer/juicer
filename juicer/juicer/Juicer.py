@@ -34,13 +34,14 @@ class Juicer(object):
 
         (self.connectors, self._defaults) = juicer.utils.get_login_info()
 
-        for env in self.args.environment:
-            try:
-                self.connectors[env].get()
-            except Exception:
-                juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
-                juicer.utils.Log.log_debug("Exiting...")
-                exit(1)
+        if 'environment' in self.args:
+            for env in self.args.environment:
+                try:
+                    self.connectors[env].get()
+                except Exception:
+                    juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
+                    juicer.utils.Log.log_debug("Exiting...")
+                    exit(1)
 
     # starts the 3-step upload process
     def _init_up(self, query='/services/upload/', name='', cksum='', size='', \
