@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/21/2012
+.\"      Date: 07/24/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "07/21/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "07/24/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -28,7 +28,7 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-juicer-admin \- manage pulp repos, users, and roles
+juicer-admin \- manage pulp repositories, users, and roles\&.
 .SH "SYNOPSIS"
 .sp
 juicer\-admin subcommand [OPTIONS \&...] [PARAMETERS \&...]
@@ -39,26 +39,26 @@ Manage pulp repositories, users, and roles\&.
 .sp
 usage: juicer\-admin creat\-repo REPONAME \-\-arch ARCH \-\-feed FEED \-\-in env1 [ env2, [ \&...]]
 .sp
-Create a repo with the options specified\&.
+Create a repository
 .PP
 \fBREPONAME\fR
 .RS 4
-The name of the repo you wish to create\&.
+The name of the repository to be created
 .RE
 .PP
 \fBARCH\fR
 .RS 4
-The architecture which packages will be built for in repo\&.
+Repository package architecture
 .RE
 .PP
 \fBFEED\fR
 .RS 4
-A feed url from which to sync yum repository meta\-data and packages\&.
+A feed url from which to synchronize yum repository packages
 .RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to create repo in\&.
+Environments in which to create repository
 .RE
 .SH "CREATE-USER"
 .sp
@@ -66,48 +66,48 @@ usage: juicer\-admin create\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD 
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username for user\&.
+Login or username
 .RE
 .PP
 \fBFULLNAME\fR
 .RS 4
-Users full name\&.
+User\(cqs full name
 .RE
 .PP
 \fBPASSWORD\fR
 .RS 4
-Plain text password for user\&.
+Plain text password
 .RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to create user in\&.
+Environments in which to create user
 .RE
 .SH "DELETE-REPO"
 .sp
-usage: juicer\-admin REPONAME \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin delete\-repo REPONAME \-\-in env1 [ env2, [ \&...]]
 .PP
 \fBREPONAME\fR
 .RS 4
-Name of repo to delete\&.
+Name of repository which will be deleted
 .RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to delete repo in\&.
+Environments in which to delete repository
 .RE
 .SH "DELETE-USER"
 .sp
-usage: juicer\-admin LOGIN \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin delete\-user LOGIN \-\-in env1 [ env2, [ \&...]]
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username of user to delete\&.
+Login or username of user which will be deleted
 .RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to delete user in\&.
+Environments in which to delete user
 .RE
 .SH "LIST-REPOS"
 .sp
@@ -115,7 +115,7 @@ usage: juicer\-admin list\-repos \-\-in env1 [ env2, [ \&...]]
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to show repos from\&.
+Environments in which to list repositories
 .RE
 .SH "LIST-ROLES"
 .sp
@@ -123,7 +123,7 @@ usage: juicer\-admin list\-roles \-\-in env1 [ env2, [ \&...]]
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to delete user in\&.
+Environments in which to list roles
 .RE
 .SH "ROLE-ADD"
 .sp
@@ -131,20 +131,25 @@ usage: juicer\-admin role\-add \-\-role ROLE \-\-login LOGIN \-\-in env1 [ env2,
 .PP
 \fBROLE\fR
 .RS 4
-The role which we will assign to login or username\&.
+The role which will be assigned to login or username
 .RE
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username of user to add to role\&.
+Login or username of user which will be added to role
+.RE
+.PP
+\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
+.RS 4
+Environments in which to assign role to user
 .RE
 .SH "SHOW-USER"
 .sp
-usage: juicer\-admin LOGIN \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin show\-user LOGIN \-\-in env1 [ env2, [ \&...]]
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username for user\&.
+Login or username
 .RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
@@ -157,22 +162,22 @@ usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD 
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username of user to update\&.
+Login or username of user which will be updated
 .RE
 .PP
 \fBFULLNAME\fR
 .RS 4
-Updated full name of user\&.
+Updated full name
 .RE
 .PP
 \fBPASSWORD\fR
 .RS 4
-Updated plain text password\&.
+Updated plain text password
 .RE
 .PP
 \fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
 .RS 4
-Environments to update user in\&.
+Environments in which to update user
 .RE
 .SH "FILES"
 .sp
