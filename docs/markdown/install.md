@@ -8,7 +8,8 @@ You'll need these dependencies to build/install:
 2. python-request >= 0.13.1
 3. rpm-python
 4. python-magic
-5. python >= 2.5
+5. python-progressbar
+6. python >= 2.5
 
 Building documentation requires the following deps. If you're building
 the RPMs, then these are required otherwise they are optional.

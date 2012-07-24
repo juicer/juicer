@@ -13,7 +13,8 @@ clone is super easy!
 2. python-request >= 0.13.1
 3. rpm-python
 4. python-magic
-5. python >= 2.5
+5. python-progressbar
+6. python >= 2.5
 
 ## Setup a Config File
 

@@ -19,6 +19,7 @@ BuildRequires: python2-devel
 Requires: python-BeautifulSoup
 Requires: python-requests >= 0.13.1
 Requires: rpm-python
+Requires: python-progressbar
 Requires: python >= 2.5
 
 
