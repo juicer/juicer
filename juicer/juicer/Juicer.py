@@ -380,7 +380,16 @@ class Juicer(object):
                 # if the package is in a repo, show a link to the package in said repo
                 # otherwise, show nothing
                 if len(package['repoids']) > 0:
-                    link = juicer.utils.remote_url(self.connectors[env], env, package['repoids'][0], package['filename'])
+                    target = package['repoids'][0]
+
+                    _r = self.connectors[env].get('/repositories/%s/' % target)
+                    if not _r.status_code == Constants.PULP_GET_OK:
+                        jucer.utils.Log.error_log("%s was not found as a repoid. A %s status code was returned" %
+                                (target, _r.status_code))
+                        exit(1)
+                    repo = juicer.utils.load_json_str(_r.content)['name']
+
+                    link = juicer.utils.remote_url(self.connectors[env], env, repo, package['filename'])
                 else:
                     link = ''
 

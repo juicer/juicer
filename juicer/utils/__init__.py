@@ -349,13 +349,15 @@ def save_url_as(url, save_as):
     with open(save_as, 'wb') as data:
         data.write(remote.content)
 
-def remote_url(connector, env, repoid, filename):
+def remote_url(connector, env, repo, filename):
     """
     return a str containing a link to the rpm in the pulp repository
     """
     dl_base = connector.base_url.replace('/pulp/api', '/pulp/repos')
 
-    _r = connector.get('/repositories/%s-%s/' % (repoid, env))
+    repoid = '%s-%s' % (repo, env)
+
+    _r = connector.get('/repositories/%s/' % repoid)
     if not _r.status_code == Constants.PULP_GET_OK:
         juicer.utils.Log.log_error("%s is was not found as a repoid. Status code %s returned by pulp" % \
                 (repoid, _r.status_code))
