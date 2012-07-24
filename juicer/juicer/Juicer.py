@@ -17,8 +17,6 @@
 
 from juicer.common import Constants
 from juicer.utils.ProgressBar import ProgressBar
-from juicer.admin.Parser import Parser
-from juicer.admin.JuicerAdmin import JuicerAdmin
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
