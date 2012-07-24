@@ -16,7 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
-from juicer.utils.StatusBar import StatusBar
+from juicer.utils.ProgressBar import ProgressBar
 from juicer.admin.Parser import Parser
 from juicer.admin.JuicerAdmin import JuicerAdmin
 import juicer.common.Cart
@@ -122,7 +122,7 @@ class Juicer(object):
 
         #create a statusbar
         if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            statusbar = StatusBar()
+            pbar = ProgressBar(size)
 
         # read in rpm
         upload_flag = False
@@ -134,9 +134,9 @@ class Juicer(object):
             juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
             upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
             if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-                statusbar.update(len(rpm_data), size)
+                pbar.update(len(rpm_data))
         if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            statusbar.close()
+            pbar.finish()
         rpm_fd.close()
 
         juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
@@ -207,7 +207,7 @@ class Juicer(object):
 
         # create a statusbar
         if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            statusbar = StatusBar()
+            pbar = ProgressBar()
 
         # read in file
         upload_flag = False
@@ -220,9 +220,9 @@ class Juicer(object):
             juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
             upload_flag = self._append_up(uid=upload_id, fdata=file_data)
             if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-                statusbar.update(len(file_data), size)
+                pbar.update(len(file_data))
         if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            statusbar.close()
+            pbar.finish()
         fd.close()
 
         juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
@@ -294,13 +294,16 @@ class Juicer(object):
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
 
+            if cart.name == 'upload-cart':
+                continue
+
             for item in items:
                 link = juicer.utils.remote_url(self.connectors[env], env, repo, os.path.basename(item))
                 cart._update(repo, item, link)
 
-        cart.save()
-
-        self.publish(cart, env)
+        if cart.name != 'upload-cart':
+            cart.save()
+            self.publish(cart, env)
 
         return True
 
@@ -317,12 +320,6 @@ class Juicer(object):
         if not env:
             env = self._defaults['cart_dest']
 
-        if not juicer.utils.cart_repo_exists_p('carts', self.connectors[env], env):
-            juicer.utils.Log.log_debug("Cart repo does not exist in '%s', creating it..." % env)
-            parser = juicer.admin.Parser.Parser()
-            args = parser.parser.parse_args(("create-repo carts --type file --in %s" % env).split())
-            juicer.admin.JuicerAdmin.JuicerAdmin(args).create_repo(arch=args.arch, name=args.name, \
-                                                                       type=args.type, envs=args.envs)
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cart.name)
 
         if not cart_file.endswith('.json'):
@@ -411,3 +408,4 @@ class Juicer(object):
                 juicer.utils.Log.log_info("FAILED")
                 juicer.utils.Log.log_info("Server said: %s", _r.content)
                 continue
+        return True
