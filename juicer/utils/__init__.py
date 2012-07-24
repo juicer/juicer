@@ -355,8 +355,6 @@ def remote_url(connector, env, repoid, filename):
     """
     dl_base = connector.base_url.replace('/pulp/api', '/pulp/repos')
 
-    print env
-
     _r = connector.get('/repositories/%s-%s/' % (repoid, env))
     if not _r.status_code == Constants.PULP_GET_OK:
         juicer.utils.Log.log_error("%s is was not found as a repoid. Status code %s returned by pulp" % \
