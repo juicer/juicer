@@ -294,9 +294,8 @@ class Juicer(object):
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
 
-            dl_base = self.connectors[env].base_url.replace('/pulp/api', '/pulp/repos')
             for item in items:
-                link = '%s/%s/%s/%s' % (dl_base, env, repo, os.path.basename(item))
+                link = juicer.utils.remote_url(self.connectors[env], env, repo, os.path.basename(item))
                 cart._update(repo, item, link)
 
         cart.save()
@@ -379,18 +378,12 @@ class Juicer(object):
             juicer.utils.Log.log_info('%s:' % str.upper(env))
 
             pkg_list = juicer.utils.load_json_str(_r.content)
-            dl_base = self.connectors[env].base_url.replace('/pulp/api', '/pulp/repos')
 
             for package in pkg_list:
                 # if the package is in a repo, show a link to the package in said repo
                 # otherwise, show nothing
                 if len(package['repoids']) > 0:
-                    _r = self.connectors[env].get('/repositories/%s/' % package['repoids'][0])
-                    if not _r.status_code == Constants.PULP_GET_OK:
-                        _r.raise_for_status()
-
-                    repo = juicer.utils.load_json_str(_r.content)['name']
-                    link = '%s/%s/%s/%s' % (dl_base, env, repo, package['filename'])
+                    link = juicer.utils.remote_url(self.connectors[env], env, package['repoids'][0], package['filename'])
                 else:
                     link = ''
 
