@@ -48,6 +48,8 @@ class JuicerAdmin(object):
 
         Create repository in specified environments
         """
+        name = name.lower()
+        
         data = {'name': name,
                 'arch': arch}
 
@@ -82,6 +84,8 @@ class JuicerAdmin(object):
 
         Create user in specified environments
         """
+        login = login.lower()
+        
         data = {'login': login,
                 'password': password,
                 'name': name}
@@ -264,6 +268,8 @@ class JuicerAdmin(object):
         Update user information
         """
         juicer.utils.Log.log_debug("Update user information %s" % login)
+
+        login = login.lower()
 
         data = {'login': login,
                 'name': name,
