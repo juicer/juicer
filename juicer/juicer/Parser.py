@@ -49,7 +49,7 @@ class Parser(object):
         parser_create.add_argument('cartname', metavar='cart-name', \
                                        help='Cart name')
 
-        parser_create.add_argument('-r', metavar='reponame', \
+        parser_create.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name')
