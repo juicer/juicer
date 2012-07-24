@@ -7,7 +7,7 @@ juicer-admin(1)
 
 NAME
 ----
-juicer-admin - manage pulp repos, users, and roles
+juicer-admin - manage pulp repositories, users, and roles.
 
 
 
@@ -26,19 +26,19 @@ CREATE-REPO
 -----------
 usage: juicer-admin creat-repo REPONAME --arch ARCH --feed FEED --in env1 [ env2, [ ...]]
 
-Create a repo with the options specified.
+Create a repository
 
 *REPONAME*::
-The name of the repo you wish to create.
+The name of the repository to be created
 
 *ARCH*::
-The architecture which packages will be built for in repo.
+Repository package architecture
 
 *FEED*::
-A feed url from which to sync yum repository meta-data and packages.
+A feed url from which to synchronize yum repository packages
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to create repo in.
+Environments in which to create repository
 
 
 CREATE-USER
@@ -46,38 +46,38 @@ CREATE-USER
 usage: juicer-admin create-user LOGIN --name FULLNAME --password PASSWORD --in env1 [ env2, [ ...]]
 
 *LOGIN*::
-Login or username for user.
+Login or username
 
 *FULLNAME*::
-Users full name.
+User's full name
 
 *PASSWORD*::
-Plain text password for user.
+Plain text password
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to create user in.
+Environments in which to create user
 
 
 DELETE-REPO
 -----------
-usage: juicer-admin REPONAME --in env1 [ env2, [ ...]]
+usage: juicer-admin delete-repo REPONAME --in env1 [ env2, [ ...]]
 
 *REPONAME*::
-Name of repo to delete.
+Name of repository which will be deleted
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to delete repo in.
+Environments in which to delete repository
 
 
 DELETE-USER
 -----------
-usage: juicer-admin LOGIN --in env1 [ env2, [ ...]]
+usage: juicer-admin delete-user LOGIN --in env1 [ env2, [ ...]]
 
 *LOGIN*::
-Login or username of user to delete.
+Login or username of user which will be deleted
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to delete user in.
+Environments in which to delete user
 
 
 LIST-REPOS
@@ -85,7 +85,7 @@ LIST-REPOS
 usage: juicer-admin list-repos --in env1 [ env2, [ ...]]
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to show repos from.
+Environments in which to list repositories
 
 
 LIST-ROLES
@@ -93,7 +93,7 @@ LIST-ROLES
 usage: juicer-admin list-roles --in env1 [ env2, [ ...]]
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to delete user in.
+Environments in which to list roles
 
 
 ROLE-ADD
@@ -101,18 +101,21 @@ ROLE-ADD
 usage: juicer-admin role-add --role ROLE --login LOGIN --in env1 [ env2, [ ...]]
 
 *ROLE*::
-The role which we will assign to login or username.
+The role which will be assigned to login or username
 
 *LOGIN*::
-Login or username of user to add to role.
+Login or username of user which will be added to role
+
+*--in* 'env1 [ env2, [ ...]]'::
+Environments in which to assign role to user
 
 
 SHOW-USER
 ---------
-usage: juicer-admin LOGIN --in env1 [ env2, [ ...]]
+usage: juicer-admin show-user LOGIN --in env1 [ env2, [ ...]]
 
 *LOGIN*::
-Login or username for user.
+Login or username 
 
 *--in* 'env1 [ env2, [ ...]]'::
 Environments to show user from.
@@ -123,16 +126,16 @@ UPDATE-USER
 usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD --in env1 [ env2, [ ...]]
 
 *LOGIN*::
-Login or username of user to update.
+Login or username of user which will be updated
 
 *FULLNAME*::
-Updated full name of user.
+Updated full name
 
 *PASSWORD*::
-Updated plain text password.
+Updated plain text password
 
 *--in* 'env1 [ env2, [ ...]]'::
-Environments to update user in.
+Environments in which to update user
 
 
 
