@@ -334,10 +334,8 @@ def is_rpm(path):
     path_type = m.file(path)
 
     if path_type in rpm_types:
-        juicer.utils.Log.log_debug("Type check passed for '%s': '%s'" % (path, path_type))
         return True
     else:
-        juicer.utils.Log.log_error("Type check failed for '%s': '%s'" % (path, path_type))
         return False
 
 
