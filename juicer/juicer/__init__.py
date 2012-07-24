@@ -38,8 +38,9 @@ def show(args):
     print cart
 
 
-def update():
-    pass
+def pull(args):
+    pulp = j(args)
+    pulp.pull(args.cartname)
 
 
 def createlike():

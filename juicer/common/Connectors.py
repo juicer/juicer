@@ -40,6 +40,11 @@ class Connectors(object):
         return requests.get(url, auth=self.auth, headers=self.headers,
                             verify=False)
 
+    def get_raw(self, url):
+        juicer.utils.Log.log_debug("[GET:%s]", url)
+        return requests.get(url, auth=self.auth, headers=self.headers,
+                            verify=False)
+
     def post(self, url="", data={}, log_data=True, auto_create_json_str=True):
         url = self.base_url + url
         if log_data:

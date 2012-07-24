@@ -301,7 +301,7 @@ class Juicer(object):
 
         if cart.name != 'upload-cart':
             cart.save()
-            self.publish(cart, env)
+            self.publish(cart)
 
         return True
 
@@ -415,4 +415,22 @@ class Juicer(object):
                 juicer.utils.Log.log_info("FAILED")
                 juicer.utils.Log.log_info("Server said: %s", _r.content)
                 continue
+        return True
+
+
+    def pull(self, cartname=None, env=None):
+        if not env:
+            env = self._defaults['cart_dest']
+
+        juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
+
+        _r = self.connectors[env].get_raw(
+            juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'))
+        if _r.status_code == Constants.PULP_GET_OK:
+            cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
+            juicer.utils.write_json_document(cart_file, juicer.utils.load_json_str(_r.content))
+            juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
+        else:
+            _r.raise_for_status()
+
         return True

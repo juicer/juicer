@@ -91,6 +91,16 @@ class Parser(object):
         # parser_update.set_defaults(j=juicer.juicer.update)
 
         ##################################################################
+        # Create the 'pull' sub-parser
+        parser_pull = subparsers.add_parser('pull', \
+                help='Pull a release cart from remote.')
+
+        parser_pull.add_argument('cartname', metavar='cartname', \
+                                       help='The name of your release cart')
+
+        parser_pull.set_defaults(j=juicer.juicer.pull)
+
+        ##################################################################
         # Create the 'create-like' sub-parser
         # parser_createlike = subparsers.add_parser('create-like', \
         #         help='Create a new cart based off an existing one.')
