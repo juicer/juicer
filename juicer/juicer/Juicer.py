@@ -26,7 +26,6 @@ import rpm
 import hashlib
 import re
 
-
 class Juicer(object):
     def __init__(self, args):
         self.args = args
@@ -266,6 +265,17 @@ class Juicer(object):
 
         juicer.utils.Log.log_debug("Beginning upload for %s" % repoid)
 
+        # Determine if these files are all rpms and if we need to sign
+        # them. If we signed them, check for sigs but don't
+        # bail... Then continue normally.
+        if self.connectors[env].requires_signature and all([juicer.utils.is_rpm(item) for item in items]):
+            self.sign_rpms(items, env)
+            if not juicer.utils.rpms_signed_p(items):
+                juicer.utils.Log.log_debug("No RPMs have been signed!")
+                #raise RunTimeException() Do we want to barf?
+            else:
+                juicer.utils.Log.log_debug("RPMs have a signature... we do not know if it is valid...")
+
         for item in items:
             juicer.utils.Log.log_debug("Processing item: '%s'" % item)
             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
@@ -288,7 +298,6 @@ class Juicer(object):
         Pushes a release cart to the pre-release environment.
         """
         juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart.name)
-        #cart = juicer.common.Cart.Cart(cart_name, autoload=True, autosync=True)
 
         if not env:
             env = self._defaults['cart_dest']
@@ -298,6 +307,7 @@ class Juicer(object):
                 juicer.utils.Log.log_info("repo '%s' doesn't exist in %s environment... skipping!",
                                           (repo, env))
                 continue
+
             juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
             self.upload(env, repo, items)
 
@@ -429,6 +439,9 @@ class Juicer(object):
                 juicer.utils.Log.log_info('%s %s %s %s' % (package['name'], package['version'], link, carts))
 
     def hello(self):
+        """
+        Test pulp server connections defined in ~/.juicer.conf.
+        """
         for env in self.args.environment:
             juicer.utils.Log.log_info("Trying to open a connection to %s, %s ...",
                                       env, self.connectors[env].base_url)
@@ -463,7 +476,8 @@ class Juicer(object):
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
         cart_file += '.json'
-        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'), cart_file)
+        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'),
+                                 cart_file)
         juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
         return True
 
@@ -491,3 +505,30 @@ class Juicer(object):
         cart.save()
 
         self.publish(cart)
+
+    def sign_rpms(self, rpm_files=None, env=None):
+        """
+        `rpm_files` - A list of paths to RPM files.
+
+        Will attempt to load the rpm_sign_plugin defined in
+        ~/.juicer.conf which must be a plugin inheriting from
+        juicer.common.RpmSignPlugin. If available, we'll call
+        rpm_sign_plugin.sign_rpms(rpm_files) and return.
+        """
+        juicer.utils.Log.log_debug("%s requires RPM signatures ... checking for rpm_sign_plugin definition ...", env)
+        module_name = self._defaults['rpm_sign_plugin']
+        if self._defaults['rpm_sign_plugin']:
+            juicer.utils.Log.log_debug("found rpm_sign_plugin definition %s ... attempting to load ...",
+                                       self._defaults['rpm_sign_plugin'])
+
+            try:
+                rpm_sign_plugin = __import__(module_name, fromlist=[self._defaults['rpm_sign_plugin']])
+                juicer.utils.Log.log_debug("successfully loaded %s ...", module_name)
+                signer = rpm_sign_plugin.RedhatRpmSign()
+                signer.sign_rpms(rpm_files)
+            except ImportError:
+                juicer.utils.Log.log_debug("couldn't load %s ... skipping! you'll have to sign these yourself...",
+                                           module_name)
+        else:
+            juicer.utils.Log.log_info("did not find an rpm_sign_plugin! you'll have to sign these yourself ...")
+        return True

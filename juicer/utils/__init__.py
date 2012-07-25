@@ -27,6 +27,7 @@ import juicer.utils.Remotes
 import magic
 import os
 import os.path
+import rpm
 import sys
 import requests
 import shutil
@@ -91,12 +92,12 @@ def _config_test(config):
         # ensure required keys are present in each section
         if not required_keys.issubset(set(cfg.keys())):
             raise Exception("Missing values in config file: %s" % \
-                            ", ".join(list(required_keys - set(cfg.keys()))))
+                                ", ".join(list(required_keys - set(cfg.keys()))))
 
         # ensure promotion path exists
         if 'promotes_to' in cfg and cfg['promotes_to'] not in config.sections():
             raise Exception("promotion_path: %s is not a config section" \
-                    % cfg['promotes_to'])
+                                % cfg['promotes_to'])
 
 def get_login_info():
     """
@@ -107,6 +108,7 @@ def get_login_info():
     connections = {}
     _defaults = {}
     _defaults['cart_dest'] = ''
+    _defaults['rpm_sign_plugin'] = ''
 
     config.read(_config_file())
 
@@ -120,6 +122,9 @@ def get_login_info():
 
         if 'base' in cfg:
             _defaults['cart_dest'] = section
+
+        if 'rpm_sign_plugin' in cfg:
+            _defaults['rpm_sign_plugin'] = cfg['rpm_sign_plugin']
 
         juicer.utils.Log.log_debug("[%s] username: %s, base_url: %s" % \
                                        (section, \
@@ -338,7 +343,7 @@ def is_rpm(path):
 
     path_type = m.file(path)
 
-    if path_type in rpm_types:
+    if any(rpm_type in path_type for rpm_type in rpm_types):
         return True
     else:
         return False
@@ -354,7 +359,7 @@ def save_url_as(url, save_as):
 
     if not remote.status_code == Constants.PULP_GET_OK:
         juicer.utils.Log.log_error("A %s error occurred trying to get %s" %
-                (remote.status_code, url))
+                                   (remote.status_code, url))
         exit(1)
 
     with open(save_as, 'wb') as data:
@@ -372,7 +377,7 @@ def remote_url(connector, env, repo, filename):
     _r = connector.get('/repositories/%s/' % repoid)
     if not _r.status_code == Constants.PULP_GET_OK:
         juicer.utils.Log.log_error("%s is was not found as a repoid. Status code %s returned by pulp" % \
-                (repoid, _r.status_code))
+                                       (repoid, _r.status_code))
         exit(1)
 
     repo = juicer.utils.load_json_str(_r.content)['name']
@@ -380,3 +385,79 @@ def remote_url(connector, env, repo, filename):
     link = '%s/%s/%s/%s' % (dl_base, env, repo, filename)
 
     return link
+
+def rpms_signed_p(rpm_files=None):
+    """
+    Are these RPMs signed?
+    """
+    return all([check_sig(rpm_file) for rpm_file in rpm_files])
+
+def return_hdr(ts, package):
+    """
+    Hand back the hdr - duh - if the pkg is foobar handback None
+
+    Shamelessly stolen from Seth Vidal
+    http://yum.baseurl.org/download/misc/checksig.py
+    """
+    try:
+        fdno = os.open(package, os.O_RDONLY)
+    except OSError:
+        hdr = None
+        return hdr
+    ts.setVSFlags(~(rpm.RPMVSF_NOMD5|rpm.RPMVSF_NEEDPAYLOAD))
+    try:
+        hdr = ts.hdrFromFdno(fdno)
+    except rpm.error:
+        hdr = None
+        raise rpm.error
+    if type(hdr) != rpm.hdr:
+        hdr = None
+    ts.setVSFlags(0)
+    os.close(fdno)
+    return hdr
+
+def get_sig_info(hdr):
+    """
+    hand back signature information and an error code
+
+    Shamelessly stolen from Seth Vidal
+    http://yum.baseurl.org/download/misc/checksig.py
+    """
+    string = '%|DSAHEADER?{%{DSAHEADER:pgpsig}}:{%|RSAHEADER?{%{RSAHEADER:pgpsig}}:{%|SIGGPG?{%{SIGGPG:pgpsig}}:{%|SIGPGP?{%{SIGPGP:pgpsig}}:{(none)}|}|}|}|'
+    siginfo = hdr.sprintf(string)
+    if siginfo != '(none)':
+        error = 0
+        sigtype, sigdate, sigid = siginfo.split(',')
+    else:
+        error = 101
+        sigtype = 'MD5'
+        sigdate = 'None'
+        sigid = 'None'
+
+    infotuple = (sigtype, sigdate, sigid)
+    return error, infotuple
+
+def check_sig(package):
+    """
+    check if rpm has a signature, we don't care if it's valid or not
+    at the moment
+
+    Shamelessly stolen from Seth Vidal
+    http://yum.baseurl.org/download/misc/checksig.py
+    """
+    rpmroot = '/'
+
+    ts = rpm.TransactionSet(rpmroot)
+
+    sigerror = 0
+    ts.setVSFlags(0)
+    hdr = return_hdr(ts, package)
+    sigerror, (sigtype, sigdate, sigid) = get_sig_info(hdr)
+    if sigid == 'None':
+        keyid = 'None'
+    else:
+        keyid = sigid[-8:]
+    if keyid != 'None':
+        return True
+    else:
+        return False

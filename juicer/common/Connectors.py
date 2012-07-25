@@ -25,6 +25,10 @@ class Connectors(object):
         self.base_url = connect_params['base_url']
         self.auth = (connect_params['username'], connect_params['password'])
         self.headers = {'content-type': 'application/json'}
+        if 'requires_signature' in connect_params:
+            self.requires_signature = True
+        else:
+            self.requires_signature = False
 
     def delete(self, url=""):
         url = self.base_url + url

@@ -17,6 +17,7 @@ rpm packages through a Pulp installation.
 1. [Installation](https://github.com/abutcher/juicer/blob/master/docs/markdown/install.md)
 2. [Configuration](https://github.com/abutcher/juicer/blob/master/docs/markdown/config.md)
 3. [Hacking](https://github.com/abutcher/juicer/blob/master/docs/markdown/hacking.md)
+4. [RpmSignPlugins](https://github.com/abutcher/juicer/blob/master/docs/markdown/plugins.md)
 
 ## Examples
 

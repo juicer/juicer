@@ -24,6 +24,11 @@ prod.
     # explicit environment(s).
     start_in: devel
 
+    # If an environment requires signatures, specify an
+    # rpm_sign_plugin. Here we've included MySweetPlugin, which will
+    # serve to sign RPMs for us. See juicer.common.RpmSignPlugin.
+    rpm_sign_plugin: juicer.plugins.MySweetPlugin
+
     [devel]
     # Most of our configuration for this environment lives in the
     # DEFAULT section already, but we do need to tell Juicer where
