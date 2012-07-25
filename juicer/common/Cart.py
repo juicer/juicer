@@ -74,12 +74,22 @@ class Cart(object):
             raise IOError("No carts currently exist (%s does not exist)" % CART_LOCATION)
 
         cart_file = os.path.join(CART_LOCATION, json_file)
-        cart_body = juicer.utils.read_json_document(cart_file)
+        try:
+            cart_body = juicer.utils.read_json_document(cart_file)
+        except IOError as e:
+            juicer.utils.Log.log_error('an error occured while accessing %s:' %
+                    cart_file)
+            juicer.utils.Log.log_error(e.message)
+            exit(1)
 
         for cart, items in cart_body.iteritems():
             self.add_repo(cart, items)
 
     def save(self):
+        if self.is_empty():
+            juicer.utils.Log.log_error('Cart is empty, not saving.')
+            exit(1)
+
         if not os.path.exists(CART_LOCATION):
             os.mkdir(CART_LOCATION)
 
@@ -132,6 +142,20 @@ class Cart(object):
                 juicer.utils.Log.log_warn("The following items are not actually RPMs:")
                 for i in not_rpms:
                     juicer.utils.Log.log_warn(i)
+
+    def is_empty(self):
+        """
+        return True if the cart has no items, False otherwise
+        """
+        count = 0
+
+        for repo, items in self.iterrepos():
+            count += items.count()
+
+        if count == 0:
+            return True
+        else:
+            return False
 
     def _update(self, repo, current, new):
         self.repo_items_hash[repo].remove(current)
