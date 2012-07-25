@@ -66,23 +66,14 @@ def _config_file():
     elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
         raise IOError("Can not read %s" % config_file)
     else:
-        config = ConfigParser.RawConfigParser({'username': 'user', \
-                'password': 'pword', \
-                'base_url': 'https://localhost/pulp/api/'}, \
-                allow_no_value=True)
-        config.add_section('qa')
-        config.set('qa', 'base')
-        config.set('qa', 'promotes_to', 'stage')
-        config.add_section('stage')
-        config.set('stage', 'requires_signature')
-        config.set('stage', 'promotes_to', 'prod')
-        config.add_section('prod')
-        config.set('prod', 'requires_signature')
+        with open(config_file, 'w') as dest:
+            with open('/usr/share/juicer/juicer.conf') as source:
+                for line in source:
+                    dest.write(line)
 
-        with open(config_file, 'w') as conf:
-            config.write(conf)
-
-        raise Exception('default config file created')
+        juicer.utils.Log.log_info("Default config file created.")
+        juicer.utils.Log.log_info("Check man 5 juicer.conf.")
+        exit(1)
 
 
 def _config_test(config):
