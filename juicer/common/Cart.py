@@ -150,7 +150,7 @@ class Cart(object):
         count = 0
 
         for repo, items in self.iterrepos():
-            count += items.count()
+            count += len(items)
 
         if count == 0:
             return True

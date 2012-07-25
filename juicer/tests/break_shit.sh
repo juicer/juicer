@@ -19,6 +19,13 @@ function go_home() {
 
 # source in hacking/setup-env
 function setup() {
+    CART_FILE=~/.juicer-carts/orange.json
+    TEST_RPM=./share/juicer/empty-0.0.1-1.fc17.x86_64.rpm
+
+    if [ -f $CART_FILE ]; then
+        rm $CART_FILE
+    fi
+
     . ./hacking/setup-env > /dev/null
 }
 
@@ -46,11 +53,11 @@ function break_shit() {
     echo -e "\n\n"
 
     echo "Upload into a non-existant repo"
-    run ./bin/juicer upload -r citrus ~/Downloads/pesticide.rpm
+    run ./bin/juicer upload -r citrus $TEST_RPM
     echo -e "\n\n"
 
-    echo "Upload into a server"
-    run ./bin/juicer upload -r citrus ~/Downloads/pesticide.rpm --in florida
+    echo "Upload into a non-existant server"
+    run ./bin/juicer upload -r citrus $TEST_RPM --in florida
     echo -e "\n\n"
 
     echo "Break shit in juicer-admin"
