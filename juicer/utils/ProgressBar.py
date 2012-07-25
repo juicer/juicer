@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from progressbar import Bar, ETA, FileTransferSpeed, Percentage, ProgressBar
+from progressbar import Bar, Percentage, ProgressBar
 import sys
 
 class ProgessBar(object):
     def __init__(self, maxval):
-        widgets = [Percentage(), Bar()]
+        widgets = [Bar(), Percentage()]
         self.pbar = progressbar.ProgressBar(widgets=widgets, maxval=maxval).start()
 
     def update(self, val):
