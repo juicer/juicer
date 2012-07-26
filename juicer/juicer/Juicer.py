@@ -419,10 +419,16 @@ class Juicer(object):
 
 
     def pull(self, cartname=None, env=None):
+        """
+        `cartname` - Name of cart
+
+        Pull remote cart from the pre release (base) environment
+        """
         if not env:
             env = self._defaults['cart_dest']
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
-        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'), cart_file + '.json')
-        juicer.utils.Log.log_info("pulled cart %s and saved to %s.json", cartname, cart_file)
+        cart_file += '.json'
+        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname), cart_file)
+        juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
         return True
