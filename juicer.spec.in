@@ -21,11 +21,30 @@ Requires: python-requests >= 0.13.1
 Requires: rpm-python
 Requires: python-progressbar
 Requires: python >= 2.5
-
+Requires: juicer-common
 
 %description
 Pulp stuff, oh -- and release carts.
 
+######################################################################
+# juicer-common sub-package
+%package common
+Group: Development/Libraries
+Summary: Files common to juicer and juicer-admin
+%description common
+Provides common resources like documentation, shared libraries, and
+utilities for juicer and juicer-admin.
+
+######################################################################
+# juicer-admin sub-package
+%package admin
+Group: Development/Libraries
+Summary: Manage a pulp repository server
+%description admin
+The juicer-admin utility lets you manage users, user roles, create,
+and delete repositories on a pulp server.
+
+######################################################################
 
 %prep
 %setup -q
@@ -35,30 +54,38 @@ Pulp stuff, oh -- and release carts.
 
 %install
 %{__python} setup.py install -O1 --root=$RPM_BUILD_ROOT
-# system configs?
-#mkdir -p $RPM_BUILD_ROOT/etc/juicer/
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}/{man1,man5}/
 cp -v docs/man/man1/*.1 $RPM_BUILD_ROOT/%{_mandir}/man1/
 cp -v docs/man/man5/*.5 $RPM_BUILD_ROOT/%{_mandir}/man5/
-# usr/share/juicer/ --> examples?
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/juicer
 cp -vr completions/ $RPM_BUILD_ROOT/%{_datadir}/juicer/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+######################################################################
 %files
 %defattr(-,root,root)
-%{python_sitelib}/juicer*
-%{_bindir}/juicer*
-%{_datadir}/juicer*
-#%{_datadir}/juicer
-#%config(noreplace) %{_sysconfdir}/juicer
+%{python_sitelib}/juicer/juicer
+%{_bindir}/juicer
+
+######################################################################
+%files common
+%{python_sitelib}/juicer*-info
+%{python_sitelib}/juicer/__init__.py*
+%{python_sitelib}/juicer/common
+%{python_sitelib}/juicer/utils
 %doc README.md docs/markdown
 %doc %{_mandir}/man1/juicer*
 %doc %{_mandir}/man5/juicer*
+%{_datadir}/juicer*
 
+######################################################################
+%files admin
+%{_bindir}/juicer-admin
+%{python_sitelib}/juicer/admin
 
+######################################################################
 %changelog
 * Sun Jul 22 2012 Tim Bielawa <tim@redhat.com> - 0.2.0-1
 - First actual release!
