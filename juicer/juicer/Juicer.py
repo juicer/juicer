@@ -419,6 +419,11 @@ class Juicer(object):
 
 
     def pull(self, cartname=None, env=None):
+        """
+        `cartname` - Name of cart
+
+        Pull remote cart from the pre release (base) environment
+        """
         if not env:
             env = self._defaults['cart_dest']
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
