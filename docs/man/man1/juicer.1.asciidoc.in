@@ -103,6 +103,16 @@ Items to update in the cart.
 ////////////////////////////////////////////////////////////////////////
 
 
+PULL
+----
+usage: juicer pull 'CARTNAME'
+
+Pulls a cart from the pulp server and saves it on your local machine.
+
+*CARTNAME*::
+The name of the cart to pull.
+
+
 PUSH
 ----
 usage: juicer push 'CARTNAME'
