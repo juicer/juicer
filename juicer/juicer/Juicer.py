@@ -429,6 +429,6 @@ class Juicer(object):
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
         cart_file += '.json'
-        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname), cart_file)
+        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'), cart_file)
         juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
         return True
