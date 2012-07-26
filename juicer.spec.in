@@ -3,25 +3,20 @@
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %endif
 
-Name: juicer
-Release: 1%{?dist}
-Summary: Pulp and release carts
-Version: %VERSION%
+Name:          juicer
+Release:       1%{?dist}
+Summary:       Pulp and release carts
+Version:       %VERSION%
 
-Group: Development/Libraries
-License: GPLv3+
-Source0: %{name}-%{version}.tar.gz
-Url: https://github.com/abutcher/juicer
+Group:         Development/Libraries
+License:       GPLv3+
+Source0:       %{name}-%{version}.tar.gz
+Url:           https://github.com/abutcher/juicer
 
-BuildArch: noarch
+BuildArch:     noarch
 BuildRequires: python2-devel
 
-Requires: python-BeautifulSoup
-Requires: python-requests >= 0.13.1
-Requires: rpm-python
-Requires: python-progressbar
-Requires: python >= 2.5
-Requires: juicer-common
+Requires:      juicer-common
 
 %description
 Pulp stuff, oh -- and release carts.
@@ -29,8 +24,14 @@ Pulp stuff, oh -- and release carts.
 ######################################################################
 # juicer-common sub-package
 %package common
-Group: Development/Libraries
-Summary: Files common to juicer and juicer-admin
+Group:    Development/Libraries
+Summary:  Files common to juicer and juicer-admin
+Requires: python-BeautifulSoup
+Requires: python-requests >= 0.13.1
+Requires: rpm-python
+Requires: python-progressbar
+Requires: python >= 2.5
+
 %description common
 Provides common resources like documentation, shared libraries, and
 utilities for juicer and juicer-admin.
@@ -38,9 +39,10 @@ utilities for juicer and juicer-admin.
 ######################################################################
 # juicer-admin sub-package
 %package admin
-Group: Development/Libraries
-Summary: Manage a pulp repository server
+Group:    Development/Libraries
+Summary:  Manage a pulp repository server
 Requires: juicer-common
+
 %description admin
 The juicer-admin utility lets you manage users, user roles, create,
 and delete repositories on a pulp server.
@@ -59,12 +61,14 @@ mkdir -p $RPM_BUILD_ROOT/%{_mandir}/{man1,man5}/
 cp -v docs/man/man1/*.1 $RPM_BUILD_ROOT/%{_mandir}/man1/
 cp -v docs/man/man5/*.5 $RPM_BUILD_ROOT/%{_mandir}/man5/
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/juicer
-cp -vr completions/ $RPM_BUILD_ROOT/%{_datadir}/juicer/
+cp -vr share/juicer/completions $RPM_BUILD_ROOT/%{_datadir}/juicer/
+cp -vr share/juicer/juicer.conf $RPM_BUILD_ROOT/%{_datadir}/juicer/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
+# files for 'juicer' package
 %files
 %defattr(-,root,root)
 %{python_sitelib}/juicer/juicer
@@ -90,6 +94,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Thu Jul 26 2012 Tim Bielawa <tim@redhat.com> - 0.2.1-1
 - Split into juicer/juicer-admin/juicer-common packages
+- Include a base config file.
 
 * Sun Jul 22 2012 Tim Bielawa <tim@redhat.com> - 0.2.0-1
 - First actual release!

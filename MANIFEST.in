@@ -3,3 +3,4 @@ include docs/man/man1/*.1
 include docs/man/man5/*.5
 include README.md
 graft completions
+graft share
