@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from progressbar import Bar, Percentage, ProgressBar
-import sys
+import progressbar
+from progressbar import Bar, Percentage
 
 class ProgessBar(object):
     def __init__(self, maxval):

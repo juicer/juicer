@@ -92,8 +92,7 @@ class Juicer(object):
             _r.raise_for_status()
 
         juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
-        from pprint import pprint as pp
-        pp(_r.content)
+        juicer.utils.Log.log_debug(juicer.utils.load_json_str(_r.content))
         return juicer.utils.load_json_str(_r.content)['id']
 
     # provides a simple interface for the pulp upload API
@@ -382,7 +381,7 @@ class Juicer(object):
 
                     _r = self.connectors[env].get('/repositories/%s/' % target)
                     if not _r.status_code == Constants.PULP_GET_OK:
-                        jucer.utils.Log.error_log("%s was not found as a repoid. A %s status code was returned" %
+                        juicer.utils.Log.error_log("%s was not found as a repoid. A %s status code was returned" %
                                 (target, _r.status_code))
                         exit(1)
                     repo = juicer.utils.load_json_str(_r.content)['name']
