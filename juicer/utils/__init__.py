@@ -338,6 +338,11 @@ def save_url_as(url, save_as):
     
     remote = requests.get(url, verify=False)
 
+    if not remote.status_code == Constants.PULP_GET_OK:
+        juicer.utils.Log.log_error("A %s error occurred trying to get %s" %
+                (remote.status_code, url))
+        exit(1)
+
     with open(save_as, 'wb') as data:
         data.write(remote.content)
 
