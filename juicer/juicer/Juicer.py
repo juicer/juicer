@@ -205,7 +205,7 @@ class Juicer(object):
 
         # create a statusbar
         if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            pbar = ProgressBar()
+            pbar = ProgressBar(size)
 
         # read in file
         upload_flag = False
