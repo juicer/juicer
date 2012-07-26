@@ -40,6 +40,7 @@ utilities for juicer and juicer-admin.
 %package admin
 Group: Development/Libraries
 Summary: Manage a pulp repository server
+Requires: juicer-common
 %description admin
 The juicer-admin utility lets you manage users, user roles, create,
 and delete repositories on a pulp server.
@@ -87,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Thu Jul 26 2012 Tim Bielawa <tim@redhat.com> - 0.2.1-1
+- Split into juicer/juicer-admin/juicer-common packages
+
 * Sun Jul 22 2012 Tim Bielawa <tim@redhat.com> - 0.2.0-1
 - First actual release!
 
