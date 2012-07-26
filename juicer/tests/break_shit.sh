@@ -48,6 +48,10 @@ function break_shit() {
     run ./bin/juicer push orange
     echo -e "\n\n"
 
+    echo "Pull a non-existant cart..."
+    run ./bin/juicer pull orange
+    echo -e "\n\n"
+
     echo "RPM search on a non-existant server..."
     run ./bin/juicer rpm-search orange.rpm --in florida
     echo -e "\n\n"
