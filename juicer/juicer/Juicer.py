@@ -421,16 +421,8 @@ class Juicer(object):
     def pull(self, cartname=None, env=None):
         if not env:
             env = self._defaults['cart_dest']
-
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
-
-        _r = self.connectors[env].get_raw(
-            juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'))
-        if _r.status_code == Constants.PULP_GET_OK:
-            cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
-            juicer.utils.write_json_document(cart_file, juicer.utils.load_json_str(_r.content))
-            juicer.utils.Log.log_info("pulled cart %s and saved to %s.json", cartname, cart_file)
-        else:
-            _r.raise_for_status()
-
+        cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
+        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'), cart_file + '.json')
+        juicer.utils.Log.log_info("pulled cart %s and saved to %s.json", cartname, cart_file)
         return True

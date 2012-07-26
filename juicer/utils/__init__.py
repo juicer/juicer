@@ -335,7 +335,8 @@ def save_url_as(url, save_as):
     Download the file `url` and save it to the local disk as
     `save_as`.
     """
-    remote = requests.get(url)
+    
+    remote = requests.get(url, verify=False)
 
     with open(save_as, 'wb') as data:
         data.write(remote.content)
