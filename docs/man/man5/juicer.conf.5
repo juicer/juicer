@@ -2,12 +2,12 @@
 .\"     Title: juicer.conf
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/21/2012
+.\"      Date: 07/26/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.0
 .\"  Language: English
 .\"
-.TH "JUICER\&.CONF" "5" "07/21/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
+.TH "JUICER\&.CONF" "5" "07/26/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +31,7 @@
 juicer.conf \- juicer configuration file
 .SH "DESCRIPTION"
 .sp
-Sections and variables to use in your juicer configuration file\&. This file is broken into 2 or more parts\&. The first is \fBDEFAULT\fR and the rest are named after your environments, e\&.g\&., \fIqa\fR, \fIstage\fR, or \fIprod\fR\&.
+Sections and variables to use in your juicer configuration file\&. This file is broken into two or more parts\&. The first is \fBDEFAULT\fR and the rest are named after your environments, e\&.g\&., \fIqa\fR, \fIstage\fR, or \fIprod\fR\&.
 .sp
 Assuming you have a \fIdevel\fR and \fIprod\fR environment, you might have a configuration file that looks like this:
 .sp
@@ -64,9 +64,9 @@ base_url: https://pulp\&.devel\&.int\&.tux\&.org/pulp/api
 .\}
 .nf
 [devel]
-# Most of our configuration for this environment lives the DEFAULT
-# section already but we do need to tell Juicer where we promote
-# to from devel and also that devel is the base environment\&.
+# Most of our configuration for this environment lives in the
+# DEFAULT section already, but we do need to tell Juicer where
+# this environment promotes to next\&.
 promotes_to: prod
 .fi
 .if n \{\

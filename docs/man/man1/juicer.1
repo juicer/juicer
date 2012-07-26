@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/21/2012
+.\"      Date: 07/26/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "07/21/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
+.TH "JUICER" "1" "07/26/2012" "Juicer 0\&.2\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -34,14 +34,12 @@ juicer \- create and push release carts, upload items to pulp
 juicer sub\-command [PARAMETERS \&...] [OPTIONS \&...]
 .SH "DESCRIPTION"
 .sp
-Juicer lets you create and push release carts, and directly upload items to a pulp repository\&.
-.sp
 A release cart is a description of what RPMs you want to push into a specific repository\&. A single cart can specify multiple repos and associated items\&. Release cart descriptions are saved so you can easily "promote" a cart to another environment\&.
 .sp
-RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle remote resources as well\&. Anywhere an option argument is described as \fIitem\fR you can give the path to a local directory, or rpm, as well as an RPM available over HTTP\&. HTTP directory indexes work as well, the page is parsed and links to rpm files are added to your cart\&.
+RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle remote resources as well\&. Anywhere an option argument is described as \fIitem\fR you can give the path to a local directory, or rpm, as well as an RPM available over HTTP\&. HTTP directory indexes work as well; the page is parsed and links to rpm files are added to your cart\&.
 .SH "CREATE"
 .sp
-usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIitem1\fR [ \fIitem2\fR, [ \&...]]
+usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -50,17 +48,17 @@ Create a cart with the items specified\&.
 The name of the new release cart\&.
 .RE
 .PP
-\fBITEMS\fR
-.RS 4
-Items to add to the cart in repository
-\fIREPONAME\fR\&.
-.RE
-.PP
 \fB\-r\fR \fIREPONAME\fR
 .RS 4
 Name of the reopsitory to install
 \fIITEMS\fR
 into\&.
+.RE
+.PP
+\fBITEMS\fR
+.RS 4
+Items to add to the cart in repository
+\fIREPONAME\fR\&.
 .RE
 .SH "SHOW"
 .sp
@@ -127,7 +125,8 @@ Here is an example of how you would specify a directory of \fBlocal\fR RPMs and 
 .RS 4
 .\}
 .nf
-$ juicer upload \-r javastuff ~/my\-java\-app/rpmbuild/noarch/ \e
+$ juicer upload \-r javastuff \e
+    ~/my\-java\-app/rpmbuild/noarch/ \e
     ~/misc\-java\-rpms/megafrobber\-0\&.8\&.0\&.noarch\&.rpm
 .fi
 .if n \{\
@@ -157,7 +156,8 @@ Here is an example of how you would specify a directory of \fBremote\fR RPMs and
 .RS 4
 .\}
 .nf
-$ juicer upload \-r javastuff http://jenkins\&.foo/job/results/ \e
+$ juicer upload \-r javastuff \e
+    http://jenkins\&.foo/job/results/ \e
     http://foo\&.bar/rpms/megafrobber\-0\&.8\&.0\&.noarch\&.rpm
 .fi
 .if n \{\
