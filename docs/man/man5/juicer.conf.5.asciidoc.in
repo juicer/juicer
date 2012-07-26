@@ -14,7 +14,7 @@ DESCRIPTION
 -----------
 
 Sections and variables to use in your juicer configuration file. This
-file is broken into 2 or more parts. The first is *DEFAULT* and the
+file is broken into two or more parts. The first is *DEFAULT* and the
 rest are named after your environments, e.g., __qa__, __stage__, or
 __prod__.
 
@@ -31,9 +31,9 @@ a configuration file that looks like this:
     base_url: https://pulp.devel.int.tux.org/pulp/api
 
     [devel]
-    # Most of our configuration for this environment lives the DEFAULT
-    # section already but we do need to tell Juicer where we promote
-    # to from devel and also that devel is the base environment.
+    # Most of our configuration for this environment lives in the
+    # DEFAULT section already, but we do need to tell Juicer where
+    # this environment promotes to next.
     promotes_to: prod
 
     # This is the base environment. This means juicer will default to

@@ -19,9 +19,6 @@ juicer sub-command [PARAMETERS ...] [OPTIONS ...]
 
 DESCRIPTION
 -----------
-Juicer lets you create and push release carts, and directly upload
-items to a pulp repository.
-
 A release cart is a description of what RPMs you want to push into a
 specific repository. A single cart can specify multiple repos and
 associated items. Release cart descriptions are saved so you can
@@ -31,26 +28,25 @@ RPMs ('items') need not be stored on your local machine. Juicer can
 handle remote resources as well. Anywhere an option argument is
 described as 'item' you can give the path to a local directory, or
 rpm, as well as an RPM available over HTTP. HTTP directory indexes
-work as well, the page is parsed and links to rpm files are added to
+work as well; the page is parsed and links to rpm files are added to
 your cart.
 
 
 
 CREATE
 ------
-usage: juicer create 'CARTNAME' -r 'REPONAME' 'item1' [ 'item2', [ ...]]
+usage: juicer create 'CARTNAME' -r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]
 
 Create a cart with the items specified.
 
 *CARTNAME*::
 The name of the new release cart.
 
-*ITEMS*::
-Items to add to the cart in repository 'REPONAME'.
-
 *-r* 'REPONAME'::
 Name of the reopsitory to install 'ITEMS' into.
 
+*ITEMS*::
+Items to add to the cart in repository 'REPONAME'.
 
 ////////////////////////////////////////
 EDIT
@@ -163,7 +159,8 @@ resource types:
 Here is an example of how you would specify a directory of *local*
 RPMs and a direct path:
 
-    $ juicer upload -r javastuff ~/my-java-app/rpmbuild/noarch/ \
+    $ juicer upload -r javastuff \
+        ~/my-java-app/rpmbuild/noarch/ \
         ~/misc-java-rpms/megafrobber-0.8.0.noarch.rpm
 
 
@@ -178,7 +175,8 @@ RPMs and a direct path:
 Here is an example of how you would specify a directory of *remote*
 RPMs and a specific remote RPM:
 
-    $ juicer upload -r javastuff http://jenkins.foo/job/results/ \
+    $ juicer upload -r javastuff \
+        http://jenkins.foo/job/results/ \
         http://foo.bar/rpms/megafrobber-0.8.0.noarch.rpm
 
 *create and show a cart*:
@@ -193,7 +191,7 @@ RPMs and a specific remote RPM:
     JUICER
     ------
     http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm
-    
+
     JUICER-DEPS
     -----------
     ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
@@ -205,7 +203,7 @@ The cart description is saved into *~/.juicer-carts/* as
     JUICER
     ------
     http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm
-    
+
     JUICER-DEPS
     -----------
     ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
