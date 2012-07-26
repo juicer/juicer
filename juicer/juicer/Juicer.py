@@ -429,7 +429,7 @@ class Juicer(object):
         if _r.status_code == Constants.PULP_GET_OK:
             cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
             juicer.utils.write_json_document(cart_file, juicer.utils.load_json_str(_r.content))
-            juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
+            juicer.utils.Log.log_info("pulled cart %s and saved to %s.json", cartname, cart_file)
         else:
             _r.raise_for_status()
 
