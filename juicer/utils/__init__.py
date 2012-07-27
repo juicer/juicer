@@ -153,6 +153,26 @@ def get_environments():
     juicer.utils.Log.log_notice("Read environment sections: %s", environments)
     return environments
 
+def get_next_environment(env):
+    """
+    Given an environment, return the next environment in the
+    promotion hierarchy
+    """
+    config = ConfigParser.SafeConfigParser(allow_no_value=True)
+
+    config.read(_config_file())
+
+    juicer.utils.Log.log_debug("Finding next environment...")
+
+    if env not in config.sections():
+        juicer.utils.Log.log_error("%s is not a configured section" % env)
+        exit(1)
+
+    section = dict(config.items(env))
+
+    print section['promotes_to']
+    return section['promotes_to']
+
 
 def user_exists_p(login, connector):
     """

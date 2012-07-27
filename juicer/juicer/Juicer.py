@@ -439,4 +439,10 @@ class Juicer(object):
         Promote a cart from its current environment to the next in the chain.
         """
         cart = juicer.common.Cart.Cart(name=name, autoload=True, autosync=True)
+        old_env = cart.current_env
+        cart.current_env = juicer.utils.get_next_environment(cart.current_env)
+
+        juicer.utils.Log.log_info("Promoting %s from %s to %s" % (name, old_env, cart.current_env))
+
         cart.save()
+
