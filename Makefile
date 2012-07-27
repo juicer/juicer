@@ -48,7 +48,8 @@ RPMSPEC := $(RPMSPECDIR)/juicer.spec
 RPMVERSION := $(VERSION)
 RPMRELEASE = $(shell awk '/Release/{print $$2; exit}' < $(RPMSPEC).in | cut -d "%" -f1)
 RPMDIST = $(shell rpm --eval '%dist')
-RPMNVR = $(NAME)-$(RPMVERSION)-$(RPMRELEASE)$(RPMDIST)
+NVR = $(RPMVERSION)-$(RPMRELEASE)$(RPMDIST)
+RPMNVR = $(NAME)-$(NVR)
 
 # Testing parameters.
 LOG ?= false
@@ -175,5 +176,5 @@ test:
 	fi
 
 rpminstall: rpm
-	-rpm -e juicer
-	rpm -Uvh rpm-build/noarch/$(RPMNVR).noarch.rpm
+	-rpm -e juicer juicer-common juicer-admin
+	yum localinstall rpm-build/noarch/juicer*$(NVR).noarch.rpm
