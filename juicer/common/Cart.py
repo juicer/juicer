@@ -38,6 +38,7 @@ class Cart(object):
         automatically.
         """
         self.name = name
+        self.current_env = juicer.utils.get_login_info()[1]['cart_dest']
         self.repo_items_hash = {}
         self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % name))
 
@@ -82,8 +83,15 @@ class Cart(object):
             juicer.utils.Log.log_error(e.message)
             exit(1)
 
-        for cart, items in cart_body.iteritems():
-            self.add_repo(cart, items)
+        self.name = cart_body['name']
+
+        if cart_body['current_env'] == '':
+                self.current_env = juicer.utils.get_login_info()[1]['cart_dest']
+        else:
+            self.current_env = cart_body['current_env']
+
+        for repo, items in cart_body['repos_items'].iteritems():
+            self.add_repo(repo, items)
 
     def save(self):
         if self.is_empty():
@@ -94,7 +102,7 @@ class Cart(object):
             os.mkdir(CART_LOCATION)
 
         cart_file = os.path.join(CART_LOCATION, self.name)
-        juicer.utils.write_json_document(cart_file, self.repo_items_hash)
+        juicer.utils.write_json_document(cart_file, self.__dict__())
 
     def iterrepos(self):
         """
@@ -173,6 +181,19 @@ class Cart(object):
             output.append('')
 
         return "\n".join(output)
+
+    def __dict__(self):
+        output = {'name': self.name,
+                'current_env': None,
+                'repos_items': []}
+        output['current_env'] = self.current_env
+
+        repos_items = {}
+        for repo, items in self.iterrepos():
+            repos_items[repo] = items
+
+        output['repos_items'] = repos_items
+        return output
 
 
 # TODO: Refactor this fetching kind of logic
