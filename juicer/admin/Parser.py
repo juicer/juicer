@@ -18,7 +18,7 @@
 import argparse
 import juicer.admin
 import juicer.utils
-
+import getpass
 
 class Parser(object):
     def __init__(self):
@@ -74,10 +74,14 @@ class Parser(object):
 
         parser_create_user.add_argument('--name', metavar='name', \
                                             dest='name', \
+                                            required=True, \
                                             help='Full name of user')
 
         parser_create_user.add_argument('--password', metavar='password', \
                                         dest='password', \
+                                        nargs=0, \
+                                        required=True, \
+                                        action=PromptAction, \
                                         help='Plain text password for user')
 
         parser_create_user.add_argument('--in', metavar='envs', \
@@ -98,10 +102,14 @@ class Parser(object):
 
         parser_update_user.add_argument('--name', metavar='name', \
                                             dest='name', \
+                                            required=True, \
                                             help='Updated name of user')
 
         parser_update_user.add_argument('--password', metavar='password', \
                                         dest='password', \
+                                        nargs=0, \
+                                        required=True, \
+                                        action=PromptAction, \
                                         help='Updated password for user')
 
         parser_update_user.add_argument('--in', metavar='envs', \
@@ -221,3 +229,13 @@ class Parser(object):
                                help='The environments in which to list roles')
 
         parser_list_roles.set_defaults(ja=juicer.admin.list_roles)
+
+class PromptAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        # If no value then we need to prompt for it...
+        if len(values) == 0:
+            values.append(getpass.getpass())
+
+        # Save the results in the namespace using the destination
+        # variable given to the constructor.
+        setattr(namespace, self.dest, values)
