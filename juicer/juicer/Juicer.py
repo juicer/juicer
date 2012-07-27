@@ -442,7 +442,16 @@ class Juicer(object):
         old_env = cart.current_env
         cart.current_env = juicer.utils.get_next_environment(cart.current_env)
 
-        juicer.utils.Log.log_info("Promoting %s from %s to %s" % (name, old_env, cart.current_env))
+        juicer.utils.Log.log_debug("Syncing down rpms...")
+        cart.sync_remotes()
+
+        juicer.utils.Log.log_info("Promoting %s from %s to %s" %
+                (name, old_env, cart.current_env))
+
+        for repo, items in cart.iterrepos():
+            juicer.utils.Log.log_debug("Promoting %s to %s in %s" %
+                    (items, repo, cart.current_env))
+            self.upload(cart.current_env, repo, items)
 
         cart.save()
 
