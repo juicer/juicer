@@ -438,5 +438,5 @@ class Juicer(object):
 
         Promote a cart from its current environment to the next in the chain.
         """
-        cart = juicer.common.Cart.Cart(name=name, autoload=True)
+        cart = juicer.common.Cart.Cart(name=name, autoload=True, autosync=True)
         cart.save()
