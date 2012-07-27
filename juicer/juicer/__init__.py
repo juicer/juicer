@@ -75,3 +75,8 @@ def upload(args):
 def hello(args):
     pulp = j(args)
     pulp.hello()
+
+
+def promote(args):
+    pulp = j(args)
+    pulp.promote(name=args.cartname)

@@ -431,3 +431,11 @@ class Juicer(object):
         juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'), cart_file)
         juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
         return True
+
+    def promote(self, name):
+        """
+        `name` - name of cart
+
+        Promote a cart from its current environment to the next in the chain.
+        """
+        pass

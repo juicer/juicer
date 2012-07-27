@@ -196,3 +196,13 @@ class Parser(object):
                 dest='environment')
 
         parser_hello.set_defaults(j=juicer.juicer.hello)
+
+        ##################################################################
+        # create the 'promote' sub-parser
+        parser_promote = subparsers.add_parser('promote', \
+                help='Promote a cart to the next environment')
+
+        parser_promote.add_argument('cartname', metavar='cart', \
+                help='The name of the cart to promote')
+
+        parser_promote.set_defaults(j=juicer.juicer.promote)
