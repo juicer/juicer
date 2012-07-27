@@ -170,7 +170,6 @@ def get_next_environment(env):
 
     section = dict(config.items(env))
 
-    print section['promotes_to']
     return section['promotes_to']
 
 
