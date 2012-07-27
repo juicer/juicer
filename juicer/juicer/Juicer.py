@@ -294,8 +294,8 @@ class Juicer(object):
             if cart.name == 'upload-cart':
                 continue
 
-            for item in items:
-                link = juicer.utils.remote_url(self.connectors[env], env, repo, os.path.basename(item))
+            links = [(item, juicer.utils.remote_url(self.connectors[env], env, repo, os.path.basename(item))) for item in items]
+            for item, link in links:
                 cart._update(repo, item, link)
 
         if cart.name != 'upload-cart':
