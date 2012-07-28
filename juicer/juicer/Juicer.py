@@ -455,3 +455,4 @@ class Juicer(object):
 
         cart.save()
 
+        cart.publish()
