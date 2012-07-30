@@ -52,7 +52,7 @@ Login or username
 User's full name
 
 *PASSWORD*::
-Plain text password
+Plain text password. Will prompt if no arg specified
 
 *--in* 'env1 [ env2, [ ...]]'::
 Environments in which to create user
@@ -132,7 +132,7 @@ Login or username of user which will be updated
 Updated full name
 
 *PASSWORD*::
-Updated plain text password
+Updated plain text password. Will prompt if no arg specified
 
 *--in* 'env1 [ env2, [ ...]]'::
 Environments in which to update user

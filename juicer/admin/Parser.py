@@ -79,7 +79,7 @@ class Parser(object):
 
         parser_create_user.add_argument('--password', metavar='password', \
                                         dest='password', \
-                                        nargs=0, \
+                                        nargs='*', \
                                         required=True, \
                                         action=PromptAction, \
                                         help='Plain text password for user')
@@ -107,7 +107,7 @@ class Parser(object):
 
         parser_update_user.add_argument('--password', metavar='password', \
                                         dest='password', \
-                                        nargs=0, \
+                                        nargs='*', \
                                         required=True, \
                                         action=PromptAction, \
                                         help='Updated password for user')
@@ -235,7 +235,7 @@ class PromptAction(argparse.Action):
         # If no value then we need to prompt for it...
         if len(values) == 0:
             values.append(getpass.getpass())
-
+        
         # Save the results in the namespace using the destination
         # variable given to the constructor.
         setattr(namespace, self.dest, values)
