@@ -59,6 +59,13 @@ class TestJuicer(unittest.TestCase):
             raise Exception("%s was in %s before and is in %s now!" % \
                     (cart.name, old_env, cart.current_env))
 
+    def test_show(self):
+        cname = 'CRQ0DAY'
+
+        self.args = self.parser.parser.parse_args(('show %s' % cname).split())
+        pulp = j(self.args)
+        mute()(pulp.show)(cname)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJuicer)
     unittest.TextTestRunner(verbosity=2).run(suite)
