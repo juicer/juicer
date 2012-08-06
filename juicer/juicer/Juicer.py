@@ -43,10 +43,13 @@ class Juicer(object):
 
     # starts the 3-step upload process
     def _init_up(self, query='/services/upload/', name='', cksum='', size='', \
-            env='re'):
+            env=''):
         data = {'name': name,
                 'checksum': cksum,
                 'size': size}
+
+        if env == '':
+            env = self._defaults['cart_dest']
 
         _r = self.connectors[env].post(query, data)
         uid = juicer.utils.load_json_str(_r.content)['id']
@@ -57,8 +60,12 @@ class Juicer(object):
 
     # continues 3-step upload process. this is where actual data transfer
     # occurs!
-    def _append_up(self, query='/services/upload/append/', uid='', fdata='', env='re'):
+    def _append_up(self, query='/services/upload/append/', uid='', fdata='', env=''):
         uri = query + uid + '/'
+
+        if env == '':
+            env = self._defaults['cart_dest']
+
         juicer.utils.Log.log_notice("Appending to: %s" % uri)
         _r = self.connectors[env].put(uri, fdata, log_data=False, auto_create_json_str=False)
 
@@ -69,7 +76,10 @@ class Juicer(object):
     # finalizes the 3-step upload process. this is where metadata is set
     def _import_up(self, query='/services/upload/import/', uid='', name='', \
                     ftype='rpm', cksum='', desc='', htype='md5', nvrea='', size='', \
-                    lic='', group='', vendor='', req='', env='re'):
+                    lic='', group='', vendor='', req='', env=''):
+        if env == '':
+            env = self._defaults['cart_dest']
+
         data = {'uploadid': uid,
                 'metadata': {
                     'type': ftype,
