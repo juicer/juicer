@@ -12,6 +12,9 @@ class TestJuicer(unittest.TestCase):
     def setUp(self):
         self.parser = pmoney()
 
+        self.cname = 'CRQ0DAY'
+        self.cpath = os.path.expanduser('~/.juicer-carts/%s.json' % self.cname)
+
     def test_rpm_search(self):
         self.args = self.parser.parser.parse_args('rpm-search ruby'.split())
         pulp = j(self.args)
@@ -23,12 +26,10 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.search_rpm)(name=self.args.rpmname)
 
     def test_workflow(self):
-        cname = 'CRQ0DAY'
-        cpath = os.path.expanduser('~/.juicer-carts/%s.json' % cname)
         rpm_path = './share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
 
-        if os.path.exists(cpath):
-            os.remove(cpath)
+        if os.path.exists(self.cpath):
+            os.remove(self.cpath)
 
         # test uploading an rpm
         self.args = self.parser.parser.parse_args(('upload -r %s %s' % ('hats', rpm_path)).split())
@@ -46,39 +47,34 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
 
         # test promoting a cart
-        cart = juicer.common.Cart.Cart(cname, autoload=True)
+        cart = juicer.common.Cart.Cart(self.cname, autoload=True)
         old_env = cart.current_env
 
-        self.args = self.parser.parser.parse_args(('promote %s' % cname).split())
+        self.args = self.parser.parser.parse_args(('promote %s' % self.cname).split())
         pulp = j(self.args)
         mute()(pulp.promote)(name=self.args.cartname)
 
-        cart = juicer.common.Cart.Cart(cname, autoload=True)
+        cart = juicer.common.Cart.Cart(self.cname, autoload=True)
 
         if cart.current_env == old_env:
             raise Exception("%s was in %s before and is in %s now!" % \
                     (cart.name, old_env, cart.current_env))
 
     def test_show(self):
-        cname = 'CRQ0DAY'
-
-        self.args = self.parser.parser.parse_args(('show %s' % cname).split())
+        self.args = self.parser.parser.parse_args(('show %s' % self.cname).split())
         pulp = j(self.args)
-        mute()(pulp.show)(cname)
+        mute()(pulp.show)(self.cname)
 
     def test_pull(self):
-        cname = 'CRQ0DAY'
-        cpath = os.path.expanduser('~/.juicer-carts/%s.json' % cname)
+        if os.path.exists(self.cpath):
+            os.remove(self.cpath)
 
-        if os.path.exists(cpath):
-            os.remove(cpath)
-
-        self.args = self.parser.parser.parse_args(('pull %s' % cname).split())
+        self.args = self.parser.parser.parse_args(('pull %s' % self.cname).split())
         pulp = j(self.args)
-        mute()(pulp.pull)(cname)
+        mute()(pulp.pull)(self.cname)
 
-        if not os.path.exists(cpath):
-            raise Exception("%s was not pulled from the server" % cname)
+        if not os.path.exists(self.cpath):
+            raise Exception("%s was not pulled from the server" % self.cname)
 
     def test_hello(self):
         self.args = self.parser.parser.parse_args('hello'.split())
