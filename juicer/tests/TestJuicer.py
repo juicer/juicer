@@ -20,6 +20,17 @@ class TestJuicer(unittest.TestCase):
         pulp = j(self.args)
         mute()(pulp.search_rpm)(name=self.args.rpmname)
 
+    def test_create(self):
+        rpm_path = './share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
+        self.args = self.parser.parser.parse_args(('create CRQ0DAY -r %s %s' % ('hats', rpm_path)).split())
+        pulp = j(self.args)
+        mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
+
+    def test_promotion(self):
+        self.args = self.parser.parser.parse_args('promote CRQ0DAY'.split())
+        pulp = j(self.args)
+        mute()(pulp.promote)(name=self.args.cartname)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJuicer)
     unittest.TextTestRunner(verbosity=2).run(suite)
