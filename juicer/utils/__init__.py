@@ -29,6 +29,7 @@ import os
 import os.path
 import sys
 import requests
+import shutil
 try:
     import json
     json
@@ -56,25 +57,23 @@ def cart_repo_exists_p(name, connector, env):
 
 def _config_file():
     """
-    check that the config file is present and readable. if not,
-    dump a template in place
+    Check that the config file is present and readable. If not,
+    copy a template in place.
     """
-    config_file = os.path.expanduser('~/.juicer.conf')
+    config_file = Constants.USER_CONFIG
 
     if os.path.exists(config_file) and os.access(config_file, os.R_OK):
         return config_file
     elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
         raise IOError("Can not read %s" % config_file)
     else:
-        with open(config_file, 'w') as dest:
-            with open('/usr/share/juicer/juicer.conf') as source:
-                for line in source:
-                    dest.write(line)
+        shutil.copy(Constants.EXAMPLE_CONFIG, config_file)
 
         juicer.utils.Log.log_info("Default config file created.")
         juicer.utils.Log.log_info("Check man 5 juicer.conf.")
+        # TODO: should never exit() from inside lib code. Needs to
+        # throw some kind of exception instead.
         exit(1)
-
 
 def _config_test(config):
     """
@@ -354,7 +353,7 @@ def save_url_as(url, save_as):
     Download the file `url` and save it to the local disk as
     `save_as`.
     """
-    
+
     remote = requests.get(url, verify=False)
 
     if not remote.status_code == Constants.PULP_GET_OK:
