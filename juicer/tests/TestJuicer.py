@@ -66,6 +66,20 @@ class TestJuicer(unittest.TestCase):
         pulp = j(self.args)
         mute()(pulp.show)(cname)
 
+    def test_pull(self):
+        cname = 'CRQ0DAY'
+        cpath = os.path.expanduser('~/.juicer-carts/%s.json' % cname)
+
+        if os.path.exists(cpath):
+            os.remove(cpath)
+
+        self.args = self.parser.parser.parse_args(('pull %s' % cname).split())
+        pulp = j(self.args)
+        mute()(pulp.pull)(cname)
+
+        if not os.path.exists(cpath):
+            raise Exception("%s was not pulled from the server" % cname)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJuicer)
     unittest.TextTestRunner(verbosity=2).run(suite)
