@@ -1,4 +1,3 @@
-from __future__ import with_statement
 # -*- coding: utf-8 -*-
 # Juicer - Administer Pulp and Release Carts
 # Copyright © 2012, Red Hat, Inc.
@@ -16,14 +15,12 @@ from __future__ import with_statement
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from juicer.common.Constants import CART_LOCATION
 import juicer.common.RPM
 import juicer.utils.Log
 import juicer.utils
 import os
 import os.path
-
-
-CART_LOCATION = os.path.expanduser("~/.juicer-carts")
 
 
 class Cart(object):
@@ -194,20 +191,3 @@ class Cart(object):
 
         output['repos_items'] = repos_items
         return output
-
-
-# TODO: Refactor this fetching kind of logic
-# into... cart processing? Perhaps a prep type
-# action to sync remotes to local.
-# # https://path.to/package.rpm
-# elif re.match('https?://.*', item):
-#     # download item and upload
-#     if not re.match('.*\.rpm', item):
-#         raise TypeError('{0} is not an rpm'.format(item))
-#     filename = re.match('https?://.*/(.*\.rpm)', item).group(1)
-#     remote = requests.get(item, env)
-#     with open(filename, 'wb') as data:
-#         data.write(remote.content())
-#     rpm_id = self._upload_rpm(filename, env)
-#     self._include_rpm_in_repo(rpm_id, env, repoid)
-#     os.remove(filename)

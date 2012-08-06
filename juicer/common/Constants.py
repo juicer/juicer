@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import os.path
+
+
 ######################################################################
 # PULP RETURN CODES
 ######################################################################
@@ -57,9 +60,7 @@ PULP_OPTIONS_OK = 200
 
 ######################################################################
 # MISC. MAGIC NUMBERS
-######################################################################
-
-######################################################################
+#
 # Amount of data to upload at a time
 UPLOAD_AT_ONCE = 10485760
 
@@ -68,3 +69,9 @@ UPLOAD_AT_ONCE = 10485760
 MAGIC_RPM_BIN = "RPM v3.0 bin i386/x86_64"
 MAGIC_RPM_NOARCH_BIN = "RPM v3.0 bin noarch"
 MAGIC_RPM_SRC = "RPM v3.0 src"
+
+######################################################################
+# Locations we may reference a few times.
+CART_LOCATION = os.path.expanduser("~/.juicer-carts")
+USER_CONFIG = os.path.expanduser("~/.juicer.conf")
+EXAMPLE_CONFIG = '/usr/share/juicer/juicer.conf'
