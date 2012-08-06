@@ -80,6 +80,11 @@ class TestJuicer(unittest.TestCase):
         if not os.path.exists(cpath):
             raise Exception("%s was not pulled from the server" % cname)
 
+    def test_hello(self):
+        self.args = self.parser.parser.parse_args('hello'.split())
+        pulp = j(self.args)
+        mute()(pulp.hello)()
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJuicer)
     unittest.TextTestRunner(verbosity=2).run(suite)
