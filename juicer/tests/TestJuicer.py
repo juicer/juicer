@@ -15,15 +15,15 @@ class TestJuicer(unittest.TestCase):
         self.cname = 'CRQ0DAY'
         self.cpath = os.path.expanduser('~/.juicer-carts/%s.json' % self.cname)
 
-    def test_rpm_search(self):
-        self.args = self.parser.parser.parse_args('rpm-search ruby'.split())
+    def test_search(self):
+        self.args = self.parser.parser.parse_args('search ruby'.split())
         pulp = j(self.args)
-        mute()(pulp.search_rpm)(name=self.args.rpmname)
+        mute()(pulp.search)(name=self.args.rpmname)
 
         self.args = self.parser.parser.parse_args(\
             'rpm-search ruby --in qa'.split())
         pulp = j(self.args)
-        mute()(pulp.search_rpm)(name=self.args.rpmname)
+        mute()(pulp.search)(name=self.args.rpmname)
 
     def test_workflow(self):
         rpm_path = './share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'

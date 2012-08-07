@@ -54,13 +54,10 @@ def push(args):
         pulp.push(cart, env)
 
 
-def cartsearch(args):
-    pass
 
-
-def rpmsearch(args):
+def search(args):
     pulp = j(args)
-    pulp.search_rpm(name=args.rpmname)
+    pulp.search(name=args.rpmname)
 
 
 def upload(args):

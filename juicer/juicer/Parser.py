@@ -134,35 +134,25 @@ class Parser(object):
         parser_push.set_defaults(j=juicer.juicer.push)
 
         ##################################################################
-        # Create the 'cart_search' sub-parser
-        # parser_cartsearch = subparsers.add_parser('cart-search', \
-        #         help='Search for a cart in pulp.')
-
-        # parser_cartsearch.add_argument('cartname', metavar='cartname', \
-        #                            help='The name of the cart to search for')
-
-        # parser_cartsearch.set_defaults(j=juicer.juicer.cartsearch)
-
-        ##################################################################
-        # Create the 'rpm_search' sub-parser
-        parser_rpmsearch = subparsers.add_parser('rpm-search', \
+        # Create the 'search' sub-parser
+        parser_search = subparsers.add_parser('search', \
                 help='Search for an RPM in pulp.', \
                 usage='%(prog)s rpmname [-r repo [repo]] \
                 [--in environment [environment]] [-h]')
 
-        parser_rpmsearch.add_argument('rpmname', metavar='rpmname', \
+        parser_search.add_argument('rpmname', metavar='rpmname', \
                                   help='The name of the rpm(s) to search for.')
 
-        parser_rpmsearch.add_argument('-r', nargs='*', metavar='repos', \
+        parser_search.add_argument('-r', nargs='*', metavar='repos', \
                 default=[], help='The repo(s) to limit search scope to.')
 
-        parser_rpmsearch.add_argument('--in', nargs='*', \
+        parser_search.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 default=[self._default_cart_dest], \
                 help='The environments to limit search scope to.', \
                 dest='environment')
 
-        parser_rpmsearch.set_defaults(j=juicer.juicer.rpmsearch)
+        parser_search.set_defaults(j=juicer.juicer.search)
 
         ##################################################################
         # create the 'upload' sub-parser
