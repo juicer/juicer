@@ -426,6 +426,8 @@ class Juicer(object):
                         if re.match('.*%s.*' % package['filename'], line):
                             carts.append(cart.rstrip('.json'))
 
+                carts = ', '.join(carts)
+
                 juicer.utils.Log.log_info('%s %s %s %s' % (package['name'], package['version'], link, carts))
 
     def hello(self):
