@@ -24,6 +24,7 @@ import os
 import time
 import rpm
 import hashlib
+import re
 
 
 class Juicer(object):
@@ -366,6 +367,24 @@ class Juicer(object):
         data = {'regex': True,
                 'name': name}
 
+        juicer.utils.Log.log_debug('Downloading all carts...')
+
+        # download all cart (json) files and set up variables for use
+        cart_dest = self._defaults['cart_dest']
+
+        _r = self.connectors[cart_dest].get('/repositories/carts-%s/files/' % cart_dest)
+        if not _r.status_code == Constants.PULP_GET_OK:
+            raise IOError("Couldn't get cart list")
+
+        cart_list = []
+
+        for cart in juicer.utils.load_json_str(_r.content):
+            cart_list.append(cart['filename'])
+
+            juicer.utils.save_url_as(
+                    juicer.utils.remote_url(self.connectors[cart_dest], cart_dest, 'carts', cart['filename']),
+                    os.path.join(juicer.common.Cart.CART_LOCATION, cart['filename']))
+
         juicer.utils.Log.log_info('Packages:')
 
         for env in self.args.environment:
@@ -397,7 +416,17 @@ class Juicer(object):
                 else:
                     link = ''
 
-                juicer.utils.Log.log_info('%s %s %s' % (package['name'], package['version'], link))
+                # if the package is in a cart, show the cart name
+                carts = []
+
+                for cart in cart_list:
+                    juicer.utils.Log.log_debug('checking for %s in %s' % (package['name'], cart))
+
+                    for line in open(os.path.join(juicer.common.Cart.CART_LOCATION, cart)):
+                        if re.match('.*%s.*' % package['filename'], line):
+                            carts.append(cart.rstrip('.json'))
+
+                juicer.utils.Log.log_info('%s %s %s %s' % (package['name'], package['version'], link, carts))
 
     def hello(self):
         for env in self.args.environment:
