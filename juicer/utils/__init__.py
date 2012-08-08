@@ -120,8 +120,8 @@ def get_login_info():
 
         connections[section] = Connectors(cfg)
 
-        if 'base' in cfg:
-            _defaults['cart_dest'] = section
+        if 'start_in' in cfg:
+            _defaults['cart_dest'] = cfg['start_in']
 
         if 'rpm_sign_plugin' in cfg:
             _defaults['rpm_sign_plugin'] = cfg['rpm_sign_plugin']
