@@ -83,14 +83,10 @@ def _config_test(config):
     confirm the provided config has the required attributes and
     has a valid promotion path
     """
-    required_keys = set(['username', 'password', 'base_url'])
-    base_count = 0
+    required_keys = set(['username', 'password', 'base_url', 'start_in'])
 
     for section in config.sections():
         cfg = dict(config.items(section))
-
-        if 'base' in cfg:
-            base_count += 1
 
         # ensure required keys are present in each section
         if not required_keys.issubset(set(cfg.keys())):
@@ -102,16 +98,12 @@ def _config_test(config):
             raise Exception("promotion_path: %s is not a config section" \
                     % cfg['promotes_to'])
 
-    if base_count != 1:
-        raise Exception("there must be one and only one base section")
-
-
 def get_login_info():
     """
     Give back an array of dicts with the connection
     information for all the environments.
     """
-    config = ConfigParser.SafeConfigParser(allow_no_value=True)
+    config = ConfigParser.SafeConfigParser()
     connections = {}
     _defaults = {}
     _defaults['cart_dest'] = ''
@@ -144,7 +136,7 @@ def get_environments():
     Return defined environments from config file for default
     environment values.
     """
-    config = ConfigParser.SafeConfigParser(allow_no_value=True)
+    config = ConfigParser.SafeConfigParser()
 
     config.read(_config_file())
 
@@ -161,7 +153,7 @@ def get_next_environment(env):
     Given an environment, return the next environment in the
     promotion hierarchy
     """
-    config = ConfigParser.SafeConfigParser(allow_no_value=True)
+    config = ConfigParser.SafeConfigParser()
 
     config.read(_config_file())
 

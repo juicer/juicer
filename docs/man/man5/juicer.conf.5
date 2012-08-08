@@ -2,12 +2,12 @@
 .\"     Title: juicer.conf
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 07/26/2012
+.\"      Date: 08/08/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.1
 .\"  Language: English
 .\"
-.TH "JUICER\&.CONF" "5" "07/26/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
+.TH "JUICER\&.CONF" "5" "08/08/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,9 +31,9 @@
 juicer.conf \- juicer configuration file
 .SH "DESCRIPTION"
 .sp
-Sections and variables to use in your juicer configuration file\&. This file is broken into two or more parts\&. The first is \fBDEFAULT\fR and the rest are named after your environments, e\&.g\&., \fIqa\fR, \fIstage\fR, or \fIprod\fR\&.
+Sections and variables to use in your juicer configuration file\&. This file is broken into two or more parts\&. The first is \fBDEFAULT\fR and the rest are named after your environments, e\&.g\&., \fBqa\fR, \fBstage\fR, or \fBprod\fR\&.
 .sp
-Assuming you have a \fIdevel\fR and \fIprod\fR environment, you might have a configuration file that looks like this:
+Assuming you have a \fBdevel\fR and \fBprod\fR environment, you might have a configuration file that looks like this:
 .sp
 .if n \{\
 .RS 4
@@ -54,6 +54,10 @@ Assuming you have a \fIdevel\fR and \fIprod\fR environment, you might have a con
 username: tux
 password: 5w33tP@ssw04d
 base_url: https://pulp\&.devel\&.int\&.tux\&.org/pulp/api
+# \*(Aqdevel\*(Aq is the base environment\&. This means juicer will default
+# to using \*(Aqdevel\*(Aq when commands are not specified with an
+# explicit environment(s)\&.
+start_in: devel
 .fi
 .if n \{\
 .RE
@@ -77,19 +81,6 @@ promotes_to: prod
 .RS 4
 .\}
 .nf
-# This is the base environment\&. This means juicer will default to
-# using \*(Aqdevel\*(Aq when commands are not specified with an explicit
-# environment(s)\&.
-base
-.fi
-.if n \{\
-.RE
-.\}
-.sp
-.if n \{\
-.RS 4
-.\}
-.nf
 [prod]
 # username already defined in DEFAULT\&.
 password: 5w33t_AdM!n_P@ssw04d
@@ -103,7 +94,7 @@ password: 5w33t_AdM!n_P@ssw04d
 .\}
 .nf
 # Note that this is a different pulp server, so we must specify
-the base_url once again\&.
+# the base_url once again\&.
 base_url: https://pulp\&.prod\&.int\&.tux\&.org/pulp/api
 .fi
 .if n \{\
@@ -116,11 +107,93 @@ base_url: https://pulp\&.prod\&.int\&.tux\&.org/pulp/api
 .nf
 # We specify that the production environment requires packages to
 # be signed\&.
-requires_signature
+requires_signature: true
 .fi
 .if n \{\
 .RE
 .\}
+.SH "ATTRIBUTES"
+.PP
+\fBusername\fR
+.RS 4
+The user name to use when connecting to a pulp server\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR, and any environment definition
+.sp
+\fBRequired in\fR: Each environment definition if not defined in
+\fBDEFAULT\fR
+.RE
+.PP
+\fBpassword\fR
+.RS 4
+The password to use when connecting to a pulp server\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR, and any environment definition
+.sp
+\fBRequired in\fR: Each environment definition if not defined in
+\fBDEFAULT\fR
+.RE
+.PP
+\fBbase_url\fR
+.RS 4
+The url to the API for a pulp server\&. You
+\fBmust\fR
+provide the full path to the pulp api after the hostname\&. This is usually
+\fI/pulp/api\fR\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR, and any environment definition
+.sp
+\fBRequired in\fR: Each environment definition if not defined in
+\fBDEFAULT\fR
+.RE
+.PP
+\fBstart_in\fR
+.RS 4
+This is the default destination for all operations when not explicitly specified\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR
+.sp
+\fBRequired in\fR:
+\fBDEFAULT\fR
+.sp
+\fBValues\fR: Must be a single valid environment name
+.RE
+.PP
+\fBpromotes_to\fR
+.RS 4
+This attribute specifies what environment packages flow into next\&. For example, packages in a
+\fBdevel\fR
+environment normally promote to a
+\fBstage\fR
+or
+\fBprod\fR
+environment next\&.
+.sp
+\fBAllowed in\fR: Any environment definition
+.sp
+\fBRequired in\fR: This attribute is optional
+.sp
+\fBValues\fR: Must be a single valid environment name
+.RE
+.PP
+\fBrequires_signature\fR
+.RS 4
+This attribute indicates that a given environment requires that items are signed before they can be published to it\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR, and any environment definition
+.sp
+\fBRequired in\fR: This attribute is optional
+.sp
+\fBValues\fR:
+\fItrue\fR
+or
+\fIfalse\fR
+.RE
 .SH "FILES"
 .sp
 \fB~/\&.juicer\&.conf\fR \(em Juicer configuration file

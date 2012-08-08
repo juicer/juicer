@@ -19,28 +19,28 @@ prod.
     username: tux
     password: 5w33tP@ssw04d
     base_url: https://pulp.devel.int.tux.org/pulp/api
+    # 'devel' is the base environment. This means juicer will default
+    # to using 'devel' when commands are not specified with an
+    # explicit environment(s).
+    start_in: devel
 
     [devel]
-    # Most of our configuration for this environment lives the DEFAULT
-    # section already but we do need to tell Juicer where we promote
-    # to from devel and also that devel is the base environment.
+    # Most of our configuration for this environment lives in the
+    # DEFAULT section already, but we do need to tell Juicer where
+    # this environment promotes to next.
     promotes_to: prod
-
-    # This is the base environment. This means juicer will default to
-    # using 'devel' when commands are not specified with an explicit
-    # environment(s).
-    base
 
     [prod]
     # username already defined in DEFAULT.
     password: 5w33t_AdM!n_P@ssw04d
 
     # Note that this is a different pulp server, so we must specify
-    the base_url once again.
+    # the base_url once again.
     base_url: https://pulp.prod.int.tux.org/pulp/api
 
     # We specify that the production environment requires packages to
     # be signed.
-    requires_signature
+    requires_signature: true
+
 
 See also: `man 5 juicer.conf`

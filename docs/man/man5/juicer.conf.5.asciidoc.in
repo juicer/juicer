@@ -15,11 +15,11 @@ DESCRIPTION
 
 Sections and variables to use in your juicer configuration file. This
 file is broken into two or more parts. The first is *DEFAULT* and the
-rest are named after your environments, e.g., __qa__, __stage__, or
-__prod__.
+rest are named after your environments, e.g., *qa*, *stage*, or
+*prod*.
 
-Assuming you have a __devel__ and __prod__ environment, you might have
-a configuration file that looks like this:
+Assuming you have a *devel* and *prod* environment, you might have a
+configuration file that looks like this:
 
 [literal]
     # ~/.juicer.conf - In this example config file we maintain two
@@ -29,6 +29,10 @@ a configuration file that looks like this:
     username: tux
     password: 5w33tP@ssw04d
     base_url: https://pulp.devel.int.tux.org/pulp/api
+    # 'devel' is the base environment. This means juicer will default
+    # to using 'devel' when commands are not specified with an
+    # explicit environment(s).
+    start_in: devel
 
     [devel]
     # Most of our configuration for this environment lives in the
@@ -36,22 +40,86 @@ a configuration file that looks like this:
     # this environment promotes to next.
     promotes_to: prod
 
-    # This is the base environment. This means juicer will default to
-    # using 'devel' when commands are not specified with an explicit
-    # environment(s).
-    base
-
     [prod]
     # username already defined in DEFAULT.
     password: 5w33t_AdM!n_P@ssw04d
 
     # Note that this is a different pulp server, so we must specify
-    the base_url once again.
+    # the base_url once again.
     base_url: https://pulp.prod.int.tux.org/pulp/api
 
     # We specify that the production environment requires packages to
     # be signed.
-    requires_signature
+    requires_signature: true
+
+ATTRIBUTES
+----------
+
+*username*::
+
+The user name to use when connecting to a pulp server.
++
+*Allowed in*: *DEFAULT*, and any environment definition
++
+*Required in*: Each environment definition if not defined in *DEFAULT*
+
+
+*password*::
+
+The password to use when connecting to a pulp server.
++
+*Allowed in*: *DEFAULT*, and any environment definition
++
+*Required in*: Each environment definition if not defined in *DEFAULT*
+
+
+*base_url*::
+
+The url to the API for a pulp server. You *must* provide the full path
+to the pulp api after the hostname. This is usually __/pulp/api__.
++
+*Allowed in*: *DEFAULT*, and any environment definition
++
+*Required in*: Each environment definition if not defined in *DEFAULT*
+
+
+*start_in*::
+
+This is the default destination for all operations when not explicitly
+specified.
++
+*Allowed in*: *DEFAULT*
++
+*Required in*: *DEFAULT*
++
+*Values*: Must be a single valid environment name
+
+
+*promotes_to*::
+
+This attribute specifies what environment packages flow into next. For
+example, packages in a *devel* environment normally promote to a
+*stage* or *prod* environment next.
++
+*Allowed in*: Any environment definition
++
+*Required in*: This attribute is optional
++
+*Values*: Must be a single valid environment name
+
+
+*requires_signature*::
+
+This attribute indicates that a given environment requires that items
+are signed before they can be published to it.
++
+*Allowed in*: *DEFAULT*, and any environment definition
++
+*Required in*: This attribute is optional
++
+*Values*: __true__ or __false__
+
+
 
 
 
