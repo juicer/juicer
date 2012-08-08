@@ -21,7 +21,7 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.search)(name=self.args.rpmname)
 
         self.args = self.parser.parser.parse_args(\
-            'rpm-search ruby --in qa'.split())
+            'search ruby --in qa'.split())
         pulp = j(self.args)
         mute()(pulp.search)(name=self.args.rpmname)
 
