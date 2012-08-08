@@ -35,7 +35,7 @@ class TestJuicer(unittest.TestCase):
         self.args = self.parser.parser.parse_args(('upload -r %s %s' % ('hats', rpm_path)).split())
         pulp = j(self.args)
         cart = pulp.create('upload-cart', self.args.r)
-        
+
         self.args = self.parser.parser.parse_args('push upload-cart'.split())
         pulp = j(self.args)
         mute()(pulp.push)(cart)

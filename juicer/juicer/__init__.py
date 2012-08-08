@@ -54,7 +54,6 @@ def push(args):
         pulp.push(cart, env)
 
 
-
 def search(args):
     pulp = j(args)
     pulp.search(name=args.rpmname)

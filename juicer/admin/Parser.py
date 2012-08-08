@@ -20,6 +20,7 @@ import juicer.admin
 import juicer.utils
 import getpass
 
+
 class Parser(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Manage pulp')
@@ -229,6 +230,7 @@ class Parser(object):
                                help='The environments in which to list roles')
 
         parser_list_roles.set_defaults(ja=juicer.admin.list_roles)
+
 
 class PromptAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):

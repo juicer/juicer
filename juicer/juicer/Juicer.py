@@ -243,7 +243,6 @@ class Juicer(object):
         juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
         return file_id
 
-
     # this is used to upload files to pulp
     def upload(self, env, repo, items=[]):
         """
@@ -314,7 +313,6 @@ class Juicer(object):
             self.publish(cart)
 
         return True
-
 
     def publish(self, cart, env=None):
         """
@@ -453,7 +451,6 @@ class Juicer(object):
                 juicer.utils.Log.log_info("Server said: %s", _r.content)
                 continue
         return True
-
 
     def pull(self, cartname=None, env=None):
         """

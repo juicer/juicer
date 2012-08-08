@@ -52,8 +52,10 @@ def create_json_str(input_ds):
     """
     return json.dumps(input_ds)
 
+
 def cart_repo_exists_p(name, connector, env):
     return repo_exists_p(name, connector, env)
+
 
 def _config_file():
     """
@@ -74,6 +76,7 @@ def _config_file():
         # TODO: should never exit() from inside lib code. Needs to
         # throw some kind of exception instead.
         exit(1)
+
 
 def _config_test(config):
     """
@@ -151,6 +154,7 @@ def get_environments():
 
     juicer.utils.Log.log_notice("Read environment sections: %s", environments)
     return environments
+
 
 def get_next_environment(env):
     """
@@ -363,6 +367,7 @@ def save_url_as(url, save_as):
 
     with open(save_as, 'wb') as data:
         data.write(remote.content)
+
 
 def remote_url(connector, env, repo, filename):
     """

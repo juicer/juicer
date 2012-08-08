@@ -38,7 +38,6 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)
 
-
     def create_repo(self, arch=None, name=None, feed=None, envs=None, type=None, query='/repositories/'):
         """
         `arch` - Architecture of repository content
@@ -49,7 +48,7 @@ class JuicerAdmin(object):
         Create repository in specified environments
         """
         name = name.lower()
-        
+
         data = {'name': name,
                 'arch': arch}
 
@@ -85,7 +84,7 @@ class JuicerAdmin(object):
         Create user in specified environments
         """
         login = login.lower()
-        
+
         data = {'login': login,
                 'password': password,
                 'name': name}

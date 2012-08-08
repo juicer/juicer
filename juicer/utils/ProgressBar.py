@@ -18,6 +18,7 @@
 import progressbar
 from progressbar import Bar, Percentage
 
+
 class ProgressBar(object):
     def __init__(self, maxval):
         widgets = [Bar(), Percentage()]
