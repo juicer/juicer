@@ -67,6 +67,19 @@ start_in: devel
 .RS 4
 .\}
 .nf
+# If an environment requires signatures, specify an
+# rpm_sign_plugin\&. Here we\*(Aqve included MySweetPlugin, which will
+# serve to sign RPMs for us\&. See juicer\&.common\&.RpmSignPlugin\&.
+rpm_sign_plugin: juicer\&.plugins\&.MySweetPlugin
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
 [devel]
 # Most of our configuration for this environment lives in the
 # DEFAULT section already, but we do need to tell Juicer where
