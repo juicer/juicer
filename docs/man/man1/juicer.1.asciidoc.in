@@ -123,21 +123,9 @@ Pushes/Updates a cart on the pulp server.
 The name of the cart to push.
 
 
-////////////////////////////////////////////////////////////////////////
-CART-SEARCH
------------
-usage: juicer cart-search CARTNAME
-
-Search for a cart in pulp.
-
-*CARTNAME*::
-The name of the cart to search for.
-////////////////////////////////////////////////////////////////////////
-
-
-RPM-SEARCH
-----------
-usage: juicer rpm-search 'ITEM' [-r 'REPO' [...]] [--in 'ENVIRONMENT' [...]]
+SEARCH
+------
+usage: juicer search 'ITEM' [-r 'REPO' [...]] [--in 'ENVIRONMENT' [...]]
 
 Search for an RPM ('item') in pulp
 
