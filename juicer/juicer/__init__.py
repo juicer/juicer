@@ -23,7 +23,15 @@ from juicer.juicer.Juicer import Juicer as j
 def create(args):
     pulp = j(args)
     juicer.utils.Log.log_info("Creating cart '%s'." % args.cartname)
-    cart = pulp.create(args.cartname, args.r)
+
+    if args.f:
+        juicer.utils.Log.log_debug("Manifest detected.")
+        cart = pulp.create_manifest(args.cartname, args.f)
+    elif args.r:
+        cart = pulp.create(args.cartname, args.r)
+    else:
+        raise Exception("Argument Error")
+
     juicer.utils.Log.log_info("Saved cart '%s'." % args.cartname)
     print cart
 
