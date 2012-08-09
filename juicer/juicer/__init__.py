@@ -32,6 +32,8 @@ def create(args):
     else:
         raise Exception("Argument Error")
 
+    cart.save()
+
     juicer.utils.Log.log_info("Saved cart '%s'." % args.cartname)
     print cart
 

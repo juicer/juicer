@@ -346,6 +346,50 @@ class Juicer(object):
 
         return True
 
+    def create_manifest(self, cart_name, manifest, query='/services/search/packages/'):
+        """
+        `cart_name` - Name of this release cart
+        `manifest` - str containing path to manifest file
+        """
+        cart_dest = self._defaults['cart_dest']
+        env_re = re.compile('.*-%s' % cart_dest)
+
+        cart = juicer.common.Cart.Cart(cart_name)
+        pkg_list = juicer.utils.parse_manifest(manifest)
+
+        urls = {}
+
+        # packages need to be included in every repo they're in
+        for pkg in pkg_list:
+            juicer.utils.Log.log_debug("Finding %s %s %s ..." % \
+                    (pkg['name'], pkg['version'], pkg['release']))
+
+            data = {'name': pkg['name'],
+                    'version': pkg['version'],
+                    'release': pkg['release']}
+
+            _r = self.connectors[cart_dest].post(query, data)
+
+            if not _r.status_code == Constants.PULP_POST_OK:
+                juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was returned' % (pkg['name'],_r.status_code))
+                exit(1)
+            
+            ppkg = juicer.utils.load_json_str(_r.content)[0]
+
+            for repo in ppkg['repoids']:
+                if re.match(env_re, repo):
+                    if repo not in urls:
+                        urls[repo] = []
+
+                    pkg_url = juicer.utils.remote_url(self.connectors[cart_dest],
+                        cart_dest, repo, ppkg['filename'])
+                    urls[repo].append(pkg_url)
+
+        for repo in urls:
+            cart.add_repo(repo, urls[repo])
+
+        return cart
+
     def create(self, cart_name, cart_description):
         """
         `cart_name` - Name of this release cart
