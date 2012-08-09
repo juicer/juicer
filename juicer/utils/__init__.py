@@ -31,6 +31,7 @@ import rpm
 import sys
 import requests
 import shutil
+import re
 try:
     import json
     json
@@ -98,6 +99,7 @@ def _config_test(config):
         if 'promotes_to' in cfg and cfg['promotes_to'] not in config.sections():
             raise Exception("promotion_path: %s is not a config section" \
                                 % cfg['promotes_to'])
+
 
 def get_login_info():
     """
@@ -461,3 +463,26 @@ def check_sig(package):
         return True
     else:
         return False
+
+def parse_manifest(manifest):
+    """
+    return a list of dicts containing an rpm name, version and release
+    eg: [{'name': 'httpd', 'version': 1.3.39, 'release': 1}]
+    """
+    manifest = os.path.expanduser(manifest)
+
+    if not os.path.exists(manifest):
+        raise IOError('File not found: %s' % manifest)
+
+    rpm_list = []
+    regex = re.compile('(.*): (?:(absent)|(?:(.*)-(.*)))')
+
+    for line in open(manifest):
+        _m = re.match(regex, line)
+
+        if _m.group(2) == 'absent':
+            juicer.utils.Log.log_debug('%s is absent. Skipping...' % _m.group(1))
+        else:
+            rpm_list.append({'name': _m.group(1), 'version': _m.group(3), 'release': _m.group(4)})
+
+    return rpm_list
