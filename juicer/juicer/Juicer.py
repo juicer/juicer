@@ -388,6 +388,8 @@ class Juicer(object):
         for repo in urls:
             cart.add_repo(repo, urls[repo])
 
+        cart.save()
+
         return cart
 
     def create(self, cart_name, cart_description):
