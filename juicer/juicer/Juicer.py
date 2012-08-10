@@ -374,7 +374,13 @@ class Juicer(object):
                 juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was returned' % (pkg['name']._r.status_code))
                 exit(1)
 
-            ppkg = juicer.utils.load_json_str(_r.content)[0]
+            content = juicer.utils.load_json_str(_r.content)
+
+            if len(content) == 0:
+                juicer.utils.Log.log_debug("Searching for %s returned 0 results." % pkg['name'])
+                continue
+
+            ppkg = content[0]
 
             for repo in ppkg['repoids']:
                 if re.match(env_re, repo):
