@@ -371,9 +371,9 @@ class Juicer(object):
             _r = self.connectors[cart_dest].post(query, data)
 
             if not _r.status_code == Constants.PULP_POST_OK:
-                juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was returned' % (pkg['name'],_r.status_code))
+                juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was returned' % (pkg['name']._r.status_code))
                 exit(1)
-            
+
             ppkg = juicer.utils.load_json_str(_r.content)[0]
 
             for repo in ppkg['repoids']:
