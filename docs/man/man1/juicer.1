@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/08/2012
+.\"      Date: 08/10/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.1
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "08/08/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "08/10/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -39,7 +39,7 @@ A release cart is a description of what RPMs you want to push into a specific re
 RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle remote resources as well\&. Anywhere an option argument is described as \fIitem\fR you can give the path to a local directory, or rpm, as well as an RPM available over HTTP\&. HTTP directory indexes work as well; the page is parsed and links to rpm files are added to your cart\&.
 .SH "CREATE"
 .sp
-usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]
+usage: juicer create \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -47,6 +47,13 @@ Create a cart with the items specified\&.
 .RS 4
 The name of the new release cart\&.
 .RE
+.PP
+\fB\-f\fR \fImanifest\fR
+.RS 4
+Create a cart from a manifest file\&. A manifest file is written in the following format:
+.RE
+.sp
+name: version\-release
 .PP
 \fB\-r\fR \fIREPONAME\fR
 .RS 4
