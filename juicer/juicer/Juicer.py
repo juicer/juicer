@@ -522,12 +522,13 @@ class Juicer(object):
                                        self._defaults['rpm_sign_plugin'])
 
             try:
-                rpm_sign_plugin = __import__(module_name, fromlist=[self._defaults['rpm_sign_plugin']])
+                rpm_sign_plugin = __import__(module_name, fromlist=[module_name])
                 juicer.utils.Log.log_debug("successfully loaded %s ...", module_name)
-                signer = rpm_sign_plugin.RedhatRpmSign()
+                plugin_object = getattr(rpm_sign_plugin, module_name.split('.')[-1])
+                signer = plugin_object()
                 signer.sign_rpms(rpm_files)
             except ImportError:
-                juicer.utils.Log.log_debug("couldn't load %s ... skipping! you'll have to sign these yourself...",
+                juicer.utils.Log.log_debug("there was a problem using %s ... skipping! you'll have to sign these yourself...",
                                            module_name)
         else:
             juicer.utils.Log.log_info("did not find an rpm_sign_plugin! you'll have to sign these yourself ...")
