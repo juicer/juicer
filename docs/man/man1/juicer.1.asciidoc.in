@@ -32,6 +32,12 @@ work as well; the page is parsed and links to rpm files are added to
 your cart.
 
 
+HELLO
+------
+usage: juicer hello
+
+Test connection settings in *~/.juicer.conf*
+
 
 CREATE
 ------
@@ -47,6 +53,7 @@ Name of the reopsitory to install 'ITEMS' into.
 
 *ITEMS*::
 Items to add to the cart in repository 'REPONAME'.
+
 
 ////////////////////////////////////////
 EDIT
@@ -140,6 +147,21 @@ The repo(s) to limit search scope to.
 The environments to limit search scope to.
 
 
+UPLOAD
+------
+usage: juicer upload [-r 'REPO' [...]] [item1 [ item2 [...] ] ] [--in 'ENVIRONMENT' [...]]
+
+Upload multiple RPMs or files ('item') to REPO
+
+*ITEM*::
+Name of the RPM or file to upload
+
+*-r* 'REPO' [...]::
+The repo(s) that will be uploaded to
+
+
+*--in* 'environment' ['environment' ...]::
+The environments which items will be uploaded to
 
 
 

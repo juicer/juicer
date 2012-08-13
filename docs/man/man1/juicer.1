@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/08/2012
+.\"      Date: 08/13/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.1
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "08/08/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "08/13/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -37,6 +37,11 @@ juicer sub\-command [PARAMETERS \&...] [OPTIONS \&...]
 A release cart is a description of what RPMs you want to push into a specific repository\&. A single cart can specify multiple repos and associated items\&. Release cart descriptions are saved so you can easily "promote" a cart to another environment\&.
 .sp
 RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle remote resources as well\&. Anywhere an option argument is described as \fIitem\fR you can give the path to a local directory, or rpm, as well as an RPM available over HTTP\&. HTTP directory indexes work as well; the page is parsed and links to rpm files are added to your cart\&.
+.SH "HELLO"
+.sp
+usage: juicer hello
+.sp
+Test connection settings in \fB~/\&.juicer\&.conf\fR
 .SH "CREATE"
 .sp
 usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]
@@ -109,6 +114,26 @@ The repo(s) to limit search scope to\&.
 \fB\-\-in\fR \fIenvironment\fR [\fIenvironment\fR \&...]
 .RS 4
 The environments to limit search scope to\&.
+.RE
+.SH "UPLOAD"
+.sp
+usage: juicer upload [\-r \fIREPO\fR [\&...]] [item1 [ item2 [\&...] ] ] [\-\-in \fIENVIRONMENT\fR [\&...]]
+.sp
+Upload multiple RPMs or files (\fIitem\fR) to REPO
+.PP
+\fBITEM\fR
+.RS 4
+Name of the RPM or file to upload
+.RE
+.PP
+\fB\-r\fR \fIREPO\fR [\&...]
+.RS 4
+The repo(s) that will be uploaded to
+.RE
+.PP
+\fB\-\-in\fR \fIenvironment\fR [\fIenvironment\fR \&...]
+.RS 4
+The environments which items will be uploaded to
 .RE
 .SH "EXAMPLES"
 .sp
