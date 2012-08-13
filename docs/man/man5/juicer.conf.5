@@ -2,12 +2,12 @@
 .\"     Title: juicer.conf
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/08/2012
+.\"      Date: 08/13/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.1
 .\"  Language: English
 .\"
-.TH "JUICER\&.CONF" "5" "08/08/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
+.TH "JUICER\&.CONF" "5" "08/13/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -206,6 +206,19 @@ This attribute indicates that a given environment requires that items are signed
 \fItrue\fR
 or
 \fIfalse\fR
+.RE
+.PP
+\fBrpm_sign_plugin\fR
+.RS 4
+This attribute indicates which RpmSignPlugin to use for RPM signing\&. RpmSignPlugins have a base class of juicer\&.common\&.RpmSignPlugin and provide a means for signing multiple RPMs at once\&. This plugin will be called whenever RPMs are being uploaded to an environment that
+\fBrequires_signature\fR\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR
+.sp
+\fBRequired in\fR: This attribute is optional
+.sp
+\fBValues\fR: Must be a single python module i\&.e\&. (juicer\&.plugins\&.MySweetPlugin)
 .RE
 .SH "FILES"
 .sp
