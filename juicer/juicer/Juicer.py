@@ -355,7 +355,11 @@ class Juicer(object):
         env_re = re.compile('.*-%s' % cart_dest)
 
         cart = juicer.common.Cart.Cart(cart_name)
-        pkg_list = juicer.utils.parse_manifest(manifest)
+        try:
+            pkg_list = juicer.utils.parse_manifest(manifest)
+        except IOError as e:
+            juicer.utils.Log.log_error(e.message)
+            exit(1)
 
         urls = {}
 
