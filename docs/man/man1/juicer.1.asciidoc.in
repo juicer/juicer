@@ -77,6 +77,17 @@ Print the contents of a cart.
 The release cart to show.
 
 
+PROMOTE
+-------
+usage: juicer promote 'CARTNAME'
+
+Promote a release cart to the next release environment in its directed
+graph.
+
+*CARTNAME*::
+The release cart to promote.
+
+
 ////////////////////////////////////////////////////////////////////////
 UPDATE
 ------
