@@ -99,7 +99,8 @@ PULL
 ----
 usage: juicer pull 'CARTNAME'
 
-Pulls a cart from the pulp server and saves it on your local machine.
+Pulls a description of a cart from the pulp server and saves it on
+your local machine in ~/.juicer-carts/.
 
 *CARTNAME*::
 The name of the cart to pull.
