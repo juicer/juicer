@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Wed Aug 15 2012 Tim Bielawa <tim@redhat.com> - 0.3.0-1
+- Release of 0.3. 
+
 * Thu Jul 26 2012 Tim Bielawa <tim@redhat.com> - 0.2.1-1
 - Split into juicer/juicer-admin/juicer-common packages
 - Include a base config file.
