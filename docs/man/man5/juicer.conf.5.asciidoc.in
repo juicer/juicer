@@ -124,19 +124,20 @@ are signed before they can be published to it.
 +
 *Values*: __true__ or __false__
 
+
 *rpm_sign_plugin*::
 
 This attribute indicates which RpmSignPlugin to use for RPM
-signing. RpmSignPlugins have a base class of
-juicer.common.RpmSignPlugin and provide a means for signing multiple
-RPMs at once. This plugin will be called whenever RPMs are being
-uploaded to an environment that *requires_signature*.
+signing. RpmSignPlugins should subclass and implement the
+__juicer.common.RpmSignPlugin__ class. This plugin will be called
+whenever RPMs are being uploaded to an environment that
+*requires_signature*.
 +
 *Allowed in*: *DEFAULT*
 +
 *Required in*: This attribute is optional
 +
-*Values*: Must be a single python module i.e. (juicer.plugins.MySweetPlugin)
+*Values*: Must be a single python module, e.g., __juicer.plugins.MySweetPlugin__
 
 
 
