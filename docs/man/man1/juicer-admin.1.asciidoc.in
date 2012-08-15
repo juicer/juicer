@@ -13,7 +13,7 @@ juicer-admin - manage pulp repositories, users, and roles.
 
 SYNOPSIS
 --------
-juicer-admin subcommand [OPTIONS ...] [PARAMETERS ...]
+juicer-admin [-vvv] subcommand [PARAMETERS ...] [OPTIONS ...] [--in env ...]
 
 
 
@@ -22,120 +22,110 @@ DESCRIPTION
 Manage pulp repositories, users, and roles.
 
 
+COMMON OPTIONS
+--------------
+
+*-v*, *--verbose*::
+Increase the verbosity (up to 3x). In usage specify '-v' *before* 'SUBCOMMAND'.
+
+*--in* 'env' ...::
+
+Specify which environment(s) to perform the 'SUBCOMMAND' in. In usage
+all __SUBCOMMAND__s accept this option when given after 'SUBCOMMAND'.
+
+
+
 CREATE-REPO
 -----------
-usage: juicer-admin creat-repo REPONAME --arch ARCH --feed FEED --in env1 [ env2, [ ...]]
-
-Create a repository
+usage: juicer-admin create-repo REPONAME --arch ARCH --feed FEED
 
 *REPONAME*::
 The name of the repository to be created
 
-*ARCH*::
+*--arch=*'ARCH'::
 Repository package architecture
 
-*FEED*::
+*--feed=*'FEED'::
 A feed url from which to synchronize yum repository packages
-
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to create repository
 
 
 CREATE-USER
 -----------
-usage: juicer-admin create-user LOGIN --name FULLNAME --password PASSWORD --in env1 [ env2, [ ...]]
+usage: juicer-admin create-user LOGIN --name FULLNAME --password PASSWORD
 
 *LOGIN*::
 Login or username
 
-*FULLNAME*::
+*--name=*'FULLNAME'::
 User's full name
 
-*PASSWORD*::
+*--password=*'PASSWORD'::
 Plain text password. Will prompt if no arg specified
-
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to create user
 
 
 DELETE-REPO
 -----------
-usage: juicer-admin delete-repo REPONAME --in env1 [ env2, [ ...]]
+usage: juicer-admin delete-repo REPONAME
 
 *REPONAME*::
 Name of repository which will be deleted
 
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to delete repository
-
 
 DELETE-USER
 -----------
-usage: juicer-admin delete-user LOGIN --in env1 [ env2, [ ...]]
+usage: juicer-admin delete-user LOGIN
 
 *LOGIN*::
 Login or username of user which will be deleted
 
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to delete user
-
 
 LIST-REPOS
 ----------
-usage: juicer-admin list-repos --in env1 [ env2, [ ...]]
-
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to list repositories
+usage: juicer-admin list-repos
 
 
 LIST-ROLES
 ----------
-usage: juicer-admin list-roles --in env1 [ env2, [ ...]]
+usage: juicer-admin list-roles
 
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to list roles
+See the Pulp User documentation (*SEE ALSO*) for more information on
+the specifics of role management.
 
 
 ROLE-ADD
 --------
-usage: juicer-admin role-add --role ROLE --login LOGIN --in env1 [ env2, [ ...]]
+usage: juicer-admin role-add --role ROLE --login LOGIN
 
-*ROLE*::
+*--role=*'ROLE'::
 The role which will be assigned to login or username
 
-*LOGIN*::
+*--login=*'LOGIN'::
 Login or username of user which will be added to role
 
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to assign role to user
+See the Pulp User documentation (*SEE ALSO*) for more information on
+the specifics of role management.
 
 
 SHOW-USER
 ---------
-usage: juicer-admin show-user LOGIN --in env1 [ env2, [ ...]]
+usage: juicer-admin show-user LOGIN
 
 *LOGIN*::
 Login or username 
 
-*--in* 'env1 [ env2, [ ...]]'::
-Environments to show user from.
-
 
 UPDATE-USER
 -----------
-usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD --in env1 [ env2, [ ...]]
+usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD
 
 *LOGIN*::
 Login or username of user which will be updated
 
-*FULLNAME*::
+*--name=*'FULLNAME'::
 Updated full name
 
-*PASSWORD*::
+*--password=*'PASSWORD'::
 Updated plain text password. Will prompt if no arg specified
-
-*--in* 'env1 [ env2, [ ...]]'::
-Environments in which to update user
 
 
 
@@ -149,8 +139,10 @@ FILES
 
 AUTHOR
 ------
-Juicer was written by GCA-PC, Red Hat, Inc.. This man page was written
-by Tim Bielawa <tbielawa@redhat.com> and Andrew Butcher <abutcher@redhat.com>
+Juicer was written by GCA-PC, Red Hat, Inc..
+
+This man page was written by Tim Bielawa <tbielawa@redhat.com> and
+Andrew Butcher <abutcher@redhat.com>.
 
 
 
@@ -166,4 +158,6 @@ SEE ALSO
 --------
 *juicer*(1), *juicer.conf*(5)
 
-The Juicer Homepage: http://github.com/abutcher/juicer/
+*Pulp User Documentation* -- <http://pulpproject.org/ug/UGUsers.html>
+
+The Juicer Homepage: <http://github.com/abutcher/juicer/>

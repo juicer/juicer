@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/08/2012
+.\"      Date: 08/15/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.1
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "08/08/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "08/15/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,153 +31,128 @@
 juicer-admin \- manage pulp repositories, users, and roles\&.
 .SH "SYNOPSIS"
 .sp
-juicer\-admin subcommand [OPTIONS \&...] [PARAMETERS \&...]
+juicer\-admin [\-vvv] subcommand [PARAMETERS \&...] [OPTIONS \&...] [\-\-in env \&...]
 .SH "DESCRIPTION"
 .sp
 Manage pulp repositories, users, and roles\&.
+.SH "COMMON OPTIONS"
+.PP
+\fB\-v\fR, \fB\-\-verbose\fR
+.RS 4
+Increase the verbosity (up to 3x)\&. In usage specify
+\fI\-v\fR
+\fBbefore\fR
+\fISUBCOMMAND\fR\&.
+.RE
+.PP
+\fB\-\-in\fR \fIenv\fR \&...
+.RS 4
+Specify which environment(s) to perform the
+\fISUBCOMMAND\fR
+in\&. In usage all
+\fISUBCOMMAND\fRs accept this option when given after
+\fISUBCOMMAND\fR\&.
+.RE
 .SH "CREATE-REPO"
 .sp
-usage: juicer\-admin creat\-repo REPONAME \-\-arch ARCH \-\-feed FEED \-\-in env1 [ env2, [ \&...]]
-.sp
-Create a repository
+usage: juicer\-admin create\-repo REPONAME \-\-arch ARCH \-\-feed FEED
 .PP
 \fBREPONAME\fR
 .RS 4
 The name of the repository to be created
 .RE
 .PP
-\fBARCH\fR
+\fB\-\-arch=\fR\fIARCH\fR
 .RS 4
 Repository package architecture
 .RE
 .PP
-\fBFEED\fR
+\fB\-\-feed=\fR\fIFEED\fR
 .RS 4
 A feed url from which to synchronize yum repository packages
 .RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to create repository
-.RE
 .SH "CREATE-USER"
 .sp
-usage: juicer\-admin create\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin create\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD
 .PP
 \fBLOGIN\fR
 .RS 4
 Login or username
 .RE
 .PP
-\fBFULLNAME\fR
+\fB\-\-name=\fR\fIFULLNAME\fR
 .RS 4
 User\(cqs full name
 .RE
 .PP
-\fBPASSWORD\fR
+\fB\-\-password=\fR\fIPASSWORD\fR
 .RS 4
 Plain text password\&. Will prompt if no arg specified
 .RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to create user
-.RE
 .SH "DELETE-REPO"
 .sp
-usage: juicer\-admin delete\-repo REPONAME \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin delete\-repo REPONAME
 .PP
 \fBREPONAME\fR
 .RS 4
 Name of repository which will be deleted
 .RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to delete repository
-.RE
 .SH "DELETE-USER"
 .sp
-usage: juicer\-admin delete\-user LOGIN \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin delete\-user LOGIN
 .PP
 \fBLOGIN\fR
 .RS 4
 Login or username of user which will be deleted
 .RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to delete user
-.RE
 .SH "LIST-REPOS"
 .sp
-usage: juicer\-admin list\-repos \-\-in env1 [ env2, [ \&...]]
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to list repositories
-.RE
+usage: juicer\-admin list\-repos
 .SH "LIST-ROLES"
 .sp
-usage: juicer\-admin list\-roles \-\-in env1 [ env2, [ \&...]]
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to list roles
-.RE
+usage: juicer\-admin list\-roles
+.sp
+See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
 .SH "ROLE-ADD"
 .sp
-usage: juicer\-admin role\-add \-\-role ROLE \-\-login LOGIN \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin role\-add \-\-role ROLE \-\-login LOGIN
 .PP
-\fBROLE\fR
+\fB\-\-role=\fR\fIROLE\fR
 .RS 4
 The role which will be assigned to login or username
 .RE
 .PP
-\fBLOGIN\fR
+\fB\-\-login=\fR\fILOGIN\fR
 .RS 4
 Login or username of user which will be added to role
 .RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to assign role to user
-.RE
+.sp
+See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
 .SH "SHOW-USER"
 .sp
-usage: juicer\-admin show\-user LOGIN \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin show\-user LOGIN
 .PP
 \fBLOGIN\fR
 .RS 4
 Login or username
 .RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments to show user from\&.
-.RE
 .SH "UPDATE-USER"
 .sp
-usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD \-\-in env1 [ env2, [ \&...]]
+usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD
 .PP
 \fBLOGIN\fR
 .RS 4
 Login or username of user which will be updated
 .RE
 .PP
-\fBFULLNAME\fR
+\fB\-\-name=\fR\fIFULLNAME\fR
 .RS 4
 Updated full name
 .RE
 .PP
-\fBPASSWORD\fR
+\fB\-\-password=\fR\fIPASSWORD\fR
 .RS 4
 Updated plain text password\&. Will prompt if no arg specified
-.RE
-.PP
-\fB\-\-in\fR \fIenv1 [ env2, [ \&...]]\fR
-.RS 4
-Environments in which to update user
 .RE
 .SH "FILES"
 .sp
@@ -186,7 +161,9 @@ Environments in which to update user
 \fB~/\&.juicer\-carts/\fR \(em Cart storage location
 .SH "AUTHOR"
 .sp
-Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com> and Andrew Butcher <abutcher@redhat\&.com>
+Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.
+.sp
+This man page was written by Tim Bielawa <tbielawa@redhat\&.com> and Andrew Butcher <abutcher@redhat\&.com>\&.
 .SH "COPYRIGHT"
 .sp
 Copyright \(co 2012, Red Hat, Inc\&.\&.
@@ -195,5 +172,7 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"
 .sp
 \fBjuicer\fR(1), \fBjuicer\&.conf\fR(5)
+.sp
+\fBPulp User Documentation\fR \(em http://pulpproject\&.org/ug/UGUsers\&.html
 .sp
 The Juicer Homepage: http://github\&.com/abutcher/juicer/
