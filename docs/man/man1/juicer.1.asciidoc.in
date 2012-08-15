@@ -13,7 +13,7 @@ juicer - create and push release carts, upload items to pulp
 
 SYNOPSIS
 --------
-juicer sub-command [PARAMETERS ...] [OPTIONS ...]
+juicer [-vvv] subcommand [PARAMETERS ...] [OPTIONS ...]
 
 
 
@@ -32,16 +32,18 @@ work as well; the page is parsed and links to rpm files are added to
 your cart.
 
 
-HELLO
-------
-usage: juicer hello
+COMMON OPTIONS
+--------------
 
-Test connection settings in *~/.juicer.conf*
+*-v*, *--verbose*::
+Increase the verbosity (up to 3x). In usage specify '-v' *before* 'SUBCOMMAND'.
+
 
 
 CREATE
 ------
-usage: juicer create 'CARTNAME' -r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]
+usage: juicer create 'CARTNAME' -r 'REPONAME' 'ITEM' ... [ -r
+'REPONAME' 'ITEM' ... ]
 
 Create a cart with the items specified.
 
@@ -49,10 +51,29 @@ Create a cart with the items specified.
 The name of the new release cart.
 
 *-r* 'REPONAME'::
-Name of the reopsitory to install 'ITEMS' into.
+Name of the reopsitory to install 'ITEMS' into. The '-r' option may be
+given multiple times.
+
+*ITEM* ...::
+Items to add to the cart in repository 'REPONAME'.
+
+////////////////////////////////////////////////////////////////////////
+CREATE-LIKE
+-----------
+usage: juicer create-like 'CARTNAME' 'OLDCARTNAME' 'ITEM' [ item2 [ ...] ]
+
+Create a new cart based off an existing one.
+
+*CARTNAME*::
+The name of your new release cart.
+
+*OLDCARTNAME*::
+Cart to copy from.
 
 *ITEMS*::
-Items to add to the cart in repository 'REPONAME'.
+Items to update in the cart.
+
+////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////
@@ -67,14 +88,36 @@ The name of your release cart.
 ////////////////////////////////////////
 
 
-SHOW
-----
-usage: juicer show 'CARTNAME'
+HELLO
+------
+usage: juicer hello
 
-Print the contents of a cart.
+Test connection settings in *~/.juicer.conf*
+
+
+PULL
+----
+usage: juicer pull 'CARTNAME'
+
+Pulls a cart from the pulp server and saves it on your local machine.
 
 *CARTNAME*::
-The release cart to show.
+The name of the cart to pull.
+
+
+
+PUSH
+----
+usage: juicer push 'CARTNAME' [--in 'ENVIRONMENT' ...]
+
+Pushes/Updates a cart on the pulp server.
+
+*CARTNAME*::
+The name of the cart to push.
+
+*--in* 'ENVIRONMENT' ... ::
+The environments to limit search scope to.
+
 
 
 PROMOTE
@@ -91,88 +134,60 @@ The release cart to promote.
 ////////////////////////////////////////////////////////////////////////
 UPDATE
 ------
-usage: juicer update CARTNAME item1 [ item2 [ ... ] ]
+usage: juicer update 'CARTNAME' 'ITEM' ...
 
 Update a release cart with items.
 
 *CARTNAME*::
 The name of the release cart to update.
 
-*ITEMS*::
+*ITEM* ...::
 The items to update in the cart.
 ////////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////////////////////////////////////////////
-CREATE-LIKE
------------
-usage: juicer create-like CARTNAME OLDCARTNAME item1 [ item2 [ ...] ]
-
-Create a new cart based off an existing one.
-
-*CARTNAME*::
-The name of your new release cart.
-
-*OLDCARTNAME*::
-Cart to copy from.
-
-*ITEMS*::
-Items to update in the cart.
-////////////////////////////////////////////////////////////////////////
-
-
-PULL
-----
-usage: juicer pull 'CARTNAME'
-
-Pulls a cart from the pulp server and saves it on your local machine.
-
-*CARTNAME*::
-The name of the cart to pull.
-
-
-PUSH
-----
-usage: juicer push 'CARTNAME'
-
-Pushes/Updates a cart on the pulp server.
-
-*CARTNAME*::
-The name of the cart to push.
-
-
 SEARCH
 ------
-usage: juicer search 'ITEM' [-r 'REPO' [...]] [--in 'ENVIRONMENT' [...]]
+usage: juicer search 'ITEM' [-r 'REPO' ...] [--in 'ENVIRONMENT' ...]
 
-Search for an RPM ('item') in pulp
+Search for an RPM ('item') in pulp.
 
 *ITEM*::
 Name of the RPM to search for.
 
-*-r* 'repos' ['repos' ...]::
+*-r* 'REPO' ...::
 The repo(s) to limit search scope to.
 
-
-*--in* 'environment' ['environment' ...]::
+*--in* 'ENVIRONMENT' ...::
 The environments to limit search scope to.
+
+
+
+SHOW
+----
+usage: juicer show 'CARTNAME'
+
+Print the contents of a cart.
+
+*CARTNAME*::
+The release cart to show.
 
 
 UPLOAD
 ------
-usage: juicer upload [-r 'REPO' [...]] [item1 [ item2 [...] ] ] [--in 'ENVIRONMENT' [...]]
+usage: juicer upload -r 'REPO' 'ITEM' ... [--in 'ENVIRONMENT' ...]
 
-Upload multiple RPMs or files ('item') to REPO
+Upload multiple RPMs or files ('ITEM') to 'REPO'.
 
-*ITEM*::
-Name of the RPM or file to upload
+*-r* 'REPO' ...::
+The repo that 'ITEM' will be uploaded to. The '-r' option may be given
+multiple times.
 
-*-r* 'REPO' [...]::
-The repo(s) that will be uploaded to
+*ITEM* ...::
+Name of the RPM(s) or file(s) to upload.
 
-
-*--in* 'environment' ['environment' ...]::
-The environments which items will be uploaded to
+*--in* 'ENVIRONMENT' ...::
+The environments which items will be uploaded to.
 
 
 
@@ -239,8 +254,8 @@ The cart description is saved into *~/.juicer-carts/* as
     -----------
     ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
 
-Remote items will be synced automatically when we push this cart the
-repositories. Items synced are saved into
+Remote items will be synced automatically when we push this cart to
+the repositories. Items synced are saved into
 *~/.juicer-carts/*'CART-NAME'*-remotes/*.
 
 Similarly, when using the *upload* command, remotes are also synced.
@@ -255,8 +270,9 @@ FILES
 
 AUTHOR
 ------
-Juicer was written by GCA-PC, Red Hat, Inc.. This man page was written
-by Tim Bielawa <tbielawa@redhat.com>.
+Juicer was written by GCA-PC, Red Hat, Inc..
+
+This man page was written by Tim Bielawa <tbielawa@redhat.com>.
 
 
 
@@ -272,4 +288,4 @@ SEE ALSO
 --------
 *juicer-admin*(1), *juicer.conf*(5)
 
-The Juicer Homepage: http://github.com/abutcher/juicer/
+The Juicer Homepage: <http://github.com/abutcher/juicer/>

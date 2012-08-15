@@ -111,7 +111,7 @@ SHOW-USER
 usage: juicer-admin show-user LOGIN
 
 *LOGIN*::
-Login or username 
+Login or username
 
 
 UPDATE-USER

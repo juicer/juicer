@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/13/2012
+.\"      Date: 08/15/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.2.1
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "08/13/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "08/15/2012" "Juicer 0\&.2\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,20 +31,24 @@
 juicer \- create and push release carts, upload items to pulp
 .SH "SYNOPSIS"
 .sp
-juicer sub\-command [PARAMETERS \&...] [OPTIONS \&...]
+juicer [\-vvv] subcommand [PARAMETERS \&...] [OPTIONS \&...]
 .SH "DESCRIPTION"
 .sp
 A release cart is a description of what RPMs you want to push into a specific repository\&. A single cart can specify multiple repos and associated items\&. Release cart descriptions are saved so you can easily "promote" a cart to another environment\&.
 .sp
 RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle remote resources as well\&. Anywhere an option argument is described as \fIitem\fR you can give the path to a local directory, or rpm, as well as an RPM available over HTTP\&. HTTP directory indexes work as well; the page is parsed and links to rpm files are added to your cart\&.
-.SH "HELLO"
-.sp
-usage: juicer hello
-.sp
-Test connection settings in \fB~/\&.juicer\&.conf\fR
+.SH "COMMON OPTIONS"
+.PP
+\fB\-v\fR, \fB\-\-verbose\fR
+.RS 4
+Increase the verbosity (up to 3x)\&. In usage specify
+\fI\-v\fR
+\fBbefore\fR
+\fISUBCOMMAND\fR\&.
+.RE
 .SH "CREATE"
 .sp
-usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]
+usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIITEM\fR \&... [ \-r \fIREPONAME\fR \fIITEM\fR \&... ]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -57,34 +61,21 @@ The name of the new release cart\&.
 .RS 4
 Name of the reopsitory to install
 \fIITEMS\fR
-into\&.
+into\&. The
+\fI\-r\fR
+option may be given multiple times\&.
 .RE
 .PP
-\fBITEMS\fR
+\fBITEM\fR \&...
 .RS 4
 Items to add to the cart in repository
 \fIREPONAME\fR\&.
 .RE
-.SH "SHOW"
+.SH "HELLO"
 .sp
-usage: juicer show \fICARTNAME\fR
+usage: juicer hello
 .sp
-Print the contents of a cart\&.
-.PP
-\fBCARTNAME\fR
-.RS 4
-The release cart to show\&.
-.RE
-.SH "PROMOTE"
-.sp
-usage: juicer promote \fICARTNAME\fR
-.sp
-Promote a release cart to the next release environment in its directed graph\&.
-.PP
-\fBCARTNAME\fR
-.RS 4
-The release cart to promote\&.
-.RE
+Test connection settings in \fB~/\&.juicer\&.conf\fR
 .SH "PULL"
 .sp
 usage: juicer pull \fICARTNAME\fR
@@ -97,7 +88,7 @@ The name of the cart to pull\&.
 .RE
 .SH "PUSH"
 .sp
-usage: juicer push \fICARTNAME\fR
+usage: juicer push \fICARTNAME\fR [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Pushes/Updates a cart on the pulp server\&.
 .PP
@@ -105,45 +96,74 @@ Pushes/Updates a cart on the pulp server\&.
 .RS 4
 The name of the cart to push\&.
 .RE
+.PP
+\fB\-\-in\fR \fIENVIRONMENT\fR \&...
+.RS 4
+The environments to limit search scope to\&.
+.RE
+.SH "PROMOTE"
+.sp
+usage: juicer promote \fICARTNAME\fR
+.sp
+Promote a release cart to the next release environment in its directed graph\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The release cart to promote\&.
+.RE
 .SH "SEARCH"
 .sp
-usage: juicer search \fIITEM\fR [\-r \fIREPO\fR [\&...]] [\-\-in \fIENVIRONMENT\fR [\&...]]
+usage: juicer search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
-Search for an RPM (\fIitem\fR) in pulp
+Search for an RPM (\fIitem\fR) in pulp\&.
 .PP
 \fBITEM\fR
 .RS 4
 Name of the RPM to search for\&.
 .RE
 .PP
-\fB\-r\fR \fIrepos\fR [\fIrepos\fR \&...]
+\fB\-r\fR \fIREPO\fR \&...
 .RS 4
 The repo(s) to limit search scope to\&.
 .RE
 .PP
-\fB\-\-in\fR \fIenvironment\fR [\fIenvironment\fR \&...]
+\fB\-\-in\fR \fIENVIRONMENT\fR \&...
 .RS 4
 The environments to limit search scope to\&.
 .RE
+.SH "SHOW"
+.sp
+usage: juicer show \fICARTNAME\fR
+.sp
+Print the contents of a cart\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The release cart to show\&.
+.RE
 .SH "UPLOAD"
 .sp
-usage: juicer upload [\-r \fIREPO\fR [\&...]] [item1 [ item2 [\&...] ] ] [\-\-in \fIENVIRONMENT\fR [\&...]]
+usage: juicer upload \-r \fIREPO\fR \fIITEM\fR \&... [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
-Upload multiple RPMs or files (\fIitem\fR) to REPO
+Upload multiple RPMs or files (\fIITEM\fR) to \fIREPO\fR\&.
 .PP
-\fBITEM\fR
+\fB\-r\fR \fIREPO\fR \&...
 .RS 4
-Name of the RPM or file to upload
+The repo that
+\fIITEM\fR
+will be uploaded to\&. The
+\fI\-r\fR
+option may be given multiple times\&.
 .RE
 .PP
-\fB\-r\fR \fIREPO\fR [\&...]
+\fBITEM\fR \&...
 .RS 4
-The repo(s) that will be uploaded to
+Name of the RPM(s) or file(s) to upload\&.
 .RE
 .PP
-\fB\-\-in\fR \fIenvironment\fR [\fIenvironment\fR \&...]
+\fB\-\-in\fR \fIENVIRONMENT\fR \&...
 .RS 4
-The environments which items will be uploaded to
+The environments which items will be uploaded to\&.
 .RE
 .SH "EXAMPLES"
 .sp
@@ -269,7 +289,7 @@ JUICER\-DEPS
 .RE
 .\}
 .sp
-Remote items will be synced automatically when we push this cart the repositories\&. Items synced are saved into \fB~/\&.juicer\-carts/\fR\fICART\-NAME\fR\fB\-remotes/\fR\&.
+Remote items will be synced automatically when we push this cart to the repositories\&. Items synced are saved into \fB~/\&.juicer\-carts/\fR\fICART\-NAME\fR\fB\-remotes/\fR\&.
 .sp
 Similarly, when using the \fBupload\fR command, remotes are also synced\&.
 .SH "FILES"
@@ -279,7 +299,9 @@ Similarly, when using the \fBupload\fR command, remotes are also synced\&.
 \fB~/\&.juicer\-carts/\fR \(em Cart storage location
 .SH "AUTHOR"
 .sp
-Juicer was written by GCA\-PC, Red Hat, Inc\&.\&. This man page was written by Tim Bielawa <tbielawa@redhat\&.com>\&.
+Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.
+.sp
+This man page was written by Tim Bielawa <tbielawa@redhat\&.com>\&.
 .SH "COPYRIGHT"
 .sp
 Copyright \(co 2012, Red Hat, Inc\&.\&.
