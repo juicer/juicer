@@ -2,24 +2,21 @@
 
 ## From Source
 
-You'll need these dependencies to build/install:
+You'll need these dependencies to run Juicer:
 
 1. python-BeautifulSoup
-2. python-request >= 0.13.1
+2. python-requests >= 0.13.1
 3. rpm-python
-4. python-magic
-5. python-progressbar
-6. python >= 2.5
+4. python-progressbar
+5. python >= 2.5
 
-Building documentation requires the following deps. If you're building
-the RPMs, then these are required otherwise they are optional.
+When the dependencies are satisfied:
 
-1. asciidoc
+    $ sudo make install
 
 ## Building RPMs From Source
 
 We recommend that you install via RPM if you're pulling down the
 Juicer source:
 
-       $ make rpm
-       $ sudo yum localinstall /path/to/rpm
+    $ sudo make rpminstall
