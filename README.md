@@ -27,14 +27,15 @@ rpm packages through a Pulp installation.
 
 ### Example Workflow
 
-* Create a release cart `MyJuicyRelease` with items from the Internet
+Star by creating a release cart `MyJuicyRelease` with items from the Internet:
 
     $ juicer create MyJuicyRelease -r juicy-software https://my.sweet.host/pulp/repos/dev/juicy-software/juicer-0.1.7-1.fc17.noarch.rpm
 
-* Push the cart and its contents to pulp
+Then push the cart and its contents to pulp:
 
     $ juicer push MyJuicyRelease
 
-* Promote the cart to the next environment
+When you're satisfied, promote the cart to the next environment
+(perhaps `stage`, or `production`):
 
     $ juicer promote MyJuicyRelease
