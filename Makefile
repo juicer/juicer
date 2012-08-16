@@ -130,6 +130,12 @@ python:
 
 install:
 	python setup.py install
+	mkdir -p /usr/share/man/{man1,man5}
+	cp -v docs/man/man1/*.1 /usr/share/man/man1/
+	cp -v docs/man/man5/*.5 /usr/share/man/man5/
+	mkdir -p /usr/share/juicer
+	cp -v share/juicer/juicer.conf /usr/share/juicer/
+	cp -vr share/juicer/completions /usr/share/juicer/
 
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
