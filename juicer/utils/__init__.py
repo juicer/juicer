@@ -99,6 +99,7 @@ def _config_test(config):
             raise Exception("promotion_path: %s is not a config section" \
                                 % cfg['promotes_to'])
 
+
 def get_login_info():
     """
     Give back an array of dicts with the connection
@@ -386,11 +387,13 @@ def remote_url(connector, env, repo, filename):
 
     return link
 
+
 def rpms_signed_p(rpm_files=None):
     """
     Are these RPMs signed?
     """
     return all([check_sig(rpm_file) for rpm_file in rpm_files])
+
 
 def return_hdr(ts, package):
     """
@@ -404,7 +407,7 @@ def return_hdr(ts, package):
     except OSError:
         hdr = None
         return hdr
-    ts.setVSFlags(~(rpm.RPMVSF_NOMD5|rpm.RPMVSF_NEEDPAYLOAD))
+    ts.setVSFlags(~(rpm.RPMVSF_NOMD5 | rpm.RPMVSF_NEEDPAYLOAD))
     try:
         hdr = ts.hdrFromFdno(fdno)
     except rpm.error:
@@ -415,6 +418,7 @@ def return_hdr(ts, package):
     ts.setVSFlags(0)
     os.close(fdno)
     return hdr
+
 
 def get_sig_info(hdr):
     """
@@ -436,6 +440,7 @@ def get_sig_info(hdr):
 
     infotuple = (sigtype, sigdate, sigid)
     return error, infotuple
+
 
 def check_sig(package):
     """

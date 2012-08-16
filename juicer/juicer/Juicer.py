@@ -26,6 +26,7 @@ import rpm
 import hashlib
 import re
 
+
 class Juicer(object):
     def __init__(self, args):
         self.args = args
