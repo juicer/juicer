@@ -3,8 +3,8 @@
 In order to take advantage of the `requires_signature` functionality
 available to environments you can create an RpmSignPlugin.
 
-You can create your own RpmSignPlugin by extending the abstact class
-`juicer.common.RpmSignPlugin`.
+You can create your own `RpmSignPlugin` by subclassing the abstract
+class `juicer.common.RpmSignPlugin`.
 
     class RpmSignPlugin(object):
 
@@ -14,7 +14,7 @@ You can create your own RpmSignPlugin by extending the abstact class
 
 ## Example
 
-Here is an example RpmSignPlugin without any functionality.
+Here is an example `RpmSignPlugin` without any functionality.
 
     import juicer.common.RpmSignPlugin
 

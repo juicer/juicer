@@ -21,5 +21,5 @@ the RPMs, then these are required otherwise they are optional.
 We recommend that you install via RPM if you're pulling down the
 Juicer source:
 
-       make rpm
-       sudo yum localinstall /path/to/rpm
+       $ make rpm
+       $ sudo yum localinstall /path/to/rpm
