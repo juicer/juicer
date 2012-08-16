@@ -1,7 +1,7 @@
 # Plugins
 
 In order to take advantage of the `requires_signature` functionality
-available to environments you can create an RpmSignPlugin.
+available to environments you can create an `RpmSignPlugin`.
 
 You can create your own `RpmSignPlugin` by subclassing the abstract
 class `juicer.common.RpmSignPlugin`.
