@@ -80,7 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/juicer/__init__.py*
 %{python_sitelib}/juicer/common
 %{python_sitelib}/juicer/utils
-%doc README.md docs/markdown
+%doc README.md RELEASES.md docs/markdown LICENSE
 %doc %{_mandir}/man1/juicer*
 %doc %{_mandir}/man5/juicer*
 %{_datadir}/juicer*
@@ -93,11 +93,15 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 %changelog
 * Wed Aug 15 2012 Tim Bielawa <tim@redhat.com> - 0.3.0-1
-- Release of 0.3. 
-
-* Thu Jul 26 2012 Tim Bielawa <tim@redhat.com> - 0.2.1-1
-- Split into juicer/juicer-admin/juicer-common packages
-- Include a base config file.
+- Release of 0.3.0
+- Adds Cart promotion
+- Adds RPM signing support
+- Adds progress bar during uploads
+- Split into 3 packages
+- Improved search output (links to results now included!)
+- Clean up some error messages/stack traces and exit cleanly
+- Password prompt for user creation/update
+- Reworked config file syntax
 
 * Sun Jul 22 2012 Tim Bielawa <tim@redhat.com> - 0.2.0-1
 - First actual release!

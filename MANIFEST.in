@@ -2,5 +2,7 @@ graft docs/markdown
 include docs/man/man1/*.1
 include docs/man/man5/*.5
 include README.md
+include RELEASES.md
+include LICENSE
 graft completions
 graft share
