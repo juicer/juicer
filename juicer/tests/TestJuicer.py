@@ -46,6 +46,13 @@ class TestJuicer(unittest.TestCase):
         pulp = j(self.args)
         mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
 
+        # test pushing a cart
+        self.args = self.parser.parser.parse_args(('create %s -r hats %s' \
+                % (self.cname, rpm_path)).split())
+        pulp = j(self.args)
+        cart = juicer.common.Cart.Cart(self.args.cartname, autoload=True, autosync=True)
+        mute()(pulp.push)(cart=cart)
+
         # test promoting a cart
         cart = juicer.common.Cart.Cart(self.cname, autoload=True)
         old_env = cart.current_env
