@@ -194,7 +194,7 @@ class Juicer(object):
 
         if _r.status_code == Constants.PULP_POST_CONFLICT:
             juicer.utils.Log.log_debug("Metadata update in %s already in progress...: " % \
-                                           (repoid, str(_r.content)))
+                                           repoid)
             while _r.status_code == Constants.PULP_POST_CONFLICT:
                 time.sleep(3)
                 _r = self.connectors[env].post(query)
