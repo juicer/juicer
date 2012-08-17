@@ -42,13 +42,18 @@ Increase the verbosity (up to 3x). In usage specify '-v' *before* 'SUBCOMMAND'.
 
 CREATE
 ------
-usage: juicer create 'CARTNAME' -r 'REPONAME' 'ITEM' ... [ -r
-'REPONAME' 'ITEM' ... ]
+usage: juicer create 'CARTNAME' [-f manifest] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
 
 Create a cart with the items specified.
 
 *CARTNAME*::
 The name of the new release cart.
+
+*-f* 'manifest'::
+Create a cart from a manifest file. A manifest file is written in
+the following format:
+
+name: version-release
 
 *-r* 'REPONAME'::
 Name of the reopsitory to install 'ITEMS' into. The '-r' option may be

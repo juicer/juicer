@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/16/2012
+.\"      Date: 08/17/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.3.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "08/16/2012" "Juicer 0\&.3\&.0" "Pulp repos and release carts"
+.TH "JUICER" "1" "08/17/2012" "Juicer 0\&.3\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -48,7 +48,7 @@ Increase the verbosity (up to 3x)\&. In usage specify
 .RE
 .SH "CREATE"
 .sp
-usage: juicer create \fICARTNAME\fR \-r \fIREPONAME\fR \fIITEM\fR \&... [ \-r \fIREPONAME\fR \fIITEM\fR \&... ]
+usage: juicer create \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -56,6 +56,13 @@ Create a cart with the items specified\&.
 .RS 4
 The name of the new release cart\&.
 .RE
+.PP
+\fB\-f\fR \fImanifest\fR
+.RS 4
+Create a cart from a manifest file\&. A manifest file is written in the following format:
+.RE
+.sp
+name: version\-release
 .PP
 \fB\-r\fR \fIREPONAME\fR
 .RS 4

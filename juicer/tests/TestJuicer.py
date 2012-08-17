@@ -60,6 +60,19 @@ class TestJuicer(unittest.TestCase):
             raise Exception("%s was in %s before and is in %s now!" % \
                     (cart.name, old_env, cart.current_env))
 
+        # test creating a cart from manifest
+        new_cname = 'CRQ1DAY'
+
+        self.args = self.parser.parser.parse_args(('create %s -f %s' \
+                % (new_cname, './share/juicer/rpm-manifest.yaml')).split())
+        pulp = j(self.args)
+        mute()(pulp.create_manifest)(cart_name=self.args.cartname, manifest=self.args.f)
+
+        cart = juicer.common.Cart.Cart(new_cname, autoload=True)
+
+        if cart.is_empty():
+            raise Exception("%s has no rpms included!" % new_cname)
+ 
     def test_show(self):
         self.args = self.parser.parser.parse_args(('show %s' % self.cname).split())
         pulp = j(self.args)

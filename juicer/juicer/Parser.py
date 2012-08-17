@@ -44,7 +44,7 @@ class Parser(object):
         # Create the 'create' sub-parser
         parser_create = subparsers.add_parser('create', \
                 help='Create a cart with the items specified.', \
-                usage='%(prog)s CARTNAME -r REPONAME items ... [ -r REPONAME items ...]')
+                usage='%(prog)s CARTNAME [-f rpm-manifest] [-r REPONAME items ... [ -r REPONAME items ...]]')
 
         parser_create.add_argument('cartname', metavar='cart-name', \
                                        help='Cart name')
@@ -53,6 +53,9 @@ class Parser(object):
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name')
+
+        parser_create.add_argument('-f', metavar='rpm-manifest', \
+                                    help='RPM manifest for cart')
 
         parser_create.set_defaults(j=juicer.juicer.create)
 

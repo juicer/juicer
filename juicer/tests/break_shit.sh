@@ -15,18 +15,23 @@ function source_dir() {
 # go back to where we were
 function go_home() {
     popd > /dev/null
+
+    rm $EMPTY_MANIFEST
 }
 
 # source in hacking/setup-env
 function setup() {
     CART_FILE=~/.juicer-carts/orange.json
     TEST_RPM=./share/juicer/empty-0.0.1-1.fc17.x86_64.rpm
+    EMPTY_MANIFEST=./share/juicer/empty.yaml
 
     if [ -f $CART_FILE ]; then
         rm $CART_FILE
     fi
 
     . ./hacking/setup-env > /dev/null
+
+    touch $EMPTY_MANIFEST
 }
 
 # proceed to break shit and display error messages
@@ -38,6 +43,14 @@ function break_shit() {
 
     echo "Create a cart with bad rpm..."
     run ./bin/juicer create orange -r citrus ~/Downloads/pesticide.rpm
+    echo -e "\n\n"
+
+    echo "Create a cart from an empty manifest..."
+    run ./bin/juicer create orange -f share/juicer/empty.yaml
+    echo -e "\n\n"
+
+    echo "Show a non-existant cart..."
+    run ./bin/juicer create orange -f share/juicer/nothere.yaml
     echo -e "\n\n"
 
     echo "Show a non-existant cart..."
