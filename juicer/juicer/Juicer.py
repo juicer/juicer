@@ -129,8 +129,7 @@ class Juicer(object):
         upload_id = self._init_up(name=package_basename, cksum=cksum, size=size)
 
         #create a statusbar
-        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            pbar = ProgressBar(size)
+        pbar = ProgressBar(size)
 
         # read in rpm
         upload_flag = False
@@ -141,10 +140,8 @@ class Juicer(object):
             total_seeked += len(rpm_data)
             juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
             upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
-            if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-                pbar.update(len(rpm_data))
-        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            pbar.finish()
+            pbar.update(len(rpm_data))
+        pbar.finish()
         rpm_fd.close()
 
         juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
