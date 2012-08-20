@@ -572,21 +572,21 @@ class Juicer(object):
         juicer.common.RpmSignPlugin. If available, we'll call
         rpm_sign_plugin.sign_rpms(rpm_files) and return.
         """
-        juicer.utils.Log.log_debug("%s requires RPM signatures ... checking for rpm_sign_plugin definition ...", env)
+        juicer.utils.Log.log_notice("%s requires RPM signatures ... checking for rpm_sign_plugin definition ...", env)
         module_name = self._defaults['rpm_sign_plugin']
         if self._defaults['rpm_sign_plugin']:
-            juicer.utils.Log.log_debug("found rpm_sign_plugin definition %s ... attempting to load ...",
+            juicer.utils.Log.log_notice("found rpm_sign_plugin definition %s ... attempting to load ...",
                                        self._defaults['rpm_sign_plugin'])
 
             try:
                 rpm_sign_plugin = __import__(module_name, fromlist=[module_name])
-                juicer.utils.Log.log_debug("successfully loaded %s ...", module_name)
+                juicer.utils.Log.log_notice("successfully loaded %s ...", module_name)
                 plugin_object = getattr(rpm_sign_plugin, module_name.split('.')[-1])
                 signer = plugin_object()
                 signer.sign_rpms(rpm_files)
-            except ImportError:
-                juicer.utils.Log.log_debug("there was a problem using %s ... skipping! you'll have to sign these yourself...",
-                                           module_name)
+            except ImportError as e:
+                juicer.utils.Log.log_notice("there was a problem using %s ... error: %s",
+                                            module_name, e)
         else:
-            juicer.utils.Log.log_info("did not find an rpm_sign_plugin! you'll have to sign these yourself ...")
+            juicer.utils.Log.log_info("did not find an rpm_sign_plugin!")
         return True
