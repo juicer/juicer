@@ -42,24 +42,6 @@ class Juicer(object):
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)
 
-    # forces pulp to generate metadata for the given repo
-    def _generate_metadata(self, env, repoid):
-        query = '/repositories/' + repoid + '/generate_metadata/'
-
-        _r = self.connectors[env].post(query)
-
-        juicer.utils.Log.log_debug("Attempted metadata update for repo: %s -> %s" % \
-                                       (repoid, str(_r.content)))
-
-        if _r.status_code == Constants.PULP_POST_CONFLICT:
-            juicer.utils.Log.log_debug("Metadata update in %s already in progress...: " % \
-                                           repoid)
-            while _r.status_code == Constants.PULP_POST_CONFLICT:
-                time.sleep(3)
-                _r = self.connectors[env].post(query)
-        if not _r.status_code == Constants.PULP_POST_ACCEPTED:
-            _r.raise_for_status()
-
     # this is used to upload files to pulp
     def upload(self, env, repo, items=[]):
         """
@@ -102,8 +84,6 @@ class Juicer(object):
                 rpm_id = juicer.utils.upload_rpm(item, repoid, self.connectors[env])
             else:
                 file_id = juicer.utils.upload_file(item, repoid, self.connectors[env])
-
-        self._generate_metadata(env, repoid)
 
         return True
 

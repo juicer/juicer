@@ -75,6 +75,26 @@ class Upload(object):
             #self.connector.delete('/files/' + fileid + '/')
             _r.raise_for_status()
 
+    def _generate_metadata(self):
+        """
+        causes pulp to regenerate the metadata for the repository
+        """
+        query = '/repositories/' + self.repoid + '/generate_metadata/'
+
+        _r = self.connector.post(query)
+
+        juicer.utils.Log.log_debug("Attempted metadata update for repo: %s -> %s" % \
+                                       (self.repoid, str(_r.content)))
+
+        if _r.status_code == Constants.PULP_POST_CONFLICT:
+            juicer.utils.Log.log_debug("Metadata update in %s already in progress...: " % \
+                                           self.repoid)
+            while _r.status_code == Constants.PULP_POST_CONFLICT:
+                time.sleep(3)
+                _r = self.connector.post(query)
+        if not _r.status_code == Constants.PULP_POST_ACCEPTED:
+            _r.raise_for_status()
+
     def append(self, fdata, query='/services/upload/append/'):
         uri = query + self.uid + '/'
         _r = self.connector.put(uri, fdata, log_data=False, auto_create_json_str=False)
@@ -117,6 +137,8 @@ class Upload(object):
             self._include_rpm_in_repo(final_id)
         elif ftype == 'file':
             self._include_file_in_repo(final_id)
+
+        self._generate_metadata()
 
         return final_id
 
