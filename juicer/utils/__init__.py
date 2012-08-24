@@ -497,7 +497,7 @@ def parse_manifest(manifest):
     return rpm_list
 
 
-def upload_rpm(rpm_path, connector):
+def upload_rpm(rpm_path, repoid, connector):
     """
     upload an rpm into pulp
 
@@ -522,7 +522,7 @@ def upload_rpm(rpm_path, connector):
     juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" %     size)   
 
     # initiate upload
-    upload = juicer.utils.Upload.Upload(package_basename, cksum, size, connector)
+    upload = juicer.utils.Upload.Upload(package_basename, cksum, size, repoid, connector)
 
     #create a statusbar
     pbar = ProgressBar(size)
@@ -551,7 +551,7 @@ def upload_rpm(rpm_path, connector):
     return rpm_id
 
 
-def upload_file(file_path, connector):
+def upload_file(file_path, repoid, connector):
     fd = open(file_path, 'rb')
     name = os.path.basename(file_path)
     cksum = hashlib.sha256(file_path).hexdigest()
@@ -561,7 +561,7 @@ def upload_file(file_path, connector):
     juicer.utils.Log.log_notice("Expected amount to seek: %s (file size by os.path.getsize)", size)
 
     # initiate upload
-    upload = juicer.utils.Upload.Upload(name, cksum, size, connector)
+    upload = juicer.utils.Upload.Upload(name, cksum, size, repoid, connector)
 
     # create a statusbar
     if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:

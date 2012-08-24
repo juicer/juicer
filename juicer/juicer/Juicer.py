@@ -42,31 +42,6 @@ class Juicer(object):
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)
 
-    # provides a simple interface to include an rpm in a pulp repo
-    def _include_rpm_in_repo(self, pkgid, env, repoid):
-        query = '/repositories/' + repoid + '/add_package/'
-        data = {'repoid': repoid,
-                'packageid': [pkgid]}
-
-        _r = self.connectors[env].post(query, data)
-
-        if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
-            self.connectors[env].delete('/packages/' + pkgid + '/')
-            _r.raise_for_status()
-
-    def _include_file_in_repo(self, fileid, env, repoid):
-        query = '/repositories/' + repoid + '/add_file/'
-        data = {'fileids': [fileid]}
-
-        _r = self.connectors[env].post(query, data)
-
-        if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
-            print juicer.utils.load_json_str(_r.content)
-            #self.connectors[env].delete('/files/' + fileid + '/')
-            _r.raise_for_status()
-
     # forces pulp to generate metadata for the given repo
     def _generate_metadata(self, env, repoid):
         query = '/repositories/' + repoid + '/generate_metadata/'
@@ -124,11 +99,9 @@ class Juicer(object):
             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
 
             if juicer.utils.is_rpm(item):
-                rpm_id = juicer.utils.upload_rpm(item, self.connectors[env])
-                self._include_rpm_in_repo(rpm_id, env, repoid)
+                rpm_id = juicer.utils.upload_rpm(item, repoid, self.connectors[env])
             else:
-                file_id = juicer.utils.upload_file(item, self.connectors[env])
-                self._include_file_in_repo(file_id, env, repoid)
+                file_id = juicer.utils.upload_file(item, repoid, self.connectors[env])
 
         self._generate_metadata(env, repoid)
 

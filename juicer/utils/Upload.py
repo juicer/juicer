@@ -20,7 +20,7 @@ from juicer.common import Constants
 
 
 class Upload(object):
-    def __init__(self, name, cksum, size, connector, query='/services/upload/'):
+    def __init__(self, name, cksum, size, repoid, connector, query='/services/upload/'):
         """
         in addition to creating an upload object, this
         initializes the upload of an rpm into pulp
@@ -34,6 +34,7 @@ class Upload(object):
         self.connector = connector
         self.cksum = cksum
         self.size = size
+        self.repoid = repoid
 
         data = {'name': name,
                 'checksum': cksum,
@@ -43,6 +44,36 @@ class Upload(object):
         self.uid = juicer.utils.load_json_str(_r.content)['id']
 
         juicer.utils.Log.log_debug("Initialized upload process. POST returned with data: %s" % str(_r.    content))
+
+    def _include_rpm_in_repo(self, pkgid):
+        """
+        includes an rpm in the designated repo
+        """
+        query = '/repositories/' + self.repoid + '/add_package/'
+        data = {'repoid': self.repoid,
+                'packageid': [pkgid]}
+
+        _r = self.connector.post(query, data)
+
+        if not _r.status_code == Constants.PULP_POST_OK:
+            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
+            self.connectors.delete('/packages/' + pkgid + '/')
+            _r.raise_for_status()
+
+    def _include_file_in_repo(self, fileid):
+        """
+        includes a file in the designated repo
+        """
+        query = '/repositories/' + self.repoid + '/add_file/'
+        data = {'fileids': [fileid]}
+
+        _r = self.connector.post(query, data)
+
+        if not _r.status_code == Constants.PULP_POST_OK:
+            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
+            print juicer.utils.load_json_str(_r.content)
+            #self.connector.delete('/files/' + fileid + '/')
+            _r.raise_for_status()
 
     def append(self, fdata, query='/services/upload/append/'):
         uri = query + self.uid + '/'
@@ -80,5 +111,12 @@ class Upload(object):
         juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
         juicer.utils.Log.log_debug(juicer.utils.load_json_str(_r.content))
 
-        return juicer.utils.load_json_str(_r.content)['id']
+        final_id = juicer.utils.load_json_str(_r.content)['id']
+
+        if ftype == 'rpm':
+            self._include_rpm_in_repo(final_id)
+        elif ftype == 'file':
+            self._include_file_in_repo(final_id)
+
+        return final_id
 
