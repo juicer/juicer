@@ -20,11 +20,11 @@ from juicer.utils.ProgressBar import ProgressBar
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
+import juicer.utils.Upload
 import os
 import time
-import rpm
-import hashlib
 import re
+import hashlib
 
 
 class Juicer(object):
@@ -41,119 +41,6 @@ class Juicer(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)
-
-    # starts the 3-step upload process
-    def _init_up(self, query='/services/upload/', name='', cksum='', size='', \
-            env=''):
-        data = {'name': name,
-                'checksum': cksum,
-                'size': size}
-
-        if env == '':
-            env = self._defaults['cart_dest']
-
-        _r = self.connectors[env].post(query, data)
-        uid = juicer.utils.load_json_str(_r.content)['id']
-
-        juicer.utils.Log.log_debug("Initialized upload process. POST returned with data: %s" % str(_r.content))
-
-        return uid
-
-    # continues 3-step upload process. this is where actual data transfer
-    # occurs!
-    def _append_up(self, query='/services/upload/append/', uid='', fdata='', env=''):
-        uri = query + uid + '/'
-
-        if env == '':
-            env = self._defaults['cart_dest']
-
-        juicer.utils.Log.log_notice("Appending to: %s" % uri)
-        _r = self.connectors[env].put(uri, fdata, log_data=False, auto_create_json_str=False)
-
-        juicer.utils.Log.log_debug("Continuing upload with append. PUT returned with data: %s" % str(_r.content))
-
-        return juicer.utils.load_json_str(_r.content)
-
-    # finalizes the 3-step upload process. this is where metadata is set
-    def _import_up(self, query='/services/upload/import/', uid='', name='', \
-                    ftype='rpm', cksum='', desc='', htype='md5', nvrea='', size='', \
-                    lic='', group='', vendor='', req='', env=''):
-        if env == '':
-            env = self._defaults['cart_dest']
-
-        data = {'uploadid': uid,
-                'metadata': {
-                    'type': ftype,
-                    'checksum': cksum,
-                    'description': desc,
-                    'hashtype': htype,
-                    'pkgname': name,
-                    'nvrea': nvrea,
-                    'size': size,
-                    'license': lic,
-                    'group': group,
-                    'vendor': vendor,
-                    'requires': req}}
-
-        _r = self.connectors[env].post(query, data)
-
-        if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_debug("Import error importing '%s'... server said: \n %s", name,
-                                       juicer.utils.load_json_str(_r.content))
-            _r.raise_for_status()
-
-        juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
-        juicer.utils.Log.log_debug(juicer.utils.load_json_str(_r.content))
-        return juicer.utils.load_json_str(_r.content)['id']
-
-    # provides a simple interface for the pulp upload API
-    def _upload_rpm(self, package, env):
-        ts = rpm.TransactionSet()
-        ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
-
-        rpm_fd = open(package, 'rb')
-        pkg = ts.hdrFromFdno(rpm_fd)
-        name = pkg['name']
-        version = pkg['version']
-        release = pkg['release']
-        epoch = 0
-        arch = pkg['arch']
-        nvrea = tuple((name, version, release, epoch, arch))
-        cksum = hashlib.md5(package).hexdigest()
-        size = os.path.getsize(package)
-        package_basename = os.path.basename(package)
-
-        juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" % size)
-
-        # initiate upload
-        upload_id = self._init_up(name=package_basename, cksum=cksum, size=size)
-
-        #create a statusbar
-        pbar = ProgressBar(size)
-
-        # read in rpm
-        upload_flag = False
-        total_seeked = 0
-        rpm_fd.seek(0)
-        while total_seeked < size:
-            rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
-            total_seeked += len(rpm_data)
-            juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
-            upload_flag = self._append_up(uid=upload_id, fdata=rpm_data)
-            pbar.update(len(rpm_data))
-        pbar.finish()
-        rpm_fd.close()
-
-        juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
-
-        # finalize upload
-        rpm_id = ''
-        if upload_flag == True:
-            rpm_id = self._import_up(uid=upload_id, name=package_basename, cksum=cksum, \
-                nvrea=nvrea, size=size)
-
-        juicer.utils.Log.log_debug("RPM upload complete. New 'packageid': %s" % rpm_id)
-        return rpm_id
 
     # provides a simple interface to include an rpm in a pulp repo
     def _include_rpm_in_repo(self, pkgid, env, repoid):
@@ -198,48 +85,6 @@ class Juicer(object):
         if not _r.status_code == Constants.PULP_POST_ACCEPTED:
             _r.raise_for_status()
 
-    def _upload_file(self, file, env):
-        fd = open(file, 'rb')
-        name = os.path.basename(file)
-        cksum = hashlib.sha256(file).hexdigest()
-        size = os.path.getsize(file)
-        nvrea = tuple((name, 0, 0, 0, 'noarch'))
-
-        juicer.utils.Log.log_notice("Expected amount to seek: %s (file size by os.path.getsize)", size)
-
-        # initiate upload
-        upload_id = self._init_up(name=name, cksum=cksum, size=size)
-
-        # create a statusbar
-        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            pbar = ProgressBar(size)
-
-        # read in file
-        upload_flag = False
-        total_seeked = 0
-        fd.seek(0)
-
-        while total_seeked < size:
-            file_data = fd.read(Constants.UPLOAD_AT_ONCE)
-            total_seeked += len(file_data)
-            juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
-            upload_flag = self._append_up(uid=upload_id, fdata=file_data)
-            if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-                pbar.update(len(file_data))
-        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            pbar.finish()
-        fd.close()
-
-        juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
-
-        # finalize upload
-        file_id = ''
-        if upload_flag == True:
-            file_id = self._import_up(uid=upload_id, name=name, cksum=cksum, \
-                                          ftype='file', nvrea=nvrea, size=size, htype='sha256')
-        juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
-        return file_id
-
     # this is used to upload files to pulp
     def upload(self, env, repo, items=[]):
         """
@@ -279,10 +124,10 @@ class Juicer(object):
             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
 
             if juicer.utils.is_rpm(item):
-                rpm_id = self._upload_rpm(item, env)
+                rpm_id = juicer.utils.upload_rpm(item, self.connectors[env])
                 self._include_rpm_in_repo(rpm_id, env, repoid)
             else:
-                file_id = self._upload_file(item, env)
+                file_id = juicer.utils.upload_file(item, self.connectors[env])
                 self._include_file_in_repo(file_id, env, repoid)
 
         self._generate_metadata(env, repoid)

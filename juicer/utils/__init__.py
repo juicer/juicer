@@ -19,6 +19,7 @@
 from juicer.common import Constants
 from juicer.common.Connectors import Connectors
 from functools import wraps
+from juicer.utils.ProgressBar import ProgressBar
 import ConfigParser
 import cStringIO
 import fnmatch
@@ -28,6 +29,7 @@ import magic
 import os
 import os.path
 import rpm
+import hashlib
 import sys
 import requests
 import shutil
@@ -493,3 +495,99 @@ def parse_manifest(manifest):
             rpm_list.append({'name': _m.group(1), 'version': _m.group(3), 'release': _m.group(4)})
 
     return rpm_list
+
+
+def upload_rpm(rpm_path, connector):
+    """
+    upload an rpm into pulp
+
+    rpm_path: path to an rpm
+    connector: the connector to use for interacting with pulp
+    """
+    ts = rpm.TransactionSet()
+    ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+
+    rpm_fd = open(rpm_path, 'rb')
+    pkg = ts.hdrFromFdno(rpm_fd)
+    name = pkg['name']
+    version = pkg['version']
+    release = pkg['release']
+    epoch = 0
+    arch = pkg['arch']
+    nvrea = tuple((name, version, release, epoch, arch))
+    cksum = hashlib.md5(rpm_path).hexdigest()
+    size = os.path.getsize(rpm_path)
+    package_basename = os.path.basename(rpm_path)
+
+    juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" %     size)   
+
+    # initiate upload
+    upload = juicer.utils.Upload.Upload(package_basename, cksum, size, connector)
+
+    #create a statusbar
+    pbar = ProgressBar(size)
+
+    # read in rpm
+    upload_flag = False
+    total_seeked = 0
+    rpm_fd.seek(0)
+    while total_seeked < size:
+        rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
+        total_seeked += len(rpm_data)
+        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data),          total_seeked))
+        upload_flag = upload.append(fdata=rpm_data)
+        pbar.update(len(rpm_data))
+    pbar.finish()
+    rpm_fd.close()
+
+    juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
+
+    # finalize upload
+    rpm_id = ''
+    if upload_flag == True:
+        rpm_id = upload.finalize(nvrea=nvrea)
+
+    juicer.utils.Log.log_debug("RPM upload complete. New 'packageid': %s" % rpm_id)
+    return rpm_id
+
+
+def upload_file(file_path, connector):
+    fd = open(file_path, 'rb')
+    name = os.path.basename(file_path)
+    cksum = hashlib.sha256(file_path).hexdigest()
+    size = os.path.getsize(file_path)
+    nvrea = tuple((name, 0, 0, 0, 'noarch'))
+
+    juicer.utils.Log.log_notice("Expected amount to seek: %s (file size by os.path.getsize)", size)
+
+    # initiate upload
+    upload = juicer.utils.Upload.Upload(name, cksum, size, connector)
+
+    # create a statusbar
+    if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
+        pbar = ProgressBar(size)
+
+    # read in file
+    upload_flag = False
+    total_seeked = 0
+    fd.seek(0)
+
+    while total_seeked < size:
+        file_data = fd.read(Constants.UPLOAD_AT_ONCE)
+        total_seeked += len(file_data)
+        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data),         total_seeked))
+        upload_flag = upload.append(fdata=file_data)
+        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
+            pbar.update(len(file_data))
+    if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
+        pbar.finish()
+    fd.close()
+
+    juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
+
+    # finalize upload
+    file_id = ''
+    if upload_flag == True:
+        file_id = upload.finalize(ftype='file', htype='sha256', nvrea=nvrea)
+    juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
+    return file_id
