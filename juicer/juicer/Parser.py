@@ -49,12 +49,14 @@ class Parser(object):
         parser_create.add_argument('cartname', metavar='cart-name', \
                                        help='Cart name')
 
-        parser_create.add_argument('-r', metavar=('reponame', 'item'), \
+        cgroup = parser_create.add_mutually_exclusive_group(required=True)
+
+        cgroup.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name')
 
-        parser_create.add_argument('-f', metavar='rpm-manifest', \
+        cgroup.add_argument('-f', metavar='rpm-manifest', \
                                     help='RPM manifest for cart')
 
         parser_create.set_defaults(j=juicer.juicer.create)

@@ -38,6 +38,10 @@ function setup() {
 function break_shit() {
     echo "Break shit in juicer..."
     echo "Create an empty cart..."
+    run ./bin/juicer create orange
+    echo -e "\n\n"
+
+    echo "Create a cart with an empty repo..."
     run ./bin/juicer create orange -r citrus
     echo -e "\n\n"
 
