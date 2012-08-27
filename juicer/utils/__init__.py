@@ -33,6 +33,7 @@ import sys
 import requests
 import shutil
 import re
+import urllib2
 try:
     import json
     json
@@ -589,3 +590,21 @@ def upload_file(file_path, repoid, connector):
         file_id = upload.finalize(ftype='file', htype='sha256', nvrea=nvrea)
     juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
     return file_id
+
+
+def get_cart(base_url, env, cart_name):
+    """
+    returns a dict object representing a cart stored in pulp
+    
+    base_url: a str for the base_url (eg: http://sweet.pulp.repo/pulp/api/)
+    env: a str with the the name of the environement (eg: prod)
+    cart_name: a str with the name of the cart to get
+    """
+    base_url = base_url.replace('/pulp/api/', '/pulp/repos')
+    url = '%s/%s/carts/%s.json' % (base_url, env, cart_name)
+
+    rsock = urllib2.urlopen(url)
+    data = rsock.read()
+    rsock.close()
+
+    return load_json_str(data)
