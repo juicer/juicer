@@ -25,7 +25,6 @@ import cStringIO
 import fnmatch
 import juicer.utils.Log
 import juicer.utils.Remotes
-import magic
 import os
 import os.path
 import rpm
@@ -338,18 +337,17 @@ def mute(returns_output=False):
 
 def is_rpm(path):
     """
-    Use the python 'magic' library to find the type of file we're
-    dealing with.
+    Attempt to validate the path as an actual (S)RPM. If an exception
+    is raised then this is not an RPM.
     """
-    rpm_types = [Constants.MAGIC_RPM_BIN, Constants.MAGIC_RPM_NOARCH_BIN, Constants.MAGIC_RPM_SRC]
-    m = magic.open(magic.NONE)
-    m.load()
 
-    path_type = m.file(path)
-
-    if any(rpm_type in path_type for rpm_type in rpm_types):
+    try:
+        ts = rpm.TransactionSet()
+        fd = os.open(path, os.O_RDONLY)
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
         return True
-    else:
+    except:
         return False
 
 
@@ -519,7 +517,7 @@ def upload_rpm(rpm_path, repoid, connector):
     size = os.path.getsize(rpm_path)
     package_basename = os.path.basename(rpm_path)
 
-    juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" %     size)   
+    juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" %     size)
 
     # initiate upload
     upload = juicer.utils.Upload.Upload(package_basename, cksum, size, repoid, connector)
