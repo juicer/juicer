@@ -223,7 +223,7 @@ class Juicer(object):
         cart.load(cart_name)
         return str(cart)
 
-    def search(self, name='', query='/services/search/packages/'):
+    def search(self, name='', search_carts=False, query='/services/search/packages/'):
         data = {'regex': True,
                 'name': name}
 
@@ -260,29 +260,30 @@ class Juicer(object):
 
                 juicer.utils.Log.log_info('%s %s %s' % (package['name'], package['version'], link))
 
-        # if the package is in a cart, show the cart name
-        juicer.utils.Log.log_info('\nCarts:')
+        if search_carts:
+            # if the package is in a cart, show the cart name
+            juicer.utils.Log.log_info('\nCarts:')
 
-        cart_dest = self._defaults['cart_dest']
-        url_base = self.connectors[cart_dest].base_url
-        remote = '/repositories/carts-%s/files/' % cart_dest
-        regex = re.compile('.*%s.*' % name)
+            cart_dest = self._defaults['cart_dest']
+            url_base = self.connectors[cart_dest].base_url
+            remote = '/repositories/carts-%s/files/' % cart_dest
+            regex = re.compile('.*%s.*' % name)
 
-        _r = self.connectors[cart_dest].get(remote)
-        if not _r.status_code == Constants.PULP_GET_OK:
-            raise IOError("Couldn't get cart list")
+            _r = self.connectors[cart_dest].get(remote)
+            if not _r.status_code == Constants.PULP_GET_OK:
+                raise IOError("Couldn't get cart list")
 
-        cart_list = juicer.utils.load_json_str(_r.content)
+            cart_list = juicer.utils.load_json_str(_r.content)
 
-        for cart in cart_list:
-            cname = cart['filename'].rstrip('.json')
-            repos_items = juicer.utils.get_cart(self.connectors[cart_dest].base_url, cart_dest, cname)['repos_items']
+            for cart in cart_list:
+                cname = cart['filename'].rstrip('.json')
+                repos_items = juicer.utils.get_cart(self.connectors[cart_dest].base_url, cart_dest, cname)['repos_items']
 
-            flag = False
-            for repo in repos_items:
-                for items in repos_items[repo]:
-                    if re.match(regex, items):
-                        juicer.utils.Log.log_info(cname)
+                flag = False
+                for repo in repos_items:
+                    for items in repos_items[repo]:
+                        if re.match(regex, items):
+                            juicer.utils.Log.log_info(cname)
 
     def hello(self):
         """

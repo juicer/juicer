@@ -64,7 +64,7 @@ def push(args):
 
 def search(args):
     pulp = j(args)
-    pulp.search(name=args.rpmname)
+    pulp.search(name=args.rpmname, search_carts=args.carts)
 
 
 def upload(args):

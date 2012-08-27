@@ -151,6 +151,10 @@ class Parser(object):
         parser_search.add_argument('-r', nargs='*', metavar='repos', \
                 default=[], help='The repo(s) to limit search scope to.')
 
+        parser_search.add_argument('-c', '--carts', dest='carts', \
+                action='store_true', \
+                help="Search for the package in carts as well")
+
         parser_search.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 default=[self._default_cart_dest], \
