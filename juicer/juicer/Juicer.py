@@ -96,7 +96,7 @@ class Juicer(object):
         juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart.name)
 
         if not env:
-            env = self._defaults['cart_dest']
+            env = self._defaults['start_in']
 
         for repo, items in cart.iterrepos():
             if not juicer.utils.repo_exists_p(repo, self.connectors[env], env):
@@ -130,7 +130,7 @@ class Juicer(object):
         juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart.name)
 
         if not env:
-            env = self._defaults['cart_dest']
+            env = self._defaults['start_in']
 
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cart.name)
 
@@ -147,8 +147,8 @@ class Juicer(object):
         `cart_name` - Name of this release cart
         `manifest` - str containing path to manifest file
         """
-        cart_dest = self._defaults['cart_dest']
-        env_re = re.compile('.*-%s' % cart_dest)
+        start_in = self._defaults['start_in']
+        env_re = re.compile('.*-%s' % start_in)
 
         cart = juicer.common.Cart.Cart(cart_name)
         try:
@@ -168,7 +168,7 @@ class Juicer(object):
                     'version': pkg['version'],
                     'release': pkg['release']}
 
-            _r = self.connectors[cart_dest].post(query, data)
+            _r = self.connectors[start_in].post(query, data)
 
             if not _r.status_code == Constants.PULP_POST_OK:
                 juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was returned' % (pkg['name']._r.status_code))
@@ -187,8 +187,8 @@ class Juicer(object):
                     if repo not in urls:
                         urls[repo] = []
 
-                    pkg_url = juicer.utils.remote_url(self.connectors[cart_dest],
-                        cart_dest, repo, ppkg['filename'])
+                    pkg_url = juicer.utils.remote_url(self.connectors[start_in],
+                        start_in, repo, ppkg['filename'])
                     urls[repo].append(pkg_url)
 
         for repo in urls:
@@ -264,12 +264,12 @@ class Juicer(object):
             # if the package is in a cart, show the cart name
             juicer.utils.Log.log_info('\nCarts:')
 
-            cart_dest = self._defaults['cart_dest']
-            url_base = self.connectors[cart_dest].base_url
-            remote = '/repositories/carts-%s/files/' % cart_dest
+            start_in = self._defaults['start_in']
+            url_base = self.connectors[start_in].base_url
+            remote = '/repositories/carts-%s/files/' % start_in
             regex = re.compile('.*%s.*' % name)
 
-            _r = self.connectors[cart_dest].get(remote)
+            _r = self.connectors[start_in].get(remote)
             if not _r.status_code == Constants.PULP_GET_OK:
                 raise IOError("Couldn't get cart list")
 
@@ -277,7 +277,7 @@ class Juicer(object):
 
             for cart in cart_list:
                 cname = cart['filename'].rstrip('.json')
-                repos_items = juicer.utils.get_cart(self.connectors[cart_dest].base_url, cart_dest, cname)['repos_items']
+                repos_items = juicer.utils.get_cart(self.connectors[start_in].base_url, start_in, cname)['repos_items']
 
                 flag = False
                 for repo in repos_items:
@@ -319,7 +319,7 @@ class Juicer(object):
         Pull remote cart from the pre release (base) environment
         """
         if not env:
-            env = self._defaults['cart_dest']
+            env = self._defaults['start_in']
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
         cart_file += '.json'

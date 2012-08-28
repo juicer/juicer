@@ -35,7 +35,7 @@ class Cart(object):
         automatically.
         """
         self.name = name
-        self.current_env = juicer.utils.get_login_info()[1]['cart_dest']
+        self.current_env = juicer.utils.get_login_info()[1]['start_in']
         self.repo_items_hash = {}
         self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % name))
 
@@ -83,7 +83,7 @@ class Cart(object):
         self.name = cart_body['name']
 
         if cart_body['current_env'] == '':
-                self.current_env = juicer.utils.get_login_info()[1]['cart_dest']
+                self.current_env = juicer.utils.get_login_info()[1]['start_in']
         else:
             self.current_env = cart_body['current_env']
 

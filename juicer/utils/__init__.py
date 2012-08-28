@@ -111,7 +111,7 @@ def get_login_info():
     config = ConfigParser.SafeConfigParser()
     connections = {}
     _defaults = {}
-    _defaults['cart_dest'] = ''
+    _defaults['start_in'] = ''
     _defaults['rpm_sign_plugin'] = ''
 
     config.read(_config_file())
@@ -125,7 +125,7 @@ def get_login_info():
         connections[section] = Connectors(cfg)
 
         if 'start_in' in cfg:
-            _defaults['cart_dest'] = cfg['start_in']
+            _defaults['start_in'] = cfg['start_in']
 
         if 'rpm_sign_plugin' in cfg:
             _defaults['rpm_sign_plugin'] = cfg['rpm_sign_plugin']

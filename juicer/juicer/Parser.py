@@ -27,7 +27,7 @@ class Parser(object):
                 description='Manage release carts')
         juicer.juicer.parser = self.parser
 
-        self._default_cart_dest = juicer.utils.get_login_info()[1]['cart_dest']
+        self._default_start_in = juicer.utils.get_login_info()[1]['start_in']
         self._default_envs = juicer.utils.get_environments()
 
         self.parser.add_argument('-v', action='count', \
@@ -132,7 +132,7 @@ class Parser(object):
 
         parser_push.add_argument('--in', nargs='*', \
                 metavar='environment', \
-                default=[self._default_cart_dest], \
+                default=[self._default_start_in], \
                 help='The environments to push into.', \
                 dest='environment')
 
@@ -157,7 +157,7 @@ class Parser(object):
 
         parser_search.add_argument('--in', nargs='*', \
                 metavar='environment', \
-                default=[self._default_cart_dest], \
+                default=[self._default_start_in], \
                 help='The environments to limit search scope to.', \
                 dest='environment')
 
@@ -176,7 +176,7 @@ class Parser(object):
 
         parser_upload.add_argument('--in', nargs='*', \
                 metavar='environment', \
-                default=[self._default_cart_dest], \
+                default=[self._default_start_in], \
                 help='The environments to upload into.', \
                 dest='environment')
 
