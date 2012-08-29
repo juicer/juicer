@@ -25,6 +25,7 @@ import os
 import time
 import re
 import hashlib
+import tempfile
 
 
 class Juicer(object):
@@ -80,7 +81,12 @@ class Juicer(object):
             juicer.utils.Log.log_debug("Processing item: '%s'" % item)
             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
 
-            if juicer.utils.is_rpm(item):
+            if juicer.utils.is_remote_rpm(item):
+                juicer.common.RPM.RPM(item).sync('%s/' % tempfile.tempdir)
+                tmpfile = '%s/%s' % (tempfile.tempdir, os.path.basename(item))
+
+                rpm_id = juicer.utils.upload_rpm(tmpfile, repoid, self.connectors[env])
+            elif juicer.utils.is_rpm(item):
                 rpm_id = juicer.utils.upload_rpm(item, repoid, self.connectors[env])
             else:
                 file_id = juicer.utils.upload_file(item, repoid, self.connectors[env])

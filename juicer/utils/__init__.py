@@ -352,6 +352,15 @@ def is_rpm(path):
         return False
 
 
+def is_remote_rpm(item):
+    """
+    Attempt to determine if the item given is a url to an rpm and
+    as such, would need to be downloaded.
+    """
+
+    return re.match(r'http(?:s)?://.*\.rpm', item)
+
+
 def save_url_as(url, save_as):
     """
     Download the file `url` and save it to the local disk as
