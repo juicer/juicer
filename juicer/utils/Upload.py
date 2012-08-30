@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import juicer.utils
+import time
 from juicer.common import Constants
 
 
@@ -124,7 +125,7 @@ class Upload(object):
         _r = self.connector.post(query, data)
 
         if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_debug("Import error importing '%s'... server said: \n %s", name,
+            juicer.utils.Log.log_debug("Import error importing '%s'... server said: \n %s", self.name,
                                        juicer.utils.load_json_str(_r.content))
             _r.raise_for_status()
 

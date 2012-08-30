@@ -16,15 +16,12 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
-from juicer.utils.ProgressBar import ProgressBar
 import juicer.common.Cart
 import juicer.juicer
 import juicer.utils
 import juicer.utils.Upload
 import os
-import time
 import re
-import hashlib
 import tempfile
 
 
@@ -86,10 +83,19 @@ class Juicer(object):
                 tmpfile = '%s/%s' % (tempfile.tempdir, os.path.basename(item))
 
                 rpm_id = juicer.utils.upload_rpm(tmpfile, repoid, self.connectors[env])
+
+                juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                        (os.path.basename(item), rpm_id))
             elif juicer.utils.is_rpm(item):
                 rpm_id = juicer.utils.upload_rpm(item, repoid, self.connectors[env])
+
+                juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                        (os.path.basename(item), rpm_id))
             else:
                 file_id = juicer.utils.upload_file(item, repoid, self.connectors[env])
+
+                juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                        (os.path.basename(item), file_id))
 
         return True
 
@@ -271,7 +277,6 @@ class Juicer(object):
             juicer.utils.Log.log_info('\nCarts:')
 
             start_in = self._defaults['start_in']
-            url_base = self.connectors[start_in].base_url
             remote = '/repositories/carts-%s/files/' % start_in
             regex = re.compile('.*%s.*' % name)
 
@@ -285,7 +290,6 @@ class Juicer(object):
                 cname = cart['filename'].rstrip('.json')
                 repos_items = juicer.utils.get_cart(self.connectors[start_in].base_url, start_in, cname)['repos_items']
 
-                flag = False
                 for repo in repos_items:
                     for items in repos_items[repo]:
                         if re.match(regex, items):

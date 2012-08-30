@@ -345,7 +345,7 @@ def is_rpm(path):
     try:
         ts = rpm.TransactionSet()
         fd = os.open(path, os.O_RDONLY)
-        h = ts.hdrFromFdno(fd)
+        ts.hdrFromFdno(fd)
         os.close(fd)
         return True
     except:
