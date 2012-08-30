@@ -20,6 +20,7 @@ import juicer.admin
 import juicer.utils
 from juicer.utils.PromptAction import PromptAction
 
+
 class Parser(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Manage pulp')

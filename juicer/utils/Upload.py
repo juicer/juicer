@@ -25,7 +25,7 @@ class Upload(object):
         """
         in addition to creating an upload object, this
         initializes the upload of an rpm into pulp
-        
+
         name: the name of the package to upload
         cksum: checksum of the rpm
         size: total size of the rpm
@@ -142,4 +142,3 @@ class Upload(object):
         self._generate_metadata()
 
         return final_id
-

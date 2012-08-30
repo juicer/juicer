@@ -79,7 +79,7 @@ class TestJuicer(unittest.TestCase):
 
         if cart.is_empty():
             raise Exception("%s has no rpms included!" % new_cname)
- 
+
     def test_show(self):
         self.args = self.parser.parser.parse_args(('show %s' % self.cname).split())
         pulp = j(self.args)

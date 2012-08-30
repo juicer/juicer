@@ -19,6 +19,7 @@ import progressbar
 from progressbar import Bar, Percentage
 import juicer.utils.Log
 
+
 class ProgressBar(object):
     def __init__(self, maxval):
         if self.is_correct_log_level():

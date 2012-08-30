@@ -481,6 +481,7 @@ def check_sig(package):
     else:
         return False
 
+
 def parse_manifest(manifest):
     """
     return a list of dicts containing an rpm name, version and release
@@ -527,7 +528,7 @@ def upload_rpm(rpm_path, repoid, connector):
     size = os.path.getsize(rpm_path)
     package_basename = os.path.basename(rpm_path)
 
-    juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" %     size)
+    juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" % size)
 
     # initiate upload
     upload = juicer.utils.Upload.Upload(package_basename, cksum, size, repoid, connector)
@@ -542,7 +543,7 @@ def upload_rpm(rpm_path, repoid, connector):
     while total_seeked < size:
         rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
         total_seeked += len(rpm_data)
-        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data),          total_seeked))
+        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
         upload_flag = upload.append(fdata=rpm_data)
         pbar.update(len(rpm_data))
     pbar.finish()
@@ -583,7 +584,7 @@ def upload_file(file_path, repoid, connector):
     while total_seeked < size:
         file_data = fd.read(Constants.UPLOAD_AT_ONCE)
         total_seeked += len(file_data)
-        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data),         total_seeked))
+        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
         upload_flag = upload.append(fdata=file_data)
         if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
             pbar.update(len(file_data))
@@ -604,7 +605,7 @@ def upload_file(file_path, repoid, connector):
 def get_cart(base_url, env, cart_name):
     """
     returns a dict object representing a cart stored in pulp
-    
+
     base_url: a str for the base_url (eg: http://sweet.pulp.repo/pulp/api/)
     env: a str with the the name of the environement (eg: prod)
     cart_name: a str with the name of the cart to get
