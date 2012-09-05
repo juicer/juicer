@@ -573,8 +573,7 @@ def upload_file(file_path, repoid, connector):
     upload = juicer.utils.Upload.Upload(name, cksum, size, repoid, connector)
 
     # create a statusbar
-    if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-        pbar = ProgressBar(size)
+    pbar = ProgressBar(size)
 
     # read in file
     upload_flag = False
@@ -586,10 +585,8 @@ def upload_file(file_path, repoid, connector):
         total_seeked += len(file_data)
         juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
         upload_flag = upload.append(fdata=file_data)
-        if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-            pbar.update(len(file_data))
-    if juicer.utils.Log.LOG_LEVEL_CURRENT == 1:
-        pbar.finish()
+        pbar.update(len(file_data))
+    pbar.finish()
     fd.close()
 
     juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
