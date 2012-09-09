@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common.Constants import CART_LOCATION
+import juicer.common.CartItem
 import juicer.common.RPM
 import juicer.utils.Log
 import juicer.utils
@@ -49,6 +50,22 @@ class Cart(object):
         elif (not autoload) and autosync:
             juicer.utils.Log.log_warn("[CART:%s] Auto-sync requested, but autoload not enabled. Skipping..." % self.name)
 
+    def __getitem__(self, repo):
+        """ Return the items in the given repo """
+        if repo in self.repo_items_hash:
+            return self.repo_items_hash[repo]
+        else:
+            # TODO: Should this raise?
+            return None
+
+    def __setitem__(self, repo, items):
+        """
+        Just provides a shorthand way to call add_repo:
+
+        cart_object['repo'] = items
+        """
+        self.add_repo(repo, items)
+
     def add_repo(self, name, items):
         """
         Build up repos
@@ -62,7 +79,13 @@ class Cart(object):
         # repo. `items` may be composed of a mix of local files, local
         # directories, remote files, and remote directories. We need
         # to filter and validate each item.
-        self.repo_items_hash[name] = juicer.utils.filter_package_list(items)
+        items = juicer.utils.filter_package_list(items)
+        cart_items = []
+        for item in items:
+            juicer.utils.Log.log_debug("Creating CartObject for %s" % item)
+            i = juicer.common.CartItem.CartItem(item)
+            cart_items.append(i)
+        self.repo_items_hash[name] = cart_items
 
     def load(self, json_file):
         """
@@ -92,8 +115,8 @@ class Cart(object):
 
     def save(self):
         if self.is_empty():
-            juicer.utils.Log.log_error('Cart is empty, not saving.')
-            exit(1)
+            juicer.utils.Log.log_error('Cart is empty, not saving anything')
+            return None
 
         if not os.path.exists(CART_LOCATION):
             os.mkdir(CART_LOCATION)
@@ -110,61 +133,60 @@ class Cart(object):
             if items:
                 yield (repo, items)
 
-    def sign_items(self, key):
+    def sign_items(self, sign_with):
         """
         Sign the items in the cart with a GPG key.
+
+        After everything is collected and signed all the cart items
+        are issued a refresh() to sync their is_signed attributes.
+
+        `sign_with` is a reference to the method that implements
+        juicer.common.RpmSignPlugin.
         """
-        pass
+        cart_items = self.items()
+        item_paths = [ item.path for item in cart_items ]
+        sign_with(item_paths)
+
+        for item in cart_items:
+            item.refresh()
 
     def sync_remotes(self):
         """
         Pull down all non-local items and save them into remotes_storage.
         """
-        synced_items = {}
-
         for repo, items in self.iterrepos():
-            syncs = []
             for rpm in items:
-                rpm_obj = juicer.common.RPM.RPM(rpm)
-                rpm_obj.sync(self.remotes_storage)
-
-                if rpm_obj.modified:
-                    syncs.append((rpm, rpm_obj.path))
-
-            if syncs:
-                synced_items[repo] = syncs
-
-        for repo in synced_items.keys():
-            for source, path in synced_items[repo]:
-                juicer.utils.Log.log_debug("Source RPM modified. New 'path': %s" % rpm)
-                self._update(repo, source, path)
+                rpm.sync_to(self.remotes_storage)
 
         for repo, items in self.iterrepos():
             juicer.utils.Log.log_info("Sanity checking items for repo '%s'" % repo)
-            not_rpms = filter(lambda r: not juicer.utils.is_rpm(r), items)
+            not_rpms = filter(lambda r: not r.is_rpm, items)
 
             if not_rpms:
                 juicer.utils.Log.log_warn("The following items are not actually RPMs:")
-                for i in not_rpms:
-                    juicer.utils.Log.log_warn(i)
+                map(juicer.utils.Log.log_warn, not_rpms)
 
     def is_empty(self):
         """
         return True if the cart has no items, False otherwise
         """
-        count = 0
-
         for repo, items in self.iterrepos():
-            count += len(items)
+            if items:
+                return False
+        return True
 
-        if count == 0:
-            return True
-        else:
-            return False
+    def repos(self):
+        """
+        Return all list of the repos it cart will upload items into.
+        """
+        return self.repo_items_hash.keys()
 
-    def _update(self, repo, current, new):
-        self.repo_items_hash[repo].remove(current)
-        self.repo_items_hash[repo].append(new)
+    def items(self):
+        """ Build and return a list of all items in this cart """
+        cart_items = []
+        for repo, items in self.iterrepos():
+            cart_items.extend(items)
+        return cart_items
 
     def __str__(self):
         output = []
@@ -174,7 +196,7 @@ class Cart(object):
             # Underline the repo name
             output.append("-" * len(repo))
             # Add all the RPMs
-            output.extend(items)
+            output.extend([str(i) for i in items])
             output.append('')
 
         return "\n".join(output)
@@ -186,8 +208,8 @@ class Cart(object):
         output['current_env'] = self.current_env
 
         repos_items = {}
-        for repo, items in self.iterrepos():
-            repos_items[repo] = items
+        for repo in self.repos():
+            repos_items[repo] = [str(i) for i in self[repo]]
 
         output['repos_items'] = repos_items
         return output

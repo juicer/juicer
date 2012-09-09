@@ -71,6 +71,7 @@ def upload(args):
     pulp = j(args)
 
     cart = pulp.create("upload-cart", args.r)
+    cart.sync_remotes()
 
     for env in args.environment:
         pulp.push(cart, env)

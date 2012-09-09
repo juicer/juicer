@@ -506,6 +506,30 @@ def parse_manifest(manifest):
     return rpm_list
 
 
+def rpm_info(rpm_path):
+    """
+    Query information about the RPM at `rpm_path`.
+
+    TODO: Remove the duplication of code from upload_rpm() below.
+    """
+    ts = rpm.TransactionSet()
+    ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+    rpm_info = {}
+
+    rpm_fd = open(rpm_path, 'rb')
+    pkg = ts.hdrFromFdno(rpm_fd)
+    rpm_info['name'] = pkg['name']
+    rpm_info['version'] = pkg['version']
+    rpm_info['release'] = pkg['release']
+    rpm_info['epoch'] = 0
+    rpm_info['arch'] = pkg['arch']
+    rpm_info['nvrea'] = tuple((rpm_info['name'], rpm_info['version'], rpm_info['release'], rpm_info['epoch'], rpm_info['arch']))
+    rpm_info['cksum'] = hashlib.md5(rpm_path).hexdigest()
+    rpm_info['size'] = os.path.getsize(rpm_path)
+    rpm_info['package_basename'] = os.path.basename(rpm_path)
+    rpm_fd.close()
+    return rpm_info
+
 def upload_rpm(rpm_path, repoid, connector):
     """
     upload an rpm into pulp

@@ -40,63 +40,56 @@ class Juicer(object):
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)
 
-    # this is used to upload files to pulp
-    def upload(self, env, repo, items=[]):
+    # this is used to upload carts to pulp
+    def upload(self, env, cart):
         """
         Nothing special happens here. This method recieves a
-        destination repo, and a payload of `items` which will be
+        destination repo, and a payload of `cart` which will be
         uploaded into the target repo.
 
         Preparation: To use this method you must pre-process your
-        upload list (`items`). Remotes must be fetched and saved
-        locally. Directories must be recursed and replaced with their
-        contents.
+        cart: Remotes must be fetched and saved locally. Directories
+        must be recursed and replaced with their contents. Items
+        should be signed if necessary.
 
         Warning: this method trusts you to Do The Right Thing (TM),
         ahead of time and check file types before feeding them to it.
 
         `env` - name of the environment with the cart destination
-        `repo` - should be a string, the detination repo name
-        `items` - should be a list of paths to RPM files
+        `cart` - cart to upload
         """
-        repoid = "%s-%s" % (repo, env)
+        for repo in cart.repos():
+            if not juicer.utils.repo_exists_p(repo, self.connectors[env], env):
+                juicer.utils.Log.log_info("repo '%s' doesn't exist in %s environment... skipping!",
+                                          (repo, env))
+                continue
 
-        juicer.utils.Log.log_debug("Beginning upload for %s" % repoid)
+            repoid = "%s-%s" % (repo, env)
+            juicer.utils.Log.log_debug("Beginning upload into %s repo" % repoid)
 
-        # Determine if these files are all rpms and if we need to sign
-        # them. If we signed them, check for sigs but don't
-        # bail... Then continue normally.
-        if self.connectors[env].requires_signature and all([juicer.utils.is_rpm(item) for item in items]):
-            self.sign_rpms(items, env)
-            if not juicer.utils.rpms_signed_p(items):
-                juicer.utils.Log.log_debug("No RPMs have been signed!")
-                #raise RunTimeException() Do we want to barf?
-            else:
-                juicer.utils.Log.log_debug("RPMs have a signature... we do not know if it is valid...")
-
-        for item in items:
-            juicer.utils.Log.log_debug("Processing item: '%s'" % item)
-            juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item, repoid))
-
-            if juicer.utils.is_remote_rpm(item):
-                juicer.common.RPM.RPM(item).sync('%s/' % tempfile.tempdir)
-                tmpfile = '%s/%s' % (tempfile.tempdir, os.path.basename(item))
-
-                rpm_id = juicer.utils.upload_rpm(tmpfile, repoid, self.connectors[env])
-
+            for item in cart[repo]:
+                juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
+                rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
                 juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                        (os.path.basename(item), rpm_id))
-            elif juicer.utils.is_rpm(item):
-                rpm_id = juicer.utils.upload_rpm(item, repoid, self.connectors[env])
+                                           (os.path.basename(item.path), rpm_id))
 
-                juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                        (os.path.basename(item), rpm_id))
-            else:
-                file_id = juicer.utils.upload_file(item, repoid, self.connectors[env])
+            # Upload carts aren't special, don't update their paths
+            if cart.name == 'upload-cart':
+                continue
 
-                juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                        (os.path.basename(item), file_id))
+            # Set the path to items in this cart to their location on
+            # the pulp server.
+            for item in cart[repo]:
+                path = juicer.utils.remote_url(self.connectors[env],
+                                               env,
+                                               repo,
+                                               os.path.basename(item.path))
+                item.update(path)
 
+        # Upload carts don't persist
+        if not cart.name == 'upload-cart':
+            cart.save()
+            self.publish(cart)
         return True
 
     def push(self, cart, env=None):
@@ -110,31 +103,13 @@ class Juicer(object):
         if not env:
             env = self._defaults['start_in']
 
-        for repo, items in cart.iterrepos():
-            if not juicer.utils.repo_exists_p(repo, self.connectors[env], env):
-                juicer.utils.Log.log_info("repo '%s' doesn't exist in %s environment... skipping!",
-                                          (repo, env))
-                continue
-
-            juicer.utils.Log.log_debug("Initiating upload for repo '%s'" % repo)
-            self.upload(env, repo, items)
-
-            if cart.name == 'upload-cart':
-                continue
-
-            links = [(item, juicer.utils.remote_url(self.connectors[env], env, repo, os.path.basename(item))) for item in items]
-            for item, link in links:
-                cart._update(repo, item, link)
-
-        if cart.name != 'upload-cart':
-            cart.save()
-            self.publish(cart)
-
+        self.sign_cart_for_env_maybe(cart, env)
+        self.upload(env, cart)
         return True
 
     def publish(self, cart, env=None):
         """
-        `cart` - Release cart to publish in json form
+        `cart` - Release cart to publish in json format
 
         Publish a release cart in JSON format to the pre-release environment.
         """
@@ -150,8 +125,11 @@ class Juicer(object):
             cart_file += '.json'
 
         juicer.utils.Log.log_debug("Initializing upload of cart '%s' to cart repository" % cart.name)
-        self.upload(env, 'carts', [cart_file])
 
+        repoid = "carts-%s" % env
+        file_id = juicer.utils.upload_file(cart_file, repoid, self.connectors[env])
+        juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                                   (os.path.basename(cart_file), file_id))
         return True
 
     def create_manifest(self, cart_name, manifest, query='/services/search/packages/'):
@@ -204,10 +182,9 @@ class Juicer(object):
                     urls[repo].append(pkg_url)
 
         for repo in urls:
-            cart.add_repo(repo, urls[repo])
+            cart[repo] = urls[repo]
 
         cart.save()
-
         return cart
 
     def create(self, cart_name, cart_description):
@@ -220,14 +197,11 @@ class Juicer(object):
         # repo_items is a list that starts with the REPO name,
         # followed by the ITEMS going into the repo.
         for repo_items in cart_description:
-            repo = repo_items[0]
-            items = repo_items[1:]
+            (repo, items) = (repo_items[0], repo_items[1:])
             juicer.utils.Log.log_debug("Processing %s input items for repo '%s'." % (len(items), repo))
-
-            cart.add_repo(repo, items)
+            cart[repo] = items
 
         cart.save()
-
         return cart
 
     def show(self, cart_name):
@@ -350,40 +324,51 @@ class Juicer(object):
 
         juicer.utils.Log.log_debug("Syncing down rpms...")
         cart.sync_remotes()
+        self.sign_cart_for_env_maybe(cart, cart.current_env)
 
         juicer.utils.Log.log_info("Promoting %s from %s to %s" %
                 (name, old_env, cart.current_env))
 
-        for repo, items in cart.iterrepos():
+        for repo in cart.repos():
             juicer.utils.Log.log_debug("Promoting %s to %s in %s" %
-                    (items, repo, cart.current_env))
-            self.upload(cart.current_env, repo, items)
+                                       (cart[repo], repo, cart.current_env))
+            self.upload(cart.current_env, cart)
 
         cart.save()
 
         self.publish(cart)
 
-    def sign_rpms(self, rpm_files=None, env=None):
+    def sign_cart_for_env_maybe(self, cart, env=None):
         """
-        `rpm_files` - A list of paths to RPM files.
+        Sign the items to upload, if the env requires a signature.
+
+        `cart` - Cart to sign
+        `envs` - The cart is signed if env has the property:
+        requires_signature = True
 
         Will attempt to load the rpm_sign_plugin defined in
-        ~/.juicer.conf which must be a plugin inheriting from
+        ~/.juicer.conf, which must be a plugin inheriting from
         juicer.common.RpmSignPlugin. If available, we'll call
-        rpm_sign_plugin.sign_rpms(rpm_files) and return.
+        cart.sign_items() with a reference to the
+        rpm_sign_plugin.sign_rpms method.
         """
-        juicer.utils.Log.log_notice("%s requires RPM signatures ... checking for rpm_sign_plugin definition ...", env)
+        if not self.connectors[env].requires_signature:
+            return None
+
+        juicer.utils.Log.log_notice("%s requires RPM signatures", env)
+        juicer.utils.Log.log_notice("Checking for rpm_sign_plugin definition ...")
         module_name = self._defaults['rpm_sign_plugin']
         if self._defaults['rpm_sign_plugin']:
-            juicer.utils.Log.log_notice("found rpm_sign_plugin definition %s ... attempting to load ...",
-                                       self._defaults['rpm_sign_plugin'])
+            juicer.utils.Log.log_notice("Found rpm_sign_plugin definition: %s",
+                                        self._defaults['rpm_sign_plugin'])
+            juicer.utils.Log.log_notice("Attempting to load ...")
 
             try:
                 rpm_sign_plugin = __import__(module_name, fromlist=[module_name])
-                juicer.utils.Log.log_notice("successfully loaded %s ...", module_name)
+                juicer.utils.Log.log_notice("Successfully loaded %s ...", module_name)
                 plugin_object = getattr(rpm_sign_plugin, module_name.split('.')[-1])
                 signer = plugin_object()
-                signer.sign_rpms(rpm_files)
+                cart.sign_items(signer.sign_rpms)
             except ImportError as e:
                 juicer.utils.Log.log_notice("there was a problem using %s ... error: %s",
                                             module_name, e)
