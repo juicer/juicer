@@ -101,9 +101,9 @@ class Juicer(object):
 
     def push(self, cart, env=None):
         """
-        `cart` - Release cart to push
+        `cart` - Release cart to push items from
 
-        Pushes a release cart to the pre-release environment.
+        Pushes the items in a release cart to the pre-release environment.
         """
         juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart.name)
 
@@ -134,9 +134,9 @@ class Juicer(object):
 
     def publish(self, cart, env=None):
         """
-        `cart` - Release cart to publish
+        `cart` - Release cart to publish in json form
 
-        Publish a release cart to the pre-release environment.
+        Publish a release cart in JSON format to the pre-release environment.
         """
 
         juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart.name)
