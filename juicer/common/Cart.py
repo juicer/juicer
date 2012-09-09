@@ -99,7 +99,7 @@ class Cart(object):
             os.mkdir(CART_LOCATION)
 
         cart_file = os.path.join(CART_LOCATION, self.name)
-        juicer.utils.write_json_document(cart_file, self.__dict__())
+        juicer.utils.write_json_document(cart_file, self._cart_dict())
 
     def iterrepos(self):
         """
@@ -179,7 +179,7 @@ class Cart(object):
 
         return "\n".join(output)
 
-    def __dict__(self):
+    def _cart_dict(self):
         output = {'name': self.name,
                 'current_env': None,
                 'repos_items': []}
