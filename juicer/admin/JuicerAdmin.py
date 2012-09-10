@@ -33,7 +33,7 @@ class JuicerAdmin(object):
             for env in self.args.envs:
                 try:
                     self.connectors[env].get()
-                except JuicerError:
+                except KeyError:
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)

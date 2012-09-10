@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common.Constants import CART_LOCATION
+from juicer.common.errors import *
 import juicer.common.CartItem
 import juicer.common.RPM
 import juicer.utils.Log
@@ -92,7 +93,7 @@ class Cart(object):
         Build a cart from a json file
         """
         if not os.path.exists(CART_LOCATION):
-            raise IOError("No carts currently exist (%s does not exist)" % CART_LOCATION)
+            raise JuicerCartError("No carts currently exist (%s does not exist)" % CART_LOCATION)
 
         cart_file = os.path.join(CART_LOCATION, json_file)
         try:

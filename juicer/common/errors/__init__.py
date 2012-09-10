@@ -20,3 +20,6 @@ class JuicerError(Exception):
 
 class JuicerConfigError(JuicerError):
     pass
+
+class JuicerCartError(JuicerError):
+    pass

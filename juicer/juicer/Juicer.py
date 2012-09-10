@@ -36,7 +36,7 @@ class Juicer(object):
             for env in self.args.environment:
                 try:
                     self.connectors[env].get()
-                except JuicerError:
+                except KeyError:
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)
@@ -257,7 +257,7 @@ class Juicer(object):
 
             _r = self.connectors[start_in].get(remote)
             if not _r.status_code == Constants.PULP_GET_OK:
-                raise IOError("Couldn't get cart list")
+                raise JuicerReturnStatusError("Couldn't get cart list")
 
             cart_list = juicer.utils.load_json_str(_r.content)
 
