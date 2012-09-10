@@ -18,6 +18,7 @@
 
 from juicer.common import Constants
 from juicer.common.Connectors import Connectors
+from juicer.common.errors import *
 from functools import wraps
 from juicer.utils.ProgressBar import ProgressBar
 import ConfigParser
@@ -94,12 +95,12 @@ def _config_test(config):
 
         # ensure required keys are present in each section
         if not required_keys.issubset(set(cfg.keys())):
-            raise Exception("Missing values in config file: %s" % \
+            raise JuicerConfigError("Missing values in config file: %s" % \
                                 ", ".join(list(required_keys - set(cfg.keys()))))
 
         # ensure promotion path exists
         if 'promotes_to' in cfg and cfg['promotes_to'] not in config.sections():
-            raise Exception("promotion_path: %s is not a config section" \
+            raise JuicerConfigError("promotion_path: %s is not a config section" \
                                 % cfg['promotes_to'])
 
 

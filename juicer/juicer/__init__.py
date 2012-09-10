@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import juicer.utils.Log
+from juicer.common.errors import *
 import juicer.common.Cart
 from juicer.juicer.Juicer import Juicer as j
 
@@ -30,7 +31,7 @@ def create(args):
     elif args.r:
         cart = pulp.create(args.cartname, args.r)
     else:
-        raise Exception("Argument Error")
+        raise JuicerError("Argument Error")
 
     juicer.utils.Log.log_info("Saved cart '%s'." % args.cartname)
     print cart

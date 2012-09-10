@@ -16,8 +16,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
+from juicer.common.errors import *
 import juicer.admin
-import juicer.common
 import juicer.utils
 import juicer.utils.Log
 import re
@@ -33,7 +33,7 @@ class JuicerAdmin(object):
             for env in self.args.envs:
                 try:
                     self.connectors[env].get()
-                except Exception:
+                except JuicerError:
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
                     exit(1)

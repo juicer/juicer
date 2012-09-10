@@ -63,9 +63,7 @@ class TestJuicer(unittest.TestCase):
 
         cart = juicer.common.Cart.Cart(self.cname, autoload=True)
 
-        if cart.current_env == old_env:
-            raise Exception("%s was in %s before and is in %s now!" % \
-                    (cart.name, old_env, cart.current_env))
+        self.assertFalse(cart.current_env == old_env)
 
         # test creating a cart from manifest
         new_cname = 'CRQ1DAY'
@@ -77,8 +75,7 @@ class TestJuicer(unittest.TestCase):
 
         cart = juicer.common.Cart.Cart(new_cname, autoload=True)
 
-        if cart.is_empty():
-            raise Exception("%s has no rpms included!" % new_cname)
+        self.assertFalse(cart.is_empty())
 
     def test_show(self):
         self.args = self.parser.parser.parse_args(('show %s' % self.cname).split())
@@ -93,8 +90,7 @@ class TestJuicer(unittest.TestCase):
         pulp = j(self.args)
         mute()(pulp.pull)(self.cname)
 
-        if not os.path.exists(self.cpath):
-            raise Exception("%s was not pulled from the server" % self.cname)
+        self.assertTrue(os.path.exists(self.cpath))
 
     def test_hello(self):
         self.args = self.parser.parser.parse_args('hello'.split())
