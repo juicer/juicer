@@ -105,22 +105,22 @@ class Upload(object):
 
         return juicer.utils.load_json_str(_r.content)
 
-    def finalize(self, nvrea, ftype='rpm', desc='', htype='md5', lic='',
-            group='', vendor='', req='', query='/services/upload/import/'):
+    def finalize(self, nvrea, ftype='rpm', desc=None, htype='md5', lic=None,
+            group=None, vendor=None, req=None, query='/services/upload/import/'):
 
         data = {'uploadid': self.uid,
                 'metadata': {
                     'type': ftype,
                     'checksum': self.cksum,
-                    'description': desc,
+                    'description': desc if desc else '',
                     'hashtype': htype,
                     'pkgname': self.name,
-                    'nvrea': nvrea,
+                    'nvrea': nvrea if nvrea else '',
                     'size': self.size,
-                    'license': lic,
-                    'group': group,
-                    'vendor': vendor,
-                    'requires': req}}
+                    'license': lic if lic else '',
+                    'group': group if group else '',
+                    'vendor': vendor if vendor else '',
+                    'requires': req if req else ''}}
 
         _r = self.connector.post(query, data)
 

@@ -209,7 +209,7 @@ class Juicer(object):
         cart.load(cart_name)
         return str(cart)
 
-    def search(self, name='', search_carts=False, query='/services/search/packages/'):
+    def search(self, name=None, search_carts=False, query='/services/search/packages/'):
         data = {'regex': True,
                 'name': name}
 
