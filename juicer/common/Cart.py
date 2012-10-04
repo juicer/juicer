@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common.Constants import CART_LOCATION
+from juicer.common import Constants
 from juicer.common.errors import *
 import juicer.common.CartItem
 import juicer.common.RPM
@@ -23,6 +24,7 @@ import juicer.utils.Log
 import juicer.utils
 import os
 import os.path
+import re
 
 
 class Cart(object):
@@ -214,3 +216,42 @@ class Cart(object):
 
         output['repos_items'] = repos_items
         return output
+
+    def add_from_manifest(self, manifest, connectors, query='/services/search/packages/'):
+        pkg_list = juicer.utils.parse_manifest(manifest)
+        env_re = re.compile('.*-%s' % self.current_env)
+
+        urls = {}
+
+        # packages need to be included in every repo they're in
+        for pkg in pkg_list:
+            juicer.utils.Log.log_debug("Finding %s %s %s ..." % \
+                    (pkg['name'], pkg['version'], pkg['release']))
+
+            data = {'name': pkg['name'],
+                    'version': pkg['version'],
+                    'release': pkg['release']}
+
+            _r = connectors[self.current_env].post(query, data)
+
+            if not _r.status_code == Constants.PULP_POST_OK:
+                juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was  returned' % (pkg['name']._r.status_code))
+                exit(1)
+
+            content = juicer.utils.load_json_str(_r.content)
+
+            if len(content) == 0:
+                juicer.utils.Log.log_debug("Searching for %s returned 0 results." % pkg['name'])
+                continue
+
+            for ppkg in content:
+                for repo in ppkg['repoids']:
+                    if re.match(env_re, repo):
+                        if repo not in urls:
+                            urls[repo] = []
+
+                        pkg_url = juicer.utils.remote_url(connectors[self.current_env], self.current_env, repo, ppkg['filename'])
+                        urls[repo].append(pkg_url)
+
+        for repo in urls:
+            self[repo] = urls[repo]

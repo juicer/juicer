@@ -71,7 +71,7 @@ class TestJuicer(unittest.TestCase):
         self.args = self.parser.parser.parse_args(('create %s -f %s' \
                 % (new_cname, './share/juicer/rpm-manifest.yaml')).split())
         pulp = j(self.args)
-        mute()(pulp.create_manifest)(cart_name=self.args.cartname, manifest=self.args.f)
+        mute()(pulp.create_manifest)(cart_name=self.args.cartname, manifests=self.args.f)
 
         cart = juicer.common.Cart.Cart(new_cname, autoload=True)
 

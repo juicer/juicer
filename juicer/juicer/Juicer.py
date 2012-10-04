@@ -133,61 +133,6 @@ class Juicer(object):
                                    (os.path.basename(cart_file), file_id))
         return True
 
-    def create_manifest(self, cart_name, manifest, query='/services/search/packages/'):
-        """
-        `cart_name` - Name of this release cart
-        `manifest` - str containing path to manifest file
-        """
-        start_in = self._defaults['start_in']
-        env_re = re.compile('.*-%s' % start_in)
-
-        cart = juicer.common.Cart.Cart(cart_name)
-        try:
-            pkg_list = juicer.utils.parse_manifest(manifest)
-        except IOError as e:
-            juicer.utils.Log.log_error(e.message)
-            exit(1)
-
-        urls = {}
-
-        # packages need to be included in every repo they're in
-        for pkg in pkg_list:
-            juicer.utils.Log.log_debug("Finding %s %s %s ..." % \
-                    (pkg['name'], pkg['version'], pkg['release']))
-
-            data = {'name': pkg['name'],
-                    'version': pkg['version'],
-                    'release': pkg['release']}
-
-            _r = self.connectors[start_in].post(query, data)
-
-            if not _r.status_code == Constants.PULP_POST_OK:
-                juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was returned' % (pkg['name']._r.status_code))
-                exit(1)
-
-            content = juicer.utils.load_json_str(_r.content)
-
-            if len(content) == 0:
-                juicer.utils.Log.log_debug("Searching for %s returned 0 results." % pkg['name'])
-                continue
-
-            ppkg = content[0]
-
-            for repo in ppkg['repoids']:
-                if re.match(env_re, repo):
-                    if repo not in urls:
-                        urls[repo] = []
-
-                    pkg_url = juicer.utils.remote_url(self.connectors[start_in],
-                        start_in, repo, ppkg['filename'])
-                    urls[repo].append(pkg_url)
-
-        for repo in urls:
-            cart[repo] = urls[repo]
-
-        cart.save()
-        return cart
-
     def create(self, cart_name, cart_description):
         """
         `cart_name` - Name of this release cart
@@ -201,6 +146,19 @@ class Juicer(object):
             (repo, items) = (repo_items[0], repo_items[1:])
             juicer.utils.Log.log_debug("Processing %s input items for repo '%s'." % (len(items), repo))
             cart[repo] = items
+
+        cart.save()
+        return cart
+
+    def create_manifest(self, cart_name, manifests):
+        """
+        `cart_name` - Name of this release cart
+        `manifests` - a list of manifest files
+        """
+        cart = juicer.common.Cart.Cart(cart_name)
+
+        for manifest in manifests:
+            cart.add_from_manifest(manifest, self.connectors)
 
         cart.save()
         return cart

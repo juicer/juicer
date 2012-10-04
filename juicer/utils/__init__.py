@@ -35,6 +35,7 @@ import requests
 import shutil
 import re
 import urllib2
+import yaml
 try:
     import json
     json
@@ -494,15 +495,22 @@ def parse_manifest(manifest):
         raise IOError('File not found: %s' % manifest)
 
     rpm_list = []
-    regex = re.compile('(.*): (?:(absent)|(?:(.*)-(.*)))')
+    fd = open(manifest)
+    regex = re.compile('(.*)-(.*)')
 
-    for line in open(manifest):
-        _m = re.match(regex, line)
-
-        if _m.group(2) == 'absent':
-            juicer.utils.Log.log_debug('%s is absent. Skipping...' % _m.group(1))
+    for name, version in yaml.load(fd).iteritems():
+        if version == 'absent':
+            juicer.utils.Log.log_debug('%s is absent. Skipping...' % name)
         else:
-            rpm_list.append({'name': _m.group(1), 'version': _m.group(3), 'release': _m.group(4)})
+            try:
+                _m = regex.match(version)
+                version = _m.group(1)
+                release = _m.group(2)
+                rpm_list.append({'name': name, 'version': _m.group(1), 'release': _m.group(2)})
+                juicer.utils.Log.log_debug('Adding %s version %s release %s' % (name, version, release))
+            except:
+                raise JuicerManifestError('The manifest %s is improperly formatted' % manifest)
+                return False
 
     return rpm_list
 
