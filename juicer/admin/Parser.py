@@ -230,3 +230,10 @@ class Parser(object):
                                help='The environments in which to list roles')
 
         parser_list_roles.set_defaults(ja=juicer.admin.list_roles)
+
+        ##################################################################
+        # Create the 'setup' sub-parser
+        parser_setup = self.subparsers.add_parser('setup', \
+                help='Set up the pulp servers to work with juicer')
+
+        parser_setup.set_defaults(ja=juicer.admin.setup)

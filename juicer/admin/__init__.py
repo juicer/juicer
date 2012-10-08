@@ -66,3 +66,8 @@ def list_roles(args):
 def update_user(args):
     pulp = ja(args)
     pulp.update_user(args.login, args.name, args.password, args.envs)
+
+
+def setup(args):
+    pulp = ja(args)
+    pulp.setup()
