@@ -21,6 +21,20 @@ rpm packages through a Pulp installation.
 
 ## Examples
 
+### Prepare Pulp for use with Juicer
+
+Out of the box, Pulp servers are not _quite_ ready to work with Juicer. There's really only two things left to do. First, you need to decide on how many Pulp environments you're going to have. At least three (dev, qa, and prod) is recommended. Then, configure Juicer to use them.
+
+    $ man juicer.conf
+
+
+At this point, all that's left to do is to create the backend repositories that Juicer needs. Because we're so thoughtful (and lazy!) we've made this part really easy:
+
+    $ juicer-admin setup
+
+
+Now you're ready to start creating release carts!
+
 ### Upload an rpm into a repository
 
     $ juicer upload -r juicy-software ~/Downloads/juicer-0.1.7-1.fc17.noarch.rpm
