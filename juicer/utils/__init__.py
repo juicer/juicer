@@ -539,6 +539,7 @@ def rpm_info(rpm_path):
     rpm_fd.close()
     return rpm_info
 
+
 def upload_rpm(rpm_path, repoid, connector):
     """
     upload an rpm into pulp

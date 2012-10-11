@@ -147,7 +147,7 @@ class Cart(object):
         juicer.common.RpmSignPlugin.
         """
         cart_items = self.items()
-        item_paths = [ item.path for item in cart_items ]
+        item_paths = [item.path for item in cart_items]
         sign_with(item_paths)
 
         for item in cart_items:

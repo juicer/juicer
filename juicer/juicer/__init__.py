@@ -36,6 +36,7 @@ def create(args):
 
     juicer.utils.Log.log_info("Saved cart '%s'." % args.cartname)
 
+
 def edit():
     pass
 
