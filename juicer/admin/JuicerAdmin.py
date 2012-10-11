@@ -16,7 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
-from juicer.common.errors import *
+from juicer.common.Errors import *
 import juicer.admin
 import juicer.utils
 import juicer.utils.Log

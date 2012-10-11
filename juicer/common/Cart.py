@@ -17,7 +17,7 @@
 
 from juicer.common.Constants import CART_LOCATION
 from juicer.common import Constants
-from juicer.common.errors import *
+from juicer.common.Errors import *
 import juicer.common.CartItem
 import juicer.common.RPM
 import juicer.utils.Log

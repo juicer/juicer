@@ -18,7 +18,7 @@
 
 from juicer.common import Constants
 from juicer.common.Connectors import Connectors
-from juicer.common.errors import *
+from juicer.common.Errors import *
 from functools import wraps
 from juicer.utils.ProgressBar import ProgressBar
 import ConfigParser

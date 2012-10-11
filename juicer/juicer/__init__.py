@@ -16,7 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import juicer.utils.Log
-from juicer.common.errors import *
+from juicer.common.Errors import *
 import juicer.common.Cart
 from juicer.juicer.Juicer import Juicer as j
 
