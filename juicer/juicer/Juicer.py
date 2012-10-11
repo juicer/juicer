@@ -310,26 +310,30 @@ class Juicer(object):
         cart.sign_items() with a reference to the
         rpm_sign_plugin.sign_rpms method.
         """
-        if not self.connectors[env].requires_signature:
-            return None
+        if self.connectors[env].requires_signature:
+            juicer.utils.Log.log_notice("%s requires RPM signatures", env)
+            juicer.utils.Log.log_notice("Checking for rpm_sign_plugin definition ...")
+            module_name = self._defaults['rpm_sign_plugin']
+            if self._defaults['rpm_sign_plugin']:
+                juicer.utils.Log.log_notice("Found rpm_sign_plugin definition: %s",
+                                            self._defaults['rpm_sign_plugin'])
+                juicer.utils.Log.log_notice("Attempting to load ...")
 
-        juicer.utils.Log.log_notice("%s requires RPM signatures", env)
-        juicer.utils.Log.log_notice("Checking for rpm_sign_plugin definition ...")
-        module_name = self._defaults['rpm_sign_plugin']
-        if self._defaults['rpm_sign_plugin']:
-            juicer.utils.Log.log_notice("Found rpm_sign_plugin definition: %s",
-                                        self._defaults['rpm_sign_plugin'])
-            juicer.utils.Log.log_notice("Attempting to load ...")
+                try:
+                    rpm_sign_plugin = __import__(module_name, fromlist=[module_name])
+                    juicer.utils.Log.log_notice("Successfully loaded %s ...", module_name)
+                    plugin_object = getattr(rpm_sign_plugin, module_name.split('.')[-1])
+                    signer = plugin_object()
+                    cart.sign_items(signer.sign_rpms)
+                except ImportError as e:
+                    juicer.utils.Log.log_notice("there was a problem using %s ... error: %s",
+                                                module_name, e)
 
-            try:
-                rpm_sign_plugin = __import__(module_name, fromlist=[module_name])
-                juicer.utils.Log.log_notice("Successfully loaded %s ...", module_name)
-                plugin_object = getattr(rpm_sign_plugin, module_name.split('.')[-1])
-                signer = plugin_object()
-                cart.sign_items(signer.sign_rpms)
-            except ImportError as e:
-                juicer.utils.Log.log_notice("there was a problem using %s ... error: %s",
-                                            module_name, e)
+                if not juicer.utils.rpms_signed_p([item.path for item in cart.items()]):
+                    raise JuicerNotSignedError('RPMs have not been signed.')
+
+            else:
+                raise JuicerConfigError("Did not find an rpm_sign_plugin in config file.")
+            return True
         else:
-            juicer.utils.Log.log_info("did not find an rpm_sign_plugin!")
-        return True
+            return None
