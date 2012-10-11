@@ -11,7 +11,7 @@ Version:       %VERSION%
 Group:         Development/Libraries
 License:       GPLv3+
 Source0:       %{name}-%{version}.tar.gz
-Url:           https://github.com/abutcher/juicer
+Url:           https://github.com/juicer
 
 BuildArch:     noarch
 BuildRequires: python2-devel
@@ -123,4 +123,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Mon Jun 18 2012 Tim Bielawa <tbielawa@redhat.com> - 0.0.1-1
 - First release
-
