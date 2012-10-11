@@ -33,12 +33,8 @@ class Juicer(object):
 
         if 'environment' in self.args:
             for env in self.args.environment:
-                try:
-                    self.connectors[env].get()
-                except KeyError:
-                    juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
-                    juicer.utils.Log.log_debug("Exiting...")
-                    exit(1)
+                if env not in self.connectors.keys():
+                    raise JuicerKeyError("%s is not an environment defined in juicer.conf" % env)
 
     # this is used to upload carts to pulp
     def upload(self, env, cart):

@@ -30,3 +30,7 @@ class JuicerCartError(JuicerError):
 
 class JuicerNotSignedError(JuicerError):
     pass
+
+
+class JuicerKeyError(JuicerError):
+    pass
