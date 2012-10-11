@@ -23,3 +23,6 @@ class JuicerConfigError(JuicerError):
 
 class JuicerCartError(JuicerError):
     pass
+
+class JuicerNotSignedError(JuicerError):
+    pass
