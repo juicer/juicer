@@ -34,7 +34,7 @@ def create(args):
     else:
         raise JuicerError("Argument Error")
 
-    juicer.utils.Log.log_info("Saved cart '%s'." % args.cartname)
+    juicer.utils.Log.log_info("Saved cart '%s'." % cart.name)
 
 
 def edit():

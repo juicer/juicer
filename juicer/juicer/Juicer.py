@@ -23,7 +23,6 @@ import juicer.utils
 import juicer.utils.Upload
 import os
 import re
-import tempfile
 
 
 class Juicer(object):
