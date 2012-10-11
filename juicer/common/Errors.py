@@ -34,3 +34,11 @@ class JuicerNotSignedError(JuicerError):
 
 class JuicerKeyError(JuicerError):
     pass
+
+
+class JuicerPulpError(JuicerError):
+    pass
+
+
+class JuicerManifestError(JuicerError):
+    pass

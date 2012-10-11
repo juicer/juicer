@@ -77,11 +77,7 @@ def _config_file():
     else:
         shutil.copy(Constants.EXAMPLE_CONFIG, config_file)
 
-        juicer.utils.Log.log_info("Default config file created.")
-        juicer.utils.Log.log_info("Check man 5 juicer.conf.")
-        # TODO: should never exit() from inside lib code. Needs to
-        # throw some kind of exception instead.
-        exit(1)
+        raise JuicerConfigError("Default config file created.\nCheck man 5 juicer.conf.")
 
 
 def _config_test(config):
@@ -171,8 +167,7 @@ def get_next_environment(env):
     juicer.utils.Log.log_debug("Finding next environment...")
 
     if env not in config.sections():
-        juicer.utils.Log.log_error("%s is not a configured section" % env)
-        exit(1)
+        raise JuicerConfigError("%s is not a server configured in juicer.conf" % env)
 
     section = dict(config.items(env))
 
@@ -372,9 +367,8 @@ def save_url_as(url, save_as):
     remote = requests.get(url, verify=False)
 
     if not remote.status_code == Constants.PULP_GET_OK:
-        juicer.utils.Log.log_error("A %s error occurred trying to get %s" %
+        raise JuicerPulpError("A %s error occurred trying to get %s" %
                                    (remote.status_code, url))
-        exit(1)
 
     with open(save_as, 'wb') as data:
         data.write(remote.content)
@@ -393,9 +387,8 @@ def remote_url(connector, env, repo, filename):
         # maybe the repo name is the repoid
         _r = connector.get('/repositories/%s/' % repo)
         if not _r.status_code == Constants.PULP_GET_OK:
-            juicer.utils.Log.log_error("%s is was not found as a repoid. Status code %s returned by pulp" % \
+            raise JuicerPulpError("%s is was not found as a repoid. Status code %s returned by pulp" % \
                     (repoid, _r.status_code))
-            exit(1)
 
     repo = juicer.utils.load_json_str(_r.content)['name']
 
@@ -489,16 +482,20 @@ def parse_manifest(manifest):
     return a list of dicts containing an rpm name, version and release
     eg: [{'name': 'httpd', 'version': 1.3.39, 'release': 1}]
     """
+    regex = re.compile('(.*)-(.*)')
     manifest = os.path.expanduser(manifest)
 
     if not os.path.exists(manifest):
-        raise IOError('File not found: %s' % manifest)
+        raise JuicerManifestError('File not found: %s' % manifest)
 
     rpm_list = []
     fd = open(manifest)
-    regex = re.compile('(.*)-(.*)')
+    data = yaml.load(fd)
 
-    for name, version in yaml.load(fd).iteritems():
+    if data == None:
+        raise JuicerManifestError('%s contains no items' % manifest)
+
+    for name, version in data.iteritems():
         if version == 'absent':
             juicer.utils.Log.log_debug('%s is absent. Skipping...' % name)
         else:

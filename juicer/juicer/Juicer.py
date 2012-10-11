@@ -189,9 +189,8 @@ class Juicer(object):
 
                     _r = self.connectors[env].get('/repositories/%s/' % target)
                     if not _r.status_code == Constants.PULP_GET_OK:
-                        juicer.utils.Log.error_log("%s was not found as a repoid. A %s status code was returned" %
+                        raise JuicerPulpError("%s was not found as a repoid. A %s status code was returned" %
                                 (target, _r.status_code))
-                        exit(1)
                     repo = juicer.utils.load_json_str(_r.content)['name']
 
                     link = juicer.utils.remote_url(self.connectors[env], env, repo, package['filename'])

@@ -103,8 +103,7 @@ class Cart(object):
         except IOError as e:
             juicer.utils.Log.log_error('an error occured while accessing %s:' %
                     cart_file)
-            juicer.utils.Log.log_error(e.message)
-            exit(1)
+            raise JuicerError(e.message)
 
         self.name = cart_body['name']
 
@@ -237,8 +236,7 @@ class Cart(object):
             _r = connectors[self.current_env].post(query, data)
 
             if not _r.status_code == Constants.PULP_POST_OK:
-                juicer.utils.Log.log_error('%s was not found in pulp. Additionally, a %s status code was  returned' % (pkg['name']._r.status_code))
-                exit(1)
+                raise JuicerPulpError('%s was not found in pulp. Additionally, a %s status code was  returned' % (pkg['name']._r.status_code))
 
             content = juicer.utils.load_json_str(_r.content)
 

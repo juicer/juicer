@@ -36,7 +36,6 @@ class JuicerAdmin(object):
                 except KeyError:
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
-                    exit(1)
 
     def create_repo(self, arch=None, name=None, feed=None, envs=None, type=None, query='/repositories/'):
         """
@@ -214,8 +213,7 @@ class JuicerAdmin(object):
                 juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
             else:
                 if _r.status_code == Constants.PULP_GET_NOT_FOUND:
-                    juicer.utils.Log.log_error("repo '%s' was not found" % name)
-                    exit(1)
+                    raise JuicerPulpError("repo '%s' was not found" % name)
                 else:
                     _r.raise_for_status()
         return True
