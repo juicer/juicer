@@ -19,6 +19,7 @@
 import juicer.juicer
 import juicer.juicer.Parser
 import juicer.utils.Log
+from juicer.common.Errors import JuicerError
 
 def main():
     parser = juicer.juicer.Parser.Parser()
@@ -28,4 +29,7 @@ def main():
     args.j(args)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except JuicerError, e:
+        print e
