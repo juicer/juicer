@@ -17,13 +17,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-import juicer.admin
+import juicer.admin.Parser
 import juicer.utils.Log
 from juicer.admin.Parser import Parser as Parser
 from juicer.common.Errors import JuicerError
 
 def main():
-    parser = Parser()
+    parser = juicer.admin.Parser.Parser()
     args = parser.parser.parse_args()
     juicer.utils.Log.LOG_LEVEL_CURRENT = args.v
     juicer.utils.Log.log_debug(args)
