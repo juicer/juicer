@@ -23,7 +23,9 @@ rpm packages through a Pulp installation.
 
 ### Prepare Pulp for use with Juicer
 
-Out of the box, Pulp servers are not _quite_ ready to work with Juicer. There's really only two things left to do. First, you need to decide on how many Pulp environments you're going to have. At least three (dev, qa, and prod) is recommended. Then, configure Juicer to use them.
+We assume that you have Pulp running already. Pulp ships with a default user whose name and password are both admin. If you've changed that, it's fine. If not, Juicer provides an easy way to do so! Either way, put your account credentials in your juicer.conf. There's really only two things left to configure Pulp for use with Juicer.
+
+First, you need to decide on how many Pulp environments you're going to have. At least three (dev, qa, and prod) is recommended. Then, configure Juicer to use them.
 
     $ man juicer.conf
 
