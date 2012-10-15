@@ -214,7 +214,7 @@ class Juicer(object):
             cart_list = juicer.utils.load_json_str(_r.content)
 
             for cart in cart_list:
-                cname = cart['filename'].rstrip('.json')
+                cname = os.path.splitext(cart['filename'])[0]
                 repos_items = juicer.utils.get_cart(self.connectors[start_in].base_url, start_in, cname)['repos_items']
 
                 for repo in repos_items:
