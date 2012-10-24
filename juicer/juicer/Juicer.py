@@ -145,11 +145,20 @@ class Juicer(object):
         cart.save()
         return cart
 
-    def add(self, cart_name, cart_description):
+    def update(self, cart_name, cart_description, manifests):
         """
         `cart_name` - Name of this release cart
         `cart_description` - list of ['reponame', item1, ..., itemN] lists
+        `manifests` - a list of manifest files
         """
+        if cart_description is None:
+            juicer.utils.Log.log_debug("No cart_description provided.")
+            cart_description = []
+
+        if manifests is None:
+            juicer.utils.Log.log_debug("No manifests provided.")
+            manifests = []
+
         juicer.utils.Log.log_debug("Loading cart '%s'." % cart_name)
         cart = juicer.common.Cart.Cart(cart_name, autoload=True)
 
@@ -160,6 +169,9 @@ class Juicer(object):
             for item in items:
                 cart[repo].append(juicer.common.CartItem.CartItem(os.path.expanduser(item)))
 
+        for manifest in manifests:
+            cart.add_from_manifest(manifest, self.connectors)
+
         cart.save()
         return cart
 
@@ -169,20 +181,6 @@ class Juicer(object):
         `manifests` - a list of manifest files
         """
         cart = juicer.common.Cart.Cart(cart_name)
-
-        for manifest in manifests:
-            cart.add_from_manifest(manifest, self.connectors)
-
-        cart.save()
-        return cart
-
-    def add_manifest(self, cart_name, manifests):
-        """
-        `cart_name` - Name of this release cart
-        `manifests` - a list of manifest files
-        """
-        juicer.utils.Log.log_debug("Loading cart '%s'." % cart_name)
-        cart = juicer.common.Cart.Cart(cart_name, autoload=True)
 
         for manifest in manifests:
             cart.add_from_manifest(manifest, self.connectors)

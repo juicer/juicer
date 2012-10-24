@@ -43,11 +43,7 @@ def update(args):
     if not args.r and not args.f:
         raise JuicerError("Argument Error")
 
-    if args.r:
-        cart = pulp.add(args.cartname, args.r)
-
-    if args.f:
-        cart = pulp.add_manifest(args.cartname, args.f)
+    cart = pulp.update(args.cartname, args.r, args.f)
 
     juicer.utils.Log.log_info("Updated cart '%s'." % cart.name)
 
