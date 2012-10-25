@@ -12,6 +12,14 @@ rpm packages through a Pulp installation.
 
 [1] Pulp  https://fedorahosted.org/pulp/
 
+## Download
+
+We have a [public yum repository](http://tbielawa.fedorapeople.org/juicer/) set up for your convenience! We've even provided a [repo file](https://github.com/juicer/juicer/blob/master/docs/juicer.repo) that you can place in /etc/yum.repos.d/ . From there, run
+
+    $ yum install juicer juicer-admin
+
+and you're set!
+
 ## Setting Up and Contributing
 
 1. [Installation](https://github.com/juicer/juicer/blob/master/docs/markdown/install.md)
