@@ -63,7 +63,24 @@ def cart_repo_exists_p(name, connector, env):
     return repo_exists_p(name, connector, env)
 
 
-def _config_file():
+def _system_config_file():
+    """
+    Check that the config file is present and readable. If not,
+    copy a template in place.
+    """
+    config_file = Constants.SYSTEM_CONFIG
+
+    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
+        return config_file
+    elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
+        raise IOError("Can not read %s" % config_file)
+    else:
+        shutil.copy(Constants.EXAMPLE_SYSTEM_CONFIG, config_file)
+
+        raise JuicerConfigError("Default config file created.\nCheck man 5 juicer.conf.")
+
+
+def _user_config_file():
     """
     Check that the config file is present and readable. If not,
     copy a template in place.
@@ -75,9 +92,18 @@ def _config_file():
     elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
         raise IOError("Can not read %s" % config_file)
     else:
-        shutil.copy(Constants.EXAMPLE_CONFIG, config_file)
+        shutil.copy(Constants.EXAMPLE_USER_CONFIG, config_file)
 
         raise JuicerConfigError("Default config file created.\nCheck man 5 juicer.conf.")
+
+
+def _config_file():
+    """
+    combine the user config file with the system config file (if present)
+    """
+    config = ConfigParser.SafeConfigParser()
+    config.read([_system_config_file(), _user_config_file()])
+    return config
 
 
 def _config_test(config):
@@ -106,13 +132,12 @@ def get_login_info():
     Give back an array of dicts with the connection
     information for all the environments.
     """
-    config = ConfigParser.SafeConfigParser()
     connections = {}
     _defaults = {}
     _defaults['start_in'] = ''
     _defaults['rpm_sign_plugin'] = ''
 
-    config.read(_config_file())
+    config = _config_file()
 
     _config_test(config)
 
@@ -145,7 +170,7 @@ def get_environments():
     """
     config = ConfigParser.SafeConfigParser()
 
-    config.read(_config_file())
+    config = _config_file()
 
     juicer.utils.Log.log_debug("Reading environment sections:")
 
@@ -160,9 +185,7 @@ def get_next_environment(env):
     Given an environment, return the next environment in the
     promotion hierarchy
     """
-    config = ConfigParser.SafeConfigParser()
-
-    config.read(_config_file())
+    config = _config_file()
 
     juicer.utils.Log.log_debug("Finding next environment...")
 
