@@ -47,6 +47,7 @@ def update(args):
 
     juicer.utils.Log.log_info("Updated cart '%s'." % cart.name)
 
+
 def edit():
     pass
 

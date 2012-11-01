@@ -105,12 +105,12 @@ def _config_file():
     configs = []
 
     try:
-        configs.append(_system_config_file()) 
+        configs.append(_system_config_file())
     except Exception, e:
         juicer.utils.Log.log_debug(e)
 
     try:
-        configs.append(_user_config_file()) 
+        configs.append(_user_config_file())
     except Exception, e:
         juicer.utils.Log.log_debug(e)
 
