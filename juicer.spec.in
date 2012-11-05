@@ -93,7 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 %changelog
 * Mon Nov  5 2012 Tim Bielawa <tim@redhat.com> - 0.4.0-1
-- Release of 0.4.0
+- Release of 0.4.0, "Hello, my dear"
 - System level configs
 - More helpful error messages
 - New 'juicer update' method
