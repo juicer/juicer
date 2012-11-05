@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 08/17/2012
+.\"      Date: 11/05/2012
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.3.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "08/17/2012" "Juicer 0\&.3\&.0" "Pulp repos and release carts"
+.TH "JUICER" "1" "11/05/2012" "Juicer 0\&.3\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -118,6 +118,40 @@ Promote a release cart to the next release environment in its directed graph\&.
 .RS 4
 The release cart to promote\&.
 .RE
+.SH "UPDATE"
+.sp
+usage: juicer update \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
+.sp
+update the specified cart with the items specified\&.
+.PP
+\fBCARTNAME\fR
+.RS 4
+The name of the new release cart\&.
+.RE
+.PP
+\fB\-f\fR \fImanifest\fR
+.RS 4
+Update a cart with a manifest file\&. A manifest file is written in the following format:
+.RE
+.sp
+name: version\-release
+.PP
+\fB\-r\fR \fIREPONAME\fR
+.RS 4
+Name of the reopsitory to install
+\fIITEMS\fR
+into\&. The
+\fI\-r\fR
+option may be given multiple times\&.
+.RE
+.PP
+\fBITEM\fR \&...
+.RS 4
+Items to add to the cart in repository
+\fIREPONAME\fR\&.
+.RE
+.sp
+Updating a cart will add an item to the cart if it wasn\(cqt originally present or overwrite an item if it already was\&.
 .SH "SEARCH"
 .sp
 usage: juicer search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-\-in \fIENVIRONMENT\fR \&...]
