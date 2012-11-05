@@ -143,8 +143,9 @@ whenever RPMs are being uploaded to an environment that
 
 FILES
 -----
-*~/.juicer.conf* -- Juicer configuration file
+*~/.juicer.conf* -- Personal Juicer configuration file
 
+*/etc/juicer.conf* -- System Juicer configuration file
 
 
 AUTHOR
