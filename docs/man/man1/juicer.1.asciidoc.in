@@ -137,20 +137,30 @@ graph.
 The release cart to promote.
 
 
-////////////////////////////////////////////////////////////////////////
 UPDATE
 ------
-usage: juicer update 'CARTNAME' 'ITEM' ...
+usage: juicer update 'CARTNAME' [-f manifest] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
 
-Update a release cart with items.
+update the specified cart with the items specified.
 
 *CARTNAME*::
-The name of the release cart to update.
+The name of the new release cart.
+
+*-f* 'manifest'::
+Update a cart with a manifest file. A manifest file is written in
+the following format:
+
+name: version-release
+
+*-r* 'REPONAME'::
+Name of the reopsitory to install 'ITEMS' into. The '-r' option may be
+given multiple times.
 
 *ITEM* ...::
-The items to update in the cart.
-////////////////////////////////////////////////////////////////////////
+Items to add to the cart in repository 'REPONAME'.
 
+Updating a cart will add an item to the cart if it wasn't originally
+present or overwrite an item if it already was.
 
 SEARCH
 ------
