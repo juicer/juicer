@@ -163,7 +163,7 @@ class JuicerAdmin(object):
             if _r.status_code == Constants.PULP_GET_OK:
                 for repo in juicer.utils.load_json_str(_r.content):
                     if re.match(".*-{0}$".format(env), repo['id']):
-                        juicer.utils.Log.log_info("\t" + repo['name'])
+                        juicer.utils.Log.log_info("\t" + repo['display_name'])
             else:
                 _r.raise_for_status()
         return True
