@@ -268,9 +268,11 @@ class JuicerAdmin(object):
 
         login = login.lower()
 
-        data = {'login': login,
-                'name': name,
-                'password': password}
+        data = { 'delta': 
+                    {'name': name,
+                    'password': password[0]
+                    }
+                }
 
         query = "%s%s/" % (query, login)
 
@@ -283,7 +285,8 @@ class JuicerAdmin(object):
             else:
                 _r = self.connectors[env].put(query, data)
                 if _r.status_code == Constants.PULP_PUT_OK:
-                    juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
+                    juicer.utils.Log.log_info("user %s updated" %
+                            juicer.utils.load_json_str(_r.content)['login'])
                 else:
                     _r.raise_for_status()
         return True
