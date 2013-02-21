@@ -257,7 +257,7 @@ class JuicerAdmin(object):
 
                     juicer.utils.Log.log_info("Login: %s" % user['login'])
                     juicer.utils.Log.log_info("Name: %s" % user['name'])
-                    juicer.utils.Log.log_info("Roles: %s" % user['roles'])
+                    juicer.utils.Log.log_info("Roles: %s" % ', '.join(user['roles']))
 
                     if count < len(envs):
                         # just want a new line
