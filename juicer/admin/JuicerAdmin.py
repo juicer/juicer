@@ -238,7 +238,12 @@ class JuicerAdmin(object):
         """
         juicer.utils.Log.log_debug("Show User: %s", login)
 
+        # keep track of which iteration of environment we're in
+        count = 0
+
         for env in self.args.envs:
+            count += 1
+
             juicer.utils.Log.log_info("%s:", env)
             if not juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` doesn't exist in %s... skipping!",
@@ -248,7 +253,15 @@ class JuicerAdmin(object):
                 url = "%s%s/" % (query, login)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == Constants.PULP_GET_OK:
-                    juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
+                    user =juicer.utils.load_json_str(_r.content) 
+
+                    juicer.utils.Log.log_info("Login: %s" % user['login'])
+                    juicer.utils.Log.log_info("Name: %s" % user['name'])
+                    juicer.utils.Log.log_info("Roles: %s" % user['roles'])
+
+                    if count < len(envs):
+                        # just want a new line
+                        juicer.utils.Log.log_info("")
                 else:
                     _r.raise_for_status()
         return True
