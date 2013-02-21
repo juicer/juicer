@@ -175,7 +175,7 @@ class JuicerAdmin(object):
 
         Add user to role
         """
-        data = {'username': self.args.login}
+        data = {'login': self.args.login}
         juicer.utils.Log.log_debug(
                 "Add Role '%s' to '%s'", role, login)
 
@@ -188,7 +188,7 @@ class JuicerAdmin(object):
                 juicer.utils.Log.log_info("user `%s` doesn't exist in %s... skipping!",
                                           (login, env))
             else:
-                url = "%s%s/add/" % (query, role)
+                url = "%s%s/users/" % (query, role)
                 _r = self.connectors[env].post(url, data)
                 if _r.status_code == Constants.PULP_POST_OK:
                     juicer.utils.Log.log_info("added user `%s` to role `%s` in %s",
