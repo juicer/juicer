@@ -44,7 +44,8 @@ class JuicerAdmin(object):
         `feed` - Repo URL to feed from
         `type` - Repository type (yum, file)
 
-        Create repository in specified environments
+        Create repository in specified environments, associate the
+        yum_distributor with it and publish the repo
         """
         name = name.lower()
 
@@ -67,9 +68,34 @@ class JuicerAdmin(object):
             else:
                 data['relative_path'] = '/%s/%s/' % (env, name)
                 data['id'] = '-'.join([name, env])
+
                 _r = self.connectors[env].post(query, data)
+
                 if _r.status_code == Constants.PULP_POST_CREATED:
-                    juicer.utils.Log.log_info("created repo `%s` in %s", name, env)
+                    dist_query = '/repositories/%s/distributors/' % data['id']
+                    dist_data = {'distributor_id': 'yum_distributor',
+                            'distributor_type_id': 'yum_distributor',
+                            'distributor_config': {
+                                'relative_url': '/%s/%s/' % (env, name),
+                                'http': True,
+                                'https': True
+                                },
+                            'auto_publish': True,
+                            'relative_path': '/%s/%s/' % (env, name)
+                            }
+
+                    _r = self.connectors[env].post(dist_query, dist_data)
+
+                    if _r.status_code == Constants.PULP_POST_CREATED:
+                        pub_query = '/repositories/%s/actions/publish/' % data['id']
+                        pub_data = {'id': 'yum_distributor'}
+
+                        _r = self.connectors[env].post(pub_query, pub_data)
+
+                        if _r.status_code == Constants.PULP_POST_ACCEPTED:
+                            juicer.utils.Log.log_info("created repo `%s` in %s", name, env)
+                    else:
+                        _r.raise_for_status()
                 else:
                     _r.raise_for_status()
         return True
