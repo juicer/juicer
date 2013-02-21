@@ -205,12 +205,24 @@ class JuicerAdmin(object):
         """
         juicer.utils.Log.log_debug("Show Repo: %s", name)
 
+        # keep track of which iteration of environment we're in
+        count = 0
+
         for env in envs:
+            count += 1
+
             juicer.utils.Log.log_info("%s:", env)
             url = "%s%s-%s/" % (query, name, env)
             _r = self.connectors[env].get(url)
             if _r.status_code == Constants.PULP_GET_OK:
-                juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
+                repo = juicer.utils.load_json_str(_r.content)
+
+                juicer.utils.Log.log_info(repo['display_name'])
+                juicer.utils.Log.log_info("%s packages" % repo['content_unit_count'])
+
+                if count < len(envs):
+                    # just want a new line
+                    juicer.utils.Log.log_info("")
             else:
                 if _r.status_code == Constants.PULP_GET_NOT_FOUND:
                     raise JuicerPulpError("repo '%s' was not found" % name)
