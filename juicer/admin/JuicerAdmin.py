@@ -157,13 +157,20 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug(
                 "List Repos In: %s", ", ".join(envs))
 
+        count = 0
+
         for env in envs:
+            count += 1
+
             juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
                 for repo in juicer.utils.load_json_str(_r.content):
                     if re.match(".*-{0}$".format(env), repo['id']):
-                        juicer.utils.Log.log_info("\t" + repo['display_name'])
+                        juicer.utils.Log.log_info(repo['display_name'])
+
+                if count < len(envs):
+                    juicer.utils.Log.log_info("")
             else:
                 _r.raise_for_status()
         return True
