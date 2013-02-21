@@ -48,7 +48,7 @@ class JuicerAdmin(object):
         """
         name = name.lower()
 
-        data = {'name': name,
+        data = {'display_name': name,
                 'arch': arch}
 
         if feed:
