@@ -272,11 +272,31 @@ class JuicerAdmin(object):
         """
         juicer.utils.Log.log_debug("List Roles %s", ", ".join(envs))
 
+        count = 0
+
         for env in envs:
+            rcount = 0
+
             juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
-                juicer.utils.Log.log_info(juicer.utils.load_json_str(_r.content))
+                roles = juicer.utils.load_json_str(_r.content)
+
+                for role in roles:
+                    rcount += 1
+
+                    juicer.utils.Log.log_info("Name: %s" % role['display_name'])
+                    juicer.utils.Log.log_info("Description: %s" % role['description'])
+                    juicer.utils.Log.log_info("ID: %s" % role['id'])
+                    juicer.utils.Log.log_info("Users: %s" % ', '.join(role['users']))
+
+                    if rcount < len(roles):
+                        # just want a new line
+                        juicer.utils.Log.log_info("\n")
+
+                if count < len(roles):
+                    # just want a new line
+                    juicer.utils.Log.log_info("\n")
             else:
                 _r.raise_for_status()
         return True
