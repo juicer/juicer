@@ -45,7 +45,7 @@ class Upload(object):
         else:
             _r.raise_for_status()
 
-    def append(self, fdata, offset, query='/content/uploads/'):
+    def append(self, fdata, offset, query='/content/uploads'):
         query = '%s/%s/%s/' % (query, self.uid, offset)
         _r = self.connector.put(query, fdata, log_data=False, auto_create_json_str=False)
 

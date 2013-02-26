@@ -608,10 +608,11 @@ def upload_rpm(rpm_path, repoid, connector):
     rpm_fd.seek(0)
     while total_seeked < size:
         rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
+        last_offset = total_seeked
         total_seeked += len(rpm_data)
         juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
-        upload_code = upload.append(fdata=rpm_data, offset=total_seeked)
-        if upload_code != Constants.PULP_POST_OK:
+        upload_code = upload.append(fdata=rpm_data, offset=last_offset)
+        if upload_code != Constants.PULP_PUT_OK:
             juicer.utils.Log.log_error("Upload failed.")
         pbar.update(len(rpm_data))
     pbar.finish()
