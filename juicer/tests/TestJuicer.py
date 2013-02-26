@@ -12,7 +12,7 @@ class TestJuicer(unittest.TestCase):
     def setUp(self):
         self.parser = pmoney()
 
-        self.cname = 'CRQ0DAY'
+        self.cname = 'CHG0DAY'
         self.cpath = os.path.expanduser('~/.juicer-carts/%s.json' % self.cname)
 
     def test_search(self):
@@ -41,7 +41,7 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.push)(cart)
 
         # test creating a cart
-        self.args = self.parser.parser.parse_args(('create CRQ0DAY -r %s %s' \
+        self.args = self.parser.parser.parse_args(('create CHG0DAY -r %s %s' \
                 % ('hats', rpm_path)).split())
         pulp = j(self.args)
         mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
@@ -66,7 +66,7 @@ class TestJuicer(unittest.TestCase):
         self.assertFalse(cart.current_env == old_env)
 
         # test creating a cart from manifest
-        new_cname = 'CRQ1DAY'
+        new_cname = 'CHG1DAY'
 
         self.args = self.parser.parser.parse_args(('create %s -f %s' \
                 % (new_cname, './share/juicer/rpm-manifest.yaml')).split())

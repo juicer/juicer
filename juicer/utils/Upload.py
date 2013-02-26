@@ -21,7 +21,7 @@ from juicer.common import Constants
 
 
 class Upload(object):
-    def __init__(self, name, cksum, size, repoid, connector, query='/services/upload/'):
+    def __init__(self, name, cksum, size, repoid, connector, query='/content/uploads/'):
         """
         in addition to creating an upload object, this
         initializes the upload of an rpm into pulp
@@ -37,90 +37,46 @@ class Upload(object):
         self.size = size
         self.repoid = repoid
 
-        data = {'name': name,
-                'checksum': cksum,
-                'size': size}
-
-        _r = self.connector.post(query, data)
-        self.uid = juicer.utils.load_json_str(_r.content)['id']
-
-        juicer.utils.Log.log_debug("Initialized upload process. POST returned with data: %s" % str(_r.    content))
-
-    def _include_rpm_in_repo(self, pkgid):
-        """
-        includes an rpm in the designated repo
-        """
-        query = '/repositories/' + self.repoid + '/add_package/'
-        data = {'repoid': self.repoid,
-                'packageid': [pkgid]}
-
-        _r = self.connector.post(query, data)
-
-        if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
-            self.connectors.delete('/packages/' + pkgid + '/')
-            _r.raise_for_status()
-
-    def _include_file_in_repo(self, fileid):
-        """
-        includes a file in the designated repo
-        """
-        query = '/repositories/' + self.repoid + '/add_file/'
-        data = {'fileids': [fileid]}
-
-        _r = self.connector.post(query, data)
-
-        if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
-            print juicer.utils.load_json_str(_r.content)
-            #self.connector.delete('/files/' + fileid + '/')
-            _r.raise_for_status()
-
-    def _generate_metadata(self):
-        """
-        causes pulp to regenerate the metadata for the repository
-        """
-        query = '/repositories/' + self.repoid + '/generate_metadata/'
-
         _r = self.connector.post(query)
+        if _r.status_code == Constants.PULP_POST_CREATED:
+            self.uid = juicer.utils.load_json_str(_r.content)['upload_id']
 
-        juicer.utils.Log.log_debug("Attempted metadata update for repo: %s -> %s" % \
-                                       (self.repoid, str(_r.content)))
-
-        if _r.status_code == Constants.PULP_POST_CONFLICT:
-            juicer.utils.Log.log_debug("Metadata update in %s already in progress...: " % \
-                                           self.repoid)
-            while _r.status_code == Constants.PULP_POST_CONFLICT:
-                time.sleep(3)
-                _r = self.connector.post(query)
-        if not _r.status_code == Constants.PULP_POST_ACCEPTED:
+            juicer.utils.Log.log_debug("Initialized upload process. POST returned with data: %s" % str(_r.content))
+        else:
             _r.raise_for_status()
 
-    def append(self, fdata, query='/services/upload/append/'):
-        uri = query + self.uid + '/'
-        _r = self.connector.put(uri, fdata, log_data=False, auto_create_json_str=False)
+    def append(self, fdata, offset, query='/content/uploads/'):
+        query = '%s/%s/%s/' % (query, self.uid, offset)
+        _r = self.connector.put(query, fdata, log_data=False, auto_create_json_str=False)
 
-        juicer.utils.Log.log_notice("Appending to: %s" % uri)
-        juicer.utils.Log.log_debug("Continuing upload with append. PUT returned with data: %s" % str(_r.  content))
+        juicer.utils.Log.log_notice("Appending to: %s" % query)
+        juicer.utils.Log.log_debug("Continuing upload with append. POST returned with data: %s" % str(_r.content))
 
-        return juicer.utils.load_json_str(_r.content)
+        return _r.status_code
 
-    def finalize(self, nvrea, ftype='rpm', desc=None, htype='md5', lic=None,
-            group=None, vendor=None, req=None, query='/services/upload/import/'):
-
-        data = {'uploadid': self.uid,
-                'metadata': {
-                    'type': ftype,
+    def import_upload(self, nvrea, ftype='rpm', rpm_name='', desc=None, htype='md5', lic=None, group=None, vendor=None, req=None, unit_key=""):
+        query = '/repositories/%s/actions/import_upload/' % self.repoid
+        data = {'upload_id': self.uid,
+                'unit_type_id': ftype,
+                'unit_key': {
+                    'name': rpm_name,
+                    'version': nvrea[1],
+                    'release': nvrea[2],
+                    'epoch': nvrea[3],
+                    'arch': nvrea[4],
+                    'checksumtype': htype,
                     'checksum': self.cksum,
-                    'description': desc if desc else '',
-                    'hashtype': htype,
-                    'pkgname': self.name,
-                    'nvrea': nvrea if nvrea else '',
-                    'size': self.size,
+                    },
+                'unit_metadata': {
+                    'filename': self.name,
                     'license': lic if lic else '',
-                    'group': group if group else '',
+                    'requires': req if req else '',
+                #    'type': ftype,
+                    'description': desc if desc else '',
+                #    'size': self.size,
                     'vendor': vendor if vendor else '',
-                    'requires': req if req else ''}}
+                    }
+                }
 
         _r = self.connector.post(query, data)
 
@@ -129,16 +85,13 @@ class Upload(object):
                                        juicer.utils.load_json_str(_r.content))
             _r.raise_for_status()
 
-        juicer.utils.Log.log_debug("Finalized upload with data: %s" % str(_r.content))
-        juicer.utils.Log.log_debug(juicer.utils.load_json_str(_r.content))
+        juicer.utils.Log.log_debug("Finalized upload id %s" % self.uid)
 
-        final_id = juicer.utils.load_json_str(_r.content)['id']
+    def clean_upload(self, query='/content/uploads/'):
+        query = query + self.uid + '/'
+        _r = self.connector.delete(query)
 
-        if ftype == 'rpm':
-            self._include_rpm_in_repo(final_id)
-        elif ftype == 'file':
-            self._include_file_in_repo(final_id)
-
-        self._generate_metadata()
-
-        return final_id
+        if _r.status_code == Constants.PULP_DELETE_OK:
+            juicer.utils.Log.log_info("Cleaned up after upload request.")
+        else:
+            _r.raise_for_status()

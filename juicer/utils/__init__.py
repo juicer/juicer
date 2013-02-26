@@ -413,7 +413,7 @@ def remote_url(connector, env, repo, filename):
     """
     return a str containing a link to the rpm in the pulp repository
     """
-    dl_base = connector.base_url.replace('/pulp/api', '/pulp/repos')
+    dl_base = connector.base_url.replace('/pulp/api/v2', '/pulp/repos')
 
     repoid = '%s-%s' % (repo, env)
 
@@ -425,7 +425,7 @@ def remote_url(connector, env, repo, filename):
             raise JuicerPulpError("%s is was not found as a repoid. Status code %s returned by pulp" % \
                     (repoid, _r.status_code))
 
-    repo = juicer.utils.load_json_str(_r.content)['name']
+    repo = juicer.utils.load_json_str(_r.content)['display_name']
 
     link = '%s/%s/%s/%s' % (dl_base, env, repo, filename)
 
@@ -610,7 +610,9 @@ def upload_rpm(rpm_path, repoid, connector):
         rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
         total_seeked += len(rpm_data)
         juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(rpm_data), total_seeked))
-        upload_flag = upload.append(fdata=rpm_data)
+        upload_code = upload.append(fdata=rpm_data, offset=total_seeked)
+        if upload_code != Constants.PULP_POST_OK:
+            juicer.utils.Log.log_error("Upload failed.")
         pbar.update(len(rpm_data))
     pbar.finish()
     rpm_fd.close()
@@ -618,11 +620,12 @@ def upload_rpm(rpm_path, repoid, connector):
     juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
 
     # finalize upload
-    rpm_id = ''
-    if upload_flag == True:
-        rpm_id = upload.finalize(nvrea=nvrea)
+    rpm_id = upload.import_upload(nvrea=nvrea, rpm_name=name)
 
     juicer.utils.Log.log_debug("RPM upload complete. New 'packageid': %s" % rpm_id)
+
+    # clean up working dir
+    upload.clean_upload()
     return rpm_id
 
 
@@ -650,7 +653,7 @@ def upload_file(file_path, repoid, connector):
         file_data = fd.read(Constants.UPLOAD_AT_ONCE)
         total_seeked += len(file_data)
         juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
-        upload_flag = upload.append(fdata=file_data)
+        upload_flag = upload.append(fdata=file_data, offset=total_seeked)
         pbar.update(len(file_data))
     pbar.finish()
     fd.close()
