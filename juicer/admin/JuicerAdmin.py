@@ -50,13 +50,19 @@ class JuicerAdmin(object):
         name = name.lower()
 
         data = {'display_name': name,
-                'arch': arch}
+                'arch': arch,
+                'notes': {
+                    }
+                }
 
         if feed:
             data['feed'] = feed
 
         if type:
-            data['content_types'] = type
+            if type == 'yum':
+                data['notes']['_repo-type'] = 'rpm-repo'
+            elif type == 'file':
+                data['notes']['_repo-type'] = 'file-repo'
 
         juicer.utils.Log.log_debug("Create Repo: %s", name)
 
