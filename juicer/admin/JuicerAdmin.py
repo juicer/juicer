@@ -72,6 +72,14 @@ class JuicerAdmin(object):
                 _r = self.connectors[env].post(query, data)
 
                 if _r.status_code == Constants.PULP_POST_CREATED:
+                    imp_query = '/repositories/%s/importers/' % data['id']
+                    imp_data = {'importer_id': 'yum_importer',
+                            'importer_type_id': 'yum_importer',
+                            'importer_config': {},
+                            }
+
+                    _r = self.connectors[env].post(imp_query, imp_data)
+
                     dist_query = '/repositories/%s/distributors/' % data['id']
                     dist_data = {'distributor_id': 'yum_distributor',
                             'distributor_type_id': 'yum_distributor',
