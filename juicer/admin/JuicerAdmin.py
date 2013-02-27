@@ -59,10 +59,10 @@ class JuicerAdmin(object):
             data['feed'] = feed
 
         if type:
-            if type == 'yum':
-                data['notes']['_repo-type'] = 'rpm-repo'
-            elif type == 'file':
+            if type == 'file':
                 data['notes']['_repo-type'] = 'file-repo'
+            else:
+                data['notes']['_repo-type'] = 'rpm-repo'
 
         juicer.utils.Log.log_debug("Create Repo: %s", name)
 
