@@ -193,9 +193,15 @@ class Juicer(object):
         cart.load(cart_name)
         return str(cart)
 
-    def search(self, name=None, search_carts=False, query='/services/search/packages/'):
-        data = {'regex': True,
-                'name': name}
+    def search(self, name=None, search_carts=False, query='/content/units/rpm/search/'):
+        data = {
+                    'criteria': {
+                        'filters': {'name': {'$regex': ".*%s.*" % name}},
+                        'sort': [['name', 'ascending']],
+                        'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
+                    },
+                    'include_repos': 'true'
+                }
 
         juicer.utils.Log.log_info('Packages:')
 
@@ -214,20 +220,20 @@ class Juicer(object):
             for package in pkg_list:
                 # if the package is in a repo, show a link to the package in said repo
                 # otherwise, show nothing
-                if len(package['repoids']) > 0:
-                    target = package['repoids'][0]
+                if len(package['repository_memberships']) > 0:
+                    target = package['repository_memberships'][0]
 
                     _r = self.connectors[env].get('/repositories/%s/' % target)
                     if not _r.status_code == Constants.PULP_GET_OK:
                         raise JuicerPulpError("%s was not found as a repoid. A %s status code was returned" %
                                 (target, _r.status_code))
-                    repo = juicer.utils.load_json_str(_r.content)['name']
+                    repo = juicer.utils.load_json_str(_r.content)['display_name']
 
                     link = juicer.utils.remote_url(self.connectors[env], env, repo, package['filename'])
                 else:
                     link = ''
 
-                juicer.utils.Log.log_info('%s %s %s' % (package['name'], package['version'], link))
+                juicer.utils.Log.log_info('%s\t%s\t%s\t%s' % (package['name'], package['version'], package['release'], link))
 
         if search_carts:
             # if the package is in a cart, show the cart name

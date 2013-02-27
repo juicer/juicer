@@ -236,7 +236,7 @@ class Cart(object):
             _r = connectors[self.current_env].post(query, data)
 
             if not _r.status_code == Constants.PULP_POST_OK:
-                raise JuicerPulpError('%s was not found in pulp. Additionally, a %s status code was  returned' % (pkg['name']._r.status_code))
+                raise JuicerPulpError('%s was not found in pulp. Additionally, a %s status code was  returned' % (pkg['name'], _r.status_code))
 
             content = juicer.utils.load_json_str(_r.content)
 
