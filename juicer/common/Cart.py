@@ -123,8 +123,7 @@ class Cart(object):
         if not os.path.exists(CART_LOCATION):
             os.mkdir(CART_LOCATION)
 
-        cart_file = os.path.join(CART_LOCATION, self.name)
-        juicer.utils.write_json_document(cart_file, self._cart_dict())
+        juicer.utils.write_json_document(self.cart_file(), self._cart_dict())
 
     def iterrepos(self):
         """
@@ -255,3 +254,6 @@ class Cart(object):
 
         for repo in urls:
             self[repo] = urls[repo]
+
+    def cart_file(self):
+        return os.path.join(CART_LOCATION, self.name) + '.json'

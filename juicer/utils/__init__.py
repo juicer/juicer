@@ -41,6 +41,7 @@ try:
     json
 except ImportError:
     import simplejson as json
+from pymongo import Connection as MongoClient
 
 
 def load_json_str(jstr):
@@ -123,7 +124,7 @@ def _config_test(config):
     confirm the provided config has the required attributes and
     has a valid promotion path
     """
-    required_keys = set(['username', 'password', 'base_url', 'start_in'])
+    required_keys = set(['username', 'password', 'base_url', 'start_in', 'cart_host'])
 
     for section in config.sections():
         cfg = dict(config.items(section))
@@ -137,6 +138,35 @@ def _config_test(config):
         if 'promotes_to' in cfg and cfg['promotes_to'] not in config.sections():
             raise JuicerConfigError("promotion_path: %s is not a config section" \
                                 % cfg['promotes_to'])
+
+
+def cart_db():
+    """
+    return a pymongo db connection for interacting with cart objects
+    """
+    config = _config_file()
+    _config_test(config)
+
+    juicer.utils.Log.log_debug("Establishing cart connection:")
+    cart_con = MongoClient(dict(config.items(config.sections()[0]))['cart_host'])
+    cart_db = cart_con.carts
+
+    return cart_db
+
+
+def upload_cart(cart, collection):
+    """
+    Connect to mongo and store your cart in the specified collection.
+    """
+    cart_cols = cart_db()
+
+    cart_json = read_json_document(cart.cart_file())
+    cart_id = cart_cols[collection].save(cart_json)
+
+    cart._id = "ObjectId(%s)" % cart_id
+    cart.save()
+
+    return cart_id
 
 
 def get_login_info():
@@ -652,9 +682,12 @@ def upload_file(file_path, repoid, connector):
 
     while total_seeked < size:
         file_data = fd.read(Constants.UPLOAD_AT_ONCE)
+        last_offset = total_seeked
         total_seeked += len(file_data)
         juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
-        upload_flag = upload.append(fdata=file_data, offset=total_seeked)
+        upload_code = upload.append(fdata=file_data, offset=last_offset)
+        if upload_code != Constants.PULP_PUT_OK:
+            juicer.utils.Log.log_error("Upload failed.")
         pbar.update(len(file_data))
     pbar.finish()
     fd.close()
@@ -662,9 +695,7 @@ def upload_file(file_path, repoid, connector):
     juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
 
     # finalize upload
-    file_id = ''
-    if upload_flag == True:
-        file_id = upload.finalize(ftype='file', htype='sha256', nvrea=nvrea)
+    file_id = upload.import_upload(ftype='file', htype='sha256', nvrea=nvrea)
     juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
     return file_id
 

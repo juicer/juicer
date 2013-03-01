@@ -69,6 +69,8 @@ class Juicer(object):
                 juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
                                            (os.path.basename(item.path), rpm_id))
 
+            self.connectors[env].post('/repositories/%s/actions/publish/' % repoid, {'id': 'yum_distributor'})
+
             # Upload carts aren't special, don't update their paths
             if cart.name == 'upload-cart':
                 continue
@@ -109,7 +111,6 @@ class Juicer(object):
 
         Publish a release cart in JSON format to the pre-release environment.
         """
-
         juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart.name)
 
         if not env:
@@ -122,10 +123,10 @@ class Juicer(object):
 
         juicer.utils.Log.log_debug("Initializing upload of cart '%s' to cart repository" % cart.name)
 
-        repoid = "carts-%s" % env
-        file_id = juicer.utils.upload_file(cart_file, repoid, self.connectors[env])
+        #file_id = juicer.utils.upload_file(cart_file, repoid, self.connectors[env])
+        cart_id = juicer.utils.upload_cart(cart, env)
         juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                                   (os.path.basename(cart_file), file_id))
+                                   (os.path.basename(cart_file), cart_id))
         return True
 
     def create(self, cart_name, cart_description):

@@ -60,7 +60,7 @@ class JuicerAdmin(object):
 
         if type:
             if type == 'file':
-                data['notes']['_repo-type'] = 'file-repo'
+                data['notes']['_repo-type'] = 'text-repo'
             else:
                 data['notes']['_repo-type'] = 'rpm-repo'
 
