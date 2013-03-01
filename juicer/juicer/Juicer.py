@@ -116,17 +116,9 @@ class Juicer(object):
         if not env:
             env = self._defaults['start_in']
 
-        cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cart.name)
-
-        if not cart_file.endswith('.json'):
-            cart_file += '.json'
-
-        juicer.utils.Log.log_debug("Initializing upload of cart '%s' to cart repository" % cart.name)
-
-        #file_id = juicer.utils.upload_file(cart_file, repoid, self.connectors[env])
         cart_id = juicer.utils.upload_cart(cart, env)
         juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                                   (os.path.basename(cart_file), cart_id))
+                                   (cart.name, cart_id))
         return True
 
     def create(self, cart_name, cart_description):
