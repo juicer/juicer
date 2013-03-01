@@ -217,7 +217,7 @@ class Cart(object):
         output['repos_items'] = repos_items
         return output
 
-    def add_from_manifest(self, manifest, connectors, query='/services/search/packages/'):
+    def add_from_manifest(self, manifest, connectors, query='/content/units/rpm/search/'):
         pkg_list = juicer.utils.parse_manifest(manifest)
         env_re = re.compile('.*-%s' % self.current_env)
 
@@ -228,9 +228,18 @@ class Cart(object):
             juicer.utils.Log.log_debug("Finding %s %s %s ..." % \
                     (pkg['name'], pkg['version'], pkg['release']))
 
-            data = {'name': pkg['name'],
-                    'version': pkg['version'],
-                    'release': pkg['release']}
+            data = {
+                    'criteria': {
+                        'filters': {
+                            'name': pkg['name'],
+                            'version': pkg['version'],
+                            'release': pkg['release']
+                            },
+                        'sort': [['name', 'ascending']],
+                        'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
+                        },
+                    'include_repos': 'true'
+                    }
 
             _r = connectors[self.current_env].post(query, data)
 
@@ -244,7 +253,7 @@ class Cart(object):
                 continue
 
             for ppkg in content:
-                for repo in ppkg['repoids']:
+                for repo in ppkg['repository_memberships']:
                     if re.match(env_re, repo):
                         if repo not in urls:
                             urls[repo] = []
