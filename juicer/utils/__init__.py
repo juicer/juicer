@@ -163,7 +163,6 @@ def upload_cart(cart, collection):
     cart_json = read_json_document(cart.cart_file())
     cart_id = cart_cols[collection].save(cart_json)
 
-    cart._id = "ObjectId(%s)" % cart_id
     cart.save()
 
     return cart_id

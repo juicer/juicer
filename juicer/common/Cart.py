@@ -105,7 +105,7 @@ class Cart(object):
                     cart_file)
             raise JuicerError(e.message)
 
-        self.name = cart_body['name']
+        self.name = cart_body['_id']
 
         if cart_body['current_env'] == '':
                 self.current_env = juicer.utils.get_login_info()[1]['start_in']
@@ -205,7 +205,7 @@ class Cart(object):
         return "\n".join(output)
 
     def _cart_dict(self):
-        output = {'name': self.name,
+        output = {'_id': self.name,
                 'current_env': None,
                 'repos_items': []}
         output['current_env'] = self.current_env
