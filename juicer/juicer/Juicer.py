@@ -287,11 +287,12 @@ class Juicer(object):
         if not env:
             env = self._defaults['start_in']
         juicer.utils.Log.log_debug("Initializing pulling cart: %s ...", cartname)
+
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
         cart_file += '.json'
-        juicer.utils.save_url_as(juicer.utils.remote_url(self.connectors[env], env, 'carts', cartname + '.json'),
-                                 cart_file)
-        juicer.utils.Log.log_info("pulled cart %s and saved to %s", cartname, cart_file)
+
+        juicer.utils.write_json_document(cart_file, juicer.utils.download_cart(cartname, env))
+
         return True
 
     def promote(self, name):

@@ -659,6 +659,16 @@ def upload_rpm(rpm_path, repoid, connector):
     return rpm_id
 
 
+def download_cart(cart_name, env):
+    """
+    accesses mongodb and return a cart spec stored there
+    """
+    cart_con = cart_db()
+    carts = cart_con[env]
+
+    return carts.find_one({'_id': cart_name})
+
+
 def get_cart(base_url, env, cart_name):
     """
     returns a dict object representing a cart stored in pulp
