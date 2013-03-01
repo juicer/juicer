@@ -659,46 +659,6 @@ def upload_rpm(rpm_path, repoid, connector):
     return rpm_id
 
 
-def upload_file(file_path, repoid, connector):
-    fd = open(file_path, 'rb')
-    name = os.path.basename(file_path)
-    cksum = hashlib.sha256(file_path).hexdigest()
-    size = os.path.getsize(file_path)
-    nvrea = tuple((name, 0, 0, 0, 'noarch'))
-
-    juicer.utils.Log.log_notice("Expected amount to seek: %s (file size by os.path.getsize)", size)
-
-    # initiate upload
-    upload = juicer.utils.Upload.Upload(name, cksum, size, repoid, connector)
-
-    # create a statusbar
-    pbar = ProgressBar(size)
-
-    # read in file
-    upload_flag = False
-    total_seeked = 0
-    fd.seek(0)
-
-    while total_seeked < size:
-        file_data = fd.read(Constants.UPLOAD_AT_ONCE)
-        last_offset = total_seeked
-        total_seeked += len(file_data)
-        juicer.utils.Log.log_notice("Seeked %s data... (total seeked: %s)" % (len(file_data), total_seeked))
-        upload_code = upload.append(fdata=file_data, offset=last_offset)
-        if upload_code != Constants.PULP_PUT_OK:
-            juicer.utils.Log.log_error("Upload failed.")
-        pbar.update(len(file_data))
-    pbar.finish()
-    fd.close()
-
-    juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
-
-    # finalize upload
-    file_id = upload.import_upload(ftype='file', htype='sha256', nvrea=nvrea)
-    juicer.utils.Log.log_debug("FILE upload complete. New 'fileid': %s" % file_id)
-    return file_id
-
-
 def get_cart(base_url, env, cart_name):
     """
     returns a dict object representing a cart stored in pulp
