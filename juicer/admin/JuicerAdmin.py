@@ -150,6 +150,7 @@ class JuicerAdmin(object):
 
         Delete repo in specified environments
         """
+        orphan_query = '/content/orphans/rpm/'
         juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
 
         for env in self.args.envs:
@@ -163,6 +164,18 @@ class JuicerAdmin(object):
                 if _r.status_code == Constants.PULP_DELETE_ACCEPTED:
                     juicer.utils.Log.log_info("deleted repo `%s` in %s",
                                               (name, env))
+
+                    # if delete was successful, delete orphaned rpms
+                    _r = self.connectors[env].get(orphan_query)
+                    if _r.status_code is Constants.PULP_GET_OK:
+                        if len(juicer.utils.load_json_str(_r.content)) > 0:
+                            __r = self.connectors[env].delete(orphan_query)
+                            if __r.status_code is Constants.PULP_DELETE_OK:
+                                juicer.utils.Log.log_debug("deleted orphaned rpms in %s." % env)
+                            else:
+                                juicer.utils.Log.log_error("unable to delete orphaned rpms in %s. a %s error was returned", (env, __r.status_code))
+                    else:
+                        juicer.utils.Log.log_error("unable to get a list of orphaned rpms. encountered a %s error." % _r.status_code)
                 else:
                     _r.raise_for_status()
         return True
