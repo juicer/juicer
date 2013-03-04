@@ -35,13 +35,6 @@ all __SUBCOMMAND__s accept this option when given after 'SUBCOMMAND'.
 
 
 
-SETUP
------
-Takes no options. Will configure the pulp servers defined in juicer.conf
-to work with juicer.
-
-
-
 CREATE-REPO
 -----------
 usage: juicer-admin create-repo REPONAME --arch ARCH --feed FEED

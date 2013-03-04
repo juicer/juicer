@@ -382,12 +382,3 @@ class JuicerAdmin(object):
                 else:
                     _r.raise_for_status()
         return True
-
-    def setup(self, envs=None, query='/repositories/'):
-        """
-        performs initial setup of pulp server(s) to work with juicer
-        """
-        if not envs:
-            envs = self._defaults['environments']
-
-        self.create_repo(name='carts', arch='noarch', envs=envs, type='file')
