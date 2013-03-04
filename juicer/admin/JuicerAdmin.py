@@ -55,9 +55,6 @@ class JuicerAdmin(object):
                     }
                 }
 
-        if feed:
-            data['feed'] = feed
-
         if type:
             if type == 'file':
                 data['notes']['_repo-type'] = 'text-repo'
@@ -83,6 +80,9 @@ class JuicerAdmin(object):
                             'importer_type_id': 'yum_importer',
                             'importer_config': {},
                             }
+
+                    if feed:
+                        imp_data['importer_config']['feed_url'] = feed
 
                     _r = self.connectors[env].post(imp_query, imp_data)
 
