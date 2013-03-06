@@ -685,3 +685,24 @@ def get_cart(base_url, env, cart_name):
     rsock.close()
 
     return load_json_str(data)
+
+def search_carts(env, name, repos):
+    """
+    returns a list of carts containing a package with the specified name
+
+    env: the name of an environment from the juicer config
+    name: the name of the package for which to search
+    repos: a list of repos in which to search for the package
+    """
+    db = cart_db()
+    carts = db[env]
+
+    for repo in repos:
+        field = 'repos_items.%s' % repo
+        value = '.*%s.*' % name
+
+        found_carts = []
+
+        for cart in carts.find({field : {'$regex' : value}}):
+            found_carts.append(cart)
+        return found_carts

@@ -195,6 +195,7 @@ class Juicer(object):
                     },
                     'include_repos': 'true'
                 }
+        repos = []
 
         juicer.utils.Log.log_info('Packages:')
 
@@ -221,6 +222,7 @@ class Juicer(object):
                         raise JuicerPulpError("%s was not found as a repoid. A %s status code was returned" %
                                 (target, _r.status_code))
                     repo = juicer.utils.load_json_str(_r.content)['display_name']
+                    repos.append(repo)
 
                     link = juicer.utils.remote_url(self.connectors[env], env, repo, package['filename'])
                 else:
@@ -233,23 +235,10 @@ class Juicer(object):
             juicer.utils.Log.log_info('\nCarts:')
 
             start_in = self._defaults['start_in']
-            remote = '/repositories/carts-%s/files/' % start_in
-            regex = re.compile('.*%s.*' % name)
-
-            _r = self.connectors[start_in].get(remote)
-            if not _r.status_code == Constants.PULP_GET_OK:
-                raise JuicerReturnStatusError("Couldn't get cart list")
-
-            cart_list = juicer.utils.load_json_str(_r.content)
-
-            for cart in cart_list:
-                cname = os.path.splitext(cart['filename'])[0]
-                repos_items = juicer.utils.get_cart(self.connectors[start_in].base_url, start_in, cname)['repos_items']
-
-                for repo in repos_items:
-                    for items in repos_items[repo]:
-                        if re.match(regex, items):
-                            juicer.utils.Log.log_info(cname)
+            for env in self.args.environment:
+                carts = juicer.utils.search_carts(env, name, repos)
+                for cart in carts:
+                    juicer.utils.Log.log_info(cart['_id'])
 
     def hello(self):
         """
@@ -305,6 +294,10 @@ class Juicer(object):
         old_env = cart.current_env
         cart.current_env = juicer.utils.get_next_environment(cart.current_env)
 
+        # if current_env_host == new_env_host
+        #   associate to new repo
+        # else
+        #   sync, sign and push
         juicer.utils.Log.log_debug("Syncing down rpms...")
         cart.sync_remotes()
         self.sign_cart_for_env_maybe(cart, cart.current_env)
