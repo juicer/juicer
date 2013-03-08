@@ -33,6 +33,11 @@ def list_repos(args):
     pulp.list_repos(args.envs)
 
 
+def sync_repo(args):
+    pulp = ja(args)
+    pulp.sync_repo(args.name, args.envs)
+
+
 def show_repo(args):
     pulp = ja(args)
     pulp.show_repo(args.name, args.envs)

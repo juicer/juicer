@@ -203,6 +203,30 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
+
+    def sync_repo(self, name=None, envs=None, query='/repositories/'):
+        """
+        Sync repository in specified environments
+        """
+        juicer.utils.Log.log_debug(
+               "Sync Repo %s In: %s" % (name, ",".join(envs)))
+
+        data = {
+                 'override_config':
+                   { 'verify_checksum': 'true',
+                     'verify_size': 'true' },
+               }
+
+        for env in envs:
+            url = "%s%s-%s/actions/sync/" % (query, name, env)
+            juicer.utils.Log.log_info("%s:", env)
+            _r = self.connectors[env].post(url, data)
+            if _r.status_code == Constants.PULP_POST_ACCEPTED:
+                juicer.utils.Log.log_info("`%s` sync scheduled" % name)
+            else:
+                _r.raise_for_status()
+        return True
+
     def list_repos(self, envs=None, query='/repositories/'):
         """
         List repositories in specified environments
@@ -313,7 +337,7 @@ class JuicerAdmin(object):
                 url = "%s%s/" % (query, login)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == Constants.PULP_GET_OK:
-                    user =juicer.utils.load_json_str(_r.content) 
+                    user =juicer.utils.load_json_str(_r.content)
 
                     juicer.utils.Log.log_info("Login: %s" % user['login'])
                     juicer.utils.Log.log_info("Name: %s" % user['name'])
@@ -373,7 +397,7 @@ class JuicerAdmin(object):
 
         login = login.lower()
 
-        data = { 'delta': 
+        data = { 'delta':
                     {'name': name,
                     'password': password[0]
                     }

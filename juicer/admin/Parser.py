@@ -135,6 +135,23 @@ class Parser(object):
         parser_list_repos.set_defaults(ja=juicer.admin.list_repos)
 
         ##################################################################
+        # Create the 'sync_repo' sub-parser
+
+        parser_sync_repo = self.subparsers.add_parser('sync-repo', \
+                help='Sync pulp repository')
+
+        parser_sync_repo.add_argument('name', metavar='name', \
+                                          help='The name of your repo')
+
+        parser_sync_repo.add_argument('--in', metavar='envs', \
+                      nargs="+", \
+                      dest='envs', \
+                      default=self._default_envs, \
+                      help='The environments in which to sync your repository')
+
+        parser_sync_repo.set_defaults(ja=juicer.admin.sync_repo)
+
+        ##################################################################
         # Create the 'show_repo' sub-parser
 
         parser_show_repo = self.subparsers.add_parser('show-repo', \
