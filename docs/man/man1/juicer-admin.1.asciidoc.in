@@ -114,6 +114,14 @@ usage: juicer-admin show-user LOGIN
 Login or username
 
 
+SYNC-REPO
+-----------
+usage: juicer-admin sync-repo NAME --in PASSWORD
+
+*NAME*::
+Name of repository to sync
+
+
 UPDATE-USER
 -----------
 usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD
