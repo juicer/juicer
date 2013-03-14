@@ -116,7 +116,7 @@ Login or username
 
 SYNC-REPO
 -----------
-usage: juicer-admin sync-repo NAME --in PASSWORD
+usage: juicer-admin sync-repo NAME
 
 *NAME*::
 Name of repository to sync
