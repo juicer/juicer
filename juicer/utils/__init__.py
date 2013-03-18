@@ -686,6 +686,7 @@ def get_cart(base_url, env, cart_name):
 
     return load_json_str(data)
 
+
 def search_carts(env, name, repos):
     """
     returns a list of carts containing a package with the specified name
@@ -703,6 +704,6 @@ def search_carts(env, name, repos):
 
         found_carts = []
 
-        for cart in carts.find({field : {'$regex' : value}}):
+        for cart in carts.find({field: {'$regex': value}}):
             found_carts.append(cart)
         return found_carts
