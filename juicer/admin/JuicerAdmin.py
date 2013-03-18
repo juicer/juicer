@@ -37,12 +37,11 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch=None, name=None, feed=None, envs=None, type=None, query='/repositories/'):
+    def create_repo(self, arch=None, name=None, feed=None, envs=None, query='/repositories/'):
         """
         `arch` - Architecture of repository content
         `name` - Name of repository to create
         `feed` - Repo URL to feed from
-        `type` - Repository type (yum, file)
 
         Create repository in specified environments, associate the
         yum_distributor with it and publish the repo
@@ -52,14 +51,9 @@ class JuicerAdmin(object):
         data = {'display_name': name,
                 'arch': arch,
                 'notes': {
+                    '_repo-type': 'rpm-repo',
                     }
                 }
-
-        if type:
-            if type == 'file':
-                data['notes']['_repo-type'] = 'text-repo'
-            else:
-                data['notes']['_repo-type'] = 'rpm-repo'
 
         juicer.utils.Log.log_debug("Create Repo: %s", name)
 

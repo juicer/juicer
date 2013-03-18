@@ -20,7 +20,7 @@ from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 
 def create_repo(args):
     pulp = ja(args)
-    pulp.create_repo(args.arch, args.name, args.feed, args.envs, type=args.type)
+    pulp.create_repo(args.arch, args.name, args.feed, args.envs)
 
 
 def create_user(args):

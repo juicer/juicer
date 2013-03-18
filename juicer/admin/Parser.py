@@ -54,9 +54,6 @@ class Parser(object):
                                             default=None, \
                                             help='A feed repo for your repo')
 
-        parser_create_repo.add_argument('--type', metavar='type', \
-                                            help='Allowed content type for repo (yum, file)')
-
         parser_create_repo.add_argument('--in', metavar='envs', \
                     nargs="+", \
                     dest='envs', \
