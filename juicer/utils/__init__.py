@@ -632,7 +632,6 @@ def upload_rpm(rpm_path, repoid, connector):
     pbar = ProgressBar(size)
 
     # read in rpm
-    upload_flag = False
     total_seeked = 0
     rpm_fd.seek(0)
     while total_seeked < size:

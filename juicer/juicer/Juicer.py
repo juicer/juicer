@@ -22,7 +22,6 @@ import juicer.juicer
 import juicer.utils
 import juicer.utils.Upload
 import os
-import re
 
 
 class Juicer(object):
@@ -234,7 +233,6 @@ class Juicer(object):
             # if the package is in a cart, show the cart name
             juicer.utils.Log.log_info('\nCarts:')
 
-            start_in = self._defaults['start_in']
             for env in self.args.environment:
                 carts = juicer.utils.search_carts(env, name, repos)
                 for cart in carts:
