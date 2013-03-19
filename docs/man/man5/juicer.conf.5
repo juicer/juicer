@@ -80,6 +80,18 @@ rpm_sign_plugin: juicer\&.plugins\&.MySweetPlugin
 .RS 4
 .\}
 .nf
+# Carts are stored in a mongodb instance somewhere, this is the
+#  hostname of our mongodb server\&.
+cart_host: mongodb01\&.util\&.tux\&.org
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
 [devel]
 # Most of our configuration for this environment lives in the
 # DEFAULT section already, but we do need to tell Juicer where
@@ -227,6 +239,25 @@ class\&. This plugin will be called whenever RPMs are being uploaded to an envir
 \fBValues\fR: Must be a single python module, e\&.g\&.,
 \fIjuicer\&.plugins\&.MySweetPlugin\fR
 .RE
+.PP
+\fBrpm_sign_plugin\fR
+.RS 4
+This attribute defines the name of the mongodb host where carts are stored\&. The credentials used to authenticate must be the same as the
+\fBusername\fR
+and
+\fBpassword\fR
+attributes in the
+\fBDEFAULT\fR
+section\&.
+.sp
+\fBAllowed in\fR:
+\fBDEFAULT\fR
+.sp
+\fBRequired in\fR:
+\fBDEFAULT\fR
+.sp
+\fBValues\fR: Must be a valid hostname
+.RE
 .SH "FILES"
 .sp
 \fB~/\&.juicer\&.conf\fR \(em Personal Juicer configuration file
@@ -244,4 +275,4 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .sp
 \fBjuicer\fR(1), \fBjuicer\-admin\fR(1)
 .sp
-The Juicer Homepage: http://github\&.com/abutcher/juicer/
+The Juicer Homepage: https://github\&.com/juicer/juicer/

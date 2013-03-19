@@ -166,6 +166,6 @@ SEE ALSO
 --------
 *juicer*(1), *juicer.conf*(5)
 
-*Pulp User Documentation* -- <http://pulpproject.org/ug/UGUsers.html>
+*Pulp User Documentation* -- <https://pulp-user-guide.readthedocs.org/en/pulp-2.0/>
 
-The Juicer Homepage: <http://github.com/abutcher/juicer/>
+The Juicer Homepage: <https://github.com/juicer/juicer/>

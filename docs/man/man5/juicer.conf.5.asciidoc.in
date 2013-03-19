@@ -39,6 +39,10 @@ configuration file that looks like this:
     # serve to sign RPMs for us. See juicer.common.RpmSignPlugin.
     rpm_sign_plugin: juicer.plugins.MySweetPlugin
 
+    # Carts are stored in a mongodb instance somewhere, this is the
+    #  hostname of our mongodb server.
+    cart_host: mongodb01.util.tux.org
+
     [devel]
     # Most of our configuration for this environment lives in the
     # DEFAULT section already, but we do need to tell Juicer where
@@ -152,6 +156,23 @@ whenever RPMs are being uploaded to an environment that
 
 
 
+*rpm_sign_plugin*::
+
+This attribute defines the name of the mongodb host where carts are
+stored. The credentials used to authenticate must be the same as the
+*username* and *password* attributes in the *DEFAULT* section.
++
+*Allowed in*: *DEFAULT*
++
+*Required in*: *DEFAULT*
++
+*Values*: Must be a valid hostname
+
+
+
+
+
+
 FILES
 -----
 *~/.juicer.conf* -- Personal Juicer configuration file
@@ -177,4 +198,4 @@ SEE ALSO
 --------
 *juicer*(1), *juicer-admin*(1)
 
-The Juicer Homepage: http://github.com/abutcher/juicer/
+The Juicer Homepage: <https://github.com/juicer/juicer/>
