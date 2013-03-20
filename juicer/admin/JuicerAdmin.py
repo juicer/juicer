@@ -37,7 +37,7 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch=None, repo_name=None, feed=None, envs=None, query='/repositories/'):
+    def create_repo(self, arch=None, repo_name=None, feed=None, envs=[], query='/repositories/'):
         """
         `arch` - Architecture of repository content
         `repo_name` - Name of repository to create
@@ -108,7 +108,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def create_user(self, login=None, password=None, user_name=None, envs=None, query='/users/'):
+    def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """
         `login` - Login or username for user
         `password` - Plain text password for user
@@ -138,7 +138,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def delete_repo(self, repo_name=None, envs=None, query='/repositories/'):
+    def delete_repo(self, repo_name=None, envs=[], query='/repositories/'):
         """
         `repo_name` - Name of repository to delete
 
@@ -174,7 +174,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def delete_user(self, login=None, envs=None, query='/users/'):
+    def delete_user(self, login=None, envs=[], query='/users/'):
         """
         `login` - Login or username of user to delete
 
@@ -197,7 +197,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def sync_repo(self, repo_name=None, envs=None, query='/repositories/'):
+    def sync_repo(self, repo_name=None, envs=[], query='/repositories/'):
         """
         Sync repository in specified environments
         """
@@ -221,7 +221,7 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return True
 
-    def list_repos(self, envs=None, query='/repositories/'):
+    def list_repos(self, envs=[], query='/repositories/'):
         """
         List repositories in specified environments
         """
@@ -246,7 +246,7 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return True
 
-    def role_add(self, role=None, login=None, envs=None, query='/roles/'):
+    def role_add(self, role=None, login=None, envs=[], query='/roles/'):
         """
         `login` - Login or username of user to add to `role`
         `role` - Role to add user to
@@ -275,7 +275,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def show_repo(self, repo_name=None, envs=None, query='/repositories/'):
+    def show_repo(self, repo_name=None, envs=[], query='/repositories/'):
         """
         `repo_name` - Name of repository to show
 
@@ -308,7 +308,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def show_user(self, login=None, envs=None, query='/users/'):
+    def show_user(self, login=None, envs=[], query='/users/'):
         """
         `login` - Login or username of user
 
@@ -344,7 +344,7 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def list_roles(self, envs=None, query='/roles/'):
+    def list_roles(self, envs=[], query='/roles/'):
         """
         List roles in specified environments
         """
@@ -380,7 +380,7 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return True
 
-    def update_user(self, login=None, user_name=None, password=None, envs=None, query='/users/'):
+    def update_user(self, login=None, user_name=None, password=None, envs=[], query='/users/'):
         """
         `login` - Login or username of user to update
         `user_name` - Updated full name of user
