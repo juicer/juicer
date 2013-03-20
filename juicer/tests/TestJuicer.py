@@ -18,12 +18,12 @@ class TestJuicer(unittest.TestCase):
     def test_search(self):
         self.args = self.parser.parser.parse_args('search ruby'.split())
         pulp = j(self.args)
-        mute()(pulp.search)(name=self.args.rpmname)
+        mute()(pulp.search)(pkg_name=self.args.rpmname)
 
         self.args = self.parser.parser.parse_args(\
             'search ruby --in qa'.split())
         pulp = j(self.args)
-        mute()(pulp.search)(name=self.args.rpmname)
+        mute()(pulp.search)(pkg_name=self.args.rpmname)
 
     def test_workflow(self):
         rpm_path = './share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
@@ -59,7 +59,7 @@ class TestJuicer(unittest.TestCase):
 
         self.args = self.parser.parser.parse_args(('promote %s' % self.cname).split())
         pulp = j(self.args)
-        mute()(pulp.promote)(name=self.args.cartname)
+        mute()(pulp.promote)(cart_name=self.args.cartname)
 
         cart = juicer.common.Cart.Cart(self.cname, autoload=True)
 

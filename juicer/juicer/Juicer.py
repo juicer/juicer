@@ -71,7 +71,7 @@ class Juicer(object):
             self.connectors[env].post('/repositories/%s/actions/publish/' % repoid, {'id': 'yum_distributor'})
 
             # Upload carts aren't special, don't update their paths
-            if cart.name == 'upload-cart':
+            if cart.cart_name == 'upload-cart':
                 continue
 
             # Set the path to items in this cart to their location on
@@ -84,7 +84,7 @@ class Juicer(object):
                 item.update(path)
 
         # Upload carts don't persist
-        if not cart.name == 'upload-cart':
+        if not cart.cart_name == 'upload-cart':
             cart.save()
             self.publish(cart)
         return True
@@ -95,7 +95,7 @@ class Juicer(object):
 
         Pushes the items in a release cart to the pre-release environment.
         """
-        juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart.name)
+        juicer.utils.Log.log_debug("Initializing push of cart '%s'" % cart.cart_name)
 
         if not env:
             env = self._defaults['start_in']
@@ -110,14 +110,14 @@ class Juicer(object):
 
         Publish a release cart in JSON format to the pre-release environment.
         """
-        juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart.name)
+        juicer.utils.Log.log_debug("Initializing publish of cart '%s'" % cart.cart_name)
 
         if not env:
             env = self._defaults['start_in']
 
         cart_id = juicer.utils.upload_cart(cart, env)
         juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                                   (cart.name, cart_id))
+                                   (cart.cart_name, cart_id))
         return True
 
     def create(self, cart_name, cart_description):
@@ -185,10 +185,10 @@ class Juicer(object):
         cart.load(cart_name)
         return str(cart)
 
-    def search(self, name=None, search_carts=False, query='/content/units/rpm/search/'):
+    def search(self, pkg_name=None, search_carts=False, query='/content/units/rpm/search/'):
         data = {
                     'criteria': {
-                        'filters': {'name': {'$regex': ".*%s.*" % name}},
+                        'filters': {'name': {'$regex': ".*%s.*" % pkg_name}},
                         'sort': [['name', 'ascending']],
                         'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
                     },
@@ -234,7 +234,7 @@ class Juicer(object):
             juicer.utils.Log.log_info('\nCarts:')
 
             for env in self.args.environment:
-                carts = juicer.utils.search_carts(env, name, repos)
+                carts = juicer.utils.search_carts(env, pkg_name, repos)
                 for cart in carts:
                     juicer.utils.Log.log_info(cart['_id'])
 
@@ -282,13 +282,13 @@ class Juicer(object):
 
         return True
 
-    def promote(self, name):
+    def promote(self, cart_name):
         """
         `name` - name of cart
 
         Promote a cart from its current environment to the next in the chain.
         """
-        cart = juicer.common.Cart.Cart(name=name, autoload=True, autosync=True)
+        cart = juicer.common.Cart.Cart(cart_name=cart_name, autoload=True, autosync=True)
         old_env = cart.current_env
         cart.current_env = juicer.utils.get_next_environment(cart.current_env)
 
@@ -301,7 +301,7 @@ class Juicer(object):
         self.sign_cart_for_env_maybe(cart, cart.current_env)
 
         juicer.utils.Log.log_info("Promoting %s from %s to %s" %
-                (name, old_env, cart.current_env))
+                (cart_name, old_env, cart.current_env))
 
         for repo in cart.repos():
             juicer.utils.Log.log_debug("Promoting %s to %s in %s" %

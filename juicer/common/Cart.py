@@ -28,7 +28,7 @@ import re
 
 
 class Cart(object):
-    def __init__(self, name, autoload=False, autosync=False):
+    def __init__(self, cart_name, autoload=False, autosync=False):
         """
         After a cart is instantiated there are two ways to fill it.
 
@@ -38,20 +38,20 @@ class Cart(object):
         Setting `autoload` to `True` will call the load() method
         automatically.
         """
-        self.name = name
+        self.cart_name = cart_name
         self.current_env = juicer.utils.get_login_info()[1]['start_in']
         self.repo_items_hash = {}
-        self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % name))
+        self.remotes_storage = os.path.expanduser(os.path.join(CART_LOCATION, "%s-remotes" % cart_name))
 
         if autoload:
-            juicer.utils.Log.log_notice("[CART:%s] Auto-loading cart items" % self.name)
-            self.load(name)
+            juicer.utils.Log.log_notice("[CART:%s] Auto-loading cart items" % self.cart_name)
+            self.load(cart_name)
 
             if autosync:
-                juicer.utils.Log.log_notice("[CART:%s] Auto-syncing remote cart items" % self.name)
+                juicer.utils.Log.log_notice("[CART:%s] Auto-syncing remote cart items" % self.cart_name)
                 self.sync_remotes()
         elif (not autoload) and autosync:
-            juicer.utils.Log.log_warn("[CART:%s] Auto-sync requested, but autoload not enabled. Skipping..." % self.name)
+            juicer.utils.Log.log_warn("[CART:%s] Auto-sync requested, but autoload not enabled. Skipping..." % self.cart_name)
 
     def __getitem__(self, repo):
         """ Return the items in the given repo """
@@ -69,7 +69,7 @@ class Cart(object):
         """
         self.add_repo(repo, items)
 
-    def add_repo(self, name, items):
+    def add_repo(self, repo_name, items):
         """
         Build up repos
 
@@ -77,7 +77,7 @@ class Cart(object):
         `items` - List of paths to rpm.
         """
         juicer.utils.Log.log_debug("[CART:%s] Adding %s items to repo '%s'" % \
-                                       (self.name, len(items), name))
+                                       (self.cart_name, len(items), repo_name))
         # We can't just straight-away add all of `items` to the
         # repo. `items` may be composed of a mix of local files, local
         # directories, remote files, and remote directories. We need
@@ -88,7 +88,7 @@ class Cart(object):
             juicer.utils.Log.log_debug("Creating CartObject for %s" % item)
             i = juicer.common.CartItem.CartItem(item)
             cart_items.append(i)
-        self.repo_items_hash[name] = cart_items
+        self.repo_items_hash[repo_name] = cart_items
 
     def load(self, json_file):
         """
@@ -105,7 +105,7 @@ class Cart(object):
                     cart_file)
             raise JuicerError(e.message)
 
-        self.name = cart_body['_id']
+        self.cart_name = cart_body['_id']
 
         if cart_body['current_env'] == '':
                 self.current_env = juicer.utils.get_login_info()[1]['start_in']
@@ -205,7 +205,7 @@ class Cart(object):
         return "\n".join(output)
 
     def _cart_dict(self):
-        output = {'_id': self.name,
+        output = {'_id': self.cart_name,
                 'current_env': None,
                 'repos_items': []}
         output['current_env'] = self.current_env
@@ -265,4 +265,4 @@ class Cart(object):
             self[repo] = urls[repo]
 
     def cart_file(self):
-        return os.path.join(CART_LOCATION, self.name) + '.json'
+        return os.path.join(CART_LOCATION, self.cart_name) + '.json'

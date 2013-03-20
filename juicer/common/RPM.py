@@ -22,7 +22,7 @@ import juicer.utils.Log
 
 class RPM(object):
     def __init__(self, source):
-        self.name = os.path.basename(source)
+        self.pgk_name = os.path.basename(source)
         # Source is the original location of this RPM. That includes
         # both http://.... RPMs and local /home/bro/... ones.
         self.source = source
@@ -38,7 +38,7 @@ class RPM(object):
             self.path = source
 
     def sync(self, destination):
-        dest_file = os.path.join(destination, self.name)
+        dest_file = os.path.join(destination, self.pgk_name)
 
         # This is the case with stuff that already exists locally
         if self.synced and self.source:

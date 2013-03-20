@@ -37,34 +37,34 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch=None, name=None, feed=None, envs=None, query='/repositories/'):
+    def create_repo(self, arch=None, repo_name=None, feed=None, envs=None, query='/repositories/'):
         """
         `arch` - Architecture of repository content
-        `name` - Name of repository to create
+        `repo_name` - Name of repository to create
         `feed` - Repo URL to feed from
 
         Create repository in specified environments, associate the
         yum_distributor with it and publish the repo
         """
-        name = name.lower()
+        repo_name = repo_name.lower()
 
-        data = {'display_name': name,
+        data = {'display_name': repo_name,
                 'arch': arch,
                 'notes': {
                     '_repo-type': 'rpm-repo',
                     }
                 }
 
-        juicer.utils.Log.log_debug("Create Repo: %s", name)
+        juicer.utils.Log.log_debug("Create Repo: %s", repo_name)
 
         for env in envs:
-            if juicer.utils.repo_exists_p(name, self.connectors[env], env):
+            if juicer.utils.repo_exists_p(repo_name, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo `%s` already exists in %s... skipping!",
-                                          (name, env))
+                                          (repo_name, env))
                 continue
             else:
-                data['relative_path'] = '/%s/%s/' % (env, name)
-                data['id'] = '-'.join([name, env])
+                data['relative_path'] = '/%s/%s/' % (env, repo_name)
+                data['id'] = '-'.join([repo_name, env])
 
                 _r = self.connectors[env].post(query, data)
 
@@ -84,12 +84,12 @@ class JuicerAdmin(object):
                     dist_data = {'distributor_id': 'yum_distributor',
                             'distributor_type_id': 'yum_distributor',
                             'distributor_config': {
-                                'relative_url': '/%s/%s/' % (env, name),
+                                'relative_url': '/%s/%s/' % (env, repo_name),
                                 'http': True,
                                 'https': True
                                 },
                             'auto_publish': True,
-                            'relative_path': '/%s/%s/' % (env, name)
+                            'relative_path': '/%s/%s/' % (env, repo_name)
                             }
 
                     _r = self.connectors[env].post(dist_query, dist_data)
@@ -101,18 +101,18 @@ class JuicerAdmin(object):
                         _r = self.connectors[env].post(pub_query, pub_data)
 
                         if _r.status_code == Constants.PULP_POST_ACCEPTED:
-                            juicer.utils.Log.log_info("created repo `%s` in %s", name, env)
+                            juicer.utils.Log.log_info("created repo `%s` in %s", repo_name, env)
                     else:
                         _r.raise_for_status()
                 else:
                     _r.raise_for_status()
         return True
 
-    def create_user(self, login=None, password=None, name=None, envs=None, query='/users/'):
+    def create_user(self, login=None, password=None, user_name=None, envs=None, query='/users/'):
         """
         `login` - Login or username for user
         `password` - Plain text password for user
-        `name` - Full name of user
+        `user_name` - Full name of user
 
         Create user in specified environments
         """
@@ -120,9 +120,9 @@ class JuicerAdmin(object):
 
         data = {'login': login,
                 'password': password,
-                'name': name}
+                'name': user_name}
 
-        juicer.utils.Log.log_debug("Create User: %s ('%s')", login, name)
+        juicer.utils.Log.log_debug("Create User: %s ('%s')", login, user_name)
 
         for env in envs:
             if juicer.utils.user_exists_p(login, self.connectors[env]):
@@ -133,31 +133,31 @@ class JuicerAdmin(object):
                 _r = self.connectors[env].post(query, data)
                 if _r.status_code == Constants.PULP_POST_CREATED:
                     juicer.utils.Log.log_info("created user `%s` with login `%s` in %s",
-                                              (name, login, env))
+                                              (user_name, login, env))
                 else:
                     _r.raise_for_status()
         return True
 
-    def delete_repo(self, name=None, envs=None, query='/repositories/'):
+    def delete_repo(self, repo_name=None, envs=None, query='/repositories/'):
         """
-        `name` - Name of repository to delete
+        `repo_name` - Name of repository to delete
 
         Delete repo in specified environments
         """
         orphan_query = '/content/orphans/rpm/'
-        juicer.utils.Log.log_debug("Delete Repo: %s", self.args.name)
+        juicer.utils.Log.log_debug("Delete Repo: %s", repo_name)
 
         for env in self.args.envs:
-            if not juicer.utils.repo_exists_p(name, self.connectors[env], env):
+            if not juicer.utils.repo_exists_p(repo_name, self.connectors[env], env):
                 juicer.utils.Log.log_info("repo `%s` doesn't exist in %s... skipping!",
-                                           (name, env))
+                                           (repo_name, env))
                 continue
             else:
-                url = "%s%s-%s/" % (query, name, env)
+                url = "%s%s-%s/" % (query, repo_name, env)
                 _r = self.connectors[env].delete(url)
                 if _r.status_code == Constants.PULP_DELETE_ACCEPTED:
                     juicer.utils.Log.log_info("deleted repo `%s` in %s",
-                                              (name, env))
+                                              (repo_name, env))
 
                     # if delete was successful, delete orphaned rpms
                     _r = self.connectors[env].get(orphan_query)
@@ -197,12 +197,12 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def sync_repo(self, name=None, envs=None, query='/repositories/'):
+    def sync_repo(self, repo_name=None, envs=None, query='/repositories/'):
         """
         Sync repository in specified environments
         """
         juicer.utils.Log.log_debug(
-               "Sync Repo %s In: %s" % (name, ",".join(envs)))
+               "Sync Repo %s In: %s" % (repo_name, ",".join(envs)))
 
         data = {
             'override_config': {
@@ -212,11 +212,11 @@ class JuicerAdmin(object):
             }
 
         for env in envs:
-            url = "%s%s-%s/actions/sync/" % (query, name, env)
+            url = "%s%s-%s/actions/sync/" % (query, repo_name, env)
             juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].post(url, data)
             if _r.status_code == Constants.PULP_POST_ACCEPTED:
-                juicer.utils.Log.log_info("`%s` sync scheduled" % name)
+                juicer.utils.Log.log_info("`%s` sync scheduled" % repo_name)
             else:
                 _r.raise_for_status()
         return True
@@ -275,13 +275,13 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def show_repo(self, name=None, envs=None, query='/repositories/'):
+    def show_repo(self, repo_name=None, envs=None, query='/repositories/'):
         """
-        `name` - Name of repository to show
+        `repo_name` - Name of repository to show
 
         Show repositories in specified environments
         """
-        juicer.utils.Log.log_debug("Show Repo: %s", name)
+        juicer.utils.Log.log_debug("Show Repo: %s", repo_name)
 
         # keep track of which iteration of environment we're in
         count = 0
@@ -290,7 +290,7 @@ class JuicerAdmin(object):
             count += 1
 
             juicer.utils.Log.log_info("%s:", env)
-            url = "%s%s-%s/" % (query, name, env)
+            url = "%s%s-%s/" % (query, repo_name, env)
             _r = self.connectors[env].get(url)
             if _r.status_code == Constants.PULP_GET_OK:
                 repo = juicer.utils.load_json_str(_r.content)
@@ -303,7 +303,7 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_info("")
             else:
                 if _r.status_code == Constants.PULP_GET_NOT_FOUND:
-                    raise JuicerPulpError("repo '%s' was not found" % name)
+                    raise JuicerPulpError("repo '%s' was not found" % repo_name)
                 else:
                     _r.raise_for_status()
         return True
@@ -379,10 +379,10 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return True
 
-    def update_user(self, login=None, name=None, password=None, envs=None, query='/users/'):
+    def update_user(self, login=None, user_name=None, password=None, envs=None, query='/users/'):
         """
         `login` - Login or username of user to update
-        `name` - Updated full name of user
+        `user_name` - Updated full name of user
         `password` - Updated plain text password for user
 
         Update user information
@@ -393,7 +393,7 @@ class JuicerAdmin(object):
 
         data = {
             'delta': {
-                'name': name,
+                'name': user_name,
                 'password': password[0]
                 }
             }

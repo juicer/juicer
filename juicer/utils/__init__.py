@@ -559,16 +559,16 @@ def parse_manifest(manifest):
     if data == None:
         raise JuicerManifestError('%s contains no items' % manifest)
 
-    for name, version in data.iteritems():
+    for pkg_name, version in data.iteritems():
         if version == 'absent':
-            juicer.utils.Log.log_debug('%s is absent. Skipping...' % name)
+            juicer.utils.Log.log_debug('%s is absent. Skipping...' % pkg_name)
         else:
             try:
                 _m = regex.match(version)
                 version = _m.group(1)
                 release = _m.group(2)
-                rpm_list.append({'name': name, 'version': _m.group(1), 'release': _m.group(2)})
-                juicer.utils.Log.log_debug('Adding %s version %s release %s' % (name, version, release))
+                rpm_list.append({'name': pkg_name, 'version': _m.group(1), 'release': _m.group(2)})
+                juicer.utils.Log.log_debug('Adding %s version %s release %s' % (pkg_name, version, release))
             except:
                 raise JuicerManifestError('The manifest %s is improperly formatted' % manifest)
                 return False
@@ -613,12 +613,12 @@ def upload_rpm(rpm_path, repoid, connector):
 
     rpm_fd = open(rpm_path, 'rb')
     pkg = ts.hdrFromFdno(rpm_fd)
-    name = pkg['name']
+    pkg_name = pkg['name']
     version = pkg['version']
     release = pkg['release']
     epoch = 0
     arch = pkg['arch']
-    nvrea = tuple((name, version, release, epoch, arch))
+    nvrea = tuple((pkg_name, version, release, epoch, arch))
     cksum = hashlib.md5(rpm_path).hexdigest()
     size = os.path.getsize(rpm_path)
     package_basename = os.path.basename(rpm_path)
@@ -649,7 +649,7 @@ def upload_rpm(rpm_path, repoid, connector):
     juicer.utils.Log.log_notice("Seeked total data: %s" % total_seeked)
 
     # finalize upload
-    rpm_id = upload.import_upload(nvrea=nvrea, rpm_name=name)
+    rpm_id = upload.import_upload(nvrea=nvrea, rpm_name=pkg_name)
 
     juicer.utils.Log.log_debug("RPM upload complete. New 'packageid': %s" % rpm_id)
 
@@ -686,12 +686,12 @@ def get_cart(base_url, env, cart_name):
     return load_json_str(data)
 
 
-def search_carts(env, name, repos):
+def search_carts(env, pkg_name, repos):
     """
     returns a list of carts containing a package with the specified name
 
     env: the name of an environment from the juicer config
-    name: the name of the package for which to search
+    pkg_name: the name of the package for which to search
     repos: a list of repos in which to search for the package
     """
     db = cart_db()
@@ -699,7 +699,7 @@ def search_carts(env, name, repos):
 
     for repo in repos:
         field = 'repos_items.%s' % repo
-        value = '.*%s.*' % name
+        value = '.*%s.*' % pkg_name
 
         found_carts = []
 

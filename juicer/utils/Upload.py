@@ -20,17 +20,17 @@ from juicer.common import Constants
 
 
 class Upload(object):
-    def __init__(self, name, cksum, size, repoid, connector, query='/content/uploads/'):
+    def __init__(self, pkg_name, cksum, size, repoid, connector, query='/content/uploads/'):
         """
         in addition to creating an upload object, this
         initializes the upload of an rpm into pulp
 
-        name: the name of the package to upload
+        pkg_name: the name of the package to upload
         cksum: checksum of the rpm
         size: total size of the rpm
         connector: the connector for the environment to upload into
         """
-        self.name = name
+        self.pkg_name = pkg_name
         self.connector = connector
         self.cksum = cksum
         self.size = size
@@ -67,7 +67,7 @@ class Upload(object):
                     'checksum': self.cksum,
                     },
                 'unit_metadata': {
-                    'filename': self.name,
+                    'filename': self.pkg_name,
                     'license': lic if lic else '',
                     'requires': req if req else '',
                 #    'type': ftype,
@@ -80,7 +80,7 @@ class Upload(object):
         _r = self.connector.post(query, data)
 
         if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_error("Import error importing '%s'... server said: \n %s", self.name,
+            juicer.utils.Log.log_error("Import error importing '%s'... server said: \n %s", self.pkg_name,
                                        juicer.utils.load_json_str(_r.content))
             _r.raise_for_status()
 

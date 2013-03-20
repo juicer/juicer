@@ -29,7 +29,7 @@ class TestJuicerAdmin(unittest.TestCase):
     def create_test_user(self):
         args = self.parser.parser.parse_args('create-user cjesop --password cjesop --name "ColonelJesop"'.split())
         pulp = ja(args)
-        mute()(pulp.create_user)(login=args.login, name=args.name, password=args.password, \
+        mute()(pulp.create_user)(login=args.login, user_name=args.name, password=args.password, \
                                      envs=args.envs)
 
     def delete_test_user(self):
@@ -40,18 +40,18 @@ class TestJuicerAdmin(unittest.TestCase):
     def create_test_repo(self):
         args = self.parser.parser.parse_args('create-repo test-repo-456'.split())
         pulp = ja(args)
-        mute()(pulp.create_repo)(arch=args.arch, name=args.name, envs=args.envs)
+        mute()(pulp.create_repo)(arch=args.arch, repo_name=args.name, envs=args.envs)
 
     def delete_test_repo(self):
         args = self.parser.parser.parse_args('delete-repo test-repo-456'.split())
         pulp = ja(args)
-        mute()(pulp.delete_repo)(name=args.name, envs=args.envs)
+        mute()(pulp.delete_repo)(repo_name=args.name, envs=args.envs)
 
     def test_show_repo(self):
         self.create_test_repo()
         args = self.parser.parser.parse_args('show-repo test-repo-456'.split())
         pulp = ja(args)
-        output = mute(returns_output=True)(pulp.show_repo)(name=args.name, envs=args.envs)
+        output = mute(returns_output=True)(pulp.show_repo)(repo_name=args.name, envs=args.envs)
         self.assertTrue(any('test-repo-456' in k for k in output))
         self.delete_test_repo()
 
@@ -59,7 +59,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.create_test_repo()
         args = self.parser.parser.parse_args('delete-repo test-repo-456'.split())
         pulp = ja(args)
-        output = mute(returns_output=True)(pulp.delete_repo)(name=args.name, envs=args.envs)
+        output = mute(returns_output=True)(pulp.delete_repo)(repo_name=args.name, envs=args.envs)
         self.assertTrue(any('deleted' in k for k in output))
 
     def test_list_repos(self):
@@ -73,14 +73,14 @@ class TestJuicerAdmin(unittest.TestCase):
     def test_create_repo(self):
         args = self.parser.parser.parse_args('create-repo test-repo-456'.split())
         pulp = ja(args)
-        output = mute(returns_output=True)(pulp.create_repo)(arch=args.arch, name=args.name, envs=args.envs)
+        output = mute(returns_output=True)(pulp.create_repo)(arch=args.arch, repo_name=args.name, envs=args.envs)
         self.assertTrue(any('created' in k for k in output))
         self.delete_test_repo()
 
     def test_create_user(self):
         args = self.parser.parser.parse_args('create-user cjesop --password cjesop --name "ColonelJesop"'.split())
         pulp = ja(args)
-        output = mute(returns_output=True)(pulp.create_user)(login=args.login, name=args.name, \
+        output = mute(returns_output=True)(pulp.create_user)(login=args.login, user_name=args.name, \
                                                   password=args.password, envs=args.envs)
         self.assertTrue(any('created' in k for k in output))
         self.delete_test_user()
