@@ -186,6 +186,19 @@ class Juicer(object):
         return str(cart)
 
     def search(self, pkg_name=None, search_carts=False, query='/content/units/rpm/search/'):
+        """
+        search for a package stored in a pulp repo
+
+        `pkg_name` - substring in the name of the package
+        `search_carts` - whether or not to return carts that include
+            the listed package
+        """
+        # this data block is... yeah. searching in pulp v2 is painful
+        # 
+        # https://pulp-dev-guide.readthedocs.org/en/latest/rest-api/content/retrieval.html#search-for-units
+        # https://pulp-dev-guide.readthedocs.org/en/latest/rest-api/conventions/criteria.html#search-criteria
+        # 
+        # those are the API docs for searching
         data = {
                     'criteria': {
                         'filters': {'name': {'$regex': ".*%s.*" % pkg_name}},
