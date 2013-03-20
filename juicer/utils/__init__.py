@@ -451,7 +451,7 @@ def remote_url(connector, env, repo, filename):
         # maybe the repo name is the repoid
         _r = connector.get('/repositories/%s/' % repo)
         if not _r.status_code == Constants.PULP_GET_OK:
-            raise JuicerPulpError("%s is was not found as a repoid. Status code %s returned by pulp" % \
+            raise JuicerPulpError("%s was not found as a repoid. Status code %s returned by pulp" % \
                     (repoid, _r.status_code))
 
     repo = juicer.utils.load_json_str(_r.content)['display_name']
