@@ -353,6 +353,7 @@ class JuicerAdmin(object):
         count = 0
 
         for env in envs:
+            count += 1
             rcount = 0
 
             juicer.utils.Log.log_info("%s:", env)
@@ -372,7 +373,7 @@ class JuicerAdmin(object):
                         # just want a new line
                         juicer.utils.Log.log_info("\n")
 
-                if count < len(roles):
+                if count < len(envs):
                     # just want a new line
                     juicer.utils.Log.log_info("\n")
             else:
