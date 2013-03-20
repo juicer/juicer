@@ -305,10 +305,6 @@ class Juicer(object):
         old_env = cart.current_env
         cart.current_env = juicer.utils.get_next_environment(cart.current_env)
 
-        # if current_env_host == new_env_host
-        #   associate to new repo
-        # else
-        #   sync, sign and push
         juicer.utils.Log.log_debug("Syncing down rpms...")
         cart.sync_remotes()
         self.sign_cart_for_env_maybe(cart, cart.current_env)
