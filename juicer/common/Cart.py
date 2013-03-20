@@ -265,4 +265,8 @@ class Cart(object):
             self[repo] = urls[repo]
 
     def cart_file(self):
+        """
+        return the path to the json cart file
+        note: the file does not need to already exist to use this
+        """
         return os.path.join(CART_LOCATION, self.cart_name) + '.json'
