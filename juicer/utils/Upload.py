@@ -45,6 +45,11 @@ class Upload(object):
             _r.raise_for_status()
 
     def append(self, fdata, offset, query='/content/uploads'):
+        """
+        append binary data to an upload
+        `fdata` - binary data to send to pulp
+        `offset` - the amount of previously-uploaded data
+        """
         query = '%s/%s/%s/' % (query, self.uid, offset)
         _r = self.connector.put(query, fdata, log_data=False, auto_create_json_str=False)
 
@@ -53,7 +58,18 @@ class Upload(object):
 
         return _r.status_code
 
-    def import_upload(self, nvrea, ftype='rpm', rpm_name='', desc=None, htype='md5', lic=None, group=None, vendor=None, req=None, unit_key=""):
+    def import_upload(self, nvrea, ftype='rpm', rpm_name='', desc=None, htype='md5', lic=None, group=None, vendor=None, req=None):
+        """
+        import the completed upload into pulp
+        `ftype` - the type of the upload
+        `rpm_name` - the name of the uploaded rpm
+        `desc` - description of the rpm
+        `htype` - checksum type
+        `lic` - license used in the packaged software
+        `group` - package group
+        `vendor` - software vendor
+        `req` - dependencies
+        """
         query = '/repositories/%s/actions/import_upload/' % self.repoid
         data = {'upload_id': self.uid,
                 'unit_type_id': ftype,
