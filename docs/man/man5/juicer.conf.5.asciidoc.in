@@ -156,7 +156,7 @@ whenever RPMs are being uploaded to an environment that
 
 
 
-*rpm_sign_plugin*::
+*cart_host*::
 
 This attribute defines the name of the mongodb host where carts are
 stored. The credentials used to authenticate must be the same as the
