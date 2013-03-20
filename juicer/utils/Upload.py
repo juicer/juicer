@@ -103,6 +103,10 @@ class Upload(object):
         juicer.utils.Log.log_debug("Finalized upload id %s" % self.uid)
 
     def clean_upload(self, query='/content/uploads/'):
+        """
+        pulp leaves droppings if you don't specifically tell it
+        to clean up after itself. use this to do so.
+        """
         query = query + self.uid + '/'
         _r = self.connector.delete(query)
 
