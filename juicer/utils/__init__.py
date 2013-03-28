@@ -221,6 +221,19 @@ def get_environments():
     return environments
 
 
+def env_same_host(env1, env2):
+    """
+    determine if two environments are on the same host. returns
+    true or false
+    """
+    config = _config_file()
+
+    h1 = dict(config.items(env1))['base_url']
+    h2 = dict(config.items(env2))['base_url']
+
+    return h1 == h2
+
+
 def get_next_environment(env):
     """
     Given an environment, return the next environment in the
