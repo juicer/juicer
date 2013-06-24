@@ -29,6 +29,10 @@ prod.
     # serve to sign RPMs for us. See juicer.common.RpmSignPlugin.
     rpm_sign_plugin: juicer.plugins.MySweetPlugin
 
+    # Carts are stored in a mongodb instance somewhere, this is the
+    #  hostname of our mongodb server.
+    cart_host: mongodb01.util.tux.org
+
     [devel]
     # Most of our configuration for this environment lives in the
     # DEFAULT section already, but we do need to tell Juicer where
@@ -46,6 +50,5 @@ prod.
     # We specify that the production environment requires packages to
     # be signed.
     requires_signature: true
-
 
 See also: `man 5 juicer.conf`

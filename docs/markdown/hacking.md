@@ -4,7 +4,7 @@ Starting to hack on `juicer` from source is super easy!
 
 ## Clone the Source
 
-    $ git clone git://github.com/abutcher/juicer.git
+    $ git clone git://github.com/juicer/juicer.git
 
 ## Install Dependencies
 
