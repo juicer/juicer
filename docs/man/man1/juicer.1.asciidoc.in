@@ -95,9 +95,12 @@ The name of your release cart.
 
 HELLO
 ------
-usage: juicer hello
+usage: juicer hello [--in 'ENVIRONMENT' ...]
 
 Test connection settings in *~/.juicer.conf*
+
+*ENVIRONMENT*::
+The environments to limit connecting testing to.
 
 
 PULL
@@ -122,7 +125,7 @@ Pushes/Updates a cart on the pulp server.
 The name of the cart to push.
 
 *--in* 'ENVIRONMENT' ... ::
-The environments to limit search scope to.
+The environments to push the new/updated cart to.
 
 
 
@@ -139,14 +142,17 @@ The release cart to promote.
 
 UPDATE
 ------
-usage: juicer update 'CARTNAME' [-f manifest] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
+usage: juicer update 'CARTNAME' [-f 'MANIFEST'] [-r 'REPONAME' 'ITEMS' ... [ -r 'REPONAME' 'items' ]]
 
-update the specified cart with the items specified.
+Update the specified cart with the items specified.
+
+Updating a cart will add an item to the cart if it wasn't originally
+present or overwrite an item if it already was.
 
 *CARTNAME*::
 The name of the new release cart.
 
-*-f* 'manifest'::
+*-f* 'MANIFEST'::
 Update a cart with a manifest file. A manifest file is written in
 the following format:
 
@@ -156,15 +162,13 @@ name: version-release
 Name of the reopsitory to install 'ITEMS' into. The '-r' option may be
 given multiple times.
 
-*ITEM* ...::
+*ITEMS* ...::
 Items to add to the cart in repository 'REPONAME'.
 
-Updating a cart will add an item to the cart if it wasn't originally
-present or overwrite an item if it already was.
 
 SEARCH
 ------
-usage: juicer search 'ITEM' [-r 'REPO' ...] [--in 'ENVIRONMENT' ...]
+usage: juicer search 'ITEM' [-r 'REPO' ...] [-c] [--in 'ENVIRONMENT' ...]
 
 Search for an RPM ('item') in pulp.
 
@@ -173,6 +177,9 @@ Name of the RPM to search for.
 
 *-r* 'REPO' ...::
 The repo(s) to limit search scope to.
+
+*-c*::
+Search for the package in carts as well.
 
 *--in* 'ENVIRONMENT' ...::
 The environments to limit search scope to.
@@ -186,7 +193,7 @@ usage: juicer show 'CARTNAME'
 Print the contents of a cart.
 
 *CARTNAME*::
-The release cart to show.
+The name of the release cart to show.
 
 
 UPLOAD

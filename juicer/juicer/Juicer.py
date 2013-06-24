@@ -195,10 +195,10 @@ class Juicer(object):
             the listed package
         """
         # this data block is... yeah. searching in pulp v2 is painful
-        # 
+        #
         # https://pulp-dev-guide.readthedocs.org/en/latest/rest-api/content/retrieval.html#search-for-units
         # https://pulp-dev-guide.readthedocs.org/en/latest/rest-api/conventions/criteria.html#search-criteria
-        # 
+        #
         # those are the API docs for searching
         data = {
                     'criteria': {
@@ -321,10 +321,10 @@ class Juicer(object):
 
                     data = {
                             'source_repo_id': new_repo,
-                            'criteria' : {
-                                'type_ids' : ['rpm'],
-                                'filters' : {
-                                    'unit' : {
+                            'criteria': {
+                                'type_ids': ['rpm'],
+                                'filters': {
+                                    'unit': {
                                         '$and': [{'name': item.name}, {'version': item.version}, {'release': item.release}]
                                         }
                                     }

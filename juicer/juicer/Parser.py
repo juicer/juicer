@@ -86,7 +86,7 @@ class Parser(object):
         # Create the 'update' sub-parser
         parser_update = subparsers.add_parser('update', \
                 help='Update a release cart with items.', \
-                usage='$(prog)s CARTNAME [-f rpm-manifest] ... [-r REPONAME items ... [-r REPONAME items...]]')
+                usage='%(prog)s CARTNAME [-f rpm-manifest] ... [-r REPONAME items ... [-r REPONAME items...]]')
 
         parser_update.add_argument('cartname', metavar='cartname', \
                                        help='The name of your release cart')
@@ -149,8 +149,7 @@ class Parser(object):
         # Create the 'search' sub-parser
         parser_search = subparsers.add_parser('search', \
                 help='Search for an RPM in pulp.', \
-                usage='%(prog)s rpmname [-r repo [repo]] \
-                [--in environment [environment]] [-h]')
+                usage='%(prog)s rpmname [-r repo [repo]] [-c] [--in environment [environment]] [-h]')
 
         parser_search.add_argument('rpmname', metavar='rpmname', \
                                   help='The name of the rpm(s) to search for.')
