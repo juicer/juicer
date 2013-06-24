@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 03/20/2013
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/24/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.5.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "03/20/2013" "Juicer 0\&.5\&.0" "Pulp repos and release carts"
+.TH "JUICER" "1" "06/24/2013" "Juicer 0\&.5\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -42,9 +42,7 @@ RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle
 \fB\-v\fR, \fB\-\-verbose\fR
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
-\fI\-v\fR
-\fBbefore\fR
-\fISUBCOMMAND\fR\&.
+\fI\-v\fR\fBbefore\fR\fISUBCOMMAND\fR\&.
 .RE
 .SH "CREATE"
 .sp
@@ -80,9 +78,14 @@ Items to add to the cart in repository
 .RE
 .SH "HELLO"
 .sp
-usage: juicer hello
+usage: juicer hello [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Test connection settings in \fB~/\&.juicer\&.conf\fR
+.PP
+\fBENVIRONMENT\fR
+.RS 4
+The environments to limit connecting testing to\&.
+.RE
 .SH "PULL"
 .sp
 usage: juicer pull \fICARTNAME\fR
@@ -106,7 +109,7 @@ The name of the cart to push\&.
 .PP
 \fB\-\-in\fR \fIENVIRONMENT\fR \&...
 .RS 4
-The environments to limit search scope to\&.
+The environments to push the new/updated cart to\&.
 .RE
 .SH "PROMOTE"
 .sp
@@ -120,16 +123,18 @@ The release cart to promote\&.
 .RE
 .SH "UPDATE"
 .sp
-usage: juicer update \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
+usage: juicer update \fICARTNAME\fR [\-f \fIMANIFEST\fR] [\-r \fIREPONAME\fR \fIITEMS\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
 .sp
-update the specified cart with the items specified\&.
+Update the specified cart with the items specified\&.
+.sp
+Updating a cart will add an item to the cart if it wasn\(cqt originally present or overwrite an item if it already was\&.
 .PP
 \fBCARTNAME\fR
 .RS 4
 The name of the new release cart\&.
 .RE
 .PP
-\fB\-f\fR \fImanifest\fR
+\fB\-f\fR \fIMANIFEST\fR
 .RS 4
 Update a cart with a manifest file\&. A manifest file is written in the following format:
 .RE
@@ -145,16 +150,14 @@ into\&. The
 option may be given multiple times\&.
 .RE
 .PP
-\fBITEM\fR \&...
+\fBITEMS\fR \&...
 .RS 4
 Items to add to the cart in repository
 \fIREPONAME\fR\&.
 .RE
-.sp
-Updating a cart will add an item to the cart if it wasn\(cqt originally present or overwrite an item if it already was\&.
 .SH "SEARCH"
 .sp
-usage: juicer search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-c] [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Search for an RPM (\fIitem\fR) in pulp\&.
 .PP
@@ -166,6 +169,11 @@ Name of the RPM to search for\&.
 \fB\-r\fR \fIREPO\fR \&...
 .RS 4
 The repo(s) to limit search scope to\&.
+.RE
+.PP
+\fB\-c\fR
+.RS 4
+Search for the package in carts as well\&.
 .RE
 .PP
 \fB\-\-in\fR \fIENVIRONMENT\fR \&...
@@ -180,7 +188,7 @@ Print the contents of a cart\&.
 .PP
 \fBCARTNAME\fR
 .RS 4
-The release cart to show\&.
+The name of the release cart to show\&.
 .RE
 .SH "UPLOAD"
 .sp

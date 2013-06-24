@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer-admin
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
-.\"      Date: 03/20/2013
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/24/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.5.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "03/20/2013" "Juicer 0\&.5\&.0" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "06/24/2013" "Juicer 0\&.5\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -40,9 +40,7 @@ Manage pulp repositories, users, and roles\&.
 \fB\-v\fR, \fB\-\-verbose\fR
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
-\fI\-v\fR
-\fBbefore\fR
-\fISUBCOMMAND\fR\&.
+\fI\-v\fR\fBbefore\fR\fISUBCOMMAND\fR\&.
 .RE
 .PP
 \fB\-\-in\fR \fIenv\fR \&...
@@ -74,6 +72,8 @@ A feed url from which to synchronize yum repository packages
 .SH "CREATE-USER"
 .sp
 usage: juicer\-admin create\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD
+.sp
+Create a user in the pulp system\&.
 .PP
 \fBLOGIN\fR
 .RS 4
@@ -91,7 +91,7 @@ Plain text password\&. Will prompt if no arg specified
 .RE
 .SH "DELETE-REPO"
 .sp
-usage: juicer\-admin delete\-repo REPONAME
+usage: juicer\-admin delete\-repo \fIREPONAME\fR
 .PP
 \fBREPONAME\fR
 .RS 4
@@ -99,11 +99,11 @@ Name of repository which will be deleted
 .RE
 .SH "DELETE-USER"
 .sp
-usage: juicer\-admin delete\-user LOGIN
+usage: juicer\-admin delete\-user \fILOGIN\fR
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username of user which will be deleted
+The login or username of user which will be deleted
 .RE
 .SH "LIST-REPOS"
 .sp
@@ -115,7 +115,7 @@ usage: juicer\-admin list\-roles
 See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
 .SH "ROLE-ADD"
 .sp
-usage: juicer\-admin role\-add \-\-role ROLE \-\-login LOGIN
+usage: juicer\-admin role\-add \-\-role \fIROLE\fR \-\-login \fILOGIN\fR
 .PP
 \fB\-\-role=\fR\fIROLE\fR
 .RS 4
@@ -128,17 +128,27 @@ Login or username of user which will be added to role
 .RE
 .sp
 See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
+.SH "SHOW-REPO"
+.sp
+usage: juicer\-admin show\-repo \fIREPONAME\fR
+.sp
+Show basic statistics about a repo in pulp\&. Currently this command just prints the number of packages in the specified repository\&.
+.PP
+\fBREPONAME\fR
+.RS 4
+Name of the repository to show
+.RE
 .SH "SHOW-USER"
 .sp
-usage: juicer\-admin show\-user LOGIN
+usage: juicer\-admin show\-user \fILOGIN\fR
 .PP
 \fBLOGIN\fR
 .RS 4
-Login or username
+The login for the user to show
 .RE
 .SH "SYNC-REPO"
 .sp
-usage: juicer\-admin sync\-repo NAME
+usage: juicer\-admin sync\-repo \fINAME\fR
 .PP
 \fBNAME\fR
 .RS 4
@@ -147,6 +157,8 @@ Name of repository to sync
 .SH "UPDATE-USER"
 .sp
 usage: juicer\-admin update\-user LOGIN \-\-name FULLNAME \-\-password PASSWORD
+.sp
+Update the
 .PP
 \fBLOGIN\fR
 .RS 4
