@@ -92,6 +92,12 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Mon Jun 24 2013 Tim Bielawa <tbielawa@redhat.com> - 0.5.0-1
+- Release of 0.5.0, "Lovecraft in Raleigh"
+- Tons of changes necessary for switching to targeting Pulp v2, GitHub #100
+- Support for syncing a repo from another source, GitHub #45
+- Code cleanup and minor refactoring, GitHub #101
+
 * Mon Nov  5 2012 Tim Bielawa <tim@redhat.com> - 0.4.0-1
 - Release of 0.4.0, "Hello, my dear"
 - System level configs
