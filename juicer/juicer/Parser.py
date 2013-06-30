@@ -132,7 +132,8 @@ class Parser(object):
         ##################################################################
         # Create the 'push' sub-parser
         parser_push = subparsers.add_parser('push', \
-                help='Pushes/Updates a cart on the pulp server.')
+                help='Pushes/Updates a cart on the pulp server.',
+                usage='%(prog)s CARTNAME [--in [environment [environment ...]]] [-h]')
 
         parser_push.add_argument('cartname', metavar='cartname', \
                                     help='The name of your new release cart')
