@@ -244,9 +244,13 @@ def get_next_environment(env):
     juicer.utils.Log.log_debug("Finding next environment...")
 
     if env not in config.sections():
-        raise JuicerConfigError("%s is not a server configured in juicer.conf" % env)
+        raise JuicerConfigError("%s is not a server configured in juicer.conf", env)
 
     section = dict(config.items(env))
+
+    if 'promotes_to' not in section.keys():
+        err = "Environment `%s` has no entry for `promotes_to`\nCheck man 5 juicer.conf." % env
+        raise JuicerConfigError(err)
 
     return section['promotes_to']
 
