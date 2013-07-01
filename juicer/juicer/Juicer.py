@@ -306,31 +306,38 @@ class Juicer(object):
         old_env = cart.current_env
         cart.current_env = juicer.utils.get_next_environment(cart.current_env)
 
-        # figure out what needs to be done to promote packages
+        # figure out what needs to be done to promote packages. If
+        # packages are going between environments that are on the same
+        # host and we don't need to sign them just associate with both
+        # repos.
         if juicer.utils.env_same_host(old_env, cart.current_env) and (self.connectors[old_env].requires_signature == self.connectors[cart.current_env].requires_signature):
+            juicer.utils.Log.log_info("Envs %s and %s exist on the same host, calling remote associate action" % (old_env, cart.current_env))
+            juicer.utils.Log.log_info("Promoting %s from %s to %s" %
+                    (cart_name, old_env, cart.current_env))
             # iterate through packages and associate to new repo
             for repo, items in cart.iterrepos():
-                query = '/repositories/%s/actions/associate/' % repo
-                regex = re.compile('(.*)-(.*)')
-
+                query = '/repositories/%s-%s/actions/associate/' % (repo, cart.current_env)
                 for item in items:
-                    new_repo = ''
-                    _m = regex.match(repo)
-                    if _m:
-                        new_repo = '%s-%s' % (_m.group(0), cart.current_env)
-
+                    source_repo_id = '%s-%s' % (repo, old_env)
                     data = {
-                            'source_repo_id': new_repo,
-                            'criteria': {
-                                'type_ids': ['rpm'],
-                                'filters': {
-                                    'unit': {
-                                        '$and': [{'name': item.name}, {'version': item.version}, {'release': item.release}]
-                                        }
+                        'source_repo_id': str(source_repo_id),
+                        'criteria': {
+                            'type_ids': ['rpm'],
+                            'filters': {
+                                'unit': {
+                                    'filename': str(item.path.split('/')[-1])
                                     }
                                 }
                             }
-                    self.connectors[cart.current_env].post(query, data)
+                        }
+                    _r = self.connectors[cart.current_env].post(query, data)
+                    if _r.status_code != Constants.PULP_POST_ACCEPTED:
+                        raise JuicerPulpError("Package association call was not accepted. Terminating!")
+                    else:
+                        # association was accepted so publish destination repo
+                        self.connectors[cart.current_env].post('/repositories/%s-%s/actions/publish/' % (repo, cart.current_env), {'id': 'yum_distributor'})
+            # we didn't bomb out yet so let the user know what's up
+            juicer.utils.Log.log_info("Package association calls were accepted. Trusting that your packages existed in %s" % old_env)
         else:
             juicer.utils.Log.log_debug("Syncing down rpms...")
             cart.sync_remotes()
