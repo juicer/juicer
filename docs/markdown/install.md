@@ -12,7 +12,7 @@ You'll need these dependencies to run Juicer:
 6. python-yaml
 7. pymongo
 
-When the dependencies are satisfied, rename setup.py.in to setup.py:
+When the dependencies are satisfied:
 
     $ sudo make install
 
