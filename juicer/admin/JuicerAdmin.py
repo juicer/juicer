@@ -296,7 +296,7 @@ class JuicerAdmin(object):
                 repo = juicer.utils.load_json_str(_r.content)
 
                 juicer.utils.Log.log_info(repo['display_name'])
-                juicer.utils.Log.log_info("%s packages" % repo['content_unit_count'])
+                juicer.utils.Log.log_info("%s packages" % repo['content_unit_counts']['rpm'])
 
                 if count < len(envs):
                     # just want a new line
