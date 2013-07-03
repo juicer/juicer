@@ -11,6 +11,7 @@ You'll need these dependencies to run Juicer:
 5. python >= 2.5
 6. python-yaml
 7. pymongo
+8. python2-devel
 
 When the dependencies are satisfied:
 
