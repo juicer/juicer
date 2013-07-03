@@ -128,7 +128,7 @@ cleaner: clean
 python:
 	python setup.py build
 
-install:
+install: setup.py
 	python setup.py install
 	mkdir -p /usr/share/man/{man1,man5}
 	cp -v docs/man/man1/*.1 /usr/share/man/man1/
