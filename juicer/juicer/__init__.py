@@ -69,8 +69,8 @@ def createlike():
 
 def push(args):
     pulp = j(args)
-    cart = juicer.common.Cart.Cart(args.cartname, autoload=True, autosync=True)
     for env in args.environment:
+        cart = juicer.common.Cart.Cart(args.cartname, autoload=True, autosync=True)
         pulp.push(cart, env)
 
 
