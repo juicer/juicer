@@ -279,6 +279,21 @@ class Juicer(object):
                 continue
         return True
 
+    def merge(self, carts=None, name=None):
+
+        if name != None:
+            cart_name = name
+        else:
+            cart_name = carts[0]
+
+        result_cart = juicer.common.Cart.Cart(cart_name)
+
+        for cart in carts:
+            # 1. Grab items from each cart and shit them into result_cart
+            # 2. Dedupe cart taking higher version numbers
+
+        return True
+
     def pull(self, cartname=None, env=None):
         """
         `cartname` - Name of cart

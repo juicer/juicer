@@ -212,3 +212,19 @@ class Parser(object):
                 help='The name of the cart to promote')
 
         parser_promote.set_defaults(j=juicer.juicer.promote)
+
+        ##################################################################
+        # create the 'merge' sub-parser
+        parser_merge = subparsers.add_parser('merge', \
+                help='Merge the contents of two carts', \
+                usage='%(prog)s merge [CART1 [CART2 [CART3 ...]]] --name NAME')
+
+        parser_merge.add_argument('carts', nargs="+",
+                metavar='carts', \
+                help='Two or more carts to merge')
+
+        parser_merge.add_argument('--name',
+                metavar='name', \
+                help='Name of resultant cart, defaults to the first cart provided')
+
+        parser_merge.set_defaults(j=juicer.juicer.merge)
