@@ -103,6 +103,20 @@ Test connection settings in *~/.juicer.conf*
 The environments to limit connecting testing to.
 
 
+MERGE
+-----
+usage: juicer merge ['CARTNAME' ['CARTNAME' ...]] --name 'NEWCARTNAME'
+
+Merges the contents of N carts.
+
+*CARTNAME*::
+Names of N carts to merge.
+
+*--name* 'NEWCARTNAME' ::
+Name of resultant cart, defaults to first cart specified.
+
+
+
 PULL
 ----
 usage: juicer pull 'CARTNAME'
