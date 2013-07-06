@@ -280,18 +280,33 @@ class Juicer(object):
         return True
 
     def merge(self, carts=None, name=None):
+        """
+        `carts` - A list of cart names
+        `name` - Resultant cart name
 
+        Merge the contents of N carts into a new cart
+        """
         if name != None:
             cart_name = name
         else:
             cart_name = carts[0]
 
         result_cart = juicer.common.Cart.Cart(cart_name)
-
+        items_hash = {}
         for cart in carts:
             # 1. Grab items from each cart and shit them into result_cart
-            # 2. Dedupe cart taking higher version numbers
-
+            tmpcart = juicer.common.Cart.Cart(cart, autoload=True)
+            for repo, items in tmpcart.iterrepos():
+                if str(repo) in [str(key) for key in items_hash.keys()]:
+                    items_hash[str(repo)] += [str(item) for item in items]
+                else:
+                    items_hash[str(repo)] = [str(item) for item in items]
+        # 2. Remove duplicates
+        for key in items_hash.keys():
+            items_hash[key] = list(set(items_hash[key]))
+            # 3. Wrap it up
+            result_cart[key] = items_hash[key]
+        result_cart.save()
         return True
 
     def pull(self, cartname=None, env=None):
