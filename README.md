@@ -38,11 +38,6 @@ First, you need to decide on how many Pulp environments you're going to have. At
     $ man juicer.conf
 
 
-At this point, all that's left to do is to create the backend repositories that Juicer needs. Because we're so thoughtful (and lazy!) we've made this part really easy:
-
-    $ juicer-admin setup
-
-
 Now you're ready to start creating release carts!
 
 ### Upload an rpm into a repository
