@@ -41,7 +41,8 @@ class Parser(object):
         ##################################################################
         # Create the 'create_repo' sub-parser
         parser_create_repo = self.subparsers.add_parser('create-repo',\
-                help='Create pulp repository')
+                help='Create pulp repository', \
+                usage='%(prog)s  REPONAME --arch ARCH --feed FEED')
 
         parser_create_repo.add_argument('name', metavar='name', \
                                             help='The name of your repo')
@@ -65,7 +66,8 @@ class Parser(object):
         ##################################################################
         # Create the 'create_user' sub-parser
         parser_create_user = self.subparsers.add_parser('create-user',\
-                help='Create pulp user')
+                help='Create pulp user', \
+                usage='%(prog)s LOGIN --name FULLNAME --password PASSWORD')
 
         parser_create_user.add_argument('login', metavar='login', \
                                             help='Login user id for user')
@@ -93,7 +95,8 @@ class Parser(object):
         ##################################################################
         # Create the 'update-user' sub-parser
         parser_update_user = self.subparsers.add_parser('update-user',\
-                help='Change user information')
+                help='Change user information', \
+                usage='%(prog)s LOGIN --name FULLNAME --password PASSWORD')
 
         parser_update_user.add_argument('login', metavar='login', \
                                     help='Login user id for user to update')
