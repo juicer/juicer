@@ -2,6 +2,8 @@
 import unittest
 from juicer.juicer.Juicer import Juicer as j
 from juicer.juicer.Parser import Parser as pmoney
+from juicer.admin.JuicerAdmin import JuicerAdmin as ja
+from juicer.admin.Parser import Parser as pamoney
 from juicer.utils import mute
 import juicer.common.Cart
 import os
@@ -11,19 +13,25 @@ class TestJuicer(unittest.TestCase):
 
     def setUp(self):
         self.parser = pmoney()
+        self.aparser = pamoney()
 
         self.cname = 'CHG0DAY'
         self.cpath = os.path.expanduser('~/.juicer-carts/%s.json' % self.cname)
+        self.rname = 'hats'
 
-    def test_search(self):
-        self.args = self.parser.parser.parse_args('search ruby'.split())
-        pulp = j(self.args)
-        mute()(pulp.search)(pkg_name=self.args.rpmname)
+        setup_args = self.aparser.parser.parse_args(\
+                ('create-repo %s --in re qa' % self.rname).split())
+        pulp_admin = ja(setup_args)
+        mute()(pulp_admin.create_repo)(arch=setup_args.arch,\
+                repo_name=setup_args.name, envs=setup_args.envs)
 
-        self.args = self.parser.parser.parse_args(\
-            'search ruby --in qa'.split())
-        pulp = j(self.args)
-        mute()(pulp.search)(pkg_name=self.args.rpmname)
+    def tearDown(self):
+        aparser = pamoney()
+
+        setup_args = self.aparser.parser.parse_args(\
+                ('delete-repo %s --in re qa' % self.rname).split())
+        pulp_admin = ja(setup_args)
+        mute()(pulp_admin.delete_repo)(repo_name=setup_args.name, envs=setup_args.envs)
 
     def test_workflow(self):
         rpm_path = './share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
@@ -32,13 +40,24 @@ class TestJuicer(unittest.TestCase):
             os.remove(self.cpath)
 
         # test uploading an rpm
-        self.args = self.parser.parser.parse_args(('upload -r %s %s' % ('hats', rpm_path)).split())
+        self.args = self.parser.parser.parse_args(\
+                ('upload -r %s %s' % (self.rname, rpm_path)).split())
         pulp = j(self.args)
         cart = pulp.create('upload-cart', self.args.r)
 
         self.args = self.parser.parser.parse_args('push upload-cart'.split())
         pulp = j(self.args)
         mute()(pulp.push)(cart)
+
+        # test searching for an rpm
+        self.args = self.parser.parser.parse_args('search %s'.split())
+        pulp = j(self.args)
+        mute()(pulp.search)(pkg_name=self.args.rpmname)
+
+        self.args = self.parser.parser.parse_args(\
+            'search %s --in re'.split())
+        pulp = j(self.args)
+        mute()(pulp.search)(pkg_name=self.args.rpmname)
 
         # test creating a cart
         self.args = self.parser.parser.parse_args(('create CHG0DAY -r %s %s' \
