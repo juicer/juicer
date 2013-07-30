@@ -338,6 +338,9 @@ class Juicer(object):
                         self.connectors[cart.current_env].post('/repositories/%s-%s/actions/publish/' % (repo, cart.current_env), {'id': 'yum_distributor'})
             # we didn't bomb out yet so let the user know what's up
             juicer.utils.Log.log_info("Package association calls were accepted. Trusting that your packages existed in %s" % old_env)
+            # we can save and publish here because upload does this too...
+            cart.save()
+            self.publish(cart)
         else:
             juicer.utils.Log.log_debug("Syncing down rpms...")
             cart.sync_remotes()
@@ -349,11 +352,8 @@ class Juicer(object):
             for repo in cart.repos():
                 juicer.utils.Log.log_debug("Promoting %s to %s in %s" %
                                            (cart[repo], repo, cart.current_env))
-                self.upload(cart.current_env, cart)
-
-        cart.save()
-
-        self.publish(cart)
+            # reiterating that upload will save and publish the cart
+            self.upload(cart.current_env, cart)
 
     def sign_cart_for_env_maybe(self, cart, env=None):
         """
