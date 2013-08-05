@@ -97,3 +97,8 @@ def hello(args):
 def promote(args):
     pulp = j(args)
     pulp.promote(cart_name=args.cartname)
+
+
+def merge(args):
+    pulp = j(args)
+    pulp.merge(carts=args.carts, new_cart_namename=args.new_cart_name)
