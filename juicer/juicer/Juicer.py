@@ -279,15 +279,19 @@ class Juicer(object):
                 continue
         return True
 
-    def merge(self, carts=None, name=None):
+    def merge(self, carts=None, new_cart_name=None):
         """
         `carts` - A list of cart names
-        `name` - Resultant cart name
+        `new_cart_name` - Resultant cart name
 
         Merge the contents of N carts into a new cart
+
+        TODO: Sanity check that each cart in `carts` exists. Try
+        'juicer pull'ing carts that can't be located locally. Then cry
+        like a baby and error out.
         """
-        if name != None:
-            cart_name = name
+        if new_cart_name != None:
+            cart_name = new_cart_name
         else:
             cart_name = carts[0]
 
@@ -307,6 +311,7 @@ class Juicer(object):
             # 3. Wrap it up
             result_cart[key] = items_hash[key]
         result_cart.save()
+        # You can not fail at merging carts?
         return True
 
     def pull(self, cartname=None, env=None):

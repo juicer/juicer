@@ -101,4 +101,4 @@ def promote(args):
 
 def merge(args):
     pulp = j(args)
-    pulp.merge(carts=args.carts, name=args.name)
+    pulp.merge(carts=args.carts, new_cart_namename=args.new_cart_name)

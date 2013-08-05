@@ -217,14 +217,14 @@ class Parser(object):
         # create the 'merge' sub-parser
         parser_merge = subparsers.add_parser('merge', \
                 help='Merge the contents of two carts', \
-                usage='%(prog)s merge [CART1 [CART2 [CART3 ...]]] --name NAME')
+                usage='%(prog)s merge CART1 CART2 [CARTN ...]]] --into NEWCART')
 
         parser_merge.add_argument('carts', nargs="+",
                 metavar='carts', \
                 help='Two or more carts to merge')
 
-        parser_merge.add_argument('--name',
-                metavar='name', \
-                help='Name of resultant cart, defaults to the first cart provided')
+        parser_merge.add_argument('--into', '-i',
+                metavar='new_cart_name', \
+                help='Name of resultant cart, defaults to updating CART1')
 
         parser_merge.set_defaults(j=juicer.juicer.merge)

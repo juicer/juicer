@@ -105,11 +105,12 @@ The environments to limit connecting testing to.
 
 MERGE
 -----
-usage: juicer merge ['CARTNAME' ['CARTNAME' ...]] --name 'NEWCARTNAME'
+usage: juicer merge 'CARTNAME' 'CARTNAME' [...] 'NEWCARTNAME'
 
-Merges the contents of N carts.
+Merges the contents of N carts into 'NEWCARTNAME'. Defaults to
+updating 'CART1'.
 
-*CARTNAME*::
+*CART*::
 Names of N carts to merge.
 
 *--name* 'NEWCARTNAME' ::
