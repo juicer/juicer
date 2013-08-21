@@ -222,10 +222,12 @@ class Parser(object):
                 help='Add user to role')
 
         parser_role_add.add_argument('--login', metavar='login', \
-                                         help='Login user id for user')
+                                         help='Login user id for user', \
+                                         required=True)
 
         parser_role_add.add_argument('--role', metavar='role', \
-                                        help='Role to add user to')
+                                         help='Role to add user to', \
+                                         required=True)
 
         parser_role_add.add_argument('--in', metavar='envs', \
                          nargs="+", \
