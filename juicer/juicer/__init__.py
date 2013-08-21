@@ -45,7 +45,7 @@ def update(args):
 
     cart = pulp.update(args.cartname, args.r, args.f)
 
-    juicer.utils.Log.log_info("Updated cart '%s'." % cart.name)
+    juicer.utils.Log.log_info("Updated cart '%s'." % cart.cart_name)
 
 
 def edit():
