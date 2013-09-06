@@ -27,6 +27,11 @@ import re
 
 class Juicer(object):
     def __init__(self, args):
+        # create the user's cart dir here so we don't have to worry about
+        # wether or not it exists later
+        if not os.path.exists(Constants.CART_LOCATION):
+            os.mkdir(Constants.CART_LOCATION)
+
         self.args = args
 
         (self.connectors, self._defaults) = juicer.utils.get_login_info()

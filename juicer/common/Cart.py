@@ -94,9 +94,6 @@ class Cart(object):
         """
         Build a cart from a json file
         """
-        if not os.path.exists(CART_LOCATION):
-            raise JuicerCartError("No carts currently exist (%s does not exist)" % CART_LOCATION)
-
         cart_file = os.path.join(CART_LOCATION, json_file)
         try:
             cart_body = juicer.utils.read_json_document(cart_file)
@@ -119,9 +116,6 @@ class Cart(object):
         if self.is_empty():
             juicer.utils.Log.log_error('Cart is empty, not saving anything')
             return None
-
-        if not os.path.exists(CART_LOCATION):
-            os.mkdir(CART_LOCATION)
 
         juicer.utils.write_json_document(self.cart_file(), self._cart_dict())
 
