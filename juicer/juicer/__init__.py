@@ -74,6 +74,14 @@ def push(args):
         pulp.push(cart, env)
 
 
+def delete_rpm(args):
+    pulp = j(args)
+    for env in args.environment:
+        for repo in args.r:
+            repo_name = "%s-%s" % (repo[0],env)
+            rpms = repo[1:len(repo)]
+            pulp.delete_rpms(repo_name, rpms, env)
+
 def search(args):
     pulp = j(args)
     pulp.search(pkg_name=args.rpmname, search_carts=args.carts)

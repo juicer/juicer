@@ -228,3 +228,22 @@ class Parser(object):
                 help='Name of resultant cart, defaults to updating CART1')
 
         parser_merge.set_defaults(j=juicer.juicer.merge)
+
+        ##################################################################
+        # create the 'delete-rpm' sub-parser
+        parser_delete_rpm = subparsers.add_parser('delete-rpms', \
+                help='Remove rpm(s) from repositories', \
+                usage='%(prog)s delete-rpm -r REPO-NAME ITEM ITEM ... --in [ENV ...]')
+
+        parser_delete_rpm.add_argument('-r', metavar=('reponame', 'item'), \
+                                       action='append', \
+                                       nargs='+', \
+                                       help='Target repo filename, filename...')
+
+        parser_delete_rpm.add_argument('--in', nargs='*', \
+                metavar='environment', \
+                help='The environments to test the connection to.', \
+                default=self._default_envs, \
+                dest='environment')
+
+        parser_delete_rpm.set_defaults(j=juicer.juicer.delete_rpm)
