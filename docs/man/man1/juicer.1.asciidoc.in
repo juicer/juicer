@@ -81,6 +81,22 @@ Items to update in the cart.
 ////////////////////////////////////////////////////////////////////////
 
 
+DELETE-RPMS
+-----------
+usage: juicer delete-rpms -r REPO-NAME ITEM ITEM ... --in [ENV ...]
+
+Create a new cart based off an existing one.
+
+*REPO-NAME*::
+The name of the repo rpms live in.
+
+*ITEM*::
+Filename of rpm to delete.
+
+*--in* 'ENVIRONMENT' ... ::
+The environments to delete rpms in.
+
+
 ////////////////////////////////////////
 EDIT
 ----
