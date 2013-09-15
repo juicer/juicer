@@ -246,6 +246,27 @@ class JuicerAdmin(object):
                 _r.raise_for_status()
         return True
 
+    def list_users(self, envs=[], query="/users/"):
+        """
+        List users in specified environments
+        """
+        juicer.utils.Log.log_debug(
+                "List Users In: %s", ", ".join(envs))
+        for env in envs:
+            juicer.utils.Log.log_info("%s:" % (env))
+            _r = self.connectors[env].get(query)
+            if _r.status_code == Constants.PULP_GET_OK:
+                for user in juicer.utils.load_json_str(_r.content):
+                    roles = user['roles']
+                    if roles:
+                        user_roles = ', '.join(roles)
+                    else:
+                        user_roles = "None"
+                    juicer.utils.Log.log_info("\t%s - %s" % (user['login'], user_roles))
+            else:
+                _r.raise_for_status()
+        return True
+
     def role_add(self, role=None, login=None, envs=[], query='/roles/'):
         """
         `login` - Login or username of user to add to `role`
