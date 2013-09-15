@@ -110,3 +110,8 @@ def promote(args):
 def merge(args):
     pulp = j(args)
     pulp.merge(carts=args.carts, new_cart_namename=args.new_cart_name)
+
+def publish(args):
+    pulp = j(args)
+    for env in args.environment:
+        pulp.publish_repo(args.repo, env)

@@ -159,6 +159,18 @@ The name of the cart to push.
 The environments to push the new/updated cart to.
 
 
+PUBLISH
+-------
+usage: juicer publish 'REPO' [--in 'ENVIRONMENT' ...]
+
+Publishes a repository, regenerating it's metadata.
+
+*REPO*::
+The name of the repo to publish.
+
+*--in* 'ENVIRONMENT' ... ::
+The environments to publish repository in.
+
 
 PROMOTE
 -------
