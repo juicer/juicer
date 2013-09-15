@@ -470,3 +470,16 @@ class Juicer(object):
             return True
         else:
             return None
+
+    def publish_repo(self, repo, env):
+        """
+        `repo` - Repo name.
+        `env` - Environment.
+
+        Publish a repository. This action regenerates metadata.
+        """
+        _r = self.connectors[env].post('/repositories/%s-%s/actions/publish/' % (repo, env), {'id': 'yum_distributor'})
+        if _r.status_code != Constants.PULP_POST_ACCEPTED:
+            _r.raise_for_status()
+        else:
+            juicer.utils.Log.log_info("`%s` published in `%s`" % (repo, env))

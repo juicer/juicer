@@ -247,3 +247,20 @@ class Parser(object):
                 dest='environment')
 
         parser_delete_rpm.set_defaults(j=juicer.juicer.delete_rpm)
+
+        ##################################################################
+        # create the 'publish' sub-parser
+        parser_publish = subparsers.add_parser('publish', \
+                help='Publish a repository, this will regenerate metadata.', \
+                usage='%(prog)s publish REPO --in [ENV ...]')
+
+        parser_publish.add_argument('repo', metavar='reponame', \
+                                       help='Target repo to publish.')
+
+        parser_publish.add_argument('--in', nargs='*', \
+                metavar='environment', \
+                help='The environments to publish repository in.', \
+                default=self._default_envs, \
+                dest='environment')
+
+        parser_publish.set_defaults(j=juicer.juicer.publish)
