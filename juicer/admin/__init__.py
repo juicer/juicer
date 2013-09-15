@@ -76,3 +76,8 @@ def update_user(args):
 def setup(args):
     pulp = ja(args)
     pulp.setup()
+
+
+def list_users(args):
+    pulp = ja(args)
+    pulp.list_users(args.envs)

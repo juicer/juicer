@@ -94,6 +94,11 @@ See the Pulp User documentation (*SEE ALSO*) for more information on
 the specifics of role management.
 
 
+LIST-USERS
+----------
+usage: juicer-admin list-users
+
+
 ROLE-ADD
 --------
 usage: juicer-admin role-add --role 'ROLE' --login 'LOGIN'

@@ -135,6 +135,19 @@ class Parser(object):
         parser_list_repos.set_defaults(ja=juicer.admin.list_repos)
 
         ##################################################################
+        # Create the 'list_users' sub-parser
+        parser_list_users = self.subparsers.add_parser('list-users', \
+                help='List all users')
+
+        parser_list_users.add_argument('--in', metavar='envs', \
+                               nargs="+", \
+                               dest='envs', \
+                               default=self._default_envs, \
+                               help='The environments in which to list users')
+
+        parser_list_users.set_defaults(ja=juicer.admin.list_users)
+
+        ##################################################################
         # Create the 'sync_repo' sub-parser
 
         parser_sync_repo = self.subparsers.add_parser('sync-repo', \
