@@ -171,6 +171,7 @@ class Parser(object):
         ##################################################################
         # Create the 'show_user' sub-parser
         parser_show_user = self.subparsers.add_parser('show-user', \
+                usage='%(prog)s LOGIN --in [ENV ...]', \
                 help='Show pulp user')
 
         parser_show_user.add_argument('login', metavar='login', \
