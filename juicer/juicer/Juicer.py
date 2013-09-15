@@ -164,8 +164,11 @@ class Juicer(object):
             (repo, items) = (repo_items[0], repo_items[1:])
             juicer.utils.Log.log_debug("Processing %s input items for repo '%s'." % (len(items), repo))
 
-            for item in items:
-                cart[repo].append(juicer.common.CartItem.CartItem(os.path.expanduser(item)))
+            if repo not in cart.keys():
+                cart[repo] = items
+            else:
+                for item in items:
+                    cart[repo].append(juicer.common.CartItem.CartItem(os.path.expanduser(item)))
 
         for manifest in manifests:
             cart.add_from_manifest(manifest, self.connectors)

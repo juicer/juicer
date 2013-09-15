@@ -90,6 +90,12 @@ class Cart(object):
             cart_items.append(i)
         self.repo_items_hash[repo_name] = cart_items
 
+    def keys(self):
+        """
+        Get repo keys.
+        """
+        return self.repo_items_hash.keys()
+
     def load(self, json_file):
         """
         Build a cart from a json file
