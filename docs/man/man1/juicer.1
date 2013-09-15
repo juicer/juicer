@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer
-.\"    Author: [see the "AUTHOR" section]
+.\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 08/05/2013
+.\"      Date: 09/13/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.5.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "08/05/2013" "Juicer 0\&.5\&.0" "Pulp repos and release carts"
+.TH "JUICER" "1" "09/13/2013" "Juicer 0\&.5\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -75,6 +75,26 @@ option may be given multiple times\&.
 .RS 4
 Items to add to the cart in repository
 \fIREPONAME\fR\&.
+.RE
+.SH "DELETE-RPMS"
+.sp
+usage: juicer delete\-rpms \-r REPO\-NAME ITEM ITEM \&... \-\-in [ENV \&...]
+.sp
+Create a new cart based off an existing one\&.
+.PP
+\fBREPO\-NAME\fR
+.RS 4
+The name of the repo rpms live in\&.
+.RE
+.PP
+\fBITEM\fR
+.RS 4
+Filename of rpm to delete\&.
+.RE
+.PP
+\fB\-\-in\fR \fIENVIRONMENT\fR \&...
+.RS 4
+The environments to delete rpms in\&.
 .RE
 .SH "HELLO"
 .sp
@@ -376,3 +396,9 @@ Juicer is released under the terms of the GPLv3+ License\&.
 \fBjuicer\-admin\fR(1), \fBjuicer\&.conf\fR(5)
 .sp
 The Juicer Homepage: https://github\&.com/juicer/juicer/
+.SH "AUTHOR"
+.PP
+\fB:doctype:manpage\fR
+.RS 4
+Author.
+.RE

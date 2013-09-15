@@ -398,6 +398,35 @@ class Juicer(object):
             # reiterating that upload will save and publish the cart
             self.upload(cart.current_env, cart)
 
+    def delete_rpms(self, repo_name, rpms, env):
+        """
+        `repo_name` - Name of the repository rpms live in (includes -env)
+        `rpms` - A list of rpm filenames to delete
+        `env` - Environment we're currently deleting in
+
+        Delete rpms from a repository in specified environments
+        """
+        for rpm in rpms:
+            data = {
+                'criteria': {
+                    'type_ids': ['rpm'],
+                    'filters': {
+                        'unit': {
+                            'filename': rpm
+                            }
+                        }
+                    }
+                }
+            _r = self.connectors[env].post("/repositories/%s/actions/unassociate/" % (repo_name), data)
+            if _r.status_code != Constants.PULP_POST_ACCEPTED:
+                _r.raise_for_status()
+            else:
+                juicer.utils.Log.log_info("Remove call for %s from %s was accepted" %
+                                          (rpm, repo_name))
+                # unassociation was accepted so publish destination repo after deleting orphans
+                self.connectors[env].delete('/content/orphans/rpm/')
+                self.connectors[env].post('/repositories/%s/actions/publish/' % (repo_name), {'id': 'yum_distributor'})
+
     def sign_cart_for_env_maybe(self, cart, env=None):
         """
         Sign the items to upload, if the env requires a signature.
