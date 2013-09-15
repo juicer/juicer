@@ -95,9 +95,8 @@ class Upload(object):
 
         _r = self.connector.post(query, data)
 
-        if not _r.status_code == Constants.PULP_POST_OK:
-            juicer.utils.Log.log_error("Import error importing '%s'... server said: \n %s", (self.pkg_name,
-                                       juicer.utils.load_json_str(_r.content)))
+        if not _r.status_code == Constants.PULP_POST_OK and not _r.status_code == Constants.PULP_POST_ACCEPTED:
+            juicer.utils.Log.log_error("Import error importing '%s'... server said: \n %s", (self.pkg_name, juicer.utils.load_json_str(_r.content)))
             _r.raise_for_status()
 
         juicer.utils.Log.log_debug("Finalized upload id %s" % self.uid)
@@ -111,6 +110,6 @@ class Upload(object):
         _r = self.connector.delete(query)
 
         if _r.status_code == Constants.PULP_DELETE_OK:
-            juicer.utils.Log.log_info("Cleaned up after upload request.")
+            juicer.utils.Log.log_debug("Cleaned up after upload request.")
         else:
             _r.raise_for_status()

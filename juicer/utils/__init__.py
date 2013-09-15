@@ -646,7 +646,7 @@ def upload_rpm(rpm_path, repoid, connector):
     upload = juicer.utils.Upload.Upload(package_basename, cksum, size, repoid, connector)
 
     #create a statusbar
-    pbar = ProgressBar(size)
+    pbar = ProgressBar(size, pkg_name)
 
     # read in rpm
     total_seeked = 0

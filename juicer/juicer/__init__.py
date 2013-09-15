@@ -19,7 +19,9 @@ import juicer.utils.Log
 from juicer.common.Errors import *
 import juicer.common.Cart
 from juicer.juicer.Juicer import Juicer as j
-
+import threading
+from juicer.juicer.Upload import Upload as Upload
+import Queue
 
 def create(args):
     pulp = j(args)
@@ -69,10 +71,23 @@ def createlike():
 
 def push(args):
     pulp = j(args)
-    for env in args.environment:
-        cart = juicer.common.Cart.Cart(args.cartname, autoload=True, autosync=True)
-        pulp.push(cart, env)
+    queue = Queue.Queue()
 
+    for i in range(4):
+        t = Upload(pulp, queue)
+        t.setDaemon(True)
+        t.start()
+
+    # populate the queue
+    for env in args.environment:
+        cart = juicer.common.Cart.Cart(str(args.cartname), autoload=True, autosync=True)
+        #pulp.push(cart, env)
+        for repo in cart.repos():
+            for item in cart[repo]:
+                queue.put((repo, item, env))
+
+    # wait until it's done
+    queue.join()
 
 def delete_rpm(args):
     pulp = j(args)

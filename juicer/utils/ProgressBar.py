@@ -21,9 +21,9 @@ import juicer.utils.Log
 
 
 class ProgressBar(object):
-    def __init__(self, maxval):
+    def __init__(self, maxval, package_name):
         if self.is_correct_log_level():
-            widgets = [Bar(), Percentage()]
+            widgets = [Bar(), Percentage(), " ", "%s" % package_name]
             self.pbar = progressbar.ProgressBar(widgets=widgets, maxval=maxval).start()
 
     def update(self, val):
