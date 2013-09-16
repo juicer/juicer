@@ -155,8 +155,6 @@ class Cart(object):
         """
         Pull down all non-local items and save them into remotes_storage.
         """
-        juicer.utils.Log.log_info("The Cart.sync_remotes() method is deprecated! Stop using it!")
-
         for repo, items in self.iterrepos():
             for rpm in items:
                 rpm.sync_to(self.remotes_storage)
