@@ -404,7 +404,9 @@ class Juicer(object):
                     'type_ids': ['rpm'],
                     'filters': {
                         'unit': {
-                            'filename': rpm
+                            'filename': {
+                                "$regex": rpm
+                                }
                             }
                         }
                     }
