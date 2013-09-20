@@ -93,6 +93,11 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Fri Sep 20 2013 Tim Bielawa <tbielawa@redhat.com> - 0.5.1-1
+- Too many bug fixes to list
+- Ability to merge carts
+- Lots of documentation/usage updates/corrections
+
 * Mon Jun 24 2013 Tim Bielawa <tbielawa@redhat.com> - 0.5.0-1
 - Release of 0.5.0, "Lovecraft in Raleigh"
 - Tons of changes necessary for switching to targeting Pulp v2, GitHub #100

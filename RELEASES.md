@@ -1,3 +1,9 @@
+# Juicer-0.5.1 - 2013-09-20 - "I don't know what it does but the service is down!"
+
+- Too many bug fixes to list
+- Ability to merge carts
+- Lots of documentation/usage updates/corrections
+
 # Juicer-0.5.0 - 2013-06-24 - "Lovecraft in Raleigh"
 
 - Tons of changes necessary for switching to targeting Pulp v2, GitHub #100
