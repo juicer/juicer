@@ -29,6 +29,7 @@ Summary:  Files common to juicer and juicer-admin
 Requires: python-BeautifulSoup
 Requires: python-requests >= 0.13.1
 Requires: rpm-python
+Requires: PyYAML
 Requires: python-progressbar
 Requires: python >= 2.5
 Requires: pymongo
