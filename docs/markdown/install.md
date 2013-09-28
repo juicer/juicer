@@ -9,7 +9,7 @@ You'll need these dependencies to run Juicer:
 3. rpm-python
 4. python-progressbar
 5. python >= 2.5
-6. python-yaml
+6. PyYAML
 7. pymongo
 8. python2-devel
 9. python-argparse
