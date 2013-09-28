@@ -125,7 +125,11 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug("Create User: %s ('%s')", login, user_name)
 
         for env in envs:
-            if juicer.utils.user_exists_p(login, self.connectors[env]):
+            if envs.index(env) != 0 and juicer.utils.env_same_host(env, envs[envs.index(env) - 1]):
+                juicer.utils.Log.log_info("environment `%s` shares a host with environment `%s`... skipping!",
+                                          (env, envs[envs.index(env) - 1]))
+                continue
+            elif juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` already exists in %s... skipping!",
                                           (login, env))
                 continue
@@ -183,7 +187,11 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug("Delete User: %s", login)
 
         for env in envs:
-            if not juicer.utils.user_exists_p(login, self.connectors[env]):
+            if envs.index(env) != 0 and juicer.utils.env_same_host(env, envs[envs.index(env) - 1]):
+                juicer.utils.Log.log_info("environment `%s` shares a host with environment `%s`... skipping!",
+                                          (env, envs[envs.index(env) - 1]))
+                continue
+            elif not juicer.utils.user_exists_p(login, self.connectors[env]):
                 juicer.utils.Log.log_info("user `%s` doesn't exist in %s... skipping!",
                                           (login, env))
                 continue
