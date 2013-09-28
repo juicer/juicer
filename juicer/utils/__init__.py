@@ -376,6 +376,7 @@ def filter_package_list(package_list):
     juicer.utils.Log.log_notice("Remote packages: %s" % str(remote_pkgs))
 
     possible_locals = filter(os.path.exists, package_list)
+    possible_locals = filter(is_rpm, possible_locals)
     juicer.utils.Log.log_debug("Considering %s possible locals" % len(possible_locals))
 
     for item in possible_locals:
@@ -427,6 +428,7 @@ def is_rpm(path):
         os.close(fd)
         return True
     except:
+        juicer.utils.Log.log_info("error: File `%s` is not an rpm" % path)
         return False
 
 

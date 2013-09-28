@@ -124,6 +124,7 @@ class Cart(object):
             return None
 
         juicer.utils.write_json_document(self.cart_file(), self._cart_dict())
+        juicer.utils.Log.log_info("Saved cart '%s'." % cart.cart_name)
 
     def iterrepos(self):
         """
