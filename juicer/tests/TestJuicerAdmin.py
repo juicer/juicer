@@ -82,7 +82,7 @@ class TestJuicerAdmin(unittest.TestCase):
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.create_user)(login=args.login, user_name=args.name, \
                                                   password=args.password, envs=args.envs)
-        self.assertTrue(any('created' in k for k in output))
+        self.assertTrue(any((('created' in k) or ('shares' in k)) for k in output))
         self.delete_test_user()
 
     def test_delete_user(self):

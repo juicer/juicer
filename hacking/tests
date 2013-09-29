@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/bash
 # -*- coding: utf-8 -*-
 # Juicer - Administer Pulp and Release Carts
 # Copyright © 2012, Red Hat, Inc.
@@ -16,15 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from juicer.tests.TestJuicer import TestJuicer
-from juicer.tests.TestJuicerAdmin import TestJuicerAdmin
-import unittest
+cd juicer/tests/
 
-def main():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestJuicer))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestJuicerAdmin))
-    unittest.TextTestRunner(verbosity=2).run(suite)
+for test in test_hello test_pull test_show test_workflow;
+do
+    echo "Running ${test}..."
+    python -m unittest TestJuicer.TestJuicer.$test
+done
 
-if __name__ == '__main__':
-    main()
+for test in test_create_repo test_create_user test_delete_user test_list_repos test_list_roles test_role_add test_show_repo test_show_user;
+do
+    echo "Running ${test}..."
+    python -m unittest TestJuicerAdmin.TestJuicerAdmin.$test
+done
+
+cd -

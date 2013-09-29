@@ -34,7 +34,7 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp_admin.delete_repo)(repo_name=setup_args.name, envs=setup_args.envs)
 
     def test_workflow(self):
-        rpm_path = './share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
+        rpm_path = '../../share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
 
         if os.path.exists(self.cpath):
             os.remove(self.cpath)
@@ -88,7 +88,7 @@ class TestJuicer(unittest.TestCase):
         new_cname = 'CHG1DAY'
 
         self.args = self.parser.parser.parse_args(('create %s -f %s' \
-                % (new_cname, './share/juicer/rpm-manifest.yaml')).split())
+                % (new_cname, '../../share/juicer/rpm-manifest.yaml')).split())
         pulp = j(self.args)
         mute()(pulp.create_manifest)(cart_name=self.args.cartname, manifests=self.args.f)
 
