@@ -579,8 +579,13 @@ def parse_manifest(manifest):
         raise JuicerManifestError('%s contains no items' % manifest)
 
     for pkg_name, version in data.iteritems():
-        if version == 'absent':
-            juicer.utils.Log.log_debug('%s is absent. Skipping...' % pkg_name)
+        if version == 'absent' or version == 'purged':
+            juicer.utils.Log.log_debug('%s is absent/purged. Skipping...' % pkg_name)
+        elif version == 'latest':
+            juicer.utils.Log.log_debug('%s is set to latest. Finding...' % pkg_name)
+            lversion, release = juicer.utils.find_latest(pkg_name)
+            juicer.utils.Log.log_debug('Adding %s version %s release %s' % (pkg_name, lversion, release))
+            rpm_list.append({'name': pkg_name, 'version': lversion, 'release': release})
         else:
             try:
                 _m = regex.match(version)
@@ -725,3 +730,38 @@ def search_carts(env, pkg_name, repos):
         for cart in carts.find({field: {'$regex': value}}):
             found_carts.append(cart)
         return found_carts
+
+def find_latest(pkg_name, url='/content/units/rpm/search/'):
+    """
+    returns the highest version and release of the specified package found
+    in the specified environment
+
+    env: the juicer environment to search
+    pkg_name: the name of the package for which to search
+    """
+    connectors, defaults = juicer.utils.get_login_info()
+    connector = connectors[defaults['start_in']]
+    # this data block is... yeah. searching in pulp v2 is painful
+    #
+    # https://pulp-dev-guide.readthedocs.org/en/latest/rest-api/content/retrieval.html#search-for-units
+    # https://pulp-dev-guide.readthedocs.org/en/latest/rest-api/conventions/criteria.html#search-criteria
+    #
+    # those are the API docs for searching
+    data = {
+        'criteria': {
+            'filters': {'name': pkg_name},
+            'sort': [['version', 'descending'], ['release', 'descending']],
+            'limit': 1,
+            'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
+        },
+        'include_repos': 'true'
+    }
+
+    # search pulp for package
+    _r = connector.post(url, data)
+    if not _r.status_code == Constants.PULP_POST_OK:
+        juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
+        _r.raise_for_status()
+    pkg_info = juicer.utils.load_json_str(_r.content)[0]
+
+    return pkg_info['version'], pkg_info['release']
