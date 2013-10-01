@@ -97,7 +97,6 @@ class CartItem(object):
                 i = open(self.path, 'r')
                 i.close()
                 juicer.utils.Log.log_debug("Successfully read item at: %s" % self.path)
-                self.is_rpm = juicer.utils.is_rpm(self.path)
             except:
                 raise IOError("Error while attempting to access item at path: %s" % self.path)
         else:
