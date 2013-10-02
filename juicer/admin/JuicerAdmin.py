@@ -448,3 +448,19 @@ class JuicerAdmin(object):
                 else:
                     _r.raise_for_status()
         return True
+
+    def update_repo(self, login=None, feed=None, checksum_type=None, envs=[], query='/repositories/'):
+        """
+        `repo` - Repository to update
+        `feed` - Updated feed url
+        `checksum_type` - Updated checksum_type
+
+        Change repository configuration
+        """
+        juicer.utils.Log.log_debug("Update repository configuration %s" % repo)
+        # copy current distributor config
+        # delete current distributor config
+        # change current distributor config values
+        # push new distributor config
+        # publish repository w/ new configgen
+        return True

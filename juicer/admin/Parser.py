@@ -121,9 +121,32 @@ class Parser(object):
                         nargs="+", \
                         dest='envs', \
                         default=self._default_envs, \
-                        help='The environments in which to create pulp user')
+                        help='The environments in which to update pulp user')
 
         parser_update_user.set_defaults(ja=juicer.admin.update_user)
+
+        ##################################################################
+        # Create the 'update-repo' sub-parser
+        parser_update_repo = self.subparsers.add_parser('update-repo',\
+                help='Change repository configuration', \
+                usage='%(prog)s REPO --feed FEED --checksum-type CHECKSUM-TYPE')
+
+        parser_update_repo.add_argument('repo', metavar='repo', \
+                                    help='Repository to update')
+
+        parser_update_repo.add_argument('--feed', metavar='feed', \
+                                    help='Updated feed url')
+
+        parser_update_repo.add_argument('--checksum-type', metavar='checksum_type', \
+                                    help='Updated checksum_type')
+
+        parser_update_repo.add_argument('--in', metavar='envs', \
+                        nargs="+", \
+                        dest='envs', \
+                        default=self._default_envs, \
+                        help='The environments in which to update repository')
+
+        parser_update_repo.set_defaults(ja=juicer.admin.update_repo)
 
         ##################################################################
         # Create the 'list_repos' sub-parser

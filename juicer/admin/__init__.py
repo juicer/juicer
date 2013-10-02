@@ -73,6 +73,11 @@ def update_user(args):
     pulp.update_user(args.login, args.name, args.password, args.envs)
 
 
+def update_repo(args):
+    pulp = ja(args)
+    pulp.update_repo(args.repo, args.feed, args.checksum_type, args.envs)
+
+
 def setup(args):
     pulp = ja(args)
     pulp.setup()
