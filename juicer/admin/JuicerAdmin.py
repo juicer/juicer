@@ -37,11 +37,12 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch=None, repo_name=None, feed=None, envs=[], query='/repositories/'):
+    def create_repo(self, arch=None, repo_name=None, feed=None, envs=[], checksum_type="sha256", query='/repositories/'):
         """
         `arch` - Architecture of repository content
         `repo_name` - Name of repository to create
         `feed` - Repo URL to feed from
+        `checksum_type` - Used for generating meta-data
 
         Create repository in specified environments, associate the
         yum_distributor with it and publish the repo
@@ -54,7 +55,6 @@ class JuicerAdmin(object):
                     '_repo-type': 'rpm-repo',
                     }
                 }
-
         juicer.utils.Log.log_debug("Create Repo: %s", repo_name)
 
         for env in envs:
@@ -86,7 +86,8 @@ class JuicerAdmin(object):
                             'distributor_config': {
                                 'relative_url': '/%s/%s/' % (env, repo_name),
                                 'http': True,
-                                'https': True
+                                'https': True,
+                                'checksum_type': checksum_type
                                 },
                             'auto_publish': True,
                             'relative_path': '/%s/%s/' % (env, repo_name)

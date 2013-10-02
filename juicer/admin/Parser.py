@@ -55,6 +55,10 @@ class Parser(object):
                                             default=None, \
                                             help='A feed repo for your repo')
 
+        parser_create_repo.add_argument('--checksum-type', metavar='checksum_type', \
+                                            default="sha256", \
+                                            help='Checksum-type used for meta-data generation')
+
         parser_create_repo.add_argument('--in', metavar='envs', \
                     nargs="+", \
                     dest='envs', \

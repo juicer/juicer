@@ -48,6 +48,10 @@ Repository package architecture
 *--feed=*'FEED'::
 A feed url from which to synchronize yum repository packages
 
+*--checksum-type=*'CHECKSUM_TYPE'::
+The checksum type to use when generating meta-data.
+Defaults to sha256.
+
 
 CREATE-USER
 -----------
