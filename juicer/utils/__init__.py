@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
+from juicer import __version__
 from juicer.common import Constants
 from juicer.common.Connectors import Connectors
 from juicer.common.Errors import *
@@ -731,6 +732,7 @@ def search_carts(env, pkg_name, repos):
             found_carts.append(cart)
         return found_carts
 
+
 def find_latest(pkg_name, url='/content/units/rpm/search/'):
     """
     returns the highest version and release of the specified package found
@@ -765,3 +767,10 @@ def find_latest(pkg_name, url='/content/units/rpm/search/'):
     pkg_info = juicer.utils.load_json_str(_r.content)[0]
 
     return pkg_info['version'], pkg_info['release']
+
+
+def juicer_version():
+    """
+    Duh, just print out what version of juicer you're running.
+    """
+    return juicer.__version__

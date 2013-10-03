@@ -32,6 +32,10 @@ class Parser(object):
                                  default=1, \
                                  help='Increase the verbosity (up to 3x)')
 
+        self.parser.add_argument('-V', '--version', action='version', \
+                                     version="juicer-admin-%s" \
+                                     % juicer.utils.juicer_version())
+
         ##################################################################
         # Keep the different commands separate
         self.subparsers = self.parser.add_subparsers(title='Commands', \
