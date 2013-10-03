@@ -76,9 +76,10 @@ def delete_rpm(args):
     pulp = j(args)
     for env in args.environment:
         for repo in args.r:
-            repo_name = "%s-%s" % (repo[0],env)
+            repo_name = "%s-%s" % (repo[0], env)
             rpms = repo[1:len(repo)]
             pulp.delete_rpms(repo_name, rpms, env)
+
 
 def search(args):
     pulp = j(args)
