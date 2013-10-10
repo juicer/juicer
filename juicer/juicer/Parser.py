@@ -34,7 +34,7 @@ class Parser(object):
                                 default=1, \
                                 help='Increase the verbosity (up to 3x)')
 
-        self.parser.add_argument('--version', action='version', \
+        self.parser.add_argument('-V', '--version', action='version', \
                                      version="juicer-%s" \
                                      % juicer.utils.juicer_version())
 

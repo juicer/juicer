@@ -13,7 +13,7 @@ juicer - create and push release carts, upload items to pulp
 
 SYNOPSIS
 --------
-juicer [-vvv] subcommand [PARAMETERS ...] [OPTIONS ...]
+juicer [-vvv] [-V] subcommand [PARAMETERS ...] [OPTIONS ...]
 
 
 
@@ -38,6 +38,8 @@ COMMON OPTIONS
 *-v*, *--verbose*::
 Increase the verbosity (up to 3x). In usage specify '-v' *before* 'SUBCOMMAND'.
 
+*-V*, *--version*::
+Print the version that you're using of juicer.
 
 
 CREATE

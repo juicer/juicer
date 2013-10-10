@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer-admin
-.\"    Author: :doctype:manpage
+.\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 10/01/2013
+.\"      Date: 10/10/2013
 .\"    Manual: Pulp repos and release carts
-.\"    Source: Juicer 0.5.1
+.\"    Source: Juicer 0.6.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "10/01/2013" "Juicer 0\&.5\&.1" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "10/10/2013" "Juicer 0\&.6\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +31,7 @@
 juicer-admin \- manage pulp repositories, users, and roles\&.
 .SH "SYNOPSIS"
 .sp
-juicer\-admin [\-vvv] subcommand [PARAMETERS \&...] [OPTIONS \&...] [\-\-in env \&...]
+juicer\-admin [\-vvv] [\-V] subcommand [PARAMETERS \&...] [OPTIONS \&...] [\-\-in env \&...]
 .SH "DESCRIPTION"
 .sp
 Manage pulp repositories, users, and roles\&.
@@ -41,6 +41,11 @@ Manage pulp repositories, users, and roles\&.
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
 \fI\-v\fR\fBbefore\fR\fISUBCOMMAND\fR\&.
+.RE
+.PP
+\fB\-V\fR, \fB\-\-version\fR
+.RS 4
+Print the version that you\(cqre using of juicer\-admin\&.
 .RE
 .PP
 \fB\-\-in\fR \fIenv\fR \&...
@@ -204,9 +209,3 @@ Juicer is released under the terms of the GPLv3+ License\&.
 \fBPulp User Documentation\fR \(em https://pulp\-user\-guide\&.readthedocs\&.org/en/pulp\-2\&.0/
 .sp
 The Juicer Homepage: https://github\&.com/juicer/juicer/
-.SH "AUTHOR"
-.PP
-\fB:doctype:manpage\fR
-.RS 4
-Author.
-.RE

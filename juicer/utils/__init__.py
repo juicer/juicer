@@ -16,7 +16,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-from juicer import __version__
 from juicer.common import Constants
 from juicer.common.Connectors import Connectors
 from juicer.common.Errors import *

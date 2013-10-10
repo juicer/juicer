@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 09/20/2013
+.\"      Date: 10/10/2013
 .\"    Manual: Pulp repos and release carts
-.\"    Source: Juicer 0.5.1
+.\"    Source: Juicer 0.6.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "09/20/2013" "Juicer 0\&.5\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "10/10/2013" "Juicer 0\&.6\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +31,7 @@
 juicer \- create and push release carts, upload items to pulp
 .SH "SYNOPSIS"
 .sp
-juicer [\-vvv] subcommand [PARAMETERS \&...] [OPTIONS \&...]
+juicer [\-vvv] [\-V] subcommand [PARAMETERS \&...] [OPTIONS \&...]
 .SH "DESCRIPTION"
 .sp
 A release cart is a description of what RPMs you want to push into a specific repository\&. A single cart can specify multiple repos and associated items\&. Release cart descriptions are saved so you can easily "promote" a cart to another environment\&.
@@ -43,6 +43,11 @@ RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
 \fI\-v\fR\fBbefore\fR\fISUBCOMMAND\fR\&.
+.RE
+.PP
+\fB\-V\fR, \fB\-\-version\fR
+.RS 4
+Print the version that you\(cqre using of juicer\&.
 .RE
 .SH "CREATE"
 .sp

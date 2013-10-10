@@ -94,6 +94,14 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Thu Oct 10 2013 Tim Bielawa <tbielawa@redhat.com> - 0.6.0-1
+- Release of 0.6.0, "Lemon Squeezings"
+- Bug Fixes/Features galore: 160, 157, 155, 102, 105, 104, 139, 154, 133, 152, 121, 136, 144
+- New juicer command: publish
+- New juicer-admin command/options: list-users, --checksum-type
+- Both commands now have a -V,--version option
+- Added PyYAML dep
+
 * Fri Sep 20 2013 Tim Bielawa <tbielawa@redhat.com> - 0.5.1-1
 - Too many bug fixes to list
 - Ability to merge carts
