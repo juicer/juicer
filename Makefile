@@ -11,7 +11,7 @@
 #   make sdist ---------------- produce a tarball
 #   make rpm  ----------------- produce RPMs
 #   make docs ----------------- rebuild the manpages (results are checked in)
-#   make pyflakes, make pep8 -- source code checks  
+#   make pyflakes, make pep8 -- source code checks
 #   make test ----------------- run all unit tests (export LOG=true for /tmp/ logging)
 
 ########################################################
@@ -140,7 +140,7 @@ install: setup.py
 sdist: clean
 	python setup.py sdist -t MANIFEST.in
 
-rpmcommon: juicer/__init__.py juicer.spec setup.py sdist docs 
+rpmcommon: juicer/__init__.py juicer.spec setup.py sdist docs
 	@mkdir -p rpm-build
 	@cp dist/*.gz rpm-build/
 
@@ -154,7 +154,7 @@ srpm: rpmcommon
 	-bs $(RPMSPEC)
 	@echo "#############################################"
 	@echo "Juicer SRPM is built:"
-	@echo "    rpm-build/$(RPMNVR).src.rpm"
+	@find rpm-build -maxdepth 2 -name 'juicer*src.rpm' | awk '{print "    " $$1}'
 	@echo "#############################################"
 
 rpm: rpmcommon
@@ -166,8 +166,8 @@ rpm: rpmcommon
 	--define "_sourcedir %{_topdir}" \
 	-ba $(RPMSPEC)
 	@echo "#############################################"
-	@echo "Juicer RPM is built:"
-	@echo "    rpm-build/noarch/$(RPMNVR).noarch.rpm"
+	@echo "Juicer RPMs are built:"
+	@find rpm-build -maxdepth 2 -name 'juicer*.rpm' | awk '{print "    " $$1}'
 	@echo "#############################################"
 
 koji: srpm
