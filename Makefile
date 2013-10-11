@@ -39,6 +39,7 @@ MANPAGES := docs/man/man1/juicer.1 docs/man/man1/juicer-admin.1 docs/man/man5/ju
 
 # VERSION file provides one place to update the software version.
 VERSION := $(shell cat VERSION)
+GITVERSION := $(shell git reflog -1 | awk '{print $$1}')
 # All of these targets are rebuilt when the VERSION file is updated.
 juicer/__init__.py juicer.spec setup.py: VERSION
 
@@ -91,7 +92,7 @@ setup.py: setup.py.in
 	sed "s/%VERSION%/$(VERSION)/" $< > $@
 
 juicer/__init__.py: juicer/__init__.py.in
-	sed "s/%VERSION%/$(VERSION)/" $< > $@
+	sed "s/%VERSION%/$(VERSION)-$(GITVERSION)/" $< > $@
 
 pep8:
 	@echo "#############################################"
