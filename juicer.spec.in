@@ -16,7 +16,7 @@ Url:           https://github.com/juicer
 BuildArch:     noarch
 BuildRequires: python2-devel
 
-Requires:      juicer-common
+Requires:      juicer-common = %VERSION%
 
 %description
 Pulp stuff, oh -- and release carts.
@@ -43,7 +43,7 @@ utilities for juicer and juicer-admin.
 %package admin
 Group:    Development/Libraries
 Summary:  Manage a pulp repository server
-Requires: juicer-common
+Requires: juicer-common = %VERSION%
 
 %description admin
 The juicer-admin utility lets you manage users, user roles, create,
