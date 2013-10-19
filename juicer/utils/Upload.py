@@ -95,7 +95,7 @@ class Upload(object):
 
         _r = self.connector.post(query, data)
 
-        if not _r.status_code == Constants.PULP_POST_OK or not _r.status_code == Constants.PULP_POST_ACCEPTED:
+        if _r.status_code not in [Constants.PULP_POST_OK, Constants.PULP_POST_ACCEPTED]:
             juicer.utils.Log.log_error("Import error importing '%s'... server said: \n %s", (self.pkg_name,
                                        juicer.utils.load_json_str(_r.content)))
             _r.raise_for_status()
