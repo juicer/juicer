@@ -424,7 +424,9 @@ def is_rpm(path):
     import magic
     m = magic.open(magic.MAGIC_MIME)
     m.load()
-    if 'rpm' in m.file(path):
+    mime = m.file(path)
+    # rpms or directories are cool
+    if 'rpm' in mime or 'directory' in mime:
         return True
     else:
         juicer.utils.Log.log_info("error: File `%s` is not an rpm" % path)
