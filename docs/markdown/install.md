@@ -13,6 +13,7 @@ You'll need these dependencies to run Juicer:
 7. pymongo
 8. python2-devel
 9. python-argparse
+10. python-magic
 
 When the dependencies are satisfied:
 

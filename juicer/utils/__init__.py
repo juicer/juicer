@@ -421,13 +421,12 @@ def is_rpm(path):
     is raised then this is not an RPM.
     """
 
-    try:
-        ts = rpm.TransactionSet()
-        fd = os.open(path, os.O_RDONLY)
-        ts.hdrFromFdno(fd)
-        os.close(fd)
+    import magic
+    m = magic.open(magic.MAGIC_MIME)
+    m.load()
+    if 'rpm' in m.file(path):
         return True
-    except:
+    else:
         juicer.utils.Log.log_info("error: File `%s` is not an rpm" % path)
         return False
 
