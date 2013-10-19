@@ -1,3 +1,7 @@
+# Juicer-0.6.1 - 2013-10-19 - "Lemon Squeezings Hotfix"
+- Bug Fixes/Features: 167, 168, 171
+- Added python-magic dep
+
 # Juicer-0.6.0 - 2013-10-10 - "Lemon Squeezings"
 - Bug Fixes/Features galore: 160, 157, 155, 102, 105, 104, 139, 154, 133, 152, 121, 136, 144
 - New juicer command: publish
