@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer
-.\"    Author: :doctype:manpage
+.\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 10/19/2013
+.\"      Date: 10/20/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.6.1
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "10/19/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "10/20/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -245,6 +245,17 @@ Print the contents of a cart\&.
 .RS 4
 The name of the release cart to show\&.
 .RE
+.SH "LIST"
+.sp
+usage: juicer list [\fICART_GLOB\fR [ \fICART_GLOB\fR \&...]]
+.sp
+List all carts\&. Optionally provide one or more \fICART_GLOB\fR to only list carts whose names match the given pattern\&. Pattern matching uses standard \fBfnmatch\fR rules\&.
+.PP
+\fBCART_GLOB\fR
+.RS 4
+The pattern to match\&. Default:
+\fB*\fR
+.RE
 .SH "UPLOAD"
 .sp
 usage: juicer upload \-r \fIREPO\fR \fIITEM\fR \&... [\-\-in \fIENVIRONMENT\fR \&...]
@@ -413,12 +424,6 @@ Copyright \(co 2012, Red Hat, Inc\&.\&.
 Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"
 .sp
-\fBjuicer\-admin\fR(1), \fBjuicer\&.conf\fR(5)
+\fBjuicer\-admin\fR(1), \fBjuicer\&.conf\fR(5), \fBfnmatch\fR(3)
 .sp
 The Juicer Homepage: https://github\&.com/juicer/juicer/
-.SH "AUTHOR"
-.PP
-\fB:doctype:manpage\fR
-.RS 4
-Author.
-.RE

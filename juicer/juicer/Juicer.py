@@ -194,6 +194,24 @@ class Juicer(object):
         cart.load(cart_name)
         return str(cart)
 
+    def list(self, cart_glob=['*.json']):
+        """
+        List all carts
+        """
+        carts = []
+        for glob in cart_glob:
+            # Translate cart names into cart file names
+            if not glob.endswith('.json'):
+                search_glob = glob + ".json"
+            else:
+                search_glob = glob
+
+            for cart in juicer.utils.find_pattern(os.path.expanduser('~/.juicer-carts/'), search_glob):
+                cart_name = cart.split('/')[-1].replace('.json', '')
+                carts.append(cart_name)
+
+        return carts
+
     def search(self, pkg_name=None, search_carts=False, query='/content/units/rpm/search/'):
         """
         search for a package stored in a pulp repo

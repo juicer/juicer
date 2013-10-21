@@ -241,6 +241,19 @@ Print the contents of a cart.
 The name of the release cart to show.
 
 
+LIST
+----
+usage: juicer list ['CART_GLOB' [ 'CART_GLOB' ...]]
+
+List all carts. Optionally provide one or more 'CART_GLOB' to only
+list carts whose names match the given pattern. Pattern matching uses
+standard *fnmatch* rules.
+
+*CART_GLOB*::
+The pattern to match. Default: ***
+
+
+
 UPLOAD
 ------
 usage: juicer upload -r 'REPO' 'ITEM' ... [--in 'ENVIRONMENT' ...]
@@ -354,6 +367,6 @@ Juicer is released under the terms of the GPLv3+ License.
 
 SEE ALSO
 --------
-*juicer-admin*(1), *juicer.conf*(5)
+*juicer-admin*(1), *juicer.conf*(5), *fnmatch*(3)
 
 The Juicer Homepage: <https://github.com/juicer/juicer/>

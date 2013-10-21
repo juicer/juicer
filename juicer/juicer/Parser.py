@@ -87,6 +87,17 @@ class Parser(object):
         parser_show.set_defaults(j=juicer.juicer.show)
 
         ##################################################################
+        # Create the 'list' sub-parser
+        parser_list = subparsers.add_parser('list', \
+                help='List all of your carts.')
+
+        parser_list.add_argument('cart_glob', metavar='cart_glob', \
+                                     nargs='*', default=['*'], \
+                                     help='A pattern to match cart names against (default: *)')
+
+        parser_list.set_defaults(j=juicer.juicer.list)
+
+        ##################################################################
         # Create the 'update' sub-parser
         parser_update = subparsers.add_parser('update', \
                 help='Update a release cart with items.', \
