@@ -56,6 +56,12 @@ def show(args):
     print cart
 
 
+def list(args):
+    pulp = j(args)
+    for cart in pulp.list(args.cart_glob):
+        print cart
+
+
 def pull(args):
     pulp = j(args)
     pulp.pull(args.cartname)
