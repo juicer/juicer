@@ -22,7 +22,6 @@ import juicer.juicer
 import juicer.utils
 import juicer.utils.Upload
 import os
-import re
 
 
 class Juicer(object):
@@ -479,12 +478,15 @@ class Juicer(object):
                 except ImportError as e:
                     juicer.utils.Log.log_notice("there was a problem using %s ... error: %s",
                                                 module_name, e)
+                    raise JuicerRpmSignPluginError("could not load rpm_sign_plugin: %s; additional information: %s" % \
+                                                       (module_name,
+                                                        e))
 
                 if not juicer.utils.rpms_signed_p([item.path for item in cart.items()]):
                     raise JuicerNotSignedError('RPMs have not been signed.')
 
             else:
-                raise JuicerConfigError("Did not find an rpm_sign_plugin in config file.")
+                raise JuicerConfigError("Did not find an rpm_sign_plugin in config file but the %s environment requires signed RPMs." % env)
             return True
         else:
             return None

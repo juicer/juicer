@@ -4,7 +4,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %endif
 
 Name:          juicer
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Pulp and release carts
 Version:       %VERSION%
 
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Tue Oct 22 2013 Tim Bielawa <tbielawa@redhat.com> - 0.6.1-2
+- Make it harder to get unsigned bits into places requiring signatures
+
 * Sat Oct 19 2013 Andrew Butcher <abutcher@redhat.com> - 0.6.1-1
 - Release of 0.6.1, "Lemon Squeezings Hotfix"
 - Bug Fixes/Features: 167, 168, 171

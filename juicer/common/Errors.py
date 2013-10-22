@@ -42,3 +42,7 @@ class JuicerPulpError(JuicerError):
 
 class JuicerManifestError(JuicerError):
     pass
+
+
+class JuicerRpmSignPluginError(JuicerError):
+    pass
