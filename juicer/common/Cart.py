@@ -247,10 +247,12 @@ class Cart(object):
                 for repo in ppkg['repository_memberships']:
                     if re.match(env_re, repo):
                         if repo not in urls:
-                            urls[repo] = []
+                            ending = "-%s" % self.current_env
+                            simple_repo = repo[:-len(ending)]
+                            urls[simple_repo] = []
 
                         pkg_url = juicer.utils.remote_url(connectors[self.current_env], self.current_env, repo, ppkg['filename'])
-                        urls[repo].append(pkg_url)
+                        urls[simple_repo].append(pkg_url)
 
         for repo in urls:
             self[repo] = urls[repo]
