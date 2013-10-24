@@ -90,6 +90,7 @@ class Juicer(object):
 
         # Upload carts don't persist
         if not cart.cart_name == 'upload-cart':
+            cart.current_env = env
             cart.save()
             self.publish(cart)
         return True
