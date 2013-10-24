@@ -30,7 +30,6 @@ class juicer_list:
         args = parser.parser.parse_args(['list', glob])
         juicer.utils.Log.LOG_LEVEL_CURRENT = 0
         result = args.j(args)
-        print result
         web.header('Content-Type', 'application/json')
         return json.dumps(result)
 

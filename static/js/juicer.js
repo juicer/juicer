@@ -35,16 +35,24 @@ function juicer_hello(){
 
 
 $(document).ready(function(){
-    // Load carts by default
+    //////////////////////////////////////////////////////////////////
+    // LOAD CARTS BY DEFAULT
     juicer_list('*');
 
+    //////////////////////////////////////////////////////////////////
+    // CLICK EVENT HANDLERS
     $('#button-juicer-hello').click(function () {
-	console.log("Hello clicked");
         juicer_hello();
     });
 
+    //////////////////////////////////////////////////////////////////
+    // INPUT EVENT HANDLERS
     $("#input-juicer-list").on("input", null, null, juicer_list_filter);
 });
+
+
+//////////////////////////////////////////////////////////////////
+// CALLBACKS
 
 function juicer_list_filter() {
     var $list_filter = $('#input-juicer-list').val();
