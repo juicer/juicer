@@ -1,0 +1,14 @@
+#juicer-hello-output {
+    height: 150px;
+    max-height: 150px;
+}
+
+#juicer-hello-overlay {
+  display:none;
+  position:absolute;
+  background:#fff;
+}
+
+#img-load {
+  position:absolute;
+}
