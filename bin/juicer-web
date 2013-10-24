@@ -36,6 +36,10 @@ class img:
             type = 'gif'
         elif path.endswith('jpg'):
             type = 'jpeg'
+        elif path.endswith('png'):
+            type ='png'
+        else:
+            print "WTF? %s" % path
 
         web.header('Content-Type', 'image/%s' % type)
         return open('./static/img/%s' % path, 'r').read()
