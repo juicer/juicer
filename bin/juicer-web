@@ -11,23 +11,46 @@ urls = (
     '/css/(.*\.css)', 'css',
     '/js/(.*\.js)', 'js',
     '/img/(.*)', 'img',
-    '/rest/juicer/hello', 'juicer_hello',
+    # Get requests that accept a parameter:
+    '/rest/juicer/list/(.+)', 'juicer_list',
+    '/rest/juicer/list/?', 'juicer_list',
+    # Plain GET requests here:
+    '/rest/juicer/(.+)', 'juicer_rest',
     '(.*)', 'static',
     )
 
 app = web.application(urls, globals())
 
+
 ##############################################################################
-class juicer_hello:
-    def GET(self):
+class juicer_list:
+    def GET(self, glob='*'):
         import juicer.juicer.Parser
         parser = juicer.juicer.Parser.Parser()
-        args = parser.parser.parse_args(['hello'])
+        args = parser.parser.parse_args(['list', glob])
         juicer.utils.Log.LOG_LEVEL_CURRENT = 0
-        juicer.utils.Log.log_debug(args)
-        hello = args.j(args)
+        result = args.j(args)
+        print result
         web.header('Content-Type', 'application/json')
-        return json.dumps(hello)
+        return json.dumps(result)
+
+##############################################################################
+class juicer_rest:
+    def GET(self, action):
+        import juicer.juicer.Parser
+        parser = juicer.juicer.Parser.Parser()
+
+        if action == 'hello':
+            args = parser.parser.parse_args(['hello'])
+        elif action == 'list':
+            args = parser.parser.parse_args(['list'])
+        else:
+            pass
+
+        juicer.utils.Log.LOG_LEVEL_CURRENT = 0
+        result = args.j(args)
+        web.header('Content-Type', 'application/json')
+        return json.dumps(result)
 
 ##############################################################################
 class img:
