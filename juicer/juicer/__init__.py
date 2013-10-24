@@ -104,7 +104,7 @@ def upload(args):
 
 def hello(args):
     pulp = j(args)
-    pulp.hello()
+    return pulp.hello()
 
 
 def promote(args):

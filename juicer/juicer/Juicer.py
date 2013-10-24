@@ -282,14 +282,20 @@ class Juicer(object):
         """
         Test pulp server connections defined in ~/.juicer.conf.
         """
+        results = {}
+
         for env in self.args.environment:
+            connect_result = {}
+            connect_result['endpoint'] = self.connectors[env].base_url
             juicer.utils.Log.log_info("Trying to open a connection to %s, %s ...",
                                       env, self.connectors[env].base_url)
             try:
                 _r = self.connectors[env].get()
+                connect_result['connect_ok'] = True
                 juicer.utils.Log.log_info("OK")
             except JuicerError:
                 juicer.utils.Log.log_info("FAILED")
+                connect_result['connect_ok'] = False
                 continue
 
             juicer.utils.Log.log_info("Attempting to authenticate as %s",
@@ -298,12 +304,17 @@ class Juicer(object):
             _r = self.connectors[env].get('/repositories/')
 
             if _r.status_code == Constants.PULP_GET_OK:
+                connect_result['auth_ok'] = True
+                connect_result['auth_msg'] = None
                 juicer.utils.Log.log_info("OK")
             else:
                 juicer.utils.Log.log_info("FAILED")
+                connect_result['auth_ok'] = False
+                connect_result['auth_msg'] = _r.content
                 juicer.utils.Log.log_info("Server said: %s", _r.content)
                 continue
-        return True
+            results[env] = connect_result
+        return results
 
     def merge(self, carts=None, new_cart_name=None):
         """
