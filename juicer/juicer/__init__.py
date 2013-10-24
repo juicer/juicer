@@ -58,8 +58,10 @@ def show(args):
 
 def list(args):
     pulp = j(args)
-    for cart in pulp.list(args.cart_glob):
-        print cart
+    carts = pulp.list(args.cart_glob)
+    for cart in carts:
+        juicer.utils.Log.log_info(cart)
+    return carts
 
 
 def pull(args):
