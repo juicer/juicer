@@ -73,9 +73,9 @@
     <div class="container">
 
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <h1>GET JUICED!</h1>
-      </div>
+      <!-- <div class="hero-unit"> -->
+      <!--   <h1>GET JUICED!</h1> -->
+      <!-- </div> -->
 
       <!-- Example row of columns -->
       <div class="row">
@@ -88,13 +88,12 @@
         </div>
 
         <div class="span4">
-          <h2>Carts</h2>
-	  <select id="list-carts" multiple="multiple">
+          <h2>Your Carts</h2>
+	  <select id="list-carts" multiple="multiple" size="10">
 	  </select>
-	  <div class="input-append">
-	    <input class="span2" id="appendedInputButton" type="text" value="*">
-	    <button class="btn" type="button">List!</button>
-	  </div>
+	  <form class="form-search">
+	    <input class="input-medium search-query" id="input-juicer-list" type="text" placeholder="Filter cart list">
+	  </form>
 
 	</div>
         <div class="span4">

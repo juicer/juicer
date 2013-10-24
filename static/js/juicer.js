@@ -1,3 +1,12 @@
+function juicer_list($filter){
+    $('#list-carts option').remove();
+    $.getJSON("/rest/juicer/list/*" + $filter + "*", function(data) {
+	$.each(data, function(i, cart) {
+	    $("#list-carts").append("<option value='" + cart + "'>" + cart + "</option>");
+	});
+    });
+}
+
 function juicer_hello(){
     var $t = $('#juicer-hello-output');
 
@@ -26,8 +35,18 @@ function juicer_hello(){
 
 
 $(document).ready(function(){
+    // Load carts by default
+    juicer_list('*');
+
     $('#button-juicer-hello').click(function () {
 	console.log("Hello clicked");
         juicer_hello();
     });
+
+    $("#input-juicer-list").on("input", null, null, juicer_list_filter);
 });
+
+function juicer_list_filter() {
+    var $list_filter = $('#input-juicer-list').val();
+    juicer_list($list_filter);
+}
