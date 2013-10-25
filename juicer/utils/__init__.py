@@ -583,6 +583,9 @@ def parse_manifest(manifest):
         elif version == 'latest':
             juicer.utils.Log.log_debug('%s is set to latest. Finding...' % pkg_name)
             lversion, release = juicer.utils.find_latest(pkg_name)
+            if lversion == False and release == False:
+                # package wasn't found in repo so don't add it to the list
+                continue
             juicer.utils.Log.log_debug('Adding %s version %s release %s' % (pkg_name, lversion, release))
             rpm_list.append({'name': pkg_name, 'version': lversion, 'release': release})
         else:
@@ -762,9 +765,14 @@ def find_latest(pkg_name, url='/content/units/rpm/search/'):
     if not _r.status_code == Constants.PULP_POST_OK:
         juicer.utils.Log.log_debug("Expected PULP_POST_OK, got %s", _r.status_code)
         _r.raise_for_status()
-    pkg_info = juicer.utils.load_json_str(_r.content)[0]
+    content = juicer.utils.load_json_str(_r.content)
+    if len(content) < 1:
+        juicer.utils.Log.log_info("%s was not found in %s.", (pkg_name, defaults['start_in']))
+        return False, False
+    else:
+        pkg_info = content[0]
 
-    return pkg_info['version'], pkg_info['release']
+        return pkg_info['version'], pkg_info['release']
 
 
 def juicer_version():
