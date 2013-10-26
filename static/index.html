@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Juicer Web</title>
+    <link rel="icon" type="image/png" href="img/jw.png">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Get juiced -- web-2-point-oh">
     <meta name="author" content="Tim Bielawa">
@@ -84,6 +86,7 @@
 	  <div id="juicer-hello-overlay"><img src="img/loading.gif" id="img-load" /></div>
 	  <div class="well pre-scrollable" id="juicer-hello-output">
 	  </div>
+	  <p><code>juicer hello</code> tests all your connection strings and attempts to authenticate against each <b>Pulp</b> endpoint</p>
           <p><a class="btn" id="button-juicer-hello">Run 'hello' &raquo;</a></p>
         </div>
 
@@ -91,6 +94,7 @@
           <h2>Your Carts</h2>
 	  <select id="list-carts" multiple="multiple" size="10">
 	  </select>
+	  <p>This just tests listing and filtering all of the carts saved locally on your system</p>
 	  <form class="form-search">
 	    <input class="input-medium search-query" id="input-juicer-list" type="text" placeholder="Filter cart list">
 	  </form>
