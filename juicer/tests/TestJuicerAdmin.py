@@ -15,8 +15,8 @@ class TestJuicerAdmin(unittest.TestCase):
             for user in users:
                 if user['login'] == 'cjesop':
                     self.connectors[env].delete('/users/%s/' % user['id'])
-                # remove repo
-                self.connectors[env].delete('/repositories/test-repo-456/')
+            # remove repo
+            self.connectors[env].delete('/repositories/test-repo-456/')
 
         super(__init__)
 
