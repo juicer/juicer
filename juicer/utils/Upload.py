@@ -58,7 +58,7 @@ class Upload(object):
 
         return _r.status_code
 
-    def import_upload(self, nvrea, ftype='rpm', rpm_name='', desc=None, htype='md5', lic=None, group=None, vendor=None, req=None):
+    def import_upload(self, nvrea, ftype='rpm', rpm_name='', desc=None, htype='sha256', lic=None, group=None, vendor=None, req=None):
         """
         import the completed upload into pulp
         `ftype` - the type of the upload
@@ -70,32 +70,34 @@ class Upload(object):
         `vendor` - software vendor
         `req` - dependencies
         """
+
         query = '/repositories/%s/actions/import_upload/' % self.repoid
-        data = {'upload_id': self.uid,
+        data = {'upload_id': str(self.uid),
                 'unit_type_id': ftype,
                 'unit_key': {
                     'name': rpm_name,
                     'version': nvrea[1],
                     'release': nvrea[2],
-                    'epoch': nvrea[3],
+                    'epoch': str(nvrea[3]),
                     'arch': nvrea[4],
                     'checksumtype': htype,
                     'checksum': self.cksum,
                     },
                 'unit_metadata': {
-                    'filename': self.pkg_name,
+                    'filename': str(self.pkg_name),
                     'license': lic if lic else '',
                     'requires': req if req else '',
-                #    'type': ftype,
                     'description': desc if desc else '',
-                #    'size': self.size,
                     'vendor': vendor if vendor else '',
+                    'relativepath': str(self.pkg_name),
                     }
                 }
 
         _r = self.connector.post(query, data)
 
         if _r.status_code not in [Constants.PULP_POST_OK, Constants.PULP_POST_ACCEPTED]:
+            print _r.status_code
+            print _r.content
             juicer.utils.Log.log_error("Import error importing '%s'... server said: \n %s", (self.pkg_name,
                                        juicer.utils.load_json_str(_r.content)))
             _r.raise_for_status()

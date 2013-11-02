@@ -645,7 +645,7 @@ def upload_rpm(rpm_path, repoid, connector):
     epoch = 0
     arch = pkg['arch']
     nvrea = tuple((pkg_name, version, release, epoch, arch))
-    cksum = hashlib.md5(rpm_path).hexdigest()
+    cksum = hashlib.sha256(rpm_path).hexdigest()
     size = os.path.getsize(rpm_path)
     package_basename = os.path.basename(rpm_path)
 
