@@ -4,7 +4,7 @@ from juicer.juicer.Juicer import Juicer as j
 from juicer.juicer.Parser import Parser as pmoney
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pamoney
-from juicer.utils import mute
+from juicer.utils import mute, get_login_info, get_environments
 import juicer.common.Cart
 import os
 
@@ -18,7 +18,7 @@ class TestJuicer(unittest.TestCase):
         self.cname = 'CHG0DAY'
         self.cpath = os.path.expanduser('~/.juicer-carts/%s.json' % self.cname)
         self.rname = 'hats'
-
+        (self.connectors, self._defaults) = get_login_info()
         setup_args = self.aparser.parser.parse_args(\
                 ('create-repo %s --in re qa' % self.rname).split())
         pulp_admin = ja(setup_args)
@@ -112,7 +112,7 @@ class TestJuicer(unittest.TestCase):
         self.assertTrue(os.path.exists(self.cpath))
 
     def test_hello(self):
-        self.args = self.parser.parser.parse_args('hello'.split())
+        self.args = self.parser.parser.parse_args(("hello --in %s" % self._defaults['start_in']).split())
         pulp = j(self.args)
         mute()(pulp.hello)()
 
