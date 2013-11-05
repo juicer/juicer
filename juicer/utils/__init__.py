@@ -42,7 +42,7 @@ try:
 except ImportError:
     import simplejson as json
 from pymongo import Connection as MongoClient
-
+from pymongo import errors as MongoErrors
 
 def load_json_str(jstr):
     """
@@ -161,8 +161,10 @@ def upload_cart(cart, collection):
     cart_cols = cart_db()
 
     cart_json = read_json_document(cart.cart_file())
-    cart_id = cart_cols[collection].save(cart_json)
-
+    try:
+        cart_id = cart_cols[collection].save(cart_json)
+    except MongoErrors.AutoReconnect:
+        raise JuicerConfigError("Error saving cart to `cart_host`. Ensure that this node is the master.")
     return cart_id
 
 
