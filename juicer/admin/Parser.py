@@ -75,7 +75,8 @@ class Parser(object):
         # Create the 'create_user' sub-parser
         parser_create_user = self.subparsers.add_parser('create-user',\
                 help='Create pulp user', \
-                usage='%(prog)s LOGIN --name FULLNAME --password PASSWORD')
+                usage='%(prog)s LOGIN --name FULLNAME --password PASSWORD \
+                       \n\nYou will be prompted if PASSWORD argument not supplied.')
 
         parser_create_user.add_argument('login', metavar='login', \
                                             help='Login user id for user')
@@ -104,7 +105,8 @@ class Parser(object):
         # Create the 'update-user' sub-parser
         parser_update_user = self.subparsers.add_parser('update-user',\
                 help='Change user information', \
-                usage='%(prog)s LOGIN --name FULLNAME --password PASSWORD')
+                usage='%(prog)s LOGIN --name FULLNAME --password PASSWORD \
+                       \n\nYou will be prompted if PASSWORD argument not supplied.')
 
         parser_update_user.add_argument('login', metavar='login', \
                                     help='Login user id for user to update')
