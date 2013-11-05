@@ -151,8 +151,6 @@ UPDATE-USER
 -----------
 usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD
 
-Update the
-
 *LOGIN*::
 Login or username of user which will be updated
 
