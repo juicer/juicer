@@ -111,13 +111,13 @@ class Parser(object):
 
         parser_update_user.add_argument('--name', metavar='name', \
                                             dest='name', \
-                                            required=True, \
+                                            required=False, \
                                             help='Updated name of user')
 
         parser_update_user.add_argument('--password', metavar='password', \
                                         dest='password', \
                                         nargs='*', \
-                                        required=True, \
+                                        required=False, \
                                         action=PromptAction, \
                                         help='Updated password for user')
 

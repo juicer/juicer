@@ -120,7 +120,7 @@ class JuicerAdmin(object):
         login = login.lower()
 
         data = {'login': login,
-                'password': password,
+                'password': password[0],
                 'name': user_name}
 
         juicer.utils.Log.log_debug("Create User: %s ('%s')", login, user_name)
@@ -425,12 +425,16 @@ class JuicerAdmin(object):
 
         login = login.lower()
 
-        data = {
-            'delta': {
-                'name': user_name,
-                'password': password[0]
-                }
-            }
+        data = { 'delta': {} }
+
+        if not user_name and not password:
+            raise JuicerError("Error: --name or --password must be present")
+
+        if user_name:
+            data['delta']['name'] = user_name
+
+        if password:
+            data['delta']['password'] = password[0]
 
         query = "%s%s/" % (query, login)
 
