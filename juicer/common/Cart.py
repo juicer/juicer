@@ -183,17 +183,7 @@ class Cart(object):
         return cart_items
 
     def __str__(self):
-        output = []
-
-        for repo, items in self.repo_items_hash.iteritems():
-            output.append(repo.upper())
-            # Underline the repo name
-            output.append("-" * len(repo))
-            # Add all the RPMs
-            output.extend([str(i) for i in items])
-            output.append('')
-
-        return "\n".join(output)
+        return juicer.utils.create_json_str(self._cart_dict(), indent=4)
 
     def _cart_dict(self):
         output = {'_id': self.cart_name,

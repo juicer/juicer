@@ -52,12 +52,12 @@ def load_json_str(jstr):
     return json.loads(str(jstr))
 
 
-def create_json_str(input_ds):
+def create_json_str(input_ds, **kwargs):
     """
     Load a native Python datastructure into a json formatted string
     and return it.
     """
-    return json.dumps(input_ds)
+    return json.dumps(input_ds, **kwargs)
 
 
 def cart_repo_exists_p(name, connector, env):
