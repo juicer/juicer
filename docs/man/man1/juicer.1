@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer
-.\"    Author: [see the "AUTHOR" section]
+.\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 10/22/2013
+.\"      Date: 11/11/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.6.1
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "10/22/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "11/11/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -113,18 +113,18 @@ The environments to limit connecting testing to\&.
 .RE
 .SH "MERGE"
 .sp
-usage: juicer merge \fICARTNAME\fR \fICARTNAME\fR [\&...] \fINEWCARTNAME\fR
+usage: juicer merge CART1 [\&...] CARTN \-\-name NEWCARTNAME
 .sp
 Merges the contents of N carts into \fINEWCARTNAME\fR\&. Defaults to updating \fICART1\fR\&.
 .PP
-\fBCART\fR
+\fBCART#\fR
 .RS 4
 Names of N carts to merge\&.
 .RE
 .PP
 \fB\-\-name\fR \fINEWCARTNAME\fR
 .RS 4
-Name of resultant cart, defaults to first cart specified\&.
+(Optional) Name of resultant cart, defaults to first cart specified\&.
 .RE
 .SH "PULL"
 .sp
@@ -427,3 +427,9 @@ Juicer is released under the terms of the GPLv3+ License\&.
 \fBjuicer\-admin\fR(1), \fBjuicer\&.conf\fR(5), \fBfnmatch\fR(3)
 .sp
 The Juicer Homepage: https://github\&.com/juicer/juicer/
+.SH "AUTHOR"
+.PP
+\fB:doctype:manpage\fR
+.RS 4
+Author.
+.RE
