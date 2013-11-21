@@ -66,7 +66,7 @@ UPLOAD_AT_ONCE = 10485760
 
 ######################################################################
 # Locations we may reference a few times.
-CART_LOCATION = os.path.expanduser("~/.config/juicer/juicer-carts")
+CART_LOCATION = os.path.expanduser("~/.config/juicer/carts")
 USER_CONFIG = os.path.expanduser("~/.config/juicer/config")
 CONFIG_DIR = os.path.expanduser("~/.config/juicer")
 EXAMPLE_USER_CONFIG = '/usr/share/juicer/juicer.user.conf'

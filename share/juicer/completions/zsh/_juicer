@@ -2,7 +2,7 @@
 
 _carts()
 {
-    for cart in `find ~/.config/juicer/juicer-carts -maxdepth 1 -type f | grep -v "upload-cart" | awk -F/ '{print $NF}' | sed "s/.json//"`; do
+    for cart in `find ~/.config/juicer/carts -maxdepth 1 -type f | grep -v "upload-cart" | awk -F/ '{print $NF}' | sed "s/.json//"`; do
 	_wanted 'cart' expl 'cart' compadd $cart
     done
 }
@@ -36,7 +36,7 @@ _juicer_create()
 }
 
 _juicer_edit()
-# Only show files in ~/.config/juicer/juicer-carts as suggestions. By using -g
+# Only show files in ~/.config/juicer/carts as suggestions. By using -g
 # (glob) we limit completions to files that match the glob
 # "*.json". Finally, the "(:r)" part of the glob instructs zsh to omit
 # the '.json' part of each match from the final result. E.g.,
@@ -48,7 +48,7 @@ _juicer_edit()
 
 _juicer_show()
 {
-    #_files -W ~/.config/juicer/juicer-carts -g "*.json(:r)"
+    #_files -W ~/.config/juicer/carts -g "*.json(:r)"
     _arguments \
 	:cart:_carts
 }

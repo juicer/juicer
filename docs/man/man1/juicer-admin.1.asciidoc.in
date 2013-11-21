@@ -166,7 +166,7 @@ FILES
 -----
 *~/.config/juicer/config* -- Juicer configuration file
 
-*~/.config/juicer/juicer-carts/* -- Cart storage location
+*~/.config/juicer/carts/* -- Cart storage location
 
 
 

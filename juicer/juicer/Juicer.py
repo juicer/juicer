@@ -216,7 +216,7 @@ class Juicer(object):
             else:
                 search_glob = glob
 
-            for cart in juicer.utils.find_pattern(os.path.expanduser('~/.config/juicer/juicer-carts/'), search_glob):
+            for cart in juicer.utils.find_pattern(os.path.expanduser('~/.config/juicer/carts/'), search_glob):
                 cart_name = cart.split('/')[-1].replace('.json', '')
                 carts.append(cart_name)
 

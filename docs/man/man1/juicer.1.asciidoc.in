@@ -141,7 +141,7 @@ PULL
 usage: juicer pull 'CARTNAME'
 
 Pulls a description of a cart from the pulp server and saves it on
-your local machine in ~/.config/juicer/juicer-carts/.
+your local machine in ~/.config/juicer/carts/.
 
 *CARTNAME*::
 The name of the cart to pull.
@@ -323,7 +323,7 @@ RPMs and a specific remote RPM:
     -----------
     ./rpm-build/noarch/juicer-misc-0.1.7-1.fc17.noarch.rpm
 
-The cart description is saved into *~/.config/juicer/juicer-carts/* as
+The cart description is saved into *~/.config/juicer/carts/* as
 *juicer-0.1.7.json*. We could show it again simply:
 
     $ juicer show juicer-0.1.7
@@ -337,7 +337,7 @@ The cart description is saved into *~/.config/juicer/juicer-carts/* as
 
 Remote items will be synced automatically when we push this cart to
 the repositories. Items synced are saved into
-*~/.config/juicer/juicer-carts/*'CART-NAME'*-remotes/*.
+*~/.config/juicer/carts/*'CART-NAME'*-remotes/*.
 
 Similarly, when using the *upload* command, remotes are also synced.
 
@@ -346,7 +346,7 @@ FILES
 -----
 *~/.config/juicer/config* -- Juicer configuration file
 
-*~/.config/juicer/juicer-carts/* -- Cart storage location
+*~/.config/juicer/carts/* -- Cart storage location
 
 
 AUTHOR

@@ -21,7 +21,7 @@ function go_home() {
 
 # source in hacking/setup-env
 function setup() {
-    CART_FILE=~/.config/juicer/juicer-carts/orange.json
+    CART_FILE=~/.config/juicer/carts/orange.json
     TEST_RPM=./share/juicer/empty-0.0.1-1.fc17.x86_64.rpm
     EMPTY_MANIFEST=./share/juicer/empty.yaml
 
