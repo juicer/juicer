@@ -191,8 +191,15 @@ class Juicer(object):
         return cart
 
     def show(self, cart_name):
-        cart = juicer.common.Cart.Cart(cart_name)
-        cart.load(cart_name)
+        # use local cart if present
+        # otherwise use mongo version
+        cart_file = os.path.join(Constants.CART_LOCATION, '%s.json' % cart_name)
+        if os.path.exists(cart_file):
+            cart = juicer.common.Cart.Cart(cart_name)
+            cart.load(cart_name)
+        else:
+            cln = juicer.utils.get_login_info()[1]['start_in']
+            cart = juicer.utils.cart_db()[cln].find_one({'_id': cart_name})
         return str(cart)
 
     def list(self, cart_glob=['*.json']):
