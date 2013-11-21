@@ -13,7 +13,7 @@ juicer-admin - manage pulp repositories, users, and roles.
 
 SYNOPSIS
 --------
-juicer-admin [-vvv] [-V] subcommand [PARAMETERS ...] [OPTIONS ...] [--in env ...]
+juicer-admin [-vvv] [-V] command subcommand [PARAMETERS ...] [OPTIONS ...] [--in env ...]
 
 
 
@@ -26,7 +26,7 @@ COMMON OPTIONS
 --------------
 
 *-v*, *--verbose*::
-Increase the verbosity (up to 3x). In usage specify '-v' *before* 'SUBCOMMAND'.
+Increase the verbosity (up to 3x). In usage specify '-v' *before* 'COMMAND'.
 
 *-V*, *--version*::
 Print the version that you're using of juicer-admin.
@@ -38,9 +38,9 @@ all __SUBCOMMAND__s accept this option when given after 'SUBCOMMAND'.
 
 
 
-CREATE-REPO
+REPO CREATE
 -----------
-usage: juicer-admin create-repo REPONAME --arch ARCH --feed FEED
+usage: juicer-admin repo create REPONAME --arch ARCH --feed FEED
 
 *REPONAME*::
 The name of the repository to be created
@@ -56,9 +56,9 @@ The checksum type to use when generating meta-data.
 Defaults to sha256.
 
 
-CREATE-USER
+USER CREATE
 -----------
-usage: juicer-admin create-user LOGIN --name FULLNAME --password PASSWORD
+usage: juicer-admin user create LOGIN --name FULLNAME --password PASSWORD
 
 Create a user in the pulp system.
 
@@ -72,43 +72,43 @@ User's full name
 Plain text password. Will prompt if no arg specified
 
 
-DELETE-REPO
+REPO DELETE
 -----------
-usage: juicer-admin delete-repo 'REPONAME'
+usage: juicer-admin repo delete 'REPONAME'
 
 *REPONAME*::
 Name of repository which will be deleted
 
 
-DELETE-USER
+USER DELETE
 -----------
-usage: juicer-admin delete-user 'LOGIN'
+usage: juicer-admin user delete 'LOGIN'
 
 *LOGIN*::
 The login or username of user which will be deleted
 
 
-LIST-REPOS
-----------
-usage: juicer-admin list-repos
+REPO LIST
+---------
+usage: juicer-admin repo list
 
 
-LIST-ROLES
-----------
-usage: juicer-admin list-roles
+ROLE LIST
+---------
+usage: juicer-admin role list
 
 See the Pulp User documentation (*SEE ALSO*) for more information on
 the specifics of role management.
 
 
-LIST-USERS
-----------
-usage: juicer-admin list-users
+USER LIST
+---------
+usage: juicer-admin user list
 
 
-ROLE-ADD
+ROLE ADD
 --------
-usage: juicer-admin role-add --role 'ROLE' --login 'LOGIN'
+usage: juicer-admin role add --role 'ROLE' --login 'LOGIN'
 
 *--role=*'ROLE'::
 The role which will be assigned to login or username
@@ -119,9 +119,9 @@ Login or username of user which will be added to role
 See the Pulp User documentation (*SEE ALSO*) for more information on
 the specifics of role management.
 
-SHOW-REPO
+REPO SHOW
 ---------
-usage: juicer-admin show-repo 'REPONAME'
+usage: juicer-admin repo show 'REPONAME'
 
 Show basic statistics about a repo in pulp. Currently this command
 just prints the number of packages in the specified repository.
@@ -131,25 +131,25 @@ Name of the repository to show
 
 
 
-SHOW-USER
+USER SHOW
 ---------
-usage: juicer-admin show-user 'LOGIN'
+usage: juicer-admin user show 'LOGIN'
 
 *LOGIN*::
 The login for the user to show
 
 
-SYNC-REPO
------------
-usage: juicer-admin sync-repo 'NAME'
+REPO SYNC
+---------
+usage: juicer-admin repo sync 'NAME'
 
 *NAME*::
 Name of repository to sync
 
 
-UPDATE-USER
+USER UPDATE
 -----------
-usage: juicer-admin update-user LOGIN --name FULLNAME --password PASSWORD
+usage: juicer-admin user update LOGIN --name FULLNAME --password PASSWORD
 
 *LOGIN*::
 Login or username of user which will be updated

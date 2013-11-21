@@ -13,7 +13,7 @@ juicer - create and push release carts, upload items to pulp
 
 SYNOPSIS
 --------
-juicer [-vvv] [-V] subcommand [PARAMETERS ...] [OPTIONS ...]
+juicer [-vvv] [-V] command subcommand [PARAMETERS ...] [OPTIONS ...]
 
 
 
@@ -36,15 +36,15 @@ COMMON OPTIONS
 --------------
 
 *-v*, *--verbose*::
-Increase the verbosity (up to 3x). In usage specify '-v' *before* 'SUBCOMMAND'.
+Increase the verbosity (up to 3x). In usage specify '-v' *before* 'COMMAND'.
 
 *-V*, *--version*::
 Print the version that you're using of juicer.
 
 
-CREATE
-------
-usage: juicer create 'CARTNAME' [-f manifest] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
+CART CREATE
+-----------
+usage: juicer cart create 'CARTNAME' [-f manifest] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
 
 Create a cart with the items specified.
 
@@ -83,11 +83,11 @@ Items to update in the cart.
 ////////////////////////////////////////////////////////////////////////
 
 
-DELETE-RPMS
------------
-usage: juicer delete-rpms -r REPO-NAME ITEM ITEM ... --in [ENV ...]
+RPM DELETE
+----------
+usage: juicer rpm delete -r REPO-NAME ITEM ITEM ... --in [ENV ...]
 
-Create a new cart based off an existing one.
+Delete rpms in a repository.
 
 *REPO-NAME*::
 The name of the repo rpms live in.
@@ -121,9 +121,9 @@ Test connection settings in *~/.config/juicer/config*
 The environments to limit connecting testing to.
 
 
-MERGE
------
-usage: juicer merge CART1 [...] CARTN  --name NEWCARTNAME
+CART MERGE
+----------
+usage: juicer cart merge CART1 [...] CARTN  --name NEWCARTNAME
 
 Merges the contents of N carts into 'NEWCARTNAME'. Defaults to
 updating 'CART1'.
@@ -136,9 +136,9 @@ Names of N carts to merge.
 
 
 
-PULL
-----
-usage: juicer pull 'CARTNAME'
+CART PULL
+---------
+usage: juicer cart pull 'CARTNAME'
 
 Pulls a description of a cart from the pulp server and saves it on
 your local machine in ~/.config/juicer/carts/.
@@ -148,9 +148,9 @@ The name of the cart to pull.
 
 
 
-PUSH
-----
-usage: juicer push 'CARTNAME' [--in 'ENVIRONMENT' ...]
+CART PUSH
+---------
+usage: juicer cart push 'CARTNAME' [--in 'ENVIRONMENT' ...]
 
 Pushes/Updates a cart on the pulp server.
 
@@ -161,9 +161,9 @@ The name of the cart to push.
 The environments to push the new/updated cart to.
 
 
-PUBLISH
--------
-usage: juicer publish 'REPO' [--in 'ENVIRONMENT' ...]
+REPO PUBLISH
+------------
+usage: juicer repo publish 'REPO' [--in 'ENVIRONMENT' ...]
 
 Publishes a repository, regenerating it's metadata.
 
@@ -174,9 +174,9 @@ The name of the repo to publish.
 The environments to publish repository in.
 
 
-PROMOTE
--------
-usage: juicer promote 'CARTNAME'
+CART PROMOTE
+------------
+usage: juicer cart promote 'CARTNAME'
 
 Promote a release cart to the next release environment in its directed
 graph.
@@ -185,9 +185,9 @@ graph.
 The release cart to promote.
 
 
-UPDATE
-------
-usage: juicer update 'CARTNAME' [-f 'MANIFEST'] [-r 'REPONAME' 'ITEMS' ... [ -r 'REPONAME' 'items' ]]
+CART UPDATE
+-----------
+usage: juicer cart update 'CARTNAME' [-f 'MANIFEST'] [-r 'REPONAME' 'ITEMS' ... [ -r 'REPONAME' 'items' ]]
 
 Update the specified cart with the items specified.
 
@@ -211,9 +211,9 @@ given multiple times.
 Items to add to the cart in repository 'REPONAME'.
 
 
-SEARCH
-------
-usage: juicer search 'ITEM' [-r 'REPO' ...] [-c] [--in 'ENVIRONMENT' ...]
+RPM SEARCH
+----------
+usage: juicer rpm search 'ITEM' [-r 'REPO' ...] [-c] [--in 'ENVIRONMENT' ...]
 
 Search for an RPM ('item') in pulp.
 
@@ -231,9 +231,9 @@ The environments to limit search scope to.
 
 
 
-SHOW
-----
-usage: juicer show 'CARTNAME'
+CART SHOW
+---------
+usage: juicer cart show 'CARTNAME'
 
 Print the contents of a cart.
 
@@ -241,9 +241,9 @@ Print the contents of a cart.
 The name of the release cart to show.
 
 
-LIST
-----
-usage: juicer list ['CART_GLOB' [ 'CART_GLOB' ...]]
+CART LIST
+---------
+usage: juicer cart list ['CART_GLOB' [ 'CART_GLOB' ...]]
 
 List all carts. Optionally provide one or more 'CART_GLOB' to only
 list carts whose names match the given pattern. Pattern matching uses
@@ -254,9 +254,9 @@ The pattern to match. Default: ***
 
 
 
-UPLOAD
-------
-usage: juicer upload -r 'REPO' 'ITEM' ... [--in 'ENVIRONMENT' ...]
+RPM UPLOAD
+----------
+usage: juicer rpm upload -r 'REPO' 'ITEM' ... [--in 'ENVIRONMENT' ...]
 
 Upload multiple RPMs or files ('ITEM') to 'REPO'.
 
@@ -286,7 +286,7 @@ resource types:
 Here is an example of how you would specify a directory of *local*
 RPMs and a direct path:
 
-    $ juicer upload -r javastuff \
+    $ juicer rpm upload -r javastuff \
         ~/my-java-app/rpmbuild/noarch/ \
         ~/misc-java-rpms/megafrobber-0.8.0.noarch.rpm
 
@@ -302,13 +302,13 @@ RPMs and a direct path:
 Here is an example of how you would specify a directory of *remote*
 RPMs and a specific remote RPM:
 
-    $ juicer upload -r javastuff \
+    $ juicer rpm upload -r javastuff \
         http://jenkins.foo/job/results/ \
         http://foo.bar/rpms/megafrobber-0.8.0.noarch.rpm
 
 *create and show a cart*:
 
-    $ juicer create juicer-0.1.7 \
+    $ juicer cart create juicer-0.1.7 \
         -r juicer \
         http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm \
         -r juicer-deps \
@@ -326,7 +326,7 @@ RPMs and a specific remote RPM:
 The cart description is saved into *~/.config/juicer/carts/* as
 *juicer-0.1.7.json*. We could show it again simply:
 
-    $ juicer show juicer-0.1.7
+    $ juicer cart show juicer-0.1.7
     JUICER
     ------
     http://kojipkgs.fedoraproject.org/..../juicer-0.1.7-1.fc17.noarch.rpm
