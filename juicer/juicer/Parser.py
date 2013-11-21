@@ -44,16 +44,38 @@ class Parser(object):
            dest='command', \
            description='\'%(prog)s COMMAND -h\' for individual help topics')
 
+
         ##################################################################
-        # Create the 'create' sub-parser
-        parser_create = subparsers.add_parser('create', \
+        # Create the 'cart' sub-parser
+        parser_cart = subparsers.add_parser('cart', \
+                help='Cart operations')
+
+        subparser_cart = parser_cart.add_subparsers(dest='sub_command')
+
+        ##################################################################
+        # Create the 'rpm' sub-parser
+        parser_rpm = subparsers.add_parser('rpm', \
+                help='RPM operations')
+
+        subparser_rpm = parser_rpm.add_subparsers(dest='sub_command')
+
+        ##################################################################
+        # Create the 'repo' sub-parser
+        parser_repo = subparsers.add_parser('repo', \
+                help='Repo operations')
+
+        subparser_repo = parser_repo.add_subparsers(dest='sub_command')
+
+        ##################################################################
+        # Create the 'cart create' sub-parser
+        parser_cart_create = subparser_cart.add_parser('create', \
                 help='Create a cart with the items specified.', \
                 usage='%(prog)s CARTNAME [-f rpm-manifest] ... [-r REPONAME items ... [ -r REPONAME items ...]]')
 
-        parser_create.add_argument('cartname', metavar='cart-name', \
+        parser_cart_create.add_argument('cartname', metavar='cart-name', \
                                        help='Cart name')
 
-        cgroup = parser_create.add_mutually_exclusive_group(required=True)
+        cgroup = parser_cart_create.add_mutually_exclusive_group(required=True)
 
         cgroup.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
@@ -64,7 +86,8 @@ class Parser(object):
                                     action='append', \
                                     help='RPM manifest for cart')
 
-        parser_create.set_defaults(j=juicer.juicer.create)
+        parser_cart_create.set_defaults(j=juicer.juicer.create)
+
 
         ##################################################################
         # Create the 'edit' sub-parser
@@ -77,61 +100,61 @@ class Parser(object):
         # parser_edit.set_defaults(j=juicer.juicer.edit)
 
         ##################################################################
-        # Create the 'show' sub-parser
-        parser_show = subparsers.add_parser('show', \
+        # Create the 'cart show' sub-parser
+        parser_cart_show = subparser_cart.add_parser('show', \
                 help='Print the contents of a cart.')
 
-        parser_show.add_argument('cartname', metavar='name', \
+        parser_cart_show.add_argument('cartname', metavar='name', \
                                  help='The name of your cart')
 
-        parser_show.add_argument('--in', nargs='*', \
+        parser_cart_show.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 default=juicer.utils.get_environments(), \
                 help='Only show carts pushed to the given environment.', \
                 dest='environment')
 
-        parser_show.set_defaults(j=juicer.juicer.show)
+        parser_cart_show.set_defaults(j=juicer.juicer.show)
 
         ##################################################################
-        # Create the 'list' sub-parser
-        parser_list = subparsers.add_parser('list', \
+        # Create the 'cart list' sub-parser
+        parser_cart_list = subparser_cart.add_parser('list', \
                 help='List all of your carts.')
 
-        parser_list.add_argument('cart_glob', metavar='cart_glob', \
+        parser_cart_list.add_argument('cart_glob', metavar='cart_glob', \
                                      nargs='*', default=['*'], \
                                      help='A pattern to match cart names against (default: *)')
 
-        parser_list.set_defaults(j=juicer.juicer.list)
+        parser_cart_list.set_defaults(j=juicer.juicer.list)
 
         ##################################################################
-        # Create the 'update' sub-parser
-        parser_update = subparsers.add_parser('update', \
+        # Create the 'cart update' sub-parser
+        parser_cart_update = subparser_cart.add_parser('update', \
                 help='Update a release cart with items.', \
                 usage='%(prog)s CARTNAME [-f rpm-manifest] ... [-r REPONAME items ... [-r REPONAME items...]]')
 
-        parser_update.add_argument('cartname', metavar='cartname', \
+        parser_cart_update.add_argument('cartname', metavar='cartname', \
                                        help='The name of your release cart')
 
-        parser_update.add_argument('-r', metavar=('reponame', 'item'), \
+        parser_cart_update.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name')
 
-        parser_update.add_argument('-f', metavar='rpm-manifest', \
+        parser_cart_update.add_argument('-f', metavar='rpm-manifest', \
                                     action='append', \
                                     help='RPM manifest for cart')
 
-        parser_update.set_defaults(j=juicer.juicer.update)
+        parser_cart_update.set_defaults(j=juicer.juicer.update)
 
         ##################################################################
-        # Create the 'pull' sub-parser
-        parser_pull = subparsers.add_parser('pull', \
+        # Create the 'cart pull' sub-parser
+        parser_cart_pull = subparser_cart.add_parser('pull', \
                 help='Pull a release cart from remote.')
 
-        parser_pull.add_argument('cartname', metavar='cartname', \
+        parser_cart_pull.add_argument('cartname', metavar='cartname', \
                                        help='The name of your release cart')
 
-        parser_pull.set_defaults(j=juicer.juicer.pull)
+        parser_cart_pull.set_defaults(j=juicer.juicer.pull)
 
         ##################################################################
         # Create the 'create-like' sub-parser
@@ -151,64 +174,64 @@ class Parser(object):
         # parser_createlike.set_defaults(j=juicer.juicer.createlike)
 
         ##################################################################
-        # Create the 'push' sub-parser
-        parser_push = subparsers.add_parser('push', \
+        # Create the 'cart push' sub-parser
+        parser_cart_push = subparser_cart.add_parser('push', \
                 help='Pushes/Updates a cart on the pulp server.',
                 usage='%(prog)s CARTNAME [--in [environment [environment ...]]] [-h]')
 
-        parser_push.add_argument('cartname', metavar='cartname', \
+        parser_cart_push.add_argument('cartname', metavar='cartname', \
                                     help='The name of your new release cart')
 
-        parser_push.add_argument('--in', nargs='*', \
+        parser_cart_push.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 default=[self._default_start_in], \
                 help='The environments to push into.', \
                 dest='environment')
 
-        parser_push.set_defaults(j=juicer.juicer.push)
+        parser_cart_push.set_defaults(j=juicer.juicer.push)
 
         ##################################################################
-        # Create the 'search' sub-parser
-        parser_search = subparsers.add_parser('search', \
+        # Create the 'rpm search' sub-parser
+        parser_rpm_search = subparser_rpm.add_parser('search', \
                 help='Search for an RPM in pulp.', \
                 usage='%(prog)s rpmname [-r repo [repo]] [-c] [--in environment [environment]] [-h]')
 
-        parser_search.add_argument('rpmname', metavar='rpmname', \
+        parser_rpm_search.add_argument('rpmname', metavar='rpmname', \
                                   help='The name of the rpm(s) to search for.')
 
-        parser_search.add_argument('-r', nargs='*', metavar='repos', \
+        parser_rpm_search.add_argument('-r', nargs='*', metavar='repos', \
                 default=[], help='The repo(s) to limit search scope to.')
 
-        parser_search.add_argument('-c', '--carts', dest='carts', \
+        parser_rpm_search.add_argument('-c', '--carts', dest='carts', \
                 action='store_true', \
                 help="Search for the package in carts as well")
 
-        parser_search.add_argument('--in', nargs='*', \
+        parser_rpm_search.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 default=[self._default_start_in], \
                 help='The environments to limit search scope to.', \
                 dest='environment')
 
-        parser_search.set_defaults(j=juicer.juicer.search)
+        parser_rpm_search.set_defaults(j=juicer.juicer.search)
 
         ##################################################################
-        # create the 'upload' sub-parser
-        parser_upload = subparsers.add_parser('upload', \
+        # create the 'rpm upload' sub-parser
+        parser_rpm_upload = subparser_rpm.add_parser('upload', \
                 help='Upload the items specified into repos.', \
                 usage='%(prog)s -r REPONAME items ... [ -r REPONAME items ...] [--in ENV ...]')
 
-        parser_upload.add_argument('-r', metavar=('reponame', 'item'), \
+        parser_rpm_upload.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
                                        help='Destination repo name, items...')
 
-        parser_upload.add_argument('--in', nargs='*', \
+        parser_rpm_upload.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 default=[self._default_start_in], \
                 help='The environments to upload into.', \
                 dest='environment')
 
-        parser_upload.set_defaults(j=juicer.juicer.upload)
+        parser_rpm_upload.set_defaults(j=juicer.juicer.upload)
 
         ##################################################################
         # create the 'hello' sub-parser
@@ -225,63 +248,63 @@ class Parser(object):
         parser_hello.set_defaults(j=juicer.juicer.hello)
 
         ##################################################################
-        # create the 'promote' sub-parser
-        parser_promote = subparsers.add_parser('promote', \
+        # create the 'cart promote' sub-parser
+        parser_cart_promote = subparser_cart.add_parser('promote', \
                 help='Promote a cart to the next environment')
 
-        parser_promote.add_argument('cartname', metavar='cart', \
+        parser_cart_promote.add_argument('cartname', metavar='cart', \
                 help='The name of the cart to promote')
 
-        parser_promote.set_defaults(j=juicer.juicer.promote)
+        parser_cart_promote.set_defaults(j=juicer.juicer.promote)
 
         ##################################################################
-        # create the 'merge' sub-parser
-        parser_merge = subparsers.add_parser('merge', \
+        # create the 'cart merge' sub-parser
+        parser_cart_merge = subparser_cart.add_parser('merge', \
                 help='Merge the contents of two carts', \
                 usage='%(prog)s merge CART1 CART2 [CARTN ...]]] --into NEWCART')
 
-        parser_merge.add_argument('carts', nargs="+",
+        parser_cart_merge.add_argument('carts', nargs="+",
                 metavar='carts', \
                 help='Two or more carts to merge')
 
-        parser_merge.add_argument('--into', '-i',
+        parser_cart_merge.add_argument('--into', '-i',
                 metavar='new_cart_name', \
                 help='Name of resultant cart, defaults to updating CART1')
 
-        parser_merge.set_defaults(j=juicer.juicer.merge)
+        parser_cart_merge.set_defaults(j=juicer.juicer.merge)
 
         ##################################################################
-        # create the 'delete-rpm' sub-parser
-        parser_delete_rpm = subparsers.add_parser('delete-rpms', \
+        # create the 'rpm delete' sub-parser
+        parser_rpm_delete = subparser_rpm.add_parser('delete', \
                 help='Remove rpm(s) from repositories', \
                 usage='%(prog)s delete-rpm -r REPO-NAME ITEM ITEM ... --in [ENV ...]')
 
-        parser_delete_rpm.add_argument('-r', metavar=('reponame', 'item'), \
+        parser_rpm_delete.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
                                        help='Target repo filename, filename...')
 
-        parser_delete_rpm.add_argument('--in', nargs='*', \
+        parser_rpm_delete.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 help='The environments to test the connection to.', \
                 default=self._default_envs, \
                 dest='environment')
 
-        parser_delete_rpm.set_defaults(j=juicer.juicer.delete_rpm)
+        parser_rpm_delete.set_defaults(j=juicer.juicer.delete_rpm)
 
         ##################################################################
         # create the 'publish' sub-parser
-        parser_publish = subparsers.add_parser('publish', \
+        parser_repo_publish = subparser_repo.add_parser('publish', \
                 help='Publish a repository, this will regenerate metadata.', \
                 usage='%(prog)s publish REPO --in [ENV ...]')
 
-        parser_publish.add_argument('repo', metavar='reponame', \
+        parser_repo_publish.add_argument('repo', metavar='reponame', \
                                        help='Target repo to publish.')
 
-        parser_publish.add_argument('--in', nargs='*', \
+        parser_repo_publish.add_argument('--in', nargs='*', \
                 metavar='environment', \
                 help='The environments to publish repository in.', \
                 default=self._default_envs, \
                 dest='environment')
 
-        parser_publish.set_defaults(j=juicer.juicer.publish)
+        parser_repo_publish.set_defaults(j=juicer.juicer.publish)
