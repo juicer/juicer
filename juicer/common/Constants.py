@@ -71,3 +71,7 @@ USER_CONFIG = os.path.expanduser("~/.juicer.conf")
 SYSTEM_CONFIG = '/etc/juicer.conf'
 EXAMPLE_USER_CONFIG = '/usr/share/juicer/juicer.user.conf'
 EXAMPLE_SYSTEM_CONFIG = '/usr/share/juicer/juicer.conf'
+
+######################################################################
+# The version the server should be running
+EXPECTED_SERVER_VERSION = '2.1.1'

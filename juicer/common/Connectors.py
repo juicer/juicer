@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from juicer.common import Constants
+from juicer.common.Errors import JuicerPulpError
 import juicer.utils
 import juicer.utils.Log
 import requests
@@ -31,6 +33,7 @@ class Connectors(object):
             self.requires_signature = False
 
     def delete(self, url=""):
+        self.check_api_version()
         url = self.base_url + url
         juicer.utils.Log.log_debug("[REST:DELETE:%s]", url)
 
@@ -38,6 +41,7 @@ class Connectors(object):
                                verify=False)
 
     def get(self, url=""):
+        self.check_api_version()
         url = self.base_url + url
 
         juicer.utils.Log.log_debug("[REST:GET:%s]", url)
@@ -45,6 +49,7 @@ class Connectors(object):
                             verify=False)
 
     def post(self, url="", data={}, log_data=True, auto_create_json_str=True):
+        self.check_api_version()
         url = self.base_url + url
         if log_data:
             juicer.utils.Log.log_debug("[REST:POST:%s] [Data:%s]", url, str(data))
@@ -56,6 +61,7 @@ class Connectors(object):
                 auth=self.auth, headers=self.headers, verify=False)
 
     def put(self, url="", data={}, log_data=True, auto_create_json_str=True):
+        self.check_api_version()
         url = self.base_url + url
         if log_data:
             juicer.utils.Log.log_debug("[REST:PUT:%s] [Data:%s]", url, str(data))
@@ -65,3 +71,22 @@ class Connectors(object):
 
         return requests.put(url, data, \
                 auth=self.auth, headers=self.headers, verify=False)
+
+    def check_api_version(self):
+        """
+        Self check that the client expects the api version used by the
+        server. /status/ is available without authentication so it
+        will not interfere with hello.
+        """
+        url = self.base_url + "/status/"
+        juicer.utils.Log.log_debug("[REST:GET:%s]", url)
+
+        _r = requests.get(url, auth=self.auth, headers=self.headers,
+                          verify=False)
+
+        if _r.status_code == Constants.PULP_GET_OK: # server is up, cool.
+            version = juicer.utils.load_json_str(_r.content)['api_version'].strip()
+            if version != Constants.EXPECTED_SERVER_VERSION: # we done goofed
+                raise JuicerPulpError("Client expects %s and got %s -- you should probably update!" \
+                                      % (Constants.EXPECTED_SERVER_VERSION,version))
+        return True
