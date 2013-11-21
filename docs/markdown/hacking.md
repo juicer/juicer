@@ -13,7 +13,7 @@ See [install](install.md) for a list of dependencies.
 ## Setup a Config File
 
 See [Config File Setup](config.md) to create a config file
-`~/.juicer.conf`.
+`~/.config/juicer/config`.
 
 ## Start Hacking
 

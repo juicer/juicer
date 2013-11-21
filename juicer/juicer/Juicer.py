@@ -28,6 +28,8 @@ class Juicer(object):
     def __init__(self, args):
         # create the user's cart dir here so we don't have to worry about
         # wether or not it exists later
+        if not os.path.exists(Constants.CONFIG_DIR):
+            os.mkdir(Constants.CONFIG_DIR)
         if not os.path.exists(Constants.CART_LOCATION):
             os.mkdir(Constants.CART_LOCATION)
 
@@ -214,7 +216,7 @@ class Juicer(object):
             else:
                 search_glob = glob
 
-            for cart in juicer.utils.find_pattern(os.path.expanduser('~/.juicer-carts/'), search_glob):
+            for cart in juicer.utils.find_pattern(os.path.expanduser('~/.config/juicer/juicer-carts/'), search_glob):
                 cart_name = cart.split('/')[-1].replace('.json', '')
                 carts.append(cart_name)
 
@@ -288,7 +290,7 @@ class Juicer(object):
 
     def hello(self):
         """
-        Test pulp server connections defined in ~/.juicer.conf.
+        Test pulp server connections defined in ~/.config/juicer/config.
         """
         for env in self.args.environment:
             juicer.utils.Log.log_info("Trying to open a connection to %s, %s ...",
@@ -464,7 +466,7 @@ class Juicer(object):
         requires_signature = True
 
         Will attempt to load the rpm_sign_plugin defined in
-        ~/.juicer.conf, which must be a plugin inheriting from
+        ~/.config/juicer/config, which must be a plugin inheriting from
         juicer.common.RpmSignPlugin. If available, we'll call
         cart.sign_items() with a reference to the
         rpm_sign_plugin.sign_rpms method.

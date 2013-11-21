@@ -64,30 +64,12 @@ def cart_repo_exists_p(name, connector, env):
     return repo_exists_p(name, connector, env)
 
 
-def _system_config_file():
-    """
-    Check that the config file is present and readable. If not,
-    copy a template in place.
-    """
-    config_file = Constants.SYSTEM_CONFIG
-
-    if os.path.exists(config_file) and os.access(config_file, os.R_OK):
-        return config_file
-    elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
-        raise IOError("Can not read %s" % config_file)
-    else:
-        shutil.copy(Constants.EXAMPLE_SYSTEM_CONFIG, config_file)
-
-        raise JuicerConfigError("Default config file created.\nCheck man 5 juicer.conf.")
-
-
 def _user_config_file():
     """
     Check that the config file is present and readable. If not,
     copy a template in place.
     """
     config_file = Constants.USER_CONFIG
-
     if os.path.exists(config_file) and os.access(config_file, os.R_OK):
         return config_file
     elif os.path.exists(config_file) and not os.access(config_file, os.R_OK):
@@ -104,11 +86,6 @@ def _config_file():
     """
     config = ConfigParser.SafeConfigParser()
     configs = []
-
-    try:
-        configs.append(_system_config_file())
-    except Exception, e:
-        juicer.utils.Log.log_debug(e)
 
     try:
         configs.append(_user_config_file())

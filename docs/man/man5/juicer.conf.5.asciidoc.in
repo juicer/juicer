@@ -22,7 +22,7 @@ Assuming you have a *devel* and *prod* environment, you might have a
 configuration file that looks like this:
 
 [literal]
-    # ~/.juicer.conf - In this example config file we maintain two
+    # ~/.config/juicer/config - In this example config file we maintain two
     # environments: devel and prod.
 
     [DEFAULT]
@@ -61,14 +61,14 @@ configuration file that looks like this:
     # be signed.
     requires_signature: true
 
-juicer.conf may be placed in either /etc/juicer.conf or ~/.juicer.conf --
-it takes the same configuration in either location. ~/.juicer.conf will
+juicer.conf may be placed in either /etc/juicer.conf or ~/.config/juicer/config --
+it takes the same configuration in either location. ~/.config/juicer/config will
 override anything placed in /etc/juicer.conf, but the system-wide config
 is useful if multiple users on the same system need to use juicer but
 have different pulp accounts.
 
 In this scenario, the environments can be specified in /etc/juicer.conf
-while ~/.juicer.conf would contain only the username and password in
+while ~/.config/juicer/config would contain only the username and password in
 a default section.
 
 
@@ -175,7 +175,7 @@ stored. The credentials used to authenticate must be the same as the
 
 FILES
 -----
-*~/.juicer.conf* -- Personal Juicer configuration file
+*~/.config/juicer/config* -- Personal Juicer configuration file
 
 */etc/juicer.conf* -- System Juicer configuration file
 

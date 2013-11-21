@@ -2,7 +2,7 @@
 
 ## How do I configure Juicer?
 
-Juicer is configured through a `~/.juicer.conf` file. It's broken into
+Juicer is configured through a `~/.config/juicer/config` file. It's broken into
 sections by environment. It may also contain an optional `DEFAULT`
 section, from which the defaults for all following sections are
 supplied.
@@ -12,7 +12,7 @@ prod. Meaning that we upload our packages to devel and test them
 accordingly in our development environment before we `promote` them to
 prod.
 
-    # ~/.juicer.conf - In this example config file we maintain two
+    # ~/.config/juicer/config - In this example config file we maintain two
     # environments: devel and prod.
 
     [DEFAULT]

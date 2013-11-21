@@ -16,7 +16,7 @@ class TestJuicer(unittest.TestCase):
         self.aparser = pamoney()
 
         self.cname = 'CHG0DAY'
-        self.cpath = os.path.expanduser('~/.juicer-carts/%s.json' % self.cname)
+        self.cpath = os.path.expanduser('~/.config/juicer/juicer-carts/%s.json' % self.cname)
         self.rname = 'hats'
         (self.connectors, self._defaults) = get_login_info()
         setup_args = self.aparser.parser.parse_args(\

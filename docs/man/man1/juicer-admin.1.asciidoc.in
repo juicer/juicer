@@ -164,9 +164,9 @@ Updated plain text password. Will prompt if no arg specified
 
 FILES
 -----
-*~/.juicer.conf* -- Juicer configuration file
+*~/.config/juicer/config* -- Juicer configuration file
 
-*~/.juicer-carts/* -- Cart storage location
+*~/.config/juicer/juicer-carts/* -- Cart storage location
 
 
 
