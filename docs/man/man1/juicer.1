@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 11/11/2013
+.\"      Date: 11/21/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.6.1
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "11/11/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+.TH "JUICER" "1" "11/21/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -105,7 +105,7 @@ The environments to delete rpms in\&.
 .sp
 usage: juicer hello [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
-Test connection settings in \fB~/\&.juicer\&.conf\fR
+Test connection settings in \fB~/\&.config/juicer/config\fR
 .PP
 \fBENVIRONMENT\fR
 .RS 4
@@ -130,7 +130,7 @@ Names of N carts to merge\&.
 .sp
 usage: juicer pull \fICARTNAME\fR
 .sp
-Pulls a description of a cart from the pulp server and saves it on your local machine in ~/\&.juicer\-carts/\&.
+Pulls a description of a cart from the pulp server and saves it on your local machine in ~/\&.config/juicer/carts/\&.
 .PP
 \fBCARTNAME\fR
 .RS 4
@@ -377,7 +377,7 @@ JUICER\-DEPS
 .RE
 .\}
 .sp
-The cart description is saved into \fB~/\&.juicer\-carts/\fR as \fBjuicer\-0\&.1\&.7\&.json\fR\&. We could show it again simply:
+The cart description is saved into \fB~/\&.config/juicer/carts/\fR as \fBjuicer\-0\&.1\&.7\&.json\fR\&. We could show it again simply:
 .sp
 .if n \{\
 .RS 4
@@ -404,14 +404,14 @@ JUICER\-DEPS
 .RE
 .\}
 .sp
-Remote items will be synced automatically when we push this cart to the repositories\&. Items synced are saved into \fB~/\&.juicer\-carts/\fR\fICART\-NAME\fR\fB\-remotes/\fR\&.
+Remote items will be synced automatically when we push this cart to the repositories\&. Items synced are saved into \fB~/\&.config/juicer/carts/\fR\fICART\-NAME\fR\fB\-remotes/\fR\&.
 .sp
 Similarly, when using the \fBupload\fR command, remotes are also synced\&.
 .SH "FILES"
 .sp
-\fB~/\&.juicer\&.conf\fR \(em Juicer configuration file
+\fB~/\&.config/juicer/config\fR \(em Juicer configuration file
 .sp
-\fB~/\&.juicer\-carts/\fR \(em Cart storage location
+\fB~/\&.config/juicer/carts/\fR \(em Cart storage location
 .SH "AUTHOR"
 .sp
 Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.

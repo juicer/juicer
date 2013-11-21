@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: juicer.conf
-.\"    Author: [see the "AUTHOR" section]
+.\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 10/22/2013
+.\"      Date: 11/21/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.6.1
 .\"  Language: English
 .\"
-.TH "JUICER\&.CONF" "5" "10/22/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+.TH "JUICER\&.CONF" "5" "11/21/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -39,7 +39,7 @@ Assuming you have a \fBdevel\fR and \fBprod\fR environment, you might have a con
 .RS 4
 .\}
 .nf
-# ~/\&.juicer\&.conf \- In this example config file we maintain two
+# ~/\&.config/juicer/config \- In this example config file we maintain two
 # environments: devel and prod\&.
 .fi
 .if n \{\
@@ -138,9 +138,9 @@ requires_signature: true
 .RE
 .\}
 .sp
-juicer\&.conf may be placed in either /etc/juicer\&.conf or /\&.juicer\&.conf \(em it takes the same configuration in either location\&. /\&.juicer\&.conf will override anything placed in /etc/juicer\&.conf, but the system\-wide config is useful if multiple users on the same system need to use juicer but have different pulp accounts\&.
+juicer\&.conf may be placed in either /etc/juicer\&.conf or /\&.config/juicer/config \(em it takes the same configuration in either location\&. /\&.config/juicer/config will override anything placed in /etc/juicer\&.conf, but the system\-wide config is useful if multiple users on the same system need to use juicer but have different pulp accounts\&.
 .sp
-In this scenario, the environments can be specified in /etc/juicer\&.conf while ~/\&.juicer\&.conf would contain only the username and password in a default section\&.
+In this scenario, the environments can be specified in /etc/juicer\&.conf while ~/\&.config/juicer/config would contain only the username and password in a default section\&.
 .SH "ATTRIBUTES"
 .PP
 \fBusername\fR
@@ -260,7 +260,7 @@ section\&.
 .RE
 .SH "FILES"
 .sp
-\fB~/\&.juicer\&.conf\fR \(em Personal Juicer configuration file
+\fB~/\&.config/juicer/config\fR \(em Personal Juicer configuration file
 .sp
 \fB/etc/juicer\&.conf\fR \(em System Juicer configuration file
 .SH "AUTHOR"
@@ -276,3 +276,9 @@ Juicer is released under the terms of the GPLv3+ License\&.
 \fBjuicer\fR(1), \fBjuicer\-admin\fR(1)
 .sp
 The Juicer Homepage: https://github\&.com/juicer/juicer/
+.SH "AUTHOR"
+.PP
+\fB:doctype:manpage\fR
+.RS 4
+Author.
+.RE
