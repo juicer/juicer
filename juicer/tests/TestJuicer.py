@@ -56,7 +56,7 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.search)(pkg_name=self.args.rpmname)
 
         self.args = self.parser.parser.parse_args(\
-            'search %s --in re'.split())
+            'rpm search %s --in re'.split())
         pulp = j(self.args)
         mute()(pulp.search)(pkg_name=self.args.rpmname)
 
