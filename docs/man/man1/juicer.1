@@ -2,12 +2,20 @@
 .\"     Title: juicer
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+<<<<<<< HEAD
 .\"      Date: 11/26/2013
+=======
+.\"      Date: 11/20/2013
+>>>>>>> Make those docs.
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.6.1
 .\"  Language: English
 .\"
+<<<<<<< HEAD
 .TH "JUICER" "1" "11/26/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+=======
+.TH "JUICER" "1" "11/20/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+>>>>>>> Make those docs.
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -31,7 +39,7 @@
 juicer \- create and push release carts, upload items to pulp
 .SH "SYNOPSIS"
 .sp
-juicer [\-vvv] [\-V] subcommand [PARAMETERS \&...] [OPTIONS \&...]
+juicer [\-vvv] [\-V] command subcommand [PARAMETERS \&...] [OPTIONS \&...]
 .SH "DESCRIPTION"
 .sp
 A release cart is a description of what RPMs you want to push into a specific repository\&. A single cart can specify multiple repos and associated items\&. Release cart descriptions are saved so you can easily "promote" a cart to another environment\&.
@@ -42,16 +50,16 @@ RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle
 \fB\-v\fR, \fB\-\-verbose\fR
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
-\fI\-v\fR\fBbefore\fR\fISUBCOMMAND\fR\&.
+\fI\-v\fR\fBbefore\fR\fICOMMAND\fR\&.
 .RE
 .PP
 \fB\-V\fR, \fB\-\-version\fR
 .RS 4
 Print the version that you\(cqre using of juicer\&.
 .RE
-.SH "CREATE"
+.SH "CART CREATE"
 .sp
-usage: juicer create \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
+usage: juicer cart create \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -81,11 +89,11 @@ option may be given multiple times\&.
 Items to add to the cart in repository
 \fIREPONAME\fR\&.
 .RE
-.SH "DELETE-RPMS"
+.SH "RPM DELETE"
 .sp
-usage: juicer delete\-rpms \-r REPO\-NAME ITEM ITEM \&... \-\-in [ENV \&...]
+usage: juicer rpm delete \-r REPO\-NAME ITEM ITEM \&... \-\-in [ENV \&...]
 .sp
-Create a new cart based off an existing one\&.
+Delete rpms in a repository\&.
 .PP
 \fBREPO\-NAME\fR
 .RS 4
@@ -111,9 +119,9 @@ Test connection settings in \fB~/\&.config/juicer/config\fR
 .RS 4
 The environments to limit connecting testing to\&.
 .RE
-.SH "MERGE"
+.SH "CART MERGE"
 .sp
-usage: juicer merge CART1 [\&...] CARTN \-\-name NEWCARTNAME
+usage: juicer cart merge CART1 [\&...] CARTN \-\-name NEWCARTNAME
 .sp
 Merges the contents of N carts into \fINEWCARTNAME\fR\&. Defaults to updating \fICART1\fR\&.
 .PP
@@ -126,9 +134,9 @@ Names of N carts to merge\&.
 .RS 4
 (Optional) Name of resultant cart, defaults to first cart specified\&.
 .RE
-.SH "PULL"
+.SH "CART PULL"
 .sp
-usage: juicer pull \fICARTNAME\fR
+usage: juicer cart pull \fICARTNAME\fR
 .sp
 Pulls a description of a cart from the pulp server and saves it on your local machine in ~/\&.config/juicer/carts/\&.
 .PP
@@ -136,9 +144,9 @@ Pulls a description of a cart from the pulp server and saves it on your local ma
 .RS 4
 The name of the cart to pull\&.
 .RE
-.SH "PUSH"
+.SH "CART PUSH"
 .sp
-usage: juicer push \fICARTNAME\fR [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer cart push \fICARTNAME\fR [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Pushes/Updates a cart on the pulp server\&.
 .PP
@@ -151,9 +159,9 @@ The name of the cart to push\&.
 .RS 4
 The environments to push the new/updated cart to\&.
 .RE
-.SH "PUBLISH"
+.SH "REPO PUBLISH"
 .sp
-usage: juicer publish \fIREPO\fR [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer repo publish \fIREPO\fR [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Publishes a repository, regenerating it\(cqs metadata\&.
 .PP
@@ -166,9 +174,9 @@ The name of the repo to publish\&.
 .RS 4
 The environments to publish repository in\&.
 .RE
-.SH "PROMOTE"
+.SH "CART PROMOTE"
 .sp
-usage: juicer promote \fICARTNAME\fR
+usage: juicer cart promote \fICARTNAME\fR
 .sp
 Promote a release cart to the next release environment in its directed graph\&.
 .PP
@@ -176,9 +184,9 @@ Promote a release cart to the next release environment in its directed graph\&.
 .RS 4
 The release cart to promote\&.
 .RE
-.SH "UPDATE"
+.SH "CART UPDATE"
 .sp
-usage: juicer update \fICARTNAME\fR [\-f \fIMANIFEST\fR] [\-r \fIREPONAME\fR \fIITEMS\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
+usage: juicer cart update \fICARTNAME\fR [\-f \fIMANIFEST\fR] [\-r \fIREPONAME\fR \fIITEMS\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
 .sp
 Update the specified cart with the items specified\&.
 .sp
@@ -210,9 +218,9 @@ option may be given multiple times\&.
 Items to add to the cart in repository
 \fIREPONAME\fR\&.
 .RE
-.SH "SEARCH"
+.SH "RPM SEARCH"
 .sp
-usage: juicer search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-c] [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer rpm search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-c] [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Search for an RPM (\fIitem\fR) in pulp\&.
 .PP
@@ -235,9 +243,9 @@ Search for the package in carts as well\&.
 .RS 4
 The environments to limit search scope to\&.
 .RE
-.SH "SHOW"
+.SH "CART SHOW"
 .sp
-usage: juicer show \fICARTNAME\fR
+usage: juicer cart show \fICARTNAME\fR
 .sp
 Print the contents of a cart\&.
 .PP
@@ -245,9 +253,9 @@ Print the contents of a cart\&.
 .RS 4
 The name of the release cart to show\&.
 .RE
-.SH "LIST"
+.SH "CART LIST"
 .sp
-usage: juicer list [\fICART_GLOB\fR [ \fICART_GLOB\fR \&...]]
+usage: juicer cart list [\fICART_GLOB\fR [ \fICART_GLOB\fR \&...]]
 .sp
 List all carts\&. Optionally provide one or more \fICART_GLOB\fR to only list carts whose names match the given pattern\&. Pattern matching uses standard \fBfnmatch\fR rules\&.
 .PP
@@ -256,9 +264,9 @@ List all carts\&. Optionally provide one or more \fICART_GLOB\fR to only list ca
 The pattern to match\&. Default:
 \fB*\fR
 .RE
-.SH "UPLOAD"
+.SH "RPM UPLOAD"
 .sp
-usage: juicer upload \-r \fIREPO\fR \fIITEM\fR \&... [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer rpm upload \-r \fIREPO\fR \fIITEM\fR \&... [\-\-in \fIENVIRONMENT\fR \&...]
 .sp
 Upload multiple RPMs or files (\fIITEM\fR) to \fIREPO\fR\&.
 .PP
@@ -305,7 +313,7 @@ Here is an example of how you would specify a directory of \fBlocal\fR RPMs and 
 .RS 4
 .\}
 .nf
-$ juicer upload \-r javastuff \e
+$ juicer rpm upload \-r javastuff \e
     ~/my\-java\-app/rpmbuild/noarch/ \e
     ~/misc\-java\-rpms/megafrobber\-0\&.8\&.0\&.noarch\&.rpm
 .fi
@@ -336,7 +344,7 @@ Here is an example of how you would specify a directory of \fBremote\fR RPMs and
 .RS 4
 .\}
 .nf
-$ juicer upload \-r javastuff \e
+$ juicer rpm upload \-r javastuff \e
     http://jenkins\&.foo/job/results/ \e
     http://foo\&.bar/rpms/megafrobber\-0\&.8\&.0\&.noarch\&.rpm
 .fi
@@ -350,7 +358,7 @@ $ juicer upload \-r javastuff \e
 .RS 4
 .\}
 .nf
-$ juicer create juicer\-0\&.1\&.7 \e
+$ juicer cart create juicer\-0\&.1\&.7 \e
     \-r juicer \e
     http://kojipkgs\&.fedoraproject\&.org/\&.\&.\&.\&./juicer\-0\&.1\&.7\-1\&.fc17\&.noarch\&.rpm \e
     \-r juicer\-deps \e
@@ -383,7 +391,7 @@ The cart description is saved into \fB~/\&.config/juicer/carts/\fR as \fBjuicer\
 .RS 4
 .\}
 .nf
-$ juicer show juicer\-0\&.1\&.7
+$ juicer cart show juicer\-0\&.1\&.7
 JUICER
 \-\-\-\-\-\-
 http://kojipkgs\&.fedoraproject\&.org/\&.\&.\&.\&./juicer\-0\&.1\&.7\-1\&.fc17\&.noarch\&.rpm
