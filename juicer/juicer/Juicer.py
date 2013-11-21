@@ -199,7 +199,7 @@ class Juicer(object):
             cart.load(cart_name)
         else:
             cln = juicer.utils.get_login_info()[1]['start_in']
-            cart = juicer.utils.cart_db()[cln].find_one({'_id': cart_name})
+            cart = juicer.common.Cart.Cart(juicer.utils.cart_db()[cln].find_one({'_id': {'$regex': cart_name}}))
         return str(cart)
 
     def list(self, cart_glob=['*.json']):
