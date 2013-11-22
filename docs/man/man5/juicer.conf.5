@@ -2,12 +2,12 @@
 .\"     Title: juicer.conf
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 11/21/2013
+.\"      Date: 11/22/2013
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.6.1
 .\"  Language: English
 .\"
-.TH "JUICER\&.CONF" "5" "11/21/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
+.TH "JUICER\&.CONF" "5" "11/22/2013" "Juicer 0\&.6\&.1" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -138,7 +138,7 @@ requires_signature: true
 .RE
 .\}
 .sp
-juicer\&.conf may be placed in either /etc/juicer\&.conf or /\&.config/juicer/config \(em it takes the same configuration in either location\&. /\&.config/juicer/config will override anything placed in /etc/juicer\&.conf, but the system\-wide config is useful if multiple users on the same system need to use juicer but have different pulp accounts\&.
+juicer\&.conf may be placed in either /etc/juicer\&.conf or ~/\&.config/juicer/config \(em it takes the same configuration in either location\&. ~/\&.config/juicer/config will override anything placed in /etc/juicer\&.conf, but the system\-wide config is useful if multiple users on the same system need to use juicer but have different pulp accounts\&.
 .sp
 In this scenario, the environments can be specified in /etc/juicer\&.conf while ~/\&.config/juicer/config would contain only the username and password in a default section\&.
 .SH "ATTRIBUTES"

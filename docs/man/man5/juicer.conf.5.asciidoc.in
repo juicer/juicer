@@ -61,7 +61,7 @@ configuration file that looks like this:
     # be signed.
     requires_signature: true
 
-juicer.conf may be placed in either /etc/juicer.conf or ~/.config/juicer/config --
+juicer.conf may be placed in either /etc/juicer.conf or \~/.config/juicer/config --
 it takes the same configuration in either location. ~/.config/juicer/config will
 override anything placed in /etc/juicer.conf, but the system-wide config
 is useful if multiple users on the same system need to use juicer but
