@@ -42,19 +42,19 @@ Now you're ready to start creating release carts!
 
 ### Upload an rpm into a repository
 
-    $ juicer upload -r juicy-software ~/Downloads/juicer-0.1.7-1.fc17.noarch.rpm
+    $ juicer rpm upload -r juicy-software ~/Downloads/juicer-0.1.7-1.fc17.noarch.rpm
 
 ### Example Workflow
 
 Start by creating a release cart `MyJuicyRelease` with items from the Internet:
 
-    $ juicer create MyJuicyRelease -r juicy-software https://my.sweet.host/pulp/repos/dev/juicy-software/juicer-0.1.7-1.fc17.noarch.rpm
+    $ juicer cart create MyJuicyRelease -r juicy-software https://my.sweet.host/pulp/repos/dev/juicy-software/juicer-0.1.7-1.fc17.noarch.rpm
 
 Then push the cart and its contents to pulp:
 
-    $ juicer push MyJuicyRelease
+    $ juicer cart push MyJuicyRelease
 
 When you're satisfied, promote the cart to the next environment
 (perhaps `stage`, or `production`):
 
-    $ juicer promote MyJuicyRelease
+    $ juicer cart promote MyJuicyRelease
