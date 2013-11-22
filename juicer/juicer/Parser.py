@@ -84,6 +84,12 @@ class Parser(object):
         parser_show.add_argument('cartname', metavar='name', \
                                  help='The name of your cart')
 
+        parser_show.add_argument('--in', nargs='*', \
+                metavar='environment', \
+                default=juicer.utils.get_environments(), \
+                help='Only show carts pushed to the given environment.', \
+                dest='environment')
+
         parser_show.set_defaults(j=juicer.juicer.show)
 
         ##################################################################

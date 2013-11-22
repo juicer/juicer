@@ -52,7 +52,7 @@ def edit():
 
 def show(args):
     pulp = j(args)
-    cart = pulp.show(args.cartname)
+    cart = pulp.show(args.cartname, args.environment)
     print cart
 
 
