@@ -201,9 +201,26 @@ class Juicer(object):
             cart = juicer.common.Cart.Cart(cart_name)
             cart.load(cart_name)
         else:
-            query = {'_id': {'$regex': cart_name}, 'current_env' : {'$in' : env_req}}
+            juicer.utils.Log.log_debug('trying to find the remote cart')
+            remote_cart_file = "%s/remote.json" % Constants.CART_LOCATION
+            fwd_env = []
+            for e in env_req:
+                try:
+                    fwd_env.append(juicer.utils.get_next_environment(e))
+                except JuicerConfigError:
+                    continue
+            fwd_env = fwd_env + env_req
+            query = {'_id': {'$regex': cart_name}, 'current_env' : {'$in' : fwd_env}}
+            juicer.utils.Log.log_debug('query: %s' % query)
+
             cln = juicer.utils.get_login_info()[1]['start_in']
-            cart = juicer.common.Cart.Cart(juicer.utils.cart_db()[cln].find_one(query))
+            res = juicer.utils.create_json_str(juicer.utils.cart_db()[cln].find_one(query))
+            juicer.utils.Log.log_debug('query result: %s' % res)
+
+            with open(remote_cart_file, 'w') as f:
+                f.write(res)
+            cart = juicer.common.Cart.Cart('remote')
+            cart.load('remote.json')
 
         return str(cart)
 

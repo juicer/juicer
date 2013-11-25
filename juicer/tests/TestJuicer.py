@@ -5,6 +5,7 @@ from juicer.juicer.Parser import Parser as pmoney
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pamoney
 from juicer.utils import mute, get_login_info, get_environments
+import juicer.common.Constants as Constants
 import juicer.common.Cart
 import os
 
@@ -16,7 +17,7 @@ class TestJuicer(unittest.TestCase):
         self.aparser = pamoney()
 
         self.cname = 'CHG0DAY'
-        self.cpath = os.path.expanduser('~/.config/juicer/carts/%s.json' % self.cname)
+        self.cpath = os.path.expanduser('%s/%s.json' % (Constants.CART_LOCATION, self.cname))
         self.rname = 'hats'
         (self.connectors, self._defaults) = get_login_info()
         setup_args = self.aparser.parser.parse_args(\
@@ -99,7 +100,7 @@ class TestJuicer(unittest.TestCase):
     def test_show(self):
         self.args = self.parser.parser.parse_args(('show %s' % self.cname).split())
         pulp = j(self.args)
-        mute()(pulp.show)(self.cname)
+        mute()(pulp.show)(self.cname, get_environments())
 
     def test_pull(self):
         if os.path.exists(self.cpath):
