@@ -171,6 +171,20 @@ rpm: rpmcommon
 	@find rpm-build -maxdepth 2 -name 'juicer*.rpm' | awk '{print "    " $$1}'
 	@echo "#############################################"
 
+oorpm: rpmcommon
+	@rpmbuild --define "_topdir %(pwd)/rpm-build" \
+	--define "_builddir %{_topdir}" \
+	--define "_rpmdir %{_topdir}" \
+	--define "_srcrpmdir %{_topdir}" \
+	--define "_specdir $(RPMSPECDIR)" \
+	--define "_sourcedir %{_topdir}" \
+	--dbpath ~/app-root/data/rpmdb/ \
+	-ba $(RPMSPEC)
+	@echo "#############################################"
+	@echo "Juicer RPMs are built:"
+	@find rpm-build -maxdepth 2 -name 'juicer*.rpm' | awk '{print "    " $$1}'
+	@echo "#############################################"
+
 koji: srpm
 	koji build --scratch f17 rpm-build/$(RPMNVR).src.rpm
 
