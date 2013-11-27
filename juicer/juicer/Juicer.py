@@ -16,6 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.common import Constants
+from juicer.common import TaskPoller
 from juicer.common.Errors import *
 import juicer.common.Cart
 import juicer.juicer
@@ -451,10 +452,16 @@ class Juicer(object):
             if _r.status_code != Constants.PULP_POST_ACCEPTED:
                 _r.raise_for_status()
             else:
+                unassociate_task = juicer.utils.load_json_str(_r.content)['task_id']
+                unassociate_poller = TaskPoller.TaskPoller(unassociate_task, self.connectors, env)
+                unassociate_poller.poll_until_finished()
                 juicer.utils.Log.log_info("Remove call for %s from %s was accepted" %
                                           (rpm, repo_name))
                 # unassociation was accepted so publish destination repo after deleting orphans
-                self.connectors[env].delete('/content/orphans/rpm/')
+                _r = self.connectors[env].delete('/content/orphans/rpm/')
+                delete_task = juicer.utils.load_json_str(_r.content)['task_id']
+                delete_poller = TaskPoller.TaskPoller(delete_task, self.connectors, env)
+                delete_poller.poll_until_finished()
                 self.connectors[env].post('/repositories/%s/actions/publish/' % (repo_name), {'id': 'yum_distributor'})
 
     def sign_cart_for_env_maybe(self, cart, env=None):
