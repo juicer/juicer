@@ -14,7 +14,6 @@ Source0:       %{name}-%{version}.tar.gz
 Url:           https://github.com/juicer
 
 BuildArch:     noarch
-BuildRequires: python2-devel
 
 Requires:      juicer-common = %VERSION%
 
