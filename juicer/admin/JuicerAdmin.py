@@ -47,7 +47,6 @@ class JuicerAdmin(object):
         Create repository in specified environments, associate the
         yum_distributor with it and publish the repo
         """
-        repo_name = repo_name.lower()
 
         data = {'display_name': repo_name,
                 'arch': arch,
