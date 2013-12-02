@@ -636,6 +636,7 @@ def upload_rpm(rpm_path, repoid, connector):
 
     # read in rpm
     total_seeked = 0
+    rpm_fd = open(rpm_path, 'rb')
     rpm_fd.seek(0)
     while total_seeked < size:
         rpm_data = rpm_fd.read(Constants.UPLOAD_AT_ONCE)
