@@ -585,7 +585,6 @@ def rpm_info(rpm_path):
     """
     Query information about the RPM at `rpm_path`.
 
-    TODO: Remove the duplication of code from upload_rpm() below.
     """
     ts = rpm.TransactionSet()
     ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
@@ -616,17 +615,16 @@ def upload_rpm(rpm_path, repoid, connector):
     ts = rpm.TransactionSet()
     ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
 
-    rpm_fd = open(rpm_path, 'rb')
-    pkg = ts.hdrFromFdno(rpm_fd)
-    pkg_name = pkg['name']
-    version = pkg['version']
-    release = pkg['release']
-    epoch = 0
-    arch = pkg['arch']
-    nvrea = tuple((pkg_name, version, release, epoch, arch))
-    cksum = hashlib.md5(rpm_path).hexdigest()
-    size = os.path.getsize(rpm_path)
-    package_basename = os.path.basename(rpm_path)
+    info = rpm_info(rpm_path)
+    pkg_name = info['name']
+    version = info['version']
+    release = info['release']
+    epoch = info['epoch']
+    arch = info['arch']
+    nvrea = info['nvrea']
+    cksum = info['cksum']
+    size = info['size']
+    package_basename = info['package_basename']
 
     juicer.utils.Log.log_notice("Expected amount to seek: %s (package size by os.path.getsize)" % size)
 
