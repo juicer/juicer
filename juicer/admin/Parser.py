@@ -178,6 +178,7 @@ class Parser(object):
         # Create the 'show_repo' sub-parser
 
         parser_show_repo = self.subparsers.add_parser('show-repo', \
+                usage='%(prog)s name --in [ENV ...]', \
                 help='Show pulp repository')
 
         parser_show_repo.add_argument('name', metavar='name', \
