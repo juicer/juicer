@@ -156,9 +156,13 @@ class Cart(object):
         """
         Pull down all non-local items and save them into remotes_storage.
         """
+        connectors = juicer.utils.get_login_info()[0]
         for repo, items in self.iterrepos():
+            repoid = "%s-%s" % (repo, self.current_env)
             for rpm in items:
-                rpm.sync_to(self.remotes_storage)
+                # don't bother syncing down if it's already in the pulp repo it needs to go to
+                if not rpm.path.startswith(juicer.utils.pulp_repo_path(connectors[self.current_env], repoid)):
+                    rpm.sync_to(self.remotes_storage)
 
     def is_empty(self):
         """
