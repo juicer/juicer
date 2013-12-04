@@ -68,28 +68,51 @@ class Juicer(object):
                 continue
 
             repoid = "%s-%s" % (repo, env)
-            juicer.utils.Log.log_debug("Beginning upload into %s repo" % repoid)
 
             for item in cart[repo]:
-                juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
-                rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
-                juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
-                                           (os.path.basename(item.path), rpm_id))
+                # if item is remote
+                if juicer.utils.is_remote_rpm(item.path):
+                    # if item is in our pulp server
+                    ours = False
+                    for env, con in self.connectors.iteritems():
+                        if item.path.startswith(con.base_url.split('/')[0]):
+                            ours = True
+                            break
+                    if ours:
+                        # check to see if it's in the right repo
+                        if item.path.startswith(juicer.utils.pulp_repo_path(con, repoid)):
+                            juicer.utils.Log.log_info("%s is already in repo %s in %s. Nothing to do." % (item, repo, env))
+                            continue
+                        else:
+                            juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
+                            rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+                            juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                                                       (os.path.basename(item.path), rpm_id))
+                    else:
+                        juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
+                        rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+                        juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                                                   (os.path.basename(item.path), rpm_id))
+                # else item is local
+                elif juicer.utils.is_rpm(item.path):
+                    juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
+                    rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+                    juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
+                                               (os.path.basename(item.path), rpm_id))
+
+                    # Upload carts aren't special, don't update their paths
+                    if cart.cart_name == 'upload-cart':
+                        continue
+                    # Set the path to items in this cart to their location on
+                    # the pulp server.
+                    for item in cart[repo]:
+                        path = juicer.utils.remote_url(self.connectors[env],
+                                                       env,
+                                                       repo,
+                                                       os.path.basename(item.path))
+                        item.update(path)
 
             self.connectors[env].post('/repositories/%s/actions/publish/' % repoid, {'id': 'yum_distributor'})
-
-            # Upload carts aren't special, don't update their paths
-            if cart.cart_name == 'upload-cart':
-                continue
-
-            # Set the path to items in this cart to their location on
-            # the pulp server.
-            for item in cart[repo]:
-                path = juicer.utils.remote_url(self.connectors[env],
-                                               env,
-                                               repo,
-                                               os.path.basename(item.path))
-                item.update(path)
 
         # Upload carts don't persist
         if not cart.cart_name == 'upload-cart':

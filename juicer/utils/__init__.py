@@ -232,6 +232,16 @@ def get_next_environment(env):
     return section['promotes_to']
 
 
+def pulp_repo_path(connection, repoid):
+    """
+    Given a connection and a repoid, return the url of the repository
+    """
+    dl_base = connection.base_url.replace('/pulp/api/v2', '/pulp/repos')
+    repo, env = repoid.rsplit('-')
+
+    return "%s/%s/%s" % (dl_base, env, repo)
+
+
 def user_exists_p(login, connector):
     """
     Determine if user exists in specified environment.
