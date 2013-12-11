@@ -456,7 +456,11 @@ class Juicer(object):
                         raise JuicerPulpError("Package association call was not accepted. Terminating!")
                     else:
                         # association was accepted so publish destination repo
-                        self.connectors[cart.current_env].post('/repositories/%s-%s/actions/publish/' % (repo, cart.current_env), {'id': 'yum_distributor'})
+                        con = self.connectors[cart.current_env]
+                        con.post('/repositories/%s-%s/actions/publish/' % (repo, cart.current_env), {'id': 'yum_distributor'})
+                        # also update the item's remote path
+                        filename = item.path.split('/')[-1]
+                        item.update('%s/%s' % (juicer.utils.pulp_repo_path(con, '%s-%s' % (repo, cart.current_env)), filename))
             # we didn't bomb out yet so let the user know what's up
             juicer.utils.Log.log_info("Package association calls were accepted. Trusting that your packages existed in %s" % old_env)
             # we can save and publish here because upload does this too...
