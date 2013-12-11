@@ -76,7 +76,7 @@ class Juicer(object):
                     # if item is in our pulp server
                     ours = False
                     for env, con in self.connectors.iteritems():
-                        if item.path.startswith(con.base_url.split('/')[0]):
+                        if item.path.startswith('/'.join(con.base_url.split('/')[0:2])):
                             ours = True
                             break
                     if ours:
