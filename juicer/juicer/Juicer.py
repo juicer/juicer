@@ -133,6 +133,7 @@ class Juicer(object):
         if not env:
             env = self._defaults['start_in']
 
+        cart.current_env = env
         self.sign_cart_for_env_maybe(cart, env)
         self.upload(env, cart)
         return True
