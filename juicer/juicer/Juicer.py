@@ -86,7 +86,12 @@ class Juicer(object):
                             continue
                         else:
                             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
+                            item.sync_to(cart.remotes_storage)
                             rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+
+                            filename = os.path.basename(item.path)
+                            item.update('%s/%s' % (juicer.utils.pulp_repo_path(con, repoid), filename))
+
                             juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
                                                        (os.path.basename(item.path), rpm_id))
                     else:
