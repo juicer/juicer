@@ -7,8 +7,11 @@ juicer.conf(5)
 
 NAME
 ----
-juicer.conf - juicer configuration file
+juicer.conf
 
+SYNOPSIS
+--------
+- juicer configuration file
 
 DESCRIPTION
 -----------
