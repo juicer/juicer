@@ -237,7 +237,9 @@ def pulp_repo_path(connection, repoid):
     Given a connection and a repoid, return the url of the repository
     """
     dl_base = connection.base_url.replace('/pulp/api/v2', '/pulp/repos')
-    repo, env = repoid.rsplit('-')
+    _m = re.match('(.*)-(.*)', repoid)
+    repo = _m.group(1)
+    env = _m.group(2)
 
     return "%s/%s/%s" % (dl_base, env, repo)
 
