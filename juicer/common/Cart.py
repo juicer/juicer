@@ -152,7 +152,7 @@ class Cart(object):
         for item in cart_items:
             item.refresh()
 
-    def sync_remotes(self):
+    def sync_remotes(self, force=False):
         """
         Pull down all non-local items and save them into remotes_storage.
         """
@@ -161,8 +161,10 @@ class Cart(object):
             repoid = "%s-%s" % (repo, self.current_env)
             for rpm in items:
                 # don't bother syncing down if it's already in the pulp repo it needs to go to
-                if not rpm.path.startswith(juicer.utils.pulp_repo_path(connectors[self.current_env], repoid)):
+                if not rpm.path.startswith(juicer.utils.pulp_repo_path(connectors[self.current_env], repoid)) or force:
                     rpm.sync_to(self.remotes_storage)
+                else:
+                    juicer.utils.Log.log_debug("Not syncing %s because it's already in pulp" % rpm.path)
 
     def is_empty(self):
         """

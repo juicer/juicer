@@ -532,6 +532,7 @@ class Juicer(object):
         rpm_sign_plugin.sign_rpms method.
         """
         if self.connectors[env].requires_signature:
+            cart.sync_remotes(force=True)
             juicer.utils.Log.log_notice("%s requires RPM signatures", env)
             juicer.utils.Log.log_notice("Checking for rpm_sign_plugin definition ...")
             module_name = self._defaults['rpm_sign_plugin']
