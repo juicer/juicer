@@ -198,7 +198,7 @@ class Parser(object):
         ##################################################################
         # Create the 'repo show' sub-parser
 
-        parser_repo_show = subparser_repo.add_parser('show-repo', \
+        parser_repo_show = subparser_repo.add_parser('show', \
                 usage='%(prog)s name --in [ENV ...]', \
                 help='Show pulp repository')
 
