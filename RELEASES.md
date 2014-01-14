@@ -1,3 +1,7 @@
+* Juicer-0.6.2 - 2014-01-14 - Bug fixes and syntax release
+- Promotion fixes. #191
+- Standard syntax changes. #178
+
 # Juicer-0.6.1 - 2013-10-19 - "Lemon Squeezings Hotfix"
 - Bug Fixes/Features: 167, 168, 171
 - Added python-magic dep
