@@ -111,12 +111,11 @@ class Juicer(object):
                         continue
                     # Set the path to items in this cart to their location on
                     # the pulp server.
-                    for item in cart[repo]:
-                        path = juicer.utils.remote_url(self.connectors[env],
-                                                       env,
-                                                       repo,
-                                                       os.path.basename(item.path))
-                        item.update(path)
+                    path = juicer.utils.remote_url(self.connectors[env],
+                                                   env,
+                                                   repo,
+                                                   os.path.basename(item.path))
+                    item.update(path)
 
             self.connectors[env].post('/repositories/%s/actions/publish/' % repoid, {'id': 'yum_distributor'})
 
