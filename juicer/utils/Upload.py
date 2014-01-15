@@ -90,6 +90,7 @@ class Upload(object):
                     'description': desc if desc else '',
                 #    'size': self.size,
                     'vendor': vendor if vendor else '',
+                    'relativepath': 'meaningless',
                     }
                 }
 
