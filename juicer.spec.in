@@ -33,6 +33,7 @@ Requires: python-progressbar
 Requires: python >= 2.5
 Requires: pymongo
 Requires: python-magic
+BuildRequires: python-devel
 
 %description common
 Provides common resources like documentation, shared libraries, and
