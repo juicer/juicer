@@ -35,7 +35,8 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp_admin.delete_repo)(repo_name=setup_args.name, envs=setup_args.envs)
 
     def test_workflow(self):
-        rpm_path = '../../share/juicer/empty-0.0.1-1.fc17.x86_64.rpm'
+        rpm_path = '../../share/juicer/empty-0.1-1.noarch.rpm'
+        rpm2_path = '../../share/juicer/alsoempty-0.1-1.noarch.rpm'
 
         if os.path.exists(self.cpath):
             os.remove(self.cpath)
@@ -61,8 +62,8 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.search)(pkg_name=self.args.rpmname)
 
         # test creating a cart
-        self.args = self.parser.parser.parse_args(('cart create CHG0DAY -r %s %s' \
-                % ('hats', rpm_path)).split())
+        self.args = self.parser.parser.parse_args(('cart create CHG0DAY -r %s %s %s' \
+                % ('hats', rpm_path, rpm2_path)).split())
         pulp = j(self.args)
         mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
 
