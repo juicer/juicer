@@ -74,4 +74,4 @@ EXAMPLE_SYSTEM_CONFIG = '/usr/share/juicer/juicer.conf'
 
 ######################################################################
 # The version the server should be running
-EXPECTED_SERVER_VERSION = '2.1.1'
+EXPECTED_SERVER_VERSION = '2.3'
