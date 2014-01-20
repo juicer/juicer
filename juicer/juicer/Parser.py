@@ -277,7 +277,7 @@ class Parser(object):
         # create the 'rpm delete' sub-parser
         parser_rpm_delete = subparser_rpm.add_parser('delete', \
                 help='Remove rpm(s) from repositories', \
-                usage='%(prog)s delete-rpm -r REPO-NAME ITEM ITEM ... --in [ENV ...]')
+                usage='%(prog)s -r REPO-NAME ITEM ITEM ... --in [ENV ...]')
 
         parser_rpm_delete.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
