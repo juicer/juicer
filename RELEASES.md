@@ -1,4 +1,4 @@
-# Juicer-0.6.3 - 2014-01-20 - Pulp 2.3.1 integration
+# Juicer-0.7.0 - 2014-01-20 - Pulp 2.3.1 integration
 - Fix broken push code. Adds test with multiple rpms.
 - Pulp 2.3.1 integration.
 
