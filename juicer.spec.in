@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Tue Jan 21 2014 Alex Chvatal <achvatal@redhat.com> - 0.7.0-1
+- Release of 0.7.0, "Orange Rind"
+
 * Mon Jan 20 2014 Andrew Butcher <abutcher@redhat.com> - 0.6.3-1
 - Fix broken push code. Adds test with multiple rpms.
 - Pulp 2.3.1 integration.
