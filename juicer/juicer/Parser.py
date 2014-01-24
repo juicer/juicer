@@ -280,7 +280,7 @@ class Parser(object):
                 usage='%(prog)s -r REPO-NAME ITEM ITEM ... --in [ENV ...]')
 
         parser_rpm_delete.add_argument('-r', metavar=('reponame', 'item'), \
-                                       required='True', \
+                                       required=True, \
                                        action='append', \
                                        nargs='+', \
                                        help='Target repo filename, filename...')
