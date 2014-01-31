@@ -412,7 +412,11 @@ class Juicer(object):
         cart_file = os.path.join(juicer.common.Cart.CART_LOCATION, cartname)
         cart_file += '.json'
 
-        juicer.utils.write_json_document(cart_file, juicer.utils.download_cart(cartname, env))
+        try:
+            with open(cart_file):
+                juicer.utils.write_json_document(cart_file, juicer.utils.download_cart(cartname, env))
+        except IOError:
+            print 'error: cart \'%s\' does not exist' % cartname
 
         return True
 
