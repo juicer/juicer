@@ -67,7 +67,7 @@ class Parser(object):
         # Create the 'repo create' sub-parser
         parser_repo_create = subparser_repo.add_parser('create',\
                 help='Create pulp repository', \
-                usage='%(prog)s  REPONAME --arch ARCH --feed FEED')
+                usage='%(prog)s  REPONAME --arch ARCH --feed FEED --checksum-type CHECKSUM-TYPE --in [ENV ...]')
 
         parser_repo_create.add_argument('name', metavar='name', \
                                             help='The name of your repo')
