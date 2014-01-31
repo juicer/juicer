@@ -223,6 +223,7 @@ class Parser(object):
         parser_rpm_upload.add_argument('-r', metavar=('reponame', 'item'), \
                                        action='append', \
                                        nargs='+', \
+                                       required=True, \
                                        help='Destination repo name, items...')
 
         parser_rpm_upload.add_argument('--in', nargs='*', \
