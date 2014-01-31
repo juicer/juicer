@@ -102,6 +102,7 @@ class Parser(object):
         ##################################################################
         # Create the 'cart show' sub-parser
         parser_cart_show = subparser_cart.add_parser('show', \
+                usage='%(prog)s CARTNAME [--in [environment [environment ...]]] [-h]', \
                 help='Print the contents of a cart.')
 
         parser_cart_show.add_argument('cartname', metavar='name', \
