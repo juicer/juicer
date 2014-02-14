@@ -38,22 +38,78 @@ all __SUBCOMMAND__s accept this option when given after 'SUBCOMMAND'.
 
 
 
+REPO SUBCOMMANDS
+----------------
+This section describes all of the __REPO__ subcommands.
+
+
 REPO CREATE
 -----------
-usage: juicer-admin repo create REPONAME --arch ARCH --feed FEED
+usage: juicer-admin repo create REPONAME [--arch ARCH] [--feed FEED] [--checksum-type TYPE]
 
 *REPONAME*::
-The name of the repository to be created
+The name of the repository to be created. Only alphanumeric, ., -, and
+_ allowed. As a regular expression: *([a-zA-Z-_.]+)*
 
 *--arch=*'ARCH'::
-Repository package architecture
+Optional. Repository package architecture. Defaults to *noarch*. Other
+values might be: *i386*, *i686*, or *x86_64*.
+
 
 *--feed=*'FEED'::
-A feed url from which to synchronize yum repository packages
+Optional. A feed url from which to synchronize yum repository packages.
 
 *--checksum-type=*'CHECKSUM_TYPE'::
-The checksum type to use when generating meta-data.
-Defaults to sha256.
+Optional. The checksum type to use when generating meta-data.
+Defaults to *sha256*, also valid is *sha*.
+
+
+
+
+REPO DELETE
+-----------
+usage: juicer-admin repo delete 'REPONAME'
+
+*REPONAME*::
+Name of repository which will be deleted
+
+
+
+REPO LIST
+---------
+usage: juicer-admin repo list
+
+
+REPO SHOW
+---------
+usage: juicer-admin repo show 'REPONAME'
+
+Show basic statistics about a repo in pulp. Currently this command
+just prints the number of packages in the specified repository.
+
+*REPONAME*::
+Name of the repository to show
+
+
+REPO SYNC
+---------
+usage: juicer-admin repo sync 'NAME'
+
+*NAME*::
+Name of repository to sync
+
+
+
+
+
+
+
+
+
+
+USER SUBCOMMANDS
+----------------
+This section describes all of the __USER__ subcommands.
 
 
 USER CREATE
@@ -72,14 +128,6 @@ User's full name
 Plain text password. Will prompt if no arg specified
 
 
-REPO DELETE
------------
-usage: juicer-admin repo delete 'REPONAME'
-
-*REPONAME*::
-Name of repository which will be deleted
-
-
 USER DELETE
 -----------
 usage: juicer-admin user delete 'LOGIN'
@@ -88,10 +136,42 @@ usage: juicer-admin user delete 'LOGIN'
 The login or username of user which will be deleted
 
 
-REPO LIST
----------
-usage: juicer-admin repo list
 
+USER LIST
+---------
+usage: juicer-admin user list
+
+
+
+USER SHOW
+---------
+usage: juicer-admin user show 'LOGIN'
+
+*LOGIN*::
+The login for the user to show
+
+
+USER UPDATE
+-----------
+usage: juicer-admin user update LOGIN --name FULLNAME --password PASSWORD
+
+*LOGIN*::
+Login or username of user which will be updated
+
+*--name=*'FULLNAME'::
+Updated full name
+
+*--password=*'PASSWORD'::
+Updated plain text password. Will prompt if no arg specified
+
+
+
+
+
+
+ROLE SUBCOMMANDS
+----------------
+This section describes all of the __ROLE__ subcommands.
 
 ROLE LIST
 ---------
@@ -100,10 +180,6 @@ usage: juicer-admin role list
 See the Pulp User documentation (*SEE ALSO*) for more information on
 the specifics of role management.
 
-
-USER LIST
----------
-usage: juicer-admin user list
 
 
 ROLE ADD
@@ -119,46 +195,13 @@ Login or username of user which will be added to role
 See the Pulp User documentation (*SEE ALSO*) for more information on
 the specifics of role management.
 
-REPO SHOW
----------
-usage: juicer-admin repo show 'REPONAME'
-
-Show basic statistics about a repo in pulp. Currently this command
-just prints the number of packages in the specified repository.
-
-*REPONAME*::
-Name of the repository to show
 
 
 
-USER SHOW
----------
-usage: juicer-admin user show 'LOGIN'
-
-*LOGIN*::
-The login for the user to show
 
 
-REPO SYNC
----------
-usage: juicer-admin repo sync 'NAME'
-
-*NAME*::
-Name of repository to sync
 
 
-USER UPDATE
------------
-usage: juicer-admin user update LOGIN --name FULLNAME --password PASSWORD
-
-*LOGIN*::
-Login or username of user which will be updated
-
-*--name=*'FULLNAME'::
-Updated full name
-
-*--password=*'PASSWORD'::
-Updated plain text password. Will prompt if no arg specified
 
 
 

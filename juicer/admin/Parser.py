@@ -74,15 +74,16 @@ class Parser(object):
 
         parser_repo_create.add_argument('--arch', metavar='arch', \
                                         default='noarch', \
-                                        help='The architecture of your repo')
+                                        help='The architecture of your repo (default: noarch)')
 
         parser_repo_create.add_argument('--feed', metavar='feed', \
                                             default=None, \
                                             help='A feed repo for your repo')
 
         parser_repo_create.add_argument('--checksum-type', metavar='checksum_type', \
-                                            default="sha256", \
-                                            help='Checksum-type used for meta-data generation')
+                                            default='sha256', \
+                                            choices=['sha26', 'sha'], \
+                                            help='Checksum-type used for meta-data generation (one of: sha26, sha)')
 
         parser_repo_create.add_argument('--in', metavar='envs', \
                     nargs="+", \

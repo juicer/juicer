@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 01/20/2014
+.\"      Date: 02/14/2014
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.7.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "01/20/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "02/14/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -56,29 +56,71 @@ in\&. In usage all
 \fISUBCOMMAND\fRs accept this option when given after
 \fISUBCOMMAND\fR\&.
 .RE
+.SH "REPO SUBCOMMANDS"
+.sp
+This section describes all of the \fIREPO\fR subcommands\&.
 .SH "REPO CREATE"
 .sp
-usage: juicer\-admin repo create REPONAME \-\-arch ARCH \-\-feed FEED
+usage: juicer\-admin repo create REPONAME [\-\-arch ARCH] [\-\-feed FEED] [\-\-checksum\-type TYPE]
 .PP
 \fBREPONAME\fR
 .RS 4
-The name of the repository to be created
+The name of the repository to be created\&. Only alphanumeric, \&., \-, and _ allowed\&. As a regular expression:
+\fB([a\-zA\-Z\-_\&.]+)\fR
 .RE
 .PP
 \fB\-\-arch=\fR\fIARCH\fR
 .RS 4
-Repository package architecture
+Optional\&. Repository package architecture\&. Defaults to
+\fBnoarch\fR\&. Other values might be:
+\fBi386\fR,
+\fBi686\fR, or
+\fBx86_64\fR\&.
 .RE
 .PP
 \fB\-\-feed=\fR\fIFEED\fR
 .RS 4
-A feed url from which to synchronize yum repository packages
+Optional\&. A feed url from which to synchronize yum repository packages\&.
 .RE
 .PP
 \fB\-\-checksum\-type=\fR\fICHECKSUM_TYPE\fR
 .RS 4
-The checksum type to use when generating meta\-data\&. Defaults to sha256\&.
+Optional\&. The checksum type to use when generating meta\-data\&. Defaults to
+\fBsha256\fR, also valid is
+\fBsha\fR\&.
 .RE
+.SH "REPO DELETE"
+.sp
+usage: juicer\-admin repo delete \fIREPONAME\fR
+.PP
+\fBREPONAME\fR
+.RS 4
+Name of repository which will be deleted
+.RE
+.SH "REPO LIST"
+.sp
+usage: juicer\-admin repo list
+.SH "REPO SHOW"
+.sp
+usage: juicer\-admin repo show \fIREPONAME\fR
+.sp
+Show basic statistics about a repo in pulp\&. Currently this command just prints the number of packages in the specified repository\&.
+.PP
+\fBREPONAME\fR
+.RS 4
+Name of the repository to show
+.RE
+.SH "REPO SYNC"
+.sp
+usage: juicer\-admin repo sync \fINAME\fR
+.PP
+\fBNAME\fR
+.RS 4
+Name of repository to sync
+.RE
+.SH "USER SUBCOMMANDS"
+.sp
+This section describes all of the \fIUSER\fR subcommands\&.
 .SH "USER CREATE"
 .sp
 usage: juicer\-admin user create LOGIN \-\-name FULLNAME \-\-password PASSWORD
@@ -99,14 +141,6 @@ User\(cqs full name
 .RS 4
 Plain text password\&. Will prompt if no arg specified
 .RE
-.SH "REPO DELETE"
-.sp
-usage: juicer\-admin repo delete \fIREPONAME\fR
-.PP
-\fBREPONAME\fR
-.RS 4
-Name of repository which will be deleted
-.RE
 .SH "USER DELETE"
 .sp
 usage: juicer\-admin user delete \fILOGIN\fR
@@ -115,42 +149,9 @@ usage: juicer\-admin user delete \fILOGIN\fR
 .RS 4
 The login or username of user which will be deleted
 .RE
-.SH "REPO LIST"
-.sp
-usage: juicer\-admin repo list
-.SH "ROLE LIST"
-.sp
-usage: juicer\-admin role list
-.sp
-See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
 .SH "USER LIST"
 .sp
 usage: juicer\-admin user list
-.SH "ROLE ADD"
-.sp
-usage: juicer\-admin role add \-\-role \fIROLE\fR \-\-login \fILOGIN\fR
-.PP
-\fB\-\-role=\fR\fIROLE\fR
-.RS 4
-The role which will be assigned to login or username
-.RE
-.PP
-\fB\-\-login=\fR\fILOGIN\fR
-.RS 4
-Login or username of user which will be added to role
-.RE
-.sp
-See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
-.SH "REPO SHOW"
-.sp
-usage: juicer\-admin repo show \fIREPONAME\fR
-.sp
-Show basic statistics about a repo in pulp\&. Currently this command just prints the number of packages in the specified repository\&.
-.PP
-\fBREPONAME\fR
-.RS 4
-Name of the repository to show
-.RE
 .SH "USER SHOW"
 .sp
 usage: juicer\-admin user show \fILOGIN\fR
@@ -158,14 +159,6 @@ usage: juicer\-admin user show \fILOGIN\fR
 \fBLOGIN\fR
 .RS 4
 The login for the user to show
-.RE
-.SH "REPO SYNC"
-.sp
-usage: juicer\-admin repo sync \fINAME\fR
-.PP
-\fBNAME\fR
-.RS 4
-Name of repository to sync
 .RE
 .SH "USER UPDATE"
 .sp
@@ -185,6 +178,29 @@ Updated full name
 .RS 4
 Updated plain text password\&. Will prompt if no arg specified
 .RE
+.SH "ROLE SUBCOMMANDS"
+.sp
+This section describes all of the \fIROLE\fR subcommands\&.
+.SH "ROLE LIST"
+.sp
+usage: juicer\-admin role list
+.sp
+See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
+.SH "ROLE ADD"
+.sp
+usage: juicer\-admin role add \-\-role \fIROLE\fR \-\-login \fILOGIN\fR
+.PP
+\fB\-\-role=\fR\fIROLE\fR
+.RS 4
+The role which will be assigned to login or username
+.RE
+.PP
+\fB\-\-login=\fR\fILOGIN\fR
+.RS 4
+Login or username of user which will be added to role
+.RE
+.sp
+See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
 .SH "FILES"
 .sp
 \fB~/\&.config/juicer/config\fR \(em Juicer configuration file

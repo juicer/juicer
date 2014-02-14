@@ -37,7 +37,7 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch=None, repo_name=None, feed=None, envs=[], checksum_type="sha256", query='/repositories/'):
+    def create_repo(self, arch='noarch', repo_name=None, feed=None, envs=[], checksum_type="sha256", query='/repositories/'):
         """
         `arch` - Architecture of repository content
         `repo_name` - Name of repository to create
