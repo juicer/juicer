@@ -46,3 +46,6 @@ class JuicerManifestError(JuicerError):
 
 class JuicerRpmSignPluginError(JuicerError):
     pass
+
+class JuicerRepoExclusionError(JuicerError):
+    pass

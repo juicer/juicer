@@ -17,6 +17,7 @@
 
 from juicer.common import Constants
 from juicer.common.Errors import *
+from juicer.common.Repo import Repo
 import juicer.admin
 import juicer.utils
 import juicer.utils.Log
@@ -307,38 +308,43 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def show_repo(self, repo_names=[], envs=[], query='/repositories/'):
+    def show_repo(self, repo_names=[], envs=[], extra=None, query='/repositories/'):
         """
         `repo_name` - Name of repository to show
 
         Show repositories in specified environments
         """
         juicer.utils.Log.log_debug("Show Repo(s): %s", str(repo_names))
-        repo_data = {}
+
+        if extra:
+            query_parameter = "?%s=true" % extra
+        else:
+            query_parameter = ''
+
+        repo_objects = {}
         for env in envs:
-            repo_data[env] = []
+            repo_objects[env] = []
 
         for env in envs:
-            # juicer.utils.Log.log_info("%s:", env)
+            juicer.utils.Log.log_debug("scanning environment: %s", env)
             for repo_name in repo_names:
-                url = "%s%s-%s/" % (query, repo_name, env)
+                juicer.utils.Log.log_debug("looking for repo: %s", repo_name)
+                url = "%s%s-%s/%s" % (query, repo_name, env, query_parameter)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == Constants.PULP_GET_OK:
+                    juicer.utils.Log.log_debug("found repo: %s", repo_name)
                     repo = juicer.utils.load_json_str(_r.content)
-                    repo_data[env].append(repo)
-
-                    # juicer.utils.Log.log_info(repo['display_name'])
-                    # try:
-                    #     juicer.utils.Log.log_info("%s packages" % repo['content_unit_counts']['rpm'])
-                    # except:
-                    #     juicer.utils.Log.log_info("0 packages")
-
+                    repo_object = Repo(repo_name, env, pulp_def=repo)
+                    repo_objects[env].append(repo_object)
                 else:
+                    juicer.utils.Log.log_error("could not find repo: %s" % repo_name)
                     if _r.status_code == Constants.PULP_GET_NOT_FOUND:
                         raise JuicerPulpError("repo '%s' was not found" % repo_name)
                     else:
                         _r.raise_for_status()
-        return repo_data
+        for k,v in repo_objects.iteritems():
+            juicer.utils.Log.log_debug("environment %s: found %d repos" % (k, len(v)))
+        return repo_objects
 
     def show_user(self, login=None, envs=[], query='/users/'):
         """

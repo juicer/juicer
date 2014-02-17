@@ -85,7 +85,7 @@ class Parser(object):
                                             choices=['sha26', 'sha'], \
                                             help='Checksum-type used for meta-data generation (one of: sha26, sha)')
 
-        parser_repo_create.add_argument('--from-file', metavar='json_defs', \
+        parser_repo_create.add_argument('--from-file', metavar='json_defs', default=None, \
                                        help='Repository definition file in JSON format. Mutually exclusive with other arguments')
 
         parser_repo_create.add_argument('--noop', '--dry-run', '-n', metavar='noop', \
@@ -217,6 +217,9 @@ class Parser(object):
         parser_repo_show.add_argument('--json',
                                       action='store_true', default=False,
                                       help='Dump everything in JSON format')
+
+        parser_repo_show.add_argument('--extra', choices=['details', 'importers', 'distributors'], default=None,
+                                      help='Include additional information JSON dump. One of: importers, distributors, or details (for both)')
 
         parser_repo_show.add_argument('--in', metavar='envs', \
                       nargs="+", \
