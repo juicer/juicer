@@ -21,6 +21,7 @@ import juicer.admin
 import juicer.utils
 import juicer.utils.Log
 import re
+import json
 
 
 class JuicerAdmin(object):
@@ -37,12 +38,14 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch='noarch', repo_name=None, feed=None, envs=[], checksum_type="sha256", query='/repositories/'):
+    def create_repo(self, arch='noarch', repo_name=None, feed=None, envs=[], checksum_type="sha256", from_file=None, noop=False, query='/repositories/'):
         """
         `arch` - Architecture of repository content
         `repo_name` - Name of repository to create
         `feed` - Repo URL to feed from
         `checksum_type` - Used for generating meta-data
+        `from_file` - JSON file of repo definitions
+        `noop` - Boolean, if true don't actually create/update repos, just show what would have happened
 
         Create repository in specified environments, associate the
         yum_distributor with it and publish the repo
@@ -304,41 +307,38 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def show_repo(self, repo_name=None, envs=[], query='/repositories/'):
+    def show_repo(self, repo_names=[], envs=[], query='/repositories/'):
         """
         `repo_name` - Name of repository to show
 
         Show repositories in specified environments
         """
-        juicer.utils.Log.log_debug("Show Repo: %s", repo_name)
-
-        # keep track of which iteration of environment we're in
-        count = 0
+        juicer.utils.Log.log_debug("Show Repo(s): %s", str(repo_names))
+        repo_data = {}
+        for env in envs:
+            repo_data[env] = []
 
         for env in envs:
-            count += 1
+            # juicer.utils.Log.log_info("%s:", env)
+            for repo_name in repo_names:
+                url = "%s%s-%s/" % (query, repo_name, env)
+                _r = self.connectors[env].get(url)
+                if _r.status_code == Constants.PULP_GET_OK:
+                    repo = juicer.utils.load_json_str(_r.content)
+                    repo_data[env].append(repo)
 
-            juicer.utils.Log.log_info("%s:", env)
-            url = "%s%s-%s/" % (query, repo_name, env)
-            _r = self.connectors[env].get(url)
-            if _r.status_code == Constants.PULP_GET_OK:
-                repo = juicer.utils.load_json_str(_r.content)
+                    # juicer.utils.Log.log_info(repo['display_name'])
+                    # try:
+                    #     juicer.utils.Log.log_info("%s packages" % repo['content_unit_counts']['rpm'])
+                    # except:
+                    #     juicer.utils.Log.log_info("0 packages")
 
-                juicer.utils.Log.log_info(repo['display_name'])
-                try:
-                    juicer.utils.Log.log_info("%s packages" % repo['content_unit_counts']['rpm'])
-                except:
-                    juicer.utils.Log.log_info("0 packages")
-
-                if count < len(envs):
-                    # just want a new line
-                    juicer.utils.Log.log_info("")
-            else:
-                if _r.status_code == Constants.PULP_GET_NOT_FOUND:
-                    raise JuicerPulpError("repo '%s' was not found" % repo_name)
                 else:
-                    _r.raise_for_status()
-        return True
+                    if _r.status_code == Constants.PULP_GET_NOT_FOUND:
+                        raise JuicerPulpError("repo '%s' was not found" % repo_name)
+                    else:
+                        _r.raise_for_status()
+        return repo_data
 
     def show_user(self, login=None, envs=[], query='/users/'):
         """

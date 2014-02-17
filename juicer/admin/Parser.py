@@ -67,7 +67,7 @@ class Parser(object):
         # Create the 'repo create' sub-parser
         parser_repo_create = subparser_repo.add_parser('create',\
                 help='Create pulp repository', \
-                usage='%(prog)s  REPONAME --arch ARCH --feed FEED --checksum-type CHECKSUM-TYPE --in [ENV ...]')
+                usage='%(prog)s REPONAME { [--arch ARCH] [--feed FEED] [--checksum-type CHECKSUM-TYPE] | --from-file JSON_DEFS} [--in ENV [...]]')
 
         parser_repo_create.add_argument('name', metavar='name', \
                                             help='The name of your repo')
@@ -84,6 +84,13 @@ class Parser(object):
                                             default='sha256', \
                                             choices=['sha26', 'sha'], \
                                             help='Checksum-type used for meta-data generation (one of: sha26, sha)')
+
+        parser_repo_create.add_argument('--from-file', metavar='json_defs', \
+                                       help='Repository definition file in JSON format. Mutually exclusive with other arguments')
+
+        parser_repo_create.add_argument('--noop', '--dry-run', '-n', metavar='noop', \
+                                       help="Don't create the repos, just show what would have happened")
+
 
         parser_repo_create.add_argument('--in', metavar='envs', \
                     nargs="+", \
@@ -200,11 +207,16 @@ class Parser(object):
         # Create the 'repo show' sub-parser
 
         parser_repo_show = subparser_repo.add_parser('show', \
-                usage='%(prog)s name --in [ENV ...]', \
-                help='Show pulp repository')
+                usage='%(prog)s name [...] [--json] --in [ENV ...]', \
+                help='Show pulp repository(s)')
 
         parser_repo_show.add_argument('name', metavar='name', \
-                                          help='The name of your repo')
+                                      nargs="+",
+                                      help='The name of your repo(s)')
+
+        parser_repo_show.add_argument('--json',
+                                      action='store_true', default=False,
+                                      help='Dump everything in JSON format')
 
         parser_repo_show.add_argument('--in', metavar='envs', \
                       nargs="+", \

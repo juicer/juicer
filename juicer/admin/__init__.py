@@ -16,11 +16,11 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
-
+import juicer.utils
 
 def create_repo(args):
     pulp = ja(args)
-    pulp.create_repo(args.arch, args.name, args.feed, args.envs, args.checksum_type)
+    pulp.create_repo(args.arch, args.name, args.feed, args.envs, args.checksum_type, args.json_defs, args.noop)
 
 
 def create_user(args):
@@ -40,8 +40,25 @@ def sync_repo(args):
 
 def show_repo(args):
     pulp = ja(args)
-    pulp.show_repo(args.name, args.envs)
+    repo_desc = pulp.show_repo(args.name, args.envs)
+    if args.json:
+        # JSON output requested
+        print juicer.utils.create_json_str(repo_desc, indent=4)
+    else:
+        # Human readable table-style output by default
+        rows = [['Repo', 'Env', 'RPMs', 'SRPMs', 'Checksum']]
+        for env,repos in repo_desc.iteritems():
+            # print juicer.utils.header(env.upper())
+            # 'repos' contains a list of hashes
+            for repo in repos:
+                # each hash represents a repo
+                repo_name = repo['display_name']
+                repo_rpm_count = repo['content_unit_counts']['rpm']
+                repo_srpm_count = repo['content_unit_counts']['srpm']
+                repo_checksum = repo['scratchpad']['checksum_type']
+                rows.append([repo_name, env, repo_rpm_count, repo_srpm_count, repo_checksum])
 
+        print juicer.utils.table(rows)
 
 def show_user(args):
     pulp = ja(args)
