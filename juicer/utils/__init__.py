@@ -34,11 +34,11 @@ import sys
 import requests
 import shutil
 import re
+import texttable
 import urllib2
 import yaml
 try:
     import json
-    json
 except ImportError:
     import simplejson as json
 from pymongo import Connection as MongoClient
@@ -765,9 +765,25 @@ def find_latest(pkg_name, url='/content/units/rpm/search/'):
 
         return pkg_info['version'], pkg_info['release']
 
-
 def juicer_version():
     """
     Duh, just print out what version of juicer you're running.
     """
     return juicer.__version__
+
+def header(msg):
+    """
+    Wrap `msg` in bars to create a header effect
+    """
+    # Accounting for '| ' and ' |'
+    width = len(msg) + 4
+    s = []
+    s.append('-' * width)
+    s.append("| %s |" % msg)
+    s.append('-' * width)
+    return '\n'.join(s)
+
+def table(rows):
+    t = texttable.Texttable()
+    t.add_rows(rows)
+    return t.draw()
