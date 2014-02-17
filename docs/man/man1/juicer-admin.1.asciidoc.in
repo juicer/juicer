@@ -26,15 +26,16 @@ COMMON OPTIONS
 --------------
 
 *-v*, *--verbose*::
-Increase the verbosity (up to 3x). In usage specify '-v' *before* 'COMMAND'.
+Increase the verbosity (up to 3x). In usage specify '-v' before 'COMMAND'.
 
 *-V*, *--version*::
 Print the version that you're using of juicer-admin.
 
 *--in* 'env' ...::
 
-Specify which environment(s) to perform the 'SUBCOMMAND' in. In usage
-all __SUBCOMMAND__s accept this option when given after 'SUBCOMMAND'.
+Specify which environment(s) to perform the 'SUBCOMMAND' in. In
+*juicer-admin*(1) usage, all __SUBCOMMAND__s accept this option when
+given after 'SUBCOMMAND'.
 
 
 
@@ -45,7 +46,7 @@ This section describes all of the __REPO__ subcommands.
 
 REPO CREATE
 -----------
-usage: juicer-admin repo create REPONAME [--arch ARCH] [--feed FEED] [--checksum-type TYPE]
+usage: juicer-admin repo create 'REPONAME' [--arch 'ARCH'] [--feed 'FEED'] [--checksum-type 'TYPE']
 
 *REPONAME*::
 The name of the repository to be created. Only alphanumeric, ., -, and
@@ -82,13 +83,21 @@ usage: juicer-admin repo list
 
 REPO SHOW
 ---------
-usage: juicer-admin repo show 'REPONAME'
+usage: juicer-admin repo show 'REPONAME' [...] [--json]
 
-Show basic statistics about a repo in pulp. Currently this command
-just prints the number of packages in the specified repository.
+Show basic statistics in table format about one or more repos in
+pulp. This information includes: Name, Environment, RPM count, SRPM
+count, and Checksum Type.
 
 *REPONAME*::
-Name of the repository to show
+Name of the repository to show. Separate multiple 'REPONAME'
+parameters with spaces.
+
+*--json*::
+
+Optional. Including the *--json* flag will return the information in
+raw JSON format.
+
 
 
 REPO SYNC
@@ -114,7 +123,7 @@ This section describes all of the __USER__ subcommands.
 
 USER CREATE
 -----------
-usage: juicer-admin user create LOGIN --name FULLNAME --password PASSWORD
+usage: juicer-admin user create 'LOGIN' --name 'FULLNAME' --password 'PASSWORD'
 
 Create a user in the pulp system.
 
@@ -224,7 +233,7 @@ Andrew Butcher <abutcher@redhat.com>.
 
 COPYRIGHT
 ---------
-Copyright © 2012, Red Hat, Inc..
+Copyright © 2012-2014, Red Hat, Inc..
 
 Juicer is released under the terms of the GPLv3+ License.
 

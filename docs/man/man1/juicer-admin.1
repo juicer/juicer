@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 02/14/2014
+.\"      Date: 02/17/2014
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.7.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "02/14/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "02/17/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -40,7 +40,9 @@ Manage pulp repositories, users, and roles\&.
 \fB\-v\fR, \fB\-\-verbose\fR
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
-\fI\-v\fR\fBbefore\fR\fICOMMAND\fR\&.
+\fI\-v\fR
+before
+\fICOMMAND\fR\&.
 .RE
 .PP
 \fB\-V\fR, \fB\-\-version\fR
@@ -52,7 +54,8 @@ Print the version that you\(cqre using of juicer\-admin\&.
 .RS 4
 Specify which environment(s) to perform the
 \fISUBCOMMAND\fR
-in\&. In usage all
+in\&. In
+\fBjuicer\-admin\fR(1) usage, all
 \fISUBCOMMAND\fRs accept this option when given after
 \fISUBCOMMAND\fR\&.
 .RE
@@ -61,7 +64,7 @@ in\&. In usage all
 This section describes all of the \fIREPO\fR subcommands\&.
 .SH "REPO CREATE"
 .sp
-usage: juicer\-admin repo create REPONAME [\-\-arch ARCH] [\-\-feed FEED] [\-\-checksum\-type TYPE]
+usage: juicer\-admin repo create \fIREPONAME\fR [\-\-arch \fIARCH\fR] [\-\-feed \fIFEED\fR] [\-\-checksum\-type \fITYPE\fR]
 .PP
 \fBREPONAME\fR
 .RS 4
@@ -102,13 +105,22 @@ Name of repository which will be deleted
 usage: juicer\-admin repo list
 .SH "REPO SHOW"
 .sp
-usage: juicer\-admin repo show \fIREPONAME\fR
+usage: juicer\-admin repo show \fIREPONAME\fR [\&...] [\-\-json]
 .sp
-Show basic statistics about a repo in pulp\&. Currently this command just prints the number of packages in the specified repository\&.
+Show basic statistics in table format about one or more repos in pulp\&. This information includes: Name, Environment, RPM count, SRPM count, and Checksum Type\&.
 .PP
 \fBREPONAME\fR
 .RS 4
-Name of the repository to show
+Name of the repository to show\&. Separate multiple
+\fIREPONAME\fR
+parameters with spaces\&.
+.RE
+.PP
+\fB\-\-json\fR
+.RS 4
+Optional\&. Including the
+\fB\-\-json\fR
+flag will return the information in raw JSON format\&.
 .RE
 .SH "REPO SYNC"
 .sp
@@ -123,7 +135,7 @@ Name of repository to sync
 This section describes all of the \fIUSER\fR subcommands\&.
 .SH "USER CREATE"
 .sp
-usage: juicer\-admin user create LOGIN \-\-name FULLNAME \-\-password PASSWORD
+usage: juicer\-admin user create \fILOGIN\fR \-\-name \fIFULLNAME\fR \-\-password \fIPASSWORD\fR
 .sp
 Create a user in the pulp system\&.
 .PP
@@ -213,7 +225,7 @@ Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.
 This man page was written by Tim Bielawa <tbielawa@redhat\&.com> and Andrew Butcher <abutcher@redhat\&.com>\&.
 .SH "COPYRIGHT"
 .sp
-Copyright \(co 2012, Red Hat, Inc\&.\&.
+Copyright \(co 2012\-2014, Red Hat, Inc\&.\&.
 .sp
 Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"

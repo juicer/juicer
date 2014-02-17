@@ -2,12 +2,12 @@
 .\"     Title: juicer
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 02/14/2014
+.\"      Date: 02/17/2014
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.7.0
 .\"  Language: English
 .\"
-.TH "JUICER" "1" "02/14/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
+.TH "JUICER" "1" "02/17/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -42,16 +42,30 @@ RPMs (\fIitems\fR) need not be stored on your local machine\&. Juicer can handle
 \fB\-v\fR, \fB\-\-verbose\fR
 .RS 4
 Increase the verbosity (up to 3x)\&. In usage specify
-\fI\-v\fR\fBbefore\fR\fICOMMAND\fR\&.
+\fI\-v\fR
+before
+\fICOMMAND\fR\&.
 .RE
 .PP
 \fB\-V\fR, \fB\-\-version\fR
 .RS 4
 Print the version that you\(cqre using of juicer\&.
 .RE
+.PP
+\fB\-\-in\fR \fIenv\fR \&...
+.RS 4
+In
+\fBjuicer\fR(1) many subcommands allow you to limit their scope to a specific environment\&. Use
+\fB\-\-in\fR
+to specify which environment(s) to perform the
+\fISUBCOMMAND\fR
+in\&. Commands which support this will show
+\fB[\-\-in]\fR
+in their usage line\&.
+.RE
 .SH "CART CREATE"
 .sp
-usage: juicer cart create \fICARTNAME\fR [\-f manifest] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
+usage: juicer cart create \fICARTNAME\fR [\-f \fImanifest\fR] [\-r \fIREPONAME\fR \fIitems\fR \&... [ \-r \fIREPONAME\fR \fIitems\fR ]]
 .sp
 Create a cart with the items specified\&.
 .PP
@@ -63,9 +77,17 @@ The name of the new release cart\&.
 \fB\-f\fR \fImanifest\fR
 .RS 4
 Create a cart from a manifest file\&. A manifest file is written in the following format:
-.RE
 .sp
+.if n \{\
+.RS 4
+.\}
+.nf
 name: version\-release
+.fi
+.if n \{\
+.RE
+.\}
+.RE
 .PP
 \fB\-r\fR \fIREPONAME\fR
 .RS 4
@@ -83,7 +105,7 @@ Items to add to the cart in repository
 .RE
 .SH "RPM DELETE"
 .sp
-usage: juicer rpm delete \-r REPO\-NAME ITEM ITEM \&... \-\-in [ENV \&...]
+usage: juicer rpm delete \-r \fIREPO\-NAME\fR \fIITEM\fR \fIITEM\fR \&... [\-\-in]
 .sp
 Delete rpms in a repository\&.
 .PP
@@ -96,24 +118,14 @@ The name of the repo rpms live in\&.
 .RS 4
 Filename of rpm to delete\&.
 .RE
-.PP
-\fB\-\-in\fR \fIENVIRONMENT\fR \&...
-.RS 4
-The environments to delete rpms in\&.
-.RE
 .SH "HELLO"
 .sp
-usage: juicer hello [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer hello [\-\-in]
 .sp
 Test connection settings in \fB~/\&.config/juicer/config\fR
-.PP
-\fBENVIRONMENT\fR
-.RS 4
-The environments to limit connecting testing to\&.
-.RE
 .SH "CART MERGE"
 .sp
-usage: juicer cart merge CART1 [\&...] CARTN \-\-name NEWCARTNAME
+usage: juicer cart merge \fICART1\fR [\&...] \fICARTN\fR \-\-name \fINEWCARTNAME\fR
 .sp
 Merges the contents of N carts into \fINEWCARTNAME\fR\&. Defaults to updating \fICART1\fR\&.
 .PP
@@ -130,7 +142,7 @@ Names of N carts to merge\&.
 .sp
 usage: juicer cart pull \fICARTNAME\fR
 .sp
-Pulls a description of a cart from the pulp server and saves it on your local machine in ~/\&.config/juicer/carts/\&.
+Pulls a description of a cart from the pulp server and saves it on your local machine in \fB~/\&.config/juicer/carts/\fR\&.
 .PP
 \fBCARTNAME\fR
 .RS 4
@@ -138,7 +150,7 @@ The name of the cart to pull\&.
 .RE
 .SH "CART PUSH"
 .sp
-usage: juicer cart push \fICARTNAME\fR [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer cart push \fICARTNAME\fR [\-\-in]
 .sp
 Pushes/Updates a cart on the pulp server\&.
 .PP
@@ -146,25 +158,15 @@ Pushes/Updates a cart on the pulp server\&.
 .RS 4
 The name of the cart to push\&.
 .RE
-.PP
-\fB\-\-in\fR \fIENVIRONMENT\fR \&...
-.RS 4
-The environments to push the new/updated cart to\&.
-.RE
 .SH "REPO PUBLISH"
 .sp
-usage: juicer repo publish \fIREPO\fR [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer repo publish \fIREPO\fR [\-\-in]
 .sp
 Publishes a repository, regenerating it\(cqs metadata\&.
 .PP
 \fBREPO\fR
 .RS 4
 The name of the repo to publish\&.
-.RE
-.PP
-\fB\-\-in\fR \fIENVIRONMENT\fR \&...
-.RS 4
-The environments to publish repository in\&.
 .RE
 .SH "CART PROMOTE"
 .sp
@@ -192,9 +194,17 @@ The name of the new release cart\&.
 \fB\-f\fR \fIMANIFEST\fR
 .RS 4
 Update a cart with a manifest file\&. A manifest file is written in the following format:
-.RE
 .sp
+.if n \{\
+.RS 4
+.\}
+.nf
 name: version\-release
+.fi
+.if n \{\
+.RE
+.\}
+.RE
 .PP
 \fB\-r\fR \fIREPONAME\fR
 .RS 4
@@ -212,7 +222,7 @@ Items to add to the cart in repository
 .RE
 .SH "RPM SEARCH"
 .sp
-usage: juicer rpm search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-c] [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer rpm search \fIITEM\fR [\-r \fIREPO\fR \&...] [\-c] [\-\-in]
 .sp
 Search for an RPM (\fIitem\fR) in pulp\&.
 .PP
@@ -229,11 +239,6 @@ The repo(s) to limit search scope to\&.
 \fB\-c\fR
 .RS 4
 Search for the package in carts as well\&.
-.RE
-.PP
-\fB\-\-in\fR \fIENVIRONMENT\fR \&...
-.RS 4
-The environments to limit search scope to\&.
 .RE
 .SH "CART SHOW"
 .sp
@@ -258,7 +263,7 @@ The pattern to match\&. Default:
 .RE
 .SH "RPM UPLOAD"
 .sp
-usage: juicer rpm upload \-r \fIREPO\fR \fIITEM\fR \&... [\-\-in \fIENVIRONMENT\fR \&...]
+usage: juicer rpm upload \-r \fIREPO\fR \fIITEM\fR \&... [\-\-in]
 .sp
 Upload multiple RPMs or files (\fIITEM\fR) to \fIREPO\fR\&.
 .PP
@@ -274,11 +279,6 @@ option may be given multiple times\&.
 \fBITEM\fR \&...
 .RS 4
 Name of the RPM(s) or file(s) to upload\&.
-.RE
-.PP
-\fB\-\-in\fR \fIENVIRONMENT\fR \&...
-.RS 4
-The environments which items will be uploaded to\&.
 .RE
 .SH "EXAMPLES"
 .sp
@@ -419,7 +419,7 @@ Juicer was written by GCA\-PC, Red Hat, Inc\&.\&.
 This man page was written by Tim Bielawa <tbielawa@redhat\&.com>\&.
 .SH "COPYRIGHT"
 .sp
-Copyright \(co 2012, Red Hat, Inc\&.\&.
+Copyright \(co 2012\-2014, Red Hat, Inc\&.\&.
 .sp
 Juicer is released under the terms of the GPLv3+ License\&.
 .SH "SEE ALSO"

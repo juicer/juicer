@@ -36,15 +36,23 @@ COMMON OPTIONS
 --------------
 
 *-v*, *--verbose*::
-Increase the verbosity (up to 3x). In usage specify '-v' *before* 'COMMAND'.
+Increase the verbosity (up to 3x). In usage specify '-v' before 'COMMAND'.
 
 *-V*, *--version*::
 Print the version that you're using of juicer.
 
+*--in* 'env' ...::
+
+In *juicer*(1) many subcommands allow you to limit their scope to a
+specific environment. Use *--in* to specify which environment(s) to
+perform the 'SUBCOMMAND' in. Commands which support this will show
+*[--in]* in their usage line.
+
+
 
 CART CREATE
 -----------
-usage: juicer cart create 'CARTNAME' [-f manifest] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
+usage: juicer cart create 'CARTNAME' [-f 'manifest'] [-r 'REPONAME' 'items' ... [ -r 'REPONAME' 'items' ]]
 
 Create a cart with the items specified.
 
@@ -55,7 +63,7 @@ The name of the new release cart.
 Create a cart from a manifest file. A manifest file is written in
 the following format:
 
-name: version-release
+    name: version-release
 
 *-r* 'REPONAME'::
 Name of the reopsitory to install 'ITEMS' into. The '-r' option may be
@@ -64,28 +72,11 @@ given multiple times.
 *ITEM* ...::
 Items to add to the cart in repository 'REPONAME'.
 
-////////////////////////////////////////////////////////////////////////
-CREATE-LIKE
------------
-usage: juicer create-like 'CARTNAME' 'OLDCARTNAME' 'ITEM' [ item2 [ ...] ]
-
-Create a new cart based off an existing one.
-
-*CARTNAME*::
-The name of your new release cart.
-
-*OLDCARTNAME*::
-Cart to copy from.
-
-*ITEMS*::
-Items to update in the cart.
-
-////////////////////////////////////////////////////////////////////////
 
 
 RPM DELETE
 ----------
-usage: juicer rpm delete -r REPO-NAME ITEM ITEM ... --in [ENV ...]
+usage: juicer rpm delete -r 'REPO-NAME' 'ITEM' 'ITEM' ... [--in]
 
 Delete rpms in a repository.
 
@@ -95,35 +86,20 @@ The name of the repo rpms live in.
 *ITEM*::
 Filename of rpm to delete.
 
-*--in* 'ENVIRONMENT' ... ::
-The environments to delete rpms in.
 
-
-////////////////////////////////////////
-EDIT
-----
-usage: juicer edit CARTNAME
-
-Interactively edit a release cart.
-
-*CARTNAME*::
-The name of your release cart.
-////////////////////////////////////////
 
 
 HELLO
 ------
-usage: juicer hello [--in 'ENVIRONMENT' ...]
+usage: juicer hello [--in]
 
 Test connection settings in *~/.config/juicer/config*
 
-*ENVIRONMENT*::
-The environments to limit connecting testing to.
 
 
 CART MERGE
 ----------
-usage: juicer cart merge CART1 [...] CARTN  --name NEWCARTNAME
+usage: juicer cart merge 'CART1' [...] 'CARTN' --name 'NEWCARTNAME'
 
 Merges the contents of N carts into 'NEWCARTNAME'. Defaults to
 updating 'CART1'.
@@ -141,7 +117,7 @@ CART PULL
 usage: juicer cart pull 'CARTNAME'
 
 Pulls a description of a cart from the pulp server and saves it on
-your local machine in ~/.config/juicer/carts/.
+your local machine in *~/.config/juicer/carts/*.
 
 *CARTNAME*::
 The name of the cart to pull.
@@ -150,28 +126,24 @@ The name of the cart to pull.
 
 CART PUSH
 ---------
-usage: juicer cart push 'CARTNAME' [--in 'ENVIRONMENT' ...]
+usage: juicer cart push 'CARTNAME' [--in]
 
 Pushes/Updates a cart on the pulp server.
 
 *CARTNAME*::
 The name of the cart to push.
 
-*--in* 'ENVIRONMENT' ... ::
-The environments to push the new/updated cart to.
 
 
 REPO PUBLISH
 ------------
-usage: juicer repo publish 'REPO' [--in 'ENVIRONMENT' ...]
+usage: juicer repo publish 'REPO' [--in]
 
 Publishes a repository, regenerating it's metadata.
 
 *REPO*::
 The name of the repo to publish.
 
-*--in* 'ENVIRONMENT' ... ::
-The environments to publish repository in.
 
 
 CART PROMOTE
@@ -201,7 +173,7 @@ The name of the new release cart.
 Update a cart with a manifest file. A manifest file is written in
 the following format:
 
-name: version-release
+    name: version-release
 
 *-r* 'REPONAME'::
 Name of the reopsitory to install 'ITEMS' into. The '-r' option may be
@@ -213,7 +185,7 @@ Items to add to the cart in repository 'REPONAME'.
 
 RPM SEARCH
 ----------
-usage: juicer rpm search 'ITEM' [-r 'REPO' ...] [-c] [--in 'ENVIRONMENT' ...]
+usage: juicer rpm search 'ITEM' [-r 'REPO' ...] [-c] [--in]
 
 Search for an RPM ('item') in pulp.
 
@@ -226,8 +198,6 @@ The repo(s) to limit search scope to.
 *-c*::
 Search for the package in carts as well.
 
-*--in* 'ENVIRONMENT' ...::
-The environments to limit search scope to.
 
 
 
@@ -256,7 +226,7 @@ The pattern to match. Default: ***
 
 RPM UPLOAD
 ----------
-usage: juicer rpm upload -r 'REPO' 'ITEM' ... [--in 'ENVIRONMENT' ...]
+usage: juicer rpm upload -r 'REPO' 'ITEM' ... [--in]
 
 Upload multiple RPMs or files ('ITEM') to 'REPO'.
 
@@ -267,8 +237,6 @@ multiple times.
 *ITEM* ...::
 Name of the RPM(s) or file(s) to upload.
 
-*--in* 'ENVIRONMENT' ...::
-The environments which items will be uploaded to.
 
 
 
@@ -359,7 +327,7 @@ This man page was written by Tim Bielawa <tbielawa@redhat.com>.
 
 COPYRIGHT
 ---------
-Copyright © 2012, Red Hat, Inc..
+Copyright © 2012-2014, Red Hat, Inc..
 
 Juicer is released under the terms of the GPLv3+ License.
 
