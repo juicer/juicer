@@ -1,0 +1,14 @@
+[
+    {
+        "name": "repodef01",
+        "checksum_type": "sha",
+        "env": ["re", "qa", "stage", "prod"]
+    },
+    {
+        "name": "repodef02"
+    },
+    {
+        "name": "repodef03",
+        "env": ["re"]
+    }
+]
