@@ -171,6 +171,10 @@ class Parser(object):
                                default=self._default_envs, \
                                help='The environments in which to list repos')
 
+        parser_repo_list.add_argument('--json',
+                                      action='store_true', default=False,
+                                      help='Dump everything in JSON format')
+
         parser_repo_list.set_defaults(ja=juicer.admin.list_repos)
 
         ##################################################################
@@ -217,9 +221,6 @@ class Parser(object):
         parser_repo_show.add_argument('--json',
                                       action='store_true', default=False,
                                       help='Dump everything in JSON format')
-
-        parser_repo_show.add_argument('--extra', choices=['details', 'importers', 'distributors'], default=None,
-                                      help='Include additional information JSON dump. One of: importers, distributors, or details (for both)')
 
         parser_repo_show.add_argument('--in', metavar='envs', \
                       nargs="+", \

@@ -30,8 +30,12 @@ def create_user(args):
 
 def list_repos(args):
     pulp = ja(args)
-    pulp.list_repos(args.envs)
-
+    repo_lists = pulp.list_repos(args.envs)
+    if args.json:
+        print juicer.utils.create_json_str(repo_lists, indent=4)
+    else:
+        for env, repos in repo_lists.iteritems():
+            print "%s(%d): %s" % (env, len(repos), ' '.join(repos))
 
 def sync_repo(args):
     pulp = ja(args)
@@ -40,7 +44,7 @@ def sync_repo(args):
 
 def show_repo(args):
     pulp = ja(args)
-    repo_objects = pulp.show_repo(args.name, args.envs, args.extra)
+    repo_objects = pulp.show_repo(args.name, args.envs)
     if args.json:
         # JSON output requested
         print juicer.utils.create_json_str(repo_objects, indent=4,

@@ -78,7 +78,12 @@ Name of repository which will be deleted
 
 REPO LIST
 ---------
-usage: juicer-admin repo list
+usage: juicer-admin repo list [--json]
+
+List all of the repos in any or all environments.
+
+*--json*::
+Optional. Return the data in JSON format.
 
 
 REPO SHOW

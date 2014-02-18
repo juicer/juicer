@@ -56,18 +56,25 @@ class Repo(object):
         juicer.utils.Log.log_debug("instantiated Repo object for %s-%s" % (repo_name, env))
 
     def _parse_repo_def(self, repo_def):
+        juicer.utils.Log.log_debug("parsing juicer definition")
         self['type'] = 'juicer'
         self['orig_def'] = repo_def
         self['name'] = repo_def['name']
         self['checksum'] = repo_def['checksum_type']
+        juicer.utils.Log.log_debug("finished parsing juicer definition")
 
     def _parse_pulp_def(self, repo_def):
+        juicer.utils.Log.log_debug("parsing pulp definition")
+        juicer.utils.Log.log_debug(juicer.utils.create_json_str(repo_def, indent=4))
         self['type'] = 'pulp'
         self['orig_def'] = repo_def
         self['name'] = repo_def['display_name']
-        self['rpm_count'] = repo_def['content_unit_counts']['rpm']
-        self['srpm_count'] = repo_def['content_unit_counts']['srpm']
-        self['checksum'] = repo_def['scratchpad']['checksum_type']
+        self['rpm_count'] = repo_def.get('content_unit_counts', {}).get('rpm', 0)
+        self['srpm_count'] = repo_def.get('content_unit_counts', {}).get('srpm', 0)
+        # There's no pretty way to write this that doesn't take up 10 lines of code...
+        # Grab the deeply nested key 'checksum_type', or return 'sha256' if it doesn't exist
+        self['checksum'] = repo_def.get('distributors', [{}])[0].get('config', {}).get('checksum_type', 'sha256')
+        juicer.utils.Log.log_debug("finished parsing pulp definition")
 
     def __setitem__(self, key, value):
         self.spec[key] = value

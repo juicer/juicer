@@ -32,4 +32,5 @@ if __name__ == '__main__':
     try:
         main()
     except JuicerError, e:
+        print "Juicer error happened:"
         print e

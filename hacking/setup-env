@@ -1,6 +1,6 @@
 # -*- mode: shell-script -*-
 
-PREFIX_PYTHONPATH="`pwd`:`pwd`/Juicer/:`pwd`/JuicerAdmin/"
+PREFIX_PYTHONPATH="`pwd`:`pwd`/Juicer/:`pwd`/JuicerAdmin/:`pwd`/hacking/"
 PREFIX_PATH="`pwd`/bin"
 PREFIX_MANPATH="`pwd`/docs/man"
 

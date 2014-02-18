@@ -240,23 +240,19 @@ class JuicerAdmin(object):
         juicer.utils.Log.log_debug(
                 "List Repos In: %s", ", ".join(envs))
 
-        count = 0
+        repo_lists = {}
+        for env in envs:
+            repo_lists[env] = []
 
         for env in envs:
-            count += 1
-
-            juicer.utils.Log.log_info("%s:", env)
             _r = self.connectors[env].get(query)
             if _r.status_code == Constants.PULP_GET_OK:
                 for repo in juicer.utils.load_json_str(_r.content):
                     if re.match(".*-{0}$".format(env), repo['id']):
-                        juicer.utils.Log.log_info(repo['display_name'])
-
-                if count < len(envs):
-                    juicer.utils.Log.log_info("")
+                        repo_lists[env].append(repo['display_name'])
             else:
                 _r.raise_for_status()
-        return True
+        return repo_lists
 
     def list_users(self, envs=[], query="/users/"):
         """
@@ -308,18 +304,13 @@ class JuicerAdmin(object):
                     _r.raise_for_status()
         return True
 
-    def show_repo(self, repo_names=[], envs=[], extra=None, query='/repositories/'):
+    def show_repo(self, repo_names=[], envs=[], query='/repositories/'):
         """
-        `repo_name` - Name of repository to show
+        `repo_names` - Name of repository(s) to show
 
         Show repositories in specified environments
         """
         juicer.utils.Log.log_debug("Show Repo(s): %s", str(repo_names))
-
-        if extra:
-            query_parameter = "?%s=true" % extra
-        else:
-            query_parameter = ''
 
         repo_objects = {}
         for env in envs:
@@ -329,7 +320,7 @@ class JuicerAdmin(object):
             juicer.utils.Log.log_debug("scanning environment: %s", env)
             for repo_name in repo_names:
                 juicer.utils.Log.log_debug("looking for repo: %s", repo_name)
-                url = "%s%s-%s/%s" % (query, repo_name, env, query_parameter)
+                url = "%s%s-%s/?details=true" % (query, repo_name, env)
                 _r = self.connectors[env].get(url)
                 if _r.status_code == Constants.PULP_GET_OK:
                     juicer.utils.Log.log_debug("found repo: %s", repo_name)
