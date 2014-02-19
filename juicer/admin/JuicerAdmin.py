@@ -130,9 +130,10 @@ class JuicerAdmin(object):
         all_envs = juicer.utils.get_environments()
 
         # Repos to create/update, sorted by environment.
-        repo_objects_update = repo_objects_create = {}
+        repo_objects_create = []
+        repo_objects_update = {}
         for env in all_envs:
-            repo_objects_update = repo_objects_create[env] = []
+            repo_objects_update[env] = []
 
         # All repo defs as Repo objects
         all_repos = [juicer.common.Repo.Repo(repo['name'], repo_def=repo) for repo in repo_defs]
@@ -164,25 +165,34 @@ class JuicerAdmin(object):
 
         # sort out new vs. existing
         for repo in all_repos:
-            if juicer.utils.repo_in_defined_env(repo, all_envs):
+            # Does the repo refer to environments in our juicer.conf file?
+            if juicer.utils.repo_in_defined_envs(repo, all_envs):
+                repo['reality_check_in_env'] = []
+                repo['missing_in_env'] = []
                 for env in repo['env']:
                     if juicer.utils.repo_exists_in_repo_list(repo, existing_repos[env]):
-                        juicer.utils.Log.log_notice("Repo %s already exists in env: %s", repo['name'], env)
+                        # Does the repo def match what exists already?
+                        if juicer.utils.repo_def_matches_reality(repo, env):
+                            juicer.utils.Log.log_notice("Repo %s already exists and reality matches the definition", repo['name'])
+                        else:
+                            juicer.utils.Log.log_notice("Repo %s already exists, but reality does not the definition", repo['name'])
+                            repo['reality_check_in_env'].append(env)
                     else:
-                        repo_objects_create[env].append(repo)
+                        # The repo does not exist yet in reality
                         juicer.utils.Log.log_notice("Need to create %s in %s", repo['name'], env)
+                        repo['missing_in_env'].append(env)
 
-        # If this isn't a NOOP:
-        #     for each new repo
-        #         call create_repo with defaults suppplied as necessary
+                # Do we need to create the repo anywhere?
+                if repo['missing_in_env']:
+                    repo_objects_create.append(repo)
+
+                # We we need to update the repo anywhere?
+                if repo['reality_check_in_env']:
+                    for env in repo['reality_check_in_env']:
+                        repo_objects_update[env].append(repo)
 
 
-
-        if noop:
-            juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
-            juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(repo_objects_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
-
-        return True
+        return (repo_objects_create, repo_objects_update)
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """

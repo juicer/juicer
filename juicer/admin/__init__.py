@@ -25,8 +25,28 @@ def create_repo(args):
 
 def import_repo(args):
     pulp = ja(args)
-    # lets make it work by just blindly attempting to create all of the repos first
-    pulp.import_repo(args.from_file, args.noop)
+    # Get our TODO specs from juicer-admin
+    (to_create, to_update) = pulp.import_repo(args.from_file, args.noop)
+
+    if args.noop:
+        juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
+        juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
+
+        juicer.utils.Log.log_info("NOOP: Would have updated repos with definitions:")
+        juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_update, indent=4, cls=juicer.common.Repo.RepoEncoder))
+
+    else:
+        for repo in to_create:
+            pulp.create_repo(repo_name=repo['name'],
+                             feed=repo['feed'],
+                             envs=repo['missing_in_env'],
+                             checksum_type=repo['checksum_type'])
+            #juicer.utils.Log.log_info("Would have created %s in %s", repo['name'], ", ".join(repo['missing_in_env']))
+
+        for env,repos in to_update.iteritems():
+            for repo in repos:
+                juicer.utils.Log.log_info("Would have updated %s-%s", repo, env)
+
 
 def create_user(args):
     pulp = ja(args)

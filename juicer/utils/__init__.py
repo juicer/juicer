@@ -803,8 +803,7 @@ def repo_exists_in_repo_list(repo, repo_list):
     """
     return repo['name'] in repo_list
 
-# def repo_matches_reality(repo,
-def repo_in_defined_env(repo, all_envs):
+def repo_in_defined_envs(repo, all_envs):
     """Raises exception if the repo references undefined environments"""
     remaining_envs = set(repo['env']) - set(all_envs)
     if set(repo['env']) - set(all_envs):
@@ -812,3 +811,7 @@ def repo_in_defined_env(repo, all_envs):
                                         (repo['name'], ", ".join(list(remaining_envs))))
     else:
         return True
+
+def repo_def_matches_reality(repo_def, existing_repo):
+    juicer.utils.Log.log_notice("REPO_DEF_MATCHES_REALITY currently hard coded to return False")
+    return False
