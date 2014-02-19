@@ -50,7 +50,7 @@ usage: juicer-admin repo create 'REPONAME' [--arch 'ARCH'] [--feed 'FEED'] [--ch
 
 *REPONAME*::
 The name of the repository to be created. Only alphanumeric, ., -, and
-_ allowed. As a regular expression: *([a-zA-Z-_.]+)*
+_ allowed. As a regular expression: *([a-zA-Z0-9-_.]+)*
 
 *--arch=*'ARCH'::
 Optional. Repository package architecture. Defaults to *noarch*. Other

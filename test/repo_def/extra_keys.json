@@ -1,0 +1,9 @@
+[
+    {
+        "name": "repodef03",
+        "checksum_type": "sha",
+        "feed": "http://foo",
+        "env": ["prod"],
+        "extra_key": "don't need this"
+    }
+]

@@ -20,7 +20,7 @@ The overall structure of the json document reads like this:
 
 - `name`
     - **Required** - Yes
-    - **Description** - The repository name. Must match the regular expression `([a-zA-Z-_.]+)` (alphanumeric characters, `.`, `-`, and `_`)
+    - **Description** - The repository name. Must match the regular expression `([a-zA-Z0-9-_.]+)` (alphanumeric characters, `.`, `-`, and `_`)
 
 
 - `checksum_type`
