@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Juicer - Administer Pulp and Release Carts
-# Copyright © 2012, Red Hat, Inc.
+# Copyright © 2012-2014, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
-
 
 ######################################################################
 # PULP RETURN CODES
@@ -75,3 +74,16 @@ EXAMPLE_SYSTEM_CONFIG = '/usr/share/juicer/juicer.conf'
 ######################################################################
 # The version the server should be running
 EXPECTED_SERVER_VERSION = '2.3'
+
+######################################################################
+# Repo def file defaults/attributes
+REPO_DEF_DEFAULTS = {
+    'name': None,
+    'feed': None,
+    'env': [],
+    'checksum_type': 'sha256',
+}
+
+REPO_DEF_REQ_KEYS = ['name']
+REPO_DEF_OPT_KEYS = ['checksum_type', 'feed', 'env']
+REPO_DEF_CHECKSUM_TYPES = ['sha', 'sha256']

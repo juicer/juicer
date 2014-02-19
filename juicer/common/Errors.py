@@ -55,3 +55,6 @@ class JuicerRepoDefError(JuicerError):
     Raised for invalid repo def files
     """
     pass
+
+class JuicerRepoInUndefinedEnvs(JuicerError):
+    pass

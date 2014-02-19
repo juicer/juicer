@@ -85,10 +85,8 @@ class Parser(object):
                                         choices=['sha26', 'sha'],
                                         help='Checksum-type used for meta-data generation (one of: sha26, sha)')
 
-        parser_repo_create.add_argument('--from-file', metavar='json_defs', default=None,
-                                        help='Repository definition file in JSON format. Mutually exclusive with other arguments')
-
-        parser_repo_create.add_argument('--noop', '--dry-run', '-n', metavar='noop',
+        parser_repo_create.add_argument('--noop', '--dry-run', '-n',
+                                        default=False, action='store_true',
                                         help="Don't create the repos, just show what would have happened")
 
         parser_repo_create.add_argument('--in', metavar='envs',
@@ -98,6 +96,27 @@ class Parser(object):
                                         help='The environments in which to create your repository')
 
         parser_repo_create.set_defaults(ja=juicer.admin.create_repo)
+
+        ##################################################################
+        # Create the 'repo import' sub-parser
+        import_description = """This will create repositories matching the definitions in the repo
+def file. Repositories which already exist will be updated. See the
+"repo import" and "Repo Def Format" sections in juicer-admin(1) for
+instructions on how to write a proper repo def file."""
+
+        parser_repo_import = subparser_repo.add_parser('import',
+                                                       help='Create pulp repositories from an imported definition',
+                                                       usage='%(prog)s --from-file JSON_DEFS [--noop]',
+                                                       description=import_description)
+
+        parser_repo_import.add_argument('--from-file', metavar='json_defs', default=None,
+                                        help='Repository definition file in JSON format')
+
+        parser_repo_import.add_argument('--noop', '--dry-run', '-n',
+                                        default=False, action='store_true',
+                                        help="Don't create the repos, just show what would have happened")
+
+        parser_repo_import.set_defaults(ja=juicer.admin.import_repo)
 
         ##################################################################
         # Create the 'user create' sub-parser

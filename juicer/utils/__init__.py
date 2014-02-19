@@ -193,8 +193,7 @@ def get_environments():
     juicer.utils.Log.log_debug("Reading environment sections:")
 
     environments = config.sections()
-
-    juicer.utils.Log.log_notice("Read environment sections: %s", environments)
+    juicer.utils.Log.log_debug("Read environment sections: %s", ', '.join(environments))
     return environments
 
 
@@ -787,3 +786,29 @@ def table(rows):
     t = texttable.Texttable()
     t.add_rows(rows)
     return t.draw()
+
+
+def unique_repo_def_envs(repo_def):
+    defined_envs = set()
+    for repo in repo_def:
+        defined_envs = defined_envs.union(repo['env'])
+        juicer.utils.Log.log_debug("envs for repo %s: %s", repo['name'], ", ".join(repo['env']))
+    return defined_envs
+
+def repo_exists_in_repo_list(repo, repo_list):
+    """`repo_def` - a Repo object representing a juicer repo def
+
+    `repo_list` a list of repo names (sans environment-id), per the
+    data from juicer.admin.JuicerAdmin.list_repos
+    """
+    return repo['name'] in repo_list
+
+# def repo_matches_reality(repo,
+def repo_in_defined_env(repo, all_envs):
+    """Raises exception if the repo references undefined environments"""
+    remaining_envs = set(repo['env']) - set(all_envs)
+    if set(repo['env']) - set(all_envs):
+        raise JuicerRepoInUndefinedEnvs("Repo def %s references undefined environments: %s" %
+                                        (repo['name'], ", ".join(list(remaining_envs))))
+    else:
+        return True

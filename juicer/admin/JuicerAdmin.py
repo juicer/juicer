@@ -21,6 +21,7 @@ from juicer.common.Repo import Repo
 import juicer.admin
 import juicer.utils
 import juicer.utils.Log
+import juicer.utils.ValidateRepoDef
 import re
 import json
 
@@ -39,7 +40,7 @@ class JuicerAdmin(object):
                     juicer.utils.Log.log_error("%s is not a server configured in juicer.conf" % env)
                     juicer.utils.Log.log_debug("Exiting...")
 
-    def create_repo(self, arch='noarch', repo_name=None, feed=None, envs=[], checksum_type="sha256", from_file=None, noop=False, query='/repositories/'):
+    def create_repo(self, arch='noarch', repo_name=None, feed=None, envs=[], checksum_type="sha256", query='/repositories/'):
         """
         `arch` - Architecture of repository content
         `repo_name` - Name of repository to create
@@ -110,6 +111,77 @@ class JuicerAdmin(object):
                         _r.raise_for_status()
                 else:
                     _r.raise_for_status()
+        return True
+
+    def import_repo(self, from_file, noop=False, query='/repositories/'):
+        """
+        `from_file` - JSON file of repo definitions
+        `noop` - Boolean, if true don't actually create/update repos, just show what would have happened
+        """
+        try:
+            repo_defs = juicer.utils.ValidateRepoDef.validate_document(from_file)
+        except JuicerRepoDefError, e:
+            juicer.utils.Log.log_error("Could not load repo defs from %s:" % from_file)
+            raise e
+        else:
+            juicer.utils.Log.log_debug("Loaded and validated repo defs from %s" % from_file)
+
+        # All our known envs, for cases where no value is supplied for 'env'
+        all_envs = juicer.utils.get_environments()
+
+        # Repos to create/update, sorted by environment.
+        repo_objects_update = repo_objects_create = {}
+        for env in all_envs:
+            repo_objects_update = repo_objects_create[env] = []
+
+        # All repo defs as Repo objects
+        all_repos = [juicer.common.Repo.Repo(repo['name'], repo_def=repo) for repo in repo_defs]
+
+        # Detailed information on all existing repos
+        #
+        # TODO: Optimize this so we only call to pulp for environments
+        # we KNOW we need to operate in. Determine this by evaluating
+        # the 'env' property of each repo def.
+        if not noop:
+            juicer.utils.Log.log_notice("Loading information on all existing repos (this could take a while)")
+            #existing_repos = self.list_repos(envs=all_envs)
+
+        # Use a cache now to speed up testing
+        juicer.utils.Log.log_info("BE AWARE: Currently reading repo list from local cache")
+        existing_repos = juicer.utils.read_json_document('/tmp/repo_list.json')
+
+
+        for repo in all_repos:
+            # 'env' is all environments if: 'env' is not defined; 'env' is an empty list
+            current_env = repo.get('env', [])
+            if current_env == []:
+                juicer.utils.Log.log_debug("Setting 'env' to all_envs for repo: %s" % repo['name'])
+                repo['env'] = all_envs
+
+        #  Assemble a set of all specified environments.
+        defined_envs = juicer.utils.unique_repo_def_envs(all_repos)
+        juicer.utils.Log.log_notice("Discovered environments: %s" % ", ".join(list(defined_envs)))
+
+        # sort out new vs. existing
+        for repo in all_repos:
+            if juicer.utils.repo_in_defined_env(repo, all_envs):
+                for env in repo['env']:
+                    if juicer.utils.repo_exists_in_repo_list(repo, existing_repos[env]):
+                        juicer.utils.Log.log_notice("Repo %s already exists in env: %s", repo['name'], env)
+                    else:
+                        repo_objects_create[env].append(repo)
+                        juicer.utils.Log.log_notice("Need to create %s in %s", repo['name'], env)
+
+        # If this isn't a NOOP:
+        #     for each new repo
+        #         call create_repo with defaults suppplied as necessary
+
+
+
+        if noop:
+            juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
+            juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(repo_objects_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
+
         return True
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
@@ -328,9 +400,8 @@ class JuicerAdmin(object):
                     repo_object = Repo(repo_name, env, pulp_def=repo)
                     repo_objects[env].append(repo_object)
                 else:
-                    juicer.utils.Log.log_error("could not find repo: %s" % repo_name)
                     if _r.status_code == Constants.PULP_GET_NOT_FOUND:
-                        raise JuicerPulpError("repo '%s' was not found" % repo_name)
+                        juicer.utils.Log.log_warn("could not find repo '%s' in %s" % (repo_name, env))
                     else:
                         _r.raise_for_status()
         for k,v in repo_objects.iteritems():

@@ -30,8 +30,8 @@ Repository Definition file validation functions.
 from juicer.common.Errors import *
 import json
 import juicer.utils
+import juicer.common.Constants
 import re
-import pprint
 import sys
 
 valid_repo_name = re.compile('^([a-zA-Z0-9-_.]+)$')
@@ -48,7 +48,7 @@ def validate_document(document_path):
     else:
         raise JuicerRepoDefError("Document is not a list")
 
-    return True
+    return defs
 
 def is_list(ds):
     return type(ds) == list
@@ -57,12 +57,12 @@ def is_dict(ds):
     return type(ds) == dict
 
 def is_valid_checksum(cs):
-    return cs in ['sha', 'sha256']
+    return cs in juicer.common.Constants.REPO_DEF_CHECKSUM_TYPES
 
 def has_valid_keys(ds):
     keys = ds.keys()
-    required_keys = ['name']
-    optional_keys = ['checksum_type', 'feed', 'env']
+    required_keys = juicer.common.Constants.REPO_DEF_REQ_KEYS
+    optional_keys = juicer.common.Constants.REPO_DEF_OPT_KEYS
     if set(required_keys) & set(keys):
         remaining_keys = set(keys) - set(required_keys)
         if len(set(remaining_keys) - set(optional_keys)) > 0:

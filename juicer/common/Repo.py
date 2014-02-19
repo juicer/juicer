@@ -24,8 +24,10 @@ from juicer.common.Errors import JuicerRepoExclusionError
 class Repo(object):
     """
     Internal representation of a repository object
+
+    XXX: Don't set the 'env' attribute directly! Use Repo.set_env()
     """
-    def __init__(self, repo_name, env, repo_def=None, pulp_def=None):
+    def __init__(self, repo_name, env=None, repo_def=None, pulp_def=None):
         """
         `repo_name` - Name of this repo
         `env` - Environment the repo lives in
@@ -58,16 +60,18 @@ class Repo(object):
     def _parse_repo_def(self, repo_def):
         juicer.utils.Log.log_debug("parsing juicer definition")
         self['type'] = 'juicer'
-        self['orig_def'] = repo_def
+#        self.spec = repo_def
         self['name'] = repo_def['name']
-        self['checksum'] = repo_def['checksum_type']
+        defaults = juicer.common.Constants.REPO_DEF_DEFAULTS
+        for key in juicer.common.Constants.REPO_DEF_OPT_KEYS:
+            self[key] = repo_def.get(key, defaults[key])
         juicer.utils.Log.log_debug("finished parsing juicer definition")
 
     def _parse_pulp_def(self, repo_def):
         juicer.utils.Log.log_debug("parsing pulp definition")
         juicer.utils.Log.log_debug(juicer.utils.create_json_str(repo_def, indent=4))
         self['type'] = 'pulp'
-        self['orig_def'] = repo_def
+        self.spec = repo_def
         self['name'] = repo_def['display_name']
         self['rpm_count'] = repo_def.get('content_unit_counts', {}).get('rpm', 0)
         self['srpm_count'] = repo_def.get('content_unit_counts', {}).get('srpm', 0)
@@ -76,17 +80,35 @@ class Repo(object):
         self['checksum'] = repo_def.get('distributors', [{}])[0].get('config', {}).get('checksum_type', 'sha256')
         juicer.utils.Log.log_debug("finished parsing pulp definition")
 
+    def set_env(self, env):
+        if self['type'] == 'juicer':
+            self['env'] = env
+        else:
+            pass
+
     def __setitem__(self, key, value):
         self.spec[key] = value
 
     def __getitem__(self, item):
-        return self.spec[item]
+        if item in self.spec:
+            return self.spec[item]
+        else:
+            raise KeyError(item)
+
+    def __contains__(self, item):
+        return item in self.spec
 
     def __str__(self):
-        return juicer.utils.create_json_str(self['orig_def'])
+        return juicer.utils.create_json_str(self.spec)
 
     def _repo_ds(self):
-        return self['orig_def']
+        return self.spec
+
+    def get(self, key, default=None):
+        if key in self.spec:
+            return self.spec[key]
+        else:
+            return default
 
 # Custom encoder for Repo types so we can dump them with standard json tools
 class RepoEncoder(json.JSONEncoder):

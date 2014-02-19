@@ -20,13 +20,17 @@ import juicer.utils
 
 def create_repo(args):
     pulp = ja(args)
-    pulp.create_repo(args.arch, args.name, args.feed, args.envs, args.checksum_type, args.from_file, args.noop)
+    pulp.create_repo(args.arch, args.name, args.feed, args.envs, args.checksum_type)
 
+
+def import_repo(args):
+    pulp = ja(args)
+    # lets make it work by just blindly attempting to create all of the repos first
+    pulp.import_repo(args.from_file, args.noop)
 
 def create_user(args):
     pulp = ja(args)
     pulp.create_user(args.login, args.password, args.name, args.envs)
-
 
 def list_repos(args):
     pulp = ja(args)
@@ -45,11 +49,19 @@ def sync_repo(args):
 def show_repo(args):
     pulp = ja(args)
     repo_objects = pulp.show_repo(args.name, args.envs)
+
     if args.json:
         # JSON output requested
         print juicer.utils.create_json_str(repo_objects, indent=4,
                                            cls=juicer.common.Repo.RepoEncoder)
     else:
+        found_repos = 0
+        for env, repos in repo_objects.iteritems():
+            found_repos += len(repos)
+        if found_repos == 0:
+            print "Could not locate repo(s) in any environment"
+            return False
+
         # Human readable table-style output by default
         rows = [['Repo', 'Env', 'RPMs', 'SRPMs', 'Checksum']]
         for env,repos in repo_objects.iteritems():
