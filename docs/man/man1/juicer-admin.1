@@ -65,8 +65,6 @@ This section describes all of the \fIREPO\fR subcommands\&.
 .SH "REPO CREATE"
 .sp
 usage: juicer\-admin repo create \fIREPONAME\fR [\-\-arch \fIARCH\fR] [\-\-feed \fIFEED\fR] [\-\-checksum\-type \fITYPE\fR]
-.sp
-usage: juicer\-admin repo create \-\-from\-file \fIREPO_DEF\fR
 .PP
 \fBREPONAME\fR
 .RS 4
@@ -94,16 +92,25 @@ Optional\&. The checksum type to use when generating meta\-data\&. Defaults to
 \fBsha256\fR, also valid is
 \fBsha\fR\&.
 .RE
+.SH "REPO IMPORT"
+.sp
+usage: juicer\-admin repo import \-\-from\-file \fIREPO_DEF\fR [\-\-noop]
+.sp
+Create repositories matching the definitions in the repo def file\&. Repositories which already exist will be updated\&.
 .PP
 \fB\-\-from\-file=\fR\fIREPO_DEF\fR
 .RS 4
-Repository definition file in JSON format\&. Mutually exclusive with
-\fIall\fR
-other arguments and options (including
-\fB\-\-in\fR)\&. See
+Repository definition file in JSON format\&. See
 \fIREPO DEF FORMAT\fR
 (below) for a quick review of the syntax\&. See the docs online or in /usr/share/doc/juicer*/repo_syntax\&.md for a detailed description\&.
 .RE
+.PP
+\fB\-\-noop\fR, \fB\-\-dry\-run\fR, \fB\-n\fR
+.RS 4
+Don\(cqt create the repos, just show what would have happened\&.
+.RE
+.sp
+\fBNote:\fR This command does not respect \fB\-\-in\fR
 .SH "REPO DELETE"
 .sp
 usage: juicer\-admin repo delete \fIREPONAME\fR
