@@ -192,8 +192,11 @@ test:
 	. ./hacking/setup-env
 	if [ "$(LOG)" = "true" ]; then \
 		./hacking/tests | tee /tmp/juicer_tests.log; \
+		python ./juicer/utils/ValidateRepoDef.py ./test/repo_def/*.json | tee /tmp/juicer_tests.log; \
+		@echo "Test results logged to /tmp/juicer_tests.log"
 	else \
 		./hacking/tests; \
+		python ./juicer/utils/ValidateRepoDef.py ./test/repo_def/*.json \
 	fi
 
 rpminstall: rpm
