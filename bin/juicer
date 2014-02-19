@@ -34,3 +34,5 @@ if __name__ == '__main__':
     except JuicerError, e:
         print "Juicer error happened:"
         print e
+    except KeyboardInterrupt:
+        print "User killed via ^C"
