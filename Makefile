@@ -171,6 +171,7 @@ rpm: rpmcommon
 	@find rpm-build -maxdepth 2 -name 'juicer*.rpm' | awk '{print "    " $$1}'
 	@echo "#############################################"
 
+# This makes an RPM for Openshift Online
 oorpm: rpmcommon
 	@rpmbuild --define "_topdir %(pwd)/rpm-build" \
 	--define "_builddir %{_topdir}" \
@@ -191,12 +192,10 @@ koji: srpm
 test:
 	. ./hacking/setup-env
 	if [ "$(LOG)" = "true" ]; then \
-		./hacking/tests | tee /tmp/juicer_tests.log; \
-		python ./juicer/utils/ValidateRepoDef.py ./test/repo_def/*.json | tee /tmp/juicer_tests.log; \
-		@echo "Test results logged to /tmp/juicer_tests.log"
+		./hacking/tests | tee -a /tmp/juicer_tests.log; \
+		echo "Test results logged to /tmp/juicer_tests.log"; \
 	else \
 		./hacking/tests; \
-		python ./juicer/utils/ValidateRepoDef.py ./test/repo_def/*.json \
 	fi
 
 rpminstall: rpm

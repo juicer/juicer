@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 # Juicer - Administer Pulp and Release Carts
-# Copyright © 2012, Red Hat, Inc.
+# Copyright © 2012-2014, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,51 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-cd juicer/tests/
+######################################################################
+# Catch a ^C exit so the for loops don't keep running
+######################################################################
+trap "{ exit 0; }" SIGINT SIGTERM
+######################################################################
+
+. ./hacking/setup-env
+
+# Oh SWEET. Color codes! Ganked from http://stackoverflow.com/a/10466960/263969
+RESTORE='\033[0m'
+RED='\033[00;31m'
+GREEN='\033[00;32m'
+
+green() {
+    echo -en "${RESTORE}${GREEN}${1}${RESTORE}"
+}
+
+red() {
+    echo -ne "${RESTORE}${RED}${1}${RESTORE}"
+}
+
+######################################################################
+
+echo "#################################"
+echo "Running repo def validation tests"
+echo "#################################"
+
+# Count how many tests we're running
+NUM_TESTS=`ls -1 ./hacking/repo_def/*.json | wc -l`
+# Only one of them should pass
+MUST_FAIL=$(( ${NUM_TESTS} - 1 ))
+echo "Expecting `green '1 PASS'` and `red \"${MUST_FAIL} FAIL\"`s"
+
+python ./juicer/utils/ValidateRepoDef.py ./hacking/repo_def/*.json
+if [ "$?" == "${MUST_FAIL}" ]; then
+    echo "Repo def validation tests success: (`green '1 PASS'`/`red \"${MUST_FAIL} FAIL\"`s)"
+else
+    echo `red "Repo def validation failed"`
+fi
+
+######################################################################
+# Run the rest of the tests
+######################################################################
+
+pushd juicer/tests/
 
 for test in test_hello test_pull test_show test_workflow;
 do
@@ -30,4 +74,4 @@ do
     python -m unittest TestJuicerAdmin.TestJuicerAdmin.$test
 done
 
-cd -
+popd
