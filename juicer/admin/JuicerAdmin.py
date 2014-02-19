@@ -143,14 +143,12 @@ class JuicerAdmin(object):
         # TODO: Optimize this so we only call to pulp for environments
         # we KNOW we need to operate in. Determine this by evaluating
         # the 'env' property of each repo def.
-        if not noop:
-            juicer.utils.Log.log_notice("Loading information on all existing repos (this could take a while)")
-            #existing_repos = self.list_repos(envs=all_envs)
+        juicer.utils.Log.log_info("Loading information on all existing repos (this could take a while)")
+        existing_repos = self.list_repos(envs=all_envs)
 
-        # Use a cache now to speed up testing
-        juicer.utils.Log.log_info("BE AWARE: Currently reading repo list from local cache")
-        existing_repos = juicer.utils.read_json_document('/tmp/repo_list.json')
-
+        # Use a cache to speed up testing
+        # juicer.utils.Log.log_info("BE AWARE: Currently reading repo list from local cache")
+        #existing_repos = juicer.utils.read_json_document('/tmp/repo_list.json')
 
         for repo in all_repos:
             # 'env' is all environments if: 'env' is not defined; 'env' is an empty list
