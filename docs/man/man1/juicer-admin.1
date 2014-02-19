@@ -65,6 +65,8 @@ This section describes all of the \fIREPO\fR subcommands\&.
 .SH "REPO CREATE"
 .sp
 usage: juicer\-admin repo create \fIREPONAME\fR [\-\-arch \fIARCH\fR] [\-\-feed \fIFEED\fR] [\-\-checksum\-type \fITYPE\fR]
+.sp
+usage: juicer\-admin repo create \-\-from\-file \fIREPO_DEF\fR
 .PP
 \fBREPONAME\fR
 .RS 4
@@ -91,6 +93,16 @@ Optional\&. A feed url from which to synchronize yum repository packages\&.
 Optional\&. The checksum type to use when generating meta\-data\&. Defaults to
 \fBsha256\fR, also valid is
 \fBsha\fR\&.
+.RE
+.PP
+\fB\-\-from\-file=\fR\fIREPO_DEF\fR
+.RS 4
+Repository definition file in JSON format\&. Mutually exclusive with
+\fIall\fR
+other arguments and options (including
+\fB\-\-in\fR)\&. See
+\fIREPO DEF FORMAT\fR
+(below) for a quick review of the syntax\&. See the docs online or in /usr/share/doc/juicer*/repo_syntax\&.md for a detailed description\&.
 .RE
 .SH "REPO DELETE"
 .sp
@@ -125,9 +137,7 @@ parameters with spaces\&.
 .PP
 \fB\-\-json\fR
 .RS 4
-Optional\&. Including the
-\fB\-\-json\fR
-flag will return the information in raw JSON format\&.
+Optional\&. Return the data in JSON format\&.
 .RE
 .SH "REPO SYNC"
 .sp
@@ -220,6 +230,146 @@ Login or username of user which will be added to role
 .RE
 .sp
 See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
+.SH "REPO DEF FORMAT"
+.sp
+\fBMandatory keys\fR:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+name (string)
+.RE
+.sp
+\fBOptional Keys\fR:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+feed (string)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+checksum_type (string, one of:
+\fBsha\fR,
+\fBsha256\fR)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+env (list of environment name strings)
+.RE
+.sp
+\fBExample:\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+[
+    {"name": "repo01", "env": ["prod"]},
+    {"name": "repo02"},
+    {
+        "name": "fedora_mirror",
+        "feed": "http://download\&.fedoraproject\&.org/pub/fedora/linux/releases/20/Everything/x86_64/os/",
+        "checksum_type": "sha",
+        "env": ["dev", "prod"]
+    }
+]
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fBProtips\fR
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Don\(cqt end lists or hashes with trailing commas
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Remember to close all of your braces and brackets: Each
+\fB[\fR
+has a matching
+\fB]\fR, each
+\fB{\fR
+has a matching
+\fB}\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Use a javascript mode in your editor if it doesn\(cqt have a native json mode
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Setting
+\fBenv\fR
+to an empty list (\fB[]\fR) will
+\fInot\fR
+delete the repo from any environment
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Use a linting service if you\(cqre stuck, for example:
+\fBhttp://jsonlint\&.com/\fR
+.RE
 .SH "FILES"
 .sp
 \fB~/\&.config/juicer/config\fR \(em Juicer configuration file
@@ -241,7 +391,9 @@ Juicer is released under the terms of the GPLv3+ License\&.
 .sp
 \fBPulp User Documentation\fR \(em http://www\&.pulpproject\&.org/docs/
 .sp
-The Juicer Homepage: https://github\&.com/juicer/juicer/
+\fBDetailed Repo Def Description\fR \(em https://github\&.com/juicer/juicer/blob/master/docs/markdown/repo_syntax\&.md
+.sp
+\fBThe Juicer Homepage\fR \(em https://github\&.com/juicer/juicer/
 .SH "AUTHOR"
 .PP
 \fB:doctype:manpage\fR

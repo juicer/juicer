@@ -48,6 +48,8 @@ REPO CREATE
 -----------
 usage: juicer-admin repo create 'REPONAME' [--arch 'ARCH'] [--feed 'FEED'] [--checksum-type 'TYPE']
 
+usage: juicer-admin repo create --from-file 'REPO_DEF'
+
 *REPONAME*::
 The name of the repository to be created. Only alphanumeric, ., -, and
 _ allowed. As a regular expression: *([a-zA-Z0-9-_.]+)*
@@ -56,7 +58,6 @@ _ allowed. As a regular expression: *([a-zA-Z0-9-_.]+)*
 Optional. Repository package architecture. Defaults to *noarch*. Other
 values might be: *i386*, *i686*, or *x86_64*.
 
-
 *--feed=*'FEED'::
 Optional. A feed url from which to synchronize yum repository packages.
 
@@ -64,7 +65,13 @@ Optional. A feed url from which to synchronize yum repository packages.
 Optional. The checksum type to use when generating meta-data.
 Defaults to *sha256*, also valid is *sha*.
 
+*--from-file=*'REPO_DEF'::
 
+Repository definition file in JSON format. Mutually exclusive with
+'all' other arguments and options (including *--in*). See __REPO DEF
+FORMAT__ (below) for a quick review of the syntax. See the docs online
+or in /usr/share/doc/juicer*/repo_syntax.md for a detailed
+description.
 
 
 REPO DELETE
@@ -100,8 +107,7 @@ parameters with spaces.
 
 *--json*::
 
-Optional. Including the *--json* flag will return the information in
-raw JSON format.
+Optional. Return the data in JSON format.
 
 
 
@@ -212,7 +218,40 @@ the specifics of role management.
 
 
 
+REPO DEF FORMAT
+---------------
 
+*Mandatory keys*:
+
+- name (string)
+
+*Optional Keys*:
+
+- feed (string)
+- checksum_type (string, one of: *sha*, *sha256*)
+- env (list of environment name strings)
+
+*Example:*
+
+    [
+        {"name": "repo01", "env": ["prod"]},
+        {"name": "repo02"},
+        {
+            "name": "fedora_mirror",
+            "feed": "http://download.fedoraproject.org/pub/fedora/linux/releases/20/Everything/x86_64/os/",
+            "checksum_type": "sha",
+            "env": ["dev", "prod"]
+        }
+    ]
+
+
+*Protips*
+
+- Don't end lists or hashes with trailing commas
+- Remember to close all of your braces and brackets: Each *[* has a matching *]*, each *{* has a matching *}*
+- Use a javascript mode in your editor if it doesn't have a native json mode
+- Setting *env* to an empty list (*[]*) will 'not' delete the repo from any environment
+- Use a linting service if you're stuck, for example: *http://jsonlint.com/*
 
 
 
@@ -250,4 +289,6 @@ SEE ALSO
 
 *Pulp User Documentation* -- <http://www.pulpproject.org/docs/>
 
-The Juicer Homepage: <https://github.com/juicer/juicer/>
+*Detailed Repo Def Description* -- <https://github.com/juicer/juicer/blob/master/docs/markdown/repo_syntax.md>
+
+*The Juicer Homepage* -- <https://github.com/juicer/juicer/>

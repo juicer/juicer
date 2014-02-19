@@ -50,23 +50,23 @@ created in all environments.
 
     [
         {
-            'name': 'repo01'
+            "name": "repo01"
         },
         {
-            'name': 'repo02',
-            'checksum_type': 'sha'
+            "name": "repo02",
+            "checksum_type": "sha"
         }
     ]
 
 We could have also written it like this:
 
-    [{'name': 'repo01'}, {'name': 'repo02', 'checksum_type': 'sha'}]
+    [{"name": "repo01"}, {"name": "repo02", "checksum_type": "sha"}]
 
 Or even like this:
 
     [
-        {'name': 'repo01'},
-        {'name': 'repo02', 'checksum_type': 'sha'}
+        {"name": "repo01"},
+        {"name": "repo02", "checksum_type": "sha"}
     ]
 
 Here's an example with another repository definition. It exercises all
@@ -75,13 +75,13 @@ syntax:
 
 
     [
-        {'name': 'repo01', 'env': ['prod']},
-        {'name': 'repo02'},
+        {"name": "repo01", "env": ["prod"]},
+        {"name": "repo02"},
         {
-            'name': 'fedora_mirror',
-            'feed': 'http://download.fedoraproject.org/pub/fedora/linux/releases/20/Everything/x86_64/os/',
-            'checksum_type': 'sha',
-            'env': ['dev', 'prod']
+            "name": "fedora_mirror",
+            "feed": "http://download.fedoraproject.org/pub/fedora/linux/releases/20/Everything/x86_64/os/",
+            "checksum_type": "sha",
+            "env": ["dev", "prod"]
         }
     ]
 
