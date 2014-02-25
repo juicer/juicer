@@ -17,7 +17,7 @@
 
 from juicer.common import Constants
 from juicer.common.Errors import *
-from juicer.common.Repo import Repo
+from juicer.common.Repo import JuicerRepo, PulpRepo
 import juicer.admin
 import juicer.utils
 import juicer.utils.Log
@@ -136,7 +136,7 @@ class JuicerAdmin(object):
             repo_objects_update[env] = []
 
         # All repo defs as Repo objects
-        all_repos = [juicer.common.Repo.Repo(repo['name'], repo_def=repo) for repo in repo_defs]
+        all_repos = [JuicerRepo(repo['name'], repo_def=repo) for repo in repo_defs]
 
         # Detailed information on all existing repos
         #
@@ -148,7 +148,7 @@ class JuicerAdmin(object):
 
         # Use a cache to speed up testing
         # juicer.utils.Log.log_info("BE AWARE: Currently reading repo list from local cache")
-        #existing_repos = juicer.utils.read_json_document('/tmp/repo_list.json')
+        # existing_repos = juicer.utils.read_json_document('/tmp/repo_list.json')
 
         for repo in all_repos:
             # 'env' is all environments if: 'env' is not defined; 'env' is an empty list
@@ -170,11 +170,14 @@ class JuicerAdmin(object):
                 for env in repo['env']:
                     if juicer.utils.repo_exists_in_repo_list(repo, existing_repos[env]):
                         # Does the repo def match what exists already?
-                        if juicer.utils.repo_def_matches_reality(repo, env):
-                            juicer.utils.Log.log_notice("Repo %s already exists and reality matches the definition", repo['name'])
-                        else:
+                        pulp_repo = self.show_repo(repo_names=[repo['name']], envs=[env])
+                        #juicer.utils.Log.log_debug(str(pulp_repo))
+                        repo_diff = juicer.utils.repo_def_matches_reality(repo, pulp_repo[env][0])
+                        if not repo_diff.diff()['distributor'] or repo_diff.diff()['importer']:
                             juicer.utils.Log.log_notice("Repo %s already exists, but reality does not the definition", repo['name'])
-                            repo['reality_check_in_env'].append(env)
+                            repo['reality_check_in_env'].append((env, repo_diff))
+                        else:
+                            juicer.utils.Log.log_notice("Repo %s already exists and is correct", repo['name'])
                     else:
                         # The repo does not exist yet in reality
                         juicer.utils.Log.log_notice("Need to create %s in %s", repo['name'], env)
@@ -186,9 +189,8 @@ class JuicerAdmin(object):
 
                 # We we need to update the repo anywhere?
                 if repo['reality_check_in_env']:
-                    for env in repo['reality_check_in_env']:
+                    for env,diff in repo['reality_check_in_env']:
                         repo_objects_update[env].append(repo)
-
 
         return (repo_objects_create, repo_objects_update)
 
@@ -405,7 +407,7 @@ class JuicerAdmin(object):
                 if _r.status_code == Constants.PULP_GET_OK:
                     juicer.utils.Log.log_debug("found repo: %s", repo_name)
                     repo = juicer.utils.load_json_str(_r.content)
-                    repo_object = Repo(repo_name, env, pulp_def=repo)
+                    repo_object = PulpRepo(repo_name, env, repo_def=repo)
                     repo_objects[env].append(repo_object)
                 else:
                     if _r.status_code == Constants.PULP_GET_NOT_FOUND:

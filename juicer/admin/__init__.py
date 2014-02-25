@@ -34,14 +34,12 @@ def import_repo(args):
 
         juicer.utils.Log.log_info("NOOP: Would have updated repos with definitions:")
         juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_update, indent=4, cls=juicer.common.Repo.RepoEncoder))
-
     else:
         for repo in to_create:
             pulp.create_repo(repo_name=repo['name'],
                              feed=repo['feed'],
                              envs=repo['missing_in_env'],
                              checksum_type=repo['checksum_type'])
-            #juicer.utils.Log.log_info("Would have created %s in %s", repo['name'], ", ".join(repo['missing_in_env']))
 
         for env,repos in to_update.iteritems():
             for repo in repos:

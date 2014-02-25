@@ -26,6 +26,7 @@ import cStringIO
 import fnmatch
 import juicer.utils.Log
 import juicer.utils.Remotes
+import juicer.common.Repo
 import os
 import os.path
 import rpm
@@ -812,6 +813,11 @@ def repo_in_defined_envs(repo, all_envs):
     else:
         return True
 
-def repo_def_matches_reality(repo_def, existing_repo):
-    juicer.utils.Log.log_notice("REPO_DEF_MATCHES_REALITY currently hard coded to return False")
-    return False
+def repo_def_matches_reality(juicer_def, pulp_def):
+    """Compare a juicer repo def with a given pulp definition. Compute and
+    return the update necessary to make `pulp_def` match `juicer_def`.
+
+    `juicer_def` - A JuicerRepo() object representing a juicer repository
+    `pulp_def` - A PulpRepo() object representing a pulp repository
+    """
+    return juicer.common.Repo.RepoDiff(juicer_repo=juicer_def, pulp_repo=pulp_def)

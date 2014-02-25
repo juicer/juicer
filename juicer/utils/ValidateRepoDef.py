@@ -98,7 +98,7 @@ def is_valid_repo_name(repo_name):
         return False
 
 def is_string(str):
-    return type(str) == str
+    return (type(str) == str) or (type(str) == unicode)
 
 def validate_definitions(defs):
     for definition in defs:
