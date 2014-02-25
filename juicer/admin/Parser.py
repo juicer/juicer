@@ -67,14 +67,10 @@ class Parser(object):
         # Create the 'repo create' sub-parser
         parser_repo_create = subparser_repo.add_parser('create',
                                                        help='Create pulp repository',
-                                                       usage='%(prog)s REPONAME { [--arch ARCH] [--feed FEED] [--checksum-type CHECKSUM-TYPE] | --from-file JSON_DEFS} [--in ENV [...]]')
+                                                       usage='%(prog)s REPONAME [--feed FEED] [--checksum-type CHECKSUM-TYPE] [--in ENV [...]]')
 
         parser_repo_create.add_argument('name', metavar='name',
                                         help='The name of your repo')
-
-        parser_repo_create.add_argument('--arch', metavar='arch',
-                                        default='noarch',
-                                        help='The architecture of your repo (default: noarch)')
 
         parser_repo_create.add_argument('--feed', metavar='feed',
                                         default=None,
@@ -84,10 +80,6 @@ class Parser(object):
                                         default='sha256',
                                         choices=['sha26', 'sha'],
                                         help='Checksum-type used for meta-data generation (one of: sha26, sha)')
-
-        parser_repo_create.add_argument('--noop', '--dry-run', '-n',
-                                        default=False, action='store_true',
-                                        help="Don't create the repos, just show what would have happened")
 
         parser_repo_create.add_argument('--in', metavar='envs',
                                         nargs="+",
@@ -106,10 +98,10 @@ instructions on how to write a proper repo def file."""
 
         parser_repo_import = subparser_repo.add_parser('import',
                                                        help='Create pulp repositories from an imported definition',
-                                                       usage='%(prog)s --from-file JSON_DEFS [--noop]',
+                                                       usage='%(prog)s FROM_FILE [--noop]',
                                                        description=import_description)
 
-        parser_repo_import.add_argument('--from-file', metavar='json_defs', default=None,
+        parser_repo_import.add_argument('from_file', default=None,
                                         help='Repository definition file in JSON format')
 
         parser_repo_import.add_argument('--noop', '--dry-run', '-n',

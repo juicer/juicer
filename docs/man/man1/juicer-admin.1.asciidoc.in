@@ -46,15 +46,11 @@ This section describes all of the __REPO__ subcommands.
 
 REPO CREATE
 -----------
-usage: juicer-admin repo create 'REPONAME' [--arch 'ARCH'] [--feed 'FEED'] [--checksum-type 'TYPE']
+usage: juicer-admin repo create 'REPONAME' [--feed 'FEED'] [--checksum-type 'TYPE']
 
 *REPONAME*::
 The name of the repository to be created. Only alphanumeric, ., -, and
 _ allowed. As a regular expression: *([a-zA-Z0-9-_.]+)*
-
-*--arch=*'ARCH'::
-Optional. Repository package architecture. Defaults to *noarch*. Other
-values might be: *i386*, *i686*, or *x86_64*.
 
 *--feed=*'FEED'::
 Optional. A feed url from which to synchronize yum repository packages.
@@ -66,12 +62,12 @@ Defaults to *sha256*, also valid is *sha*.
 
 REPO IMPORT
 -----------
-usage: juicer-admin repo import --from-file 'REPO_DEF' [--noop]
+usage: juicer-admin repo import 'REPO_DEF' [--noop]
 
 Create repositories matching the definitions in the repo def
 file. Repositories which already exist will be updated.
 
-*--from-file=*'REPO_DEF'::
+*REPO_DEF*::
 
 Repository definition file in JSON format. See __REPO DEF FORMAT__
 (below) for a quick review of the syntax. See the docs online or in

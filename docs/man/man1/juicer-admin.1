@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 02/19/2014
+.\"      Date: 02/25/2014
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.7.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "02/19/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "02/25/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -64,21 +64,12 @@ in\&. In
 This section describes all of the \fIREPO\fR subcommands\&.
 .SH "REPO CREATE"
 .sp
-usage: juicer\-admin repo create \fIREPONAME\fR [\-\-arch \fIARCH\fR] [\-\-feed \fIFEED\fR] [\-\-checksum\-type \fITYPE\fR]
+usage: juicer\-admin repo create \fIREPONAME\fR [\-\-feed \fIFEED\fR] [\-\-checksum\-type \fITYPE\fR]
 .PP
 \fBREPONAME\fR
 .RS 4
 The name of the repository to be created\&. Only alphanumeric, \&., \-, and _ allowed\&. As a regular expression:
 \fB([a\-zA\-Z0\-9\-_\&.]+)\fR
-.RE
-.PP
-\fB\-\-arch=\fR\fIARCH\fR
-.RS 4
-Optional\&. Repository package architecture\&. Defaults to
-\fBnoarch\fR\&. Other values might be:
-\fBi386\fR,
-\fBi686\fR, or
-\fBx86_64\fR\&.
 .RE
 .PP
 \fB\-\-feed=\fR\fIFEED\fR
@@ -94,11 +85,11 @@ Optional\&. The checksum type to use when generating meta\-data\&. Defaults to
 .RE
 .SH "REPO IMPORT"
 .sp
-usage: juicer\-admin repo import \-\-from\-file \fIREPO_DEF\fR [\-\-noop]
+usage: juicer\-admin repo import \fIREPO_DEF\fR [\-\-noop]
 .sp
 Create repositories matching the definitions in the repo def file\&. Repositories which already exist will be updated\&.
 .PP
-\fB\-\-from\-file=\fR\fIREPO_DEF\fR
+\fBREPO_DEF\fR
 .RS 4
 Repository definition file in JSON format\&. See
 \fIREPO DEF FORMAT\fR
