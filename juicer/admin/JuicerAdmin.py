@@ -170,8 +170,12 @@ class JuicerAdmin(object):
                         #juicer.utils.Log.log_debug(str(pulp_repo))
                         repo_diff = juicer.utils.repo_def_matches_reality(repo, pulp_repo[env][0])
                         if not repo_diff.diff()['distributor'] or repo_diff.diff()['importer']:
-                            juicer.utils.Log.log_notice("Repo %s already exists, but reality does not the definition", repo['name'])
-                            repo['reality_check_in_env'].append((env, repo_diff))
+                            juicer.utils.Log.log_notice("Repo %s already exists in %s, but reality does not the definition", repo['name'], env)
+                            # TODO: Need a better way to track this
+                            # information. The repo_objects_create
+                            # datastructure gets pretty messy and
+                            # duplicates a lot of information.
+                            repo['reality_check_in_env'].append((env, repo_diff, pulp_repo[env][0]))
                         else:
                             juicer.utils.Log.log_notice("Repo %s already exists and is correct", repo['name'])
                     else:
@@ -185,10 +189,55 @@ class JuicerAdmin(object):
 
                 # We we need to update the repo anywhere?
                 if repo['reality_check_in_env']:
-                    for env,diff in repo['reality_check_in_env']:
+                    for env,repo_diff,pulp_repo in repo['reality_check_in_env']:
                         repo_objects_update[env].append(repo)
 
+        """repo_objects_update looks like this:
+
+        {'environment': [repo_update_spec, ...]}
+
+        repo_update_spec :: [env, repo_diff_spec, pulp_repo]
+
+        env :: environment to apply diff to
+
+        repo_diff_spec :: {
+            'distributor': {'distributor_config': {PARAMETERS_TO_UPDATE: VALUES}},
+            'importer': {'importer_config': {PARAMETERS_TO_UPDATE: VALUES}
+            }
+        }
+
+        pulp_repo :: Json serialization of a repo as returned from pulp (or juicer-admin repo show --json)
+        """
         return (repo_objects_create, repo_objects_update)
+
+
+    def _update_repo(self, juicer_repo, pulp_repo, env, repo_diff, query='/repositories/'):
+        """
+        `from_file` - JSON file of repo definitions
+        `noop` - Boolean, if true don't actually create/update repos, just show what would have happened
+
+        https://pulp-dev-guide.readthedocs.org/en/pulp-2.3/integration/rest-api/repo/cud.html#update-a-distributor-associated-with-a-repository
+        https://pulp-dev-guide.readthedocs.org/en/pulp-2.3/integration/rest-api/repo/cud.html#update-an-importer-associated-with-a-repository
+
+        Distributor update:
+        Method: PUT
+        Path: /pulp/api/v2/repositories/<repo_id>/distributors/<distributor_id>/
+
+        Importer update:
+        Method: PUT
+        Path: /pulp/api/v2/repositories/<repo_id>/importers/<importer_id>/
+        """
+        repo_id = "%s-%s" % (repo_name, env)
+
+
+        _r = self.connectors[env].post(query, data)
+        if _r.status_code == Constants.PULP_POST_CREATED:
+            juicer.utils.Log.log_info("created user `%s` with login `%s` in %s",
+                                      (user_name, login, env))
+        else:
+            _r.raise_for_status()
+        return True
+
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """

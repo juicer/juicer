@@ -32,8 +32,19 @@ def import_repo(args):
         juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
         juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
 
-        juicer.utils.Log.log_info("NOOP: Would have updated repos with definitions:")
-        juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_update, indent=4, cls=juicer.common.Repo.RepoEncoder))
+        # juicer.utils.Log.log_info("NOOP: Would have updated repos with definitions:")
+        # juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_update, indent=4, cls=juicer.common.Repo.RepoEncoder))
+
+        for env,repos in to_update.iteritems():
+            for repo in repos:
+                juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
+                repo_diff_specs = repo['reality_check_in_env']
+                for diff_spec in repo_diff_specs:
+                    if diff_spec[0] == env:
+                        this_env_diff_spec = diff_spec
+                        juicer.utils.Log.log_info("    %s", juicer.utils.create_json_str(this_env_diff_spec[1], indent=4, cls=juicer.common.Repo.RepoEncoder))
+
+
     else:
         for repo in to_create:
             pulp.create_repo(repo_name=repo['name'],
@@ -43,7 +54,11 @@ def import_repo(args):
 
         for env,repos in to_update.iteritems():
             for repo in repos:
-                juicer.utils.Log.log_info("Would have updated %s-%s", repo, env)
+                juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
+                repo_diff_specs = repo['reality_check_in_env']
+                for diff_spec in repo_diff_specs:
+                    if diff_spec[0] == env:
+                        pulp._update_repo(repo, diff_spec[2], env, diff_spec[1])
 
 
 def create_user(args):
