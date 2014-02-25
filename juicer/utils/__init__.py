@@ -821,3 +821,7 @@ def repo_def_matches_reality(juicer_def, pulp_def):
     `pulp_def` - A PulpRepo() object representing a pulp repository
     """
     return juicer.common.Repo.RepoDiff(juicer_repo=juicer_def, pulp_repo=pulp_def)
+
+
+# def filter_distributors_for(what_for, distributors):
+#     """Filter a pulp repo's distributors to find a specific type of distributor"""

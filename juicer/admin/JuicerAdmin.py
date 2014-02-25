@@ -227,17 +227,40 @@ class JuicerAdmin(object):
         Method: PUT
         Path: /pulp/api/v2/repositories/<repo_id>/importers/<importer_id>/
         """
-        repo_id = "%s-%s" % (repo_name, env)
+        repo_id = "%s-%s" % (juicer_repo['name'], env)
+        distributor_id = "yum_distributor"
+        importer_id = "yum_importer"
+        distributor_diff = repo_diff.diff()['distributor']
+        importer_diff = repo_diff.diff()['importer']
 
+        distributor_query = query + "%s/distributors/%s/" % (repo_id, distributor_id)
+        importer_query = query + "%s/importers/%s/" % (repo_id, importer_id)
 
-        _r = self.connectors[env].post(query, data)
-        if _r.status_code == Constants.PULP_POST_CREATED:
-            juicer.utils.Log.log_info("created user `%s` with login `%s` in %s",
-                                      (user_name, login, env))
+        ##############################################################
+        # Importer update
+        _r = self.connectors[env].put(distributor_query, distributor_diff)
+        if _r.status_code == Constants.PULP_PUT_OK:
+            juicer.utils.Log.log_notice("Update request accepted for %s", repo_id)
+        elif _r.status_code == Constants.PULP_PUT_CONFLICT:
+            juicer.utils.Log.log_debug(str(_r.content))
+        elif _r.status_code == Constants.PULP_PUT_NOT_FOUND:
+             juicer.utils.Log.log_debug(str(_r.content))
         else:
             _r.raise_for_status()
-        return True
 
+        ##############################################################
+        # Distributor update
+        _r = self.connectors[env].put(importer_query, importer_diff)
+        if _r.status_code == Constants.PULP_PUT_OK:
+            juicer.utils.Log.log_notice("Update request accepted for %s", repo_id)
+        elif _r.status_code == Constants.PULP_PUT_CONFLICT:
+            juicer.utils.Log.log_debug(str(_r.content))
+        elif _r.status_code == Constants.PULP_PUT_NOT_FOUND:
+             juicer.utils.Log.log_debug(str(_r.content))
+        else:
+            _r.raise_for_status()
+
+        return True
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """

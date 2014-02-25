@@ -29,21 +29,27 @@ def import_repo(args):
     (to_create, to_update) = pulp.import_repo(args.from_file, args.noop)
 
     if args.noop:
-        juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
-        juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
-
-        # juicer.utils.Log.log_info("NOOP: Would have updated repos with definitions:")
-        # juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_update, indent=4, cls=juicer.common.Repo.RepoEncoder))
+        if to_create:
+            juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
+            juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
 
         for env,repos in to_update.iteritems():
             for repo in repos:
-                juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
+                debug_msg = None
                 repo_diff_specs = repo['reality_check_in_env']
                 for diff_spec in repo_diff_specs:
+                    # [0] = env, [1] = RepoDiff, [2] = PulpRepo
                     if diff_spec[0] == env:
                         this_env_diff_spec = diff_spec
-                        juicer.utils.Log.log_info("    %s", juicer.utils.create_json_str(this_env_diff_spec[1], indent=4, cls=juicer.common.Repo.RepoEncoder))
+                        repo_diff = diff_spec[1]
+                        # "{'distributor': {'distributor_config': {}}, 'importer': {'importer_config': {}}}"
+                        # Does the diff contain anything?
+                        if repo_diff.diff()['distributor']['distributor_config'] or repo_diff.diff()['importer']['importer_config']:
+                            debug_msg = "    %s" % juicer.utils.create_json_str(this_env_diff_spec[1], indent=4, cls=juicer.common.Repo.RepoEncoder)
 
+                if debug_msg:
+                    juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
+                    juicer.utils.Log.log_info(debug_msg)
 
     else:
         for repo in to_create:
@@ -54,11 +60,13 @@ def import_repo(args):
 
         for env,repos in to_update.iteritems():
             for repo in repos:
-                juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
+                juicer.utils.Log.log_info("Updated %s-%s with:", repo['name'], env)
                 repo_diff_specs = repo['reality_check_in_env']
                 for diff_spec in repo_diff_specs:
                     if diff_spec[0] == env:
-                        pulp._update_repo(repo, diff_spec[2], env, diff_spec[1])
+                        repo_diff = diff_spec[1]
+                        if repo_diff.diff()['distributor']['distributor_config'] or repo_diff.diff()['importer']['importer_config']:
+                            pulp._update_repo(repo, diff_spec[2], env, diff_spec[1])
 
 
 def create_user(args):
@@ -96,7 +104,7 @@ def show_repo(args):
             return False
 
         # Human readable table-style output by default
-        rows = [['Repo', 'Env', 'RPMs', 'SRPMs', 'Checksum']]
+        rows = [['Repo', 'Env', 'RPMs', 'SRPMs', 'Checksum', 'Feed']]
         for env,repos in repo_objects.iteritems():
             # 'repos' contains a list of hashes
             for repo in repos:
@@ -104,8 +112,9 @@ def show_repo(args):
                 repo_name = repo['name']
                 repo_rpm_count = repo['rpm_count']
                 repo_srpm_count = repo['srpm_count']
-                repo_checksum = repo['checksum']
-                rows.append([repo_name, env, repo_rpm_count, repo_srpm_count, repo_checksum])
+                repo_checksum = repo['checksum_type']
+                repo_feed = repo['feed']
+                rows.append([repo_name, env, repo_rpm_count, repo_srpm_count, repo_checksum, str(repo_feed)])
 
         print juicer.utils.table(rows)
 

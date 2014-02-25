@@ -44,8 +44,10 @@ PULP_POST_CONFLICT = 409
 ######################################################################
 # PUT
 PULP_PUT_OK = 200
+PULP_PUT_ACCEPTED = 202
 PULP_PUT_BAD_REQUEST = 400
 PULP_PUT_NOT_FOUND = 404
+PULP_PUT_CONFLICT = 409
 
 ######################################################################
 # DELETE
