@@ -60,13 +60,20 @@ def import_repo(args):
 
         for env,repos in to_update.iteritems():
             for repo in repos:
-                juicer.utils.Log.log_info("Updated %s-%s with:", repo['name'], env)
                 repo_diff_specs = repo['reality_check_in_env']
                 for diff_spec in repo_diff_specs:
                     if diff_spec[0] == env:
                         repo_diff = diff_spec[1]
                         if repo_diff.diff()['distributor']['distributor_config'] or repo_diff.diff()['importer']['importer_config']:
-                            pulp._update_repo(repo, diff_spec[2], env, diff_spec[1])
+                            try:
+                                pulp._update_repo(repo, diff_spec[2], env, diff_spec[1])
+                            except Exception:
+                                juicer.utils.Log.log_error("Unable to update %s-%s", repo['name'], env)
+                            else:
+                                juicer.utils.Log.log_info("Updated %s-%s with:", repo['name'], env)
+                                debug_msg = "    %s\n" % juicer.utils.create_json_str(repo_diff.diff(), indent=4, cls=juicer.common.Repo.RepoEncoder)
+                                juicer.utils.Log.log_info(debug_msg)
+
 
 
 def create_user(args):
