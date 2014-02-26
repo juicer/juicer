@@ -29,9 +29,13 @@ def import_repo(args):
     (to_create, to_update) = pulp.import_repo(args.from_file, args.noop)
 
     if args.noop:
+        num_to_create = 0
+        num_to_update = 0
         if to_create:
             juicer.utils.Log.log_info("NOOP: Would have created repos with definitions:")
             juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(to_create, indent=4, cls=juicer.common.Repo.RepoEncoder))
+            for repo in to_create:
+                num_to_create += len(repo['missing_in_env'])
 
         for env,repos in to_update.iteritems():
             for repo in repos:
@@ -41,8 +45,8 @@ def import_repo(args):
                     # [0] = env, [1] = RepoDiff, [2] = PulpRepo
                     if diff_spec[0] == env:
                         this_env_diff_spec = diff_spec
-                        repo_diff = diff_spec[1]
                         # "{'distributor': {'distributor_config': {}}, 'importer': {'importer_config': {}}}"
+                        repo_diff = diff_spec[1]
                         # Does the diff contain anything?
                         if repo_diff.diff()['distributor']['distributor_config'] or repo_diff.diff()['importer']['importer_config']:
                             debug_msg = "    %s" % juicer.utils.create_json_str(this_env_diff_spec[1], indent=4, cls=juicer.common.Repo.RepoEncoder)
@@ -50,6 +54,9 @@ def import_repo(args):
                 if debug_msg:
                     juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
                     juicer.utils.Log.log_info(debug_msg)
+                    num_to_update += 1
+
+        juicer.utils.exit_with_code(num_to_create + num_to_update)
 
     else:
         for repo in to_create:

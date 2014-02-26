@@ -823,5 +823,6 @@ def repo_def_matches_reality(juicer_def, pulp_def):
     return juicer.common.Repo.RepoDiff(juicer_repo=juicer_def, pulp_repo=pulp_def)
 
 
-# def filter_distributors_for(what_for, distributors):
-#     """Filter a pulp repo's distributors to find a specific type of distributor"""
+def exit_with_code(code):
+    """Exit with a specific return code"""
+    sys.exit(code)
