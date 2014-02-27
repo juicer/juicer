@@ -272,9 +272,9 @@ class JuicerAdmin(object):
         Note that this has undefined results should a repo exist with
         different configurations in different environments.
         """
-        #all_envs = juicer.utils.get_environments()
-        all_envs = ['re']
-        all_pulp_repo_names = self.list_repos(envs=['re'])
+        all_envs = juicer.utils.get_environments()
+        #all_envs = ['re']
+        all_pulp_repo_names = self.list_repos(envs=all_envs)
         all_pulp_repo_names_uniqued = set()
         num_repos = 0
 
