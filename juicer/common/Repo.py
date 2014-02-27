@@ -105,6 +105,15 @@ class PulpRepo(Repo):
                     self.spec['feed'] = importer['config']['feed']
         juicer.utils.Log.log_debug("finished parsing pulp definition")
 
+    def to_juicer_repo(self):
+        """Returns a JuicerRepo() object representing this pulp repo"""
+        repo_def = {}
+        defaults = juicer.common.Constants.REPO_DEF_DEFAULTS
+        for key in juicer.common.Constants.REPO_DEF_OPT_KEYS:
+            repo_def[key] = self.spec.get(key, defaults[key])
+            juicer.utils.Log.log_debug("Defined %s as %s" % (key, str(self[key])))
+        return JuicerRepo(self['name'], repo_def=repo_def)
+
 
 class RepoDiff(object):
     """Calculate the difference of a juicer repo and a pulp repo."""

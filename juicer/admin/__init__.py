@@ -23,6 +23,12 @@ def create_repo(args):
     pulp.create_repo(args.arch, args.name, args.feed, args.envs, args.checksum_type)
 
 
+def export_repo(args):
+    pulp = ja(args)
+    export_list = pulp.export_repos(args.serial)
+    print export_list
+
+
 def import_repo(args):
     pulp = ja(args)
     # Get our TODO specs from juicer-admin

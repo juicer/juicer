@@ -111,6 +111,27 @@ instructions on how to write a proper repo def file."""
         parser_repo_import.set_defaults(ja=juicer.admin.import_repo)
 
         ##################################################################
+        # Create the 'repo export' sub-parser
+
+        import_description = """This dumps a standard juicer format repository definition for all
+of you repos. Note that this may take a long time to finish."""
+
+        parser_repo_export = subparser_repo.add_parser('export',
+                                                       help='Export pulp repositories into a juicer repo def file.',
+                                                       usage='%(prog)s',
+                                                       description=import_description)
+
+        parser_repo_export.add_argument('--out', '-o',
+                                        default="repodefs-%s.json" % juicer.utils.iso_date_str(),
+                                        help="File to write the output to. Use a single hypen, -, for stdout. Default is repodefs-ISO8601_FORMAT.json (YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM])")
+
+        parser_repo_export.add_argument('--serial', '-s',
+                                        default=False, action='store_true',
+                                        help="Do the lookups in serial, rather than in parallel.")
+
+        parser_repo_export.set_defaults(ja=juicer.admin.export_repo)
+
+        ##################################################################
         # Create the 'user create' sub-parser
         parser_user_create = subparser_user.add_parser('create',
                                                        help='Create pulp user',

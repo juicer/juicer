@@ -23,6 +23,7 @@ from functools import wraps
 from juicer.utils.ProgressBar import ProgressBar
 import ConfigParser
 import cStringIO
+import datetime
 import fnmatch
 import juicer.utils.Log
 import juicer.utils.Remotes
@@ -826,3 +827,10 @@ def repo_def_matches_reality(juicer_def, pulp_def):
 def exit_with_code(code):
     """Exit with a specific return code"""
     sys.exit(code)
+
+def iso_date_str():
+    return datetime.datetime.now().isoformat()
+
+def chunk_list(l, n):
+    """Return `n` size lists from a given list `l`"""
+    return [l[i:i+n] for i in range(0, len(l), n)]

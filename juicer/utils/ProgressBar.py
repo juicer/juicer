@@ -21,12 +21,14 @@ import juicer.utils.Log
 
 
 class ProgressBar(object):
-    def __init__(self, maxval):
+    def __init__(self, maxval, widgets=[Bar(), Percentage()]):
         if self.is_correct_log_level():
-            widgets = [Bar(), Percentage()]
             self.pbar = progressbar.ProgressBar(widgets=widgets, maxval=maxval).start()
 
     def update(self, val):
+        """Note that subsequent calls to this method should provide larger and
+larger values. Really this method should be something like 'set',
+indicating what you want to set the number of items processed to"""
         if self.is_correct_log_level():
             self.pbar.update(val)
 

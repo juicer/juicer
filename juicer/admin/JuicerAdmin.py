@@ -22,9 +22,13 @@ import juicer.admin
 import juicer.utils
 import juicer.utils.Log
 import juicer.utils.ValidateRepoDef
+import juicer.admin.ThreaddedQuery
+from juicer.utils.ProgressBar import ProgressBar as JuiceBar
 import re
 import json
-
+import threading
+from multiprocessing.pool import ThreadPool
+import progressbar
 
 class JuicerAdmin(object):
     def __init__(self, args):
@@ -261,6 +265,63 @@ class JuicerAdmin(object):
             _r.raise_for_status()
 
         return True
+
+    def export_repos(self, serial=False):
+        """Dump JuicerRepo() objects for all repos in all environments.
+
+        Note that this has undefined results should a repo exist with
+        different configurations in different environments.
+        """
+        #all_envs = juicer.utils.get_environments()
+        all_envs = ['re']
+        all_pulp_repo_names = self.list_repos(envs=['re'])
+        all_pulp_repo_names_uniqued = set()
+        num_repos = 0
+
+        # Track name of all processed repos. Update when we've found
+        # all environments a PulpRepo lives in.
+        repos_processed = []
+
+        for env, repos in all_pulp_repo_names.iteritems():
+            juicer.utils.Log.log_debug("Uniqued environment: %s with %s repos", env, int(len(repos)))
+            all_pulp_repo_names_uniqued.update(set(repos))
+
+        num_repos += len(all_pulp_repo_names_uniqued)
+
+        widgets = ["Exporting: ", progressbar.Percentage(), " ", "(", progressbar.SimpleProgress(), ") ", progressbar.Timer()]
+        progress_bar = JuiceBar(num_repos, widgets)
+
+        # Hacky way to get around not easily being able to pass
+        # multiple arguments to a function in a multiprocessing pool
+        lookup_objects = []
+
+        for repo in all_pulp_repo_names_uniqued:
+            lookup_args = juicer.admin.ThreaddedQuery.LookupObject()
+            setattr(lookup_args, 'progress_bar', progress_bar)
+            setattr(lookup_args, 'all_pulp_repo_names', all_pulp_repo_names)
+            setattr(lookup_args, 'all_envs', all_envs)
+            setattr(lookup_args, 'ja', self)
+            setattr(lookup_args, 'pulp_repo', repo)
+            setattr(lookup_args, 'repos_processed', repos_processed)
+            lookup_objects.append(lookup_args)
+
+        # TODO: Add the serial/concurrent logic here
+
+        try:
+            p = ThreadPool()
+            p.map(juicer.admin.ThreaddedQuery.concurrent_pulp_lookup, lookup_objects)
+        except KeyboardInterrupt, e:
+            p.close()
+            p.terminate()
+        finally:
+            p.close()
+            p.join()
+
+        # XXX: End serial/concurrent logic
+
+
+        progress_bar.finish()
+        return repos_processed
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """
