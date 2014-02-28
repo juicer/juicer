@@ -125,6 +125,13 @@ of you repos. Note that this may take a long time to finish."""
                                         default="repodefs-%s.json" % juicer.utils.iso_date_str(),
                                         help="File to write the output to. Use a single hypen, -, for stdout. Default is repodefs-ISO8601_FORMAT.json (YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM])")
 
+        parser_repo_export.add_argument('--in', metavar='envs',
+                                        nargs="+",
+                                        dest='envs',
+                                        default=self._default_envs,
+                                        help='The environments in which to export repo definitions.')
+
+
         parser_repo_export.add_argument('--serial', '-s',
                                         default=False, action='store_true',
                                         help="Do the lookups in serial, rather than in parallel.")

@@ -25,7 +25,7 @@ def create_repo(args):
 
 def export_repo(args):
     pulp = ja(args)
-    export_list = pulp.export_repos(args.serial)
+    export_list = pulp.export_repos(args.serial, args.envs)
     print export_list
 
 
