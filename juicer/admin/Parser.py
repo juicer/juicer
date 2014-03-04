@@ -131,6 +131,9 @@ of you repos. Note that this may take a long time to finish."""
                                         default=self._default_envs,
                                         help='The environments in which to export repo definitions.')
 
+        parser_repo_export.add_argument('--pretty', '-p',
+                                        default=False, action='store_true',
+                                        help="Pretty-print the export.")
 
         parser_repo_export.add_argument('--serial', '-s',
                                         default=False, action='store_true',

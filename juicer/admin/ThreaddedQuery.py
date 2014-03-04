@@ -56,7 +56,7 @@ def concurrent_pulp_lookup(lookup_object):
     # likely prod, which is most likely the desired state
     last_env = envs[-1]
     juicer.utils.Log.log_debug("The 'last_env' for %s is %s", pulp_repo, last_env)
-    _pulp_repo = ja.show_repo([pulp_repo], envs=[last_env])
+    _pulp_repo = ja.show_repo([pulp_repo], envs=[last_env])[last_env][0]
     _pulp_repo['env'] = envs
 
     PROCESSED_LOCK.acquire()

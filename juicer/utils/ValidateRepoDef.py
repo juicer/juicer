@@ -57,7 +57,9 @@ def is_dict(ds):
     return type(ds) == dict
 
 def is_valid_checksum(cs):
-    return cs in juicer.common.Constants.REPO_DEF_CHECKSUM_TYPES
+    legacy = juicer.common.Constants.REPO_DEF_LEGACY_CHECKSUM_TYPES
+    current = juicer.common.Constants.REPO_DEF_CHECKSUM_TYPES
+    return cs in legacy or cs in current
 
 def has_valid_keys(ds):
     keys = ds.keys()
@@ -81,7 +83,10 @@ def has_valid_keys(ds):
                 pass
 
         if 'feed' in keys:
-            if not is_string(ds['feed']):
+            if not ds['feed']:
+                # Feed is undefined. Which is OK!
+                pass
+            elif not is_string(ds['feed']):
                 raise JuicerRepoDefError("%s is not a string" % type(ds['feed']))
             else:
                 pass

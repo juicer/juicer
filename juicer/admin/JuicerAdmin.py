@@ -336,9 +336,9 @@ class JuicerAdmin(object):
 
         # XXX: End serial/concurrent logic
 
-
         progress_bar.finish()
-        return repos_processed
+        juicer_repos = [r.to_juicer_repo() for r in repos_processed]
+        return juicer_repos
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """

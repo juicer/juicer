@@ -834,3 +834,10 @@ def iso_date_str():
 def chunk_list(l, n):
     """Return `n` size lists from a given list `l`"""
     return [l[i:i+n] for i in range(0, len(l), n)]
+
+def debug_log_repo(repo):
+    """Log to DEBUG level a Repo (or subclass) pretty-printed"""
+    ds_str = juicer.utils.create_json_str(repo,
+                                          indent=4,
+                                          cls=juicer.common.Repo.RepoEncoder)
+    juicer.utils.Log.log_debug(ds_str)

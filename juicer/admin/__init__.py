@@ -17,6 +17,8 @@
 
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 import juicer.utils
+from datetime import datetime as dt
+import sys
 
 def create_repo(args):
     pulp = ja(args)
@@ -26,8 +28,19 @@ def create_repo(args):
 def export_repo(args):
     pulp = ja(args)
     export_list = pulp.export_repos(args.serial, args.envs)
-    juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(export_list, indent=4, cls=juicer.common.Repo.RepoEncoder))
+    fmt_args = {}
+    fmt_args['cls'] = juicer.common.Repo.RepoEncoder
+    if args.pretty:
+        fmt_args['indent'] = 4
 
+    if args.out == '-':
+        writer = sys.stdout
+    else:
+        writer = open(args.out, 'w')
+
+    export_str = juicer.utils.create_json_str(export_list, **fmt_args)
+    writer.write(export_str)
+    writer.flush()
 
 def import_repo(args):
     pulp = ja(args)

@@ -69,8 +69,8 @@ class JuicerRepo(Repo):
     Internal representation of a Juicer repository object
     """
     def _parse_repo_def(self, repo_def):
-        juicer.utils.Log.log_debug("parsing juicer definition")
         self['name'] = repo_def['name']
+        juicer.utils.Log.log_debug("parsing juicer definition for %s", self['name'])
         defaults = juicer.common.Constants.REPO_DEF_DEFAULTS
         for key in juicer.common.Constants.REPO_DEF_OPT_KEYS:
             self[key] = repo_def.get(key, defaults[key])
@@ -83,10 +83,9 @@ class PulpRepo(Repo):
     Internal representation of a Pulp repository object
     """
     def _parse_repo_def(self, repo_def):
-        juicer.utils.Log.log_debug("parsing pulp definition")
-        #juicer.utils.Log.log_debug(juicer.utils.create_json_str(repo_def, indent=4))
         self.spec = repo_def
         self['name'] = repo_def['display_name']
+        juicer.utils.Log.log_debug("parsing pulp definition for %s", self['name'])
         self['rpm_count'] = repo_def.get('content_unit_counts', {}).get('rpm', 0)
         self['srpm_count'] = repo_def.get('content_unit_counts', {}).get('srpm', 0)
         # There's no pretty way to write this that doesn't take up 10 lines of code...
@@ -109,10 +108,11 @@ class PulpRepo(Repo):
         """Returns a JuicerRepo() object representing this pulp repo"""
         repo_def = {}
         defaults = juicer.common.Constants.REPO_DEF_DEFAULTS
+        repo_def['name'] = self['name']
         for key in juicer.common.Constants.REPO_DEF_OPT_KEYS:
             repo_def[key] = self.spec.get(key, defaults[key])
             juicer.utils.Log.log_debug("Defined %s as %s" % (key, str(self[key])))
-        return JuicerRepo(self['name'], repo_def=repo_def)
+        return JuicerRepo(None, repo_def=repo_def)
 
 
 class RepoDiff(object):

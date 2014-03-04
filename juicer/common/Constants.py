@@ -89,3 +89,4 @@ REPO_DEF_DEFAULTS = {
 REPO_DEF_REQ_KEYS = ['name']
 REPO_DEF_OPT_KEYS = ['checksum_type', 'feed', 'env']
 REPO_DEF_CHECKSUM_TYPES = ['sha', 'sha256']
+REPO_DEF_LEGACY_CHECKSUM_TYPES = ['sha1']
