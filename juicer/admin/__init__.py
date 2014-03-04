@@ -22,7 +22,7 @@ import sys
 
 def create_repo(args):
     pulp = ja(args)
-    pulp.create_repo(args.arch, args.name, args.feed, args.envs, args.checksum_type)
+    pulp.create_repo(args.name, args.feed, args.envs, args.checksum_type)
 
 
 def export_repo(args):
