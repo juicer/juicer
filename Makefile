@@ -192,7 +192,7 @@ koji: srpm
 test:
 	. ./hacking/setup-env
 	if [ "$(LOG)" = "true" ]; then \
-		./hacking/tests | tee -a /tmp/juicer_tests.log; \
+		./hacking/tests 2>&1 | tee -a /tmp/juicer_tests.log; \
 		echo "Test results logged to /tmp/juicer_tests.log"; \
 	else \
 		./hacking/tests; \

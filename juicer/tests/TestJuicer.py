@@ -23,7 +23,7 @@ class TestJuicer(unittest.TestCase):
         setup_args = self.aparser.parser.parse_args(\
                 ('repo create %s --in re qa' % self.rname).split())
         pulp_admin = ja(setup_args)
-        mute()(pulp_admin.create_repo)(arch=setup_args.arch,\
+        mute()(pulp_admin.create_repo)(
                 repo_name=setup_args.name, envs=setup_args.envs)
 
     def tearDown(self):
