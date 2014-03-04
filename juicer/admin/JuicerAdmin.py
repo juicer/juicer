@@ -338,7 +338,7 @@ class JuicerAdmin(object):
 
         progress_bar.finish()
         juicer_repos = [r.to_juicer_repo() for r in repos_processed]
-        return juicer_repos
+        return sorted(juicer_repos, key=lambda d: d['name'].lower())
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):
         """

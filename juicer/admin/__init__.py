@@ -92,6 +92,7 @@ def import_repo(args):
                         repo_diff = diff_spec[1]
                         if repo_diff.diff()['distributor']['distributor_config'] or repo_diff.diff()['importer']['importer_config']:
                             try:
+                                # TODO: This could benefit from some concurrency, like how export_repo goes...
                                 pulp._update_repo(repo, diff_spec[2], env, diff_spec[1])
                             except Exception:
                                 juicer.utils.Log.log_error("Unable to update %s-%s", repo['name'], env)
