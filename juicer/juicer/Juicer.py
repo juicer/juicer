@@ -287,7 +287,7 @@ class Juicer(object):
         # those are the API docs for searching
         data = {
                     'criteria': {
-                        'filters': {'name': {'$regex': ".*%s.*" % pkg_name}},
+                        'filters': {'filename': {'$regex': ".*%s.*" % pkg_name}},
                         'sort': [['name', 'ascending']],
                         'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
                     },
