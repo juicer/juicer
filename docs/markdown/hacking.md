@@ -35,9 +35,11 @@ test your connections out by running:
 If you want to generate stats databases usable by the python `Stats`
 class there are two environment variables you can set:
 
-* `JPROFILE` - **required**
+* `JPROFILE` - **required** - Profiling is enabled if this is set to **any** value
 * `JPROFILELOG` - **optional** - The default locations are
   `/tmp/juicer-call-stats` and `/tmp/juicer-admin-call-stats`
+
+Here's an example of how to enable profiling with a custom stats db path:
 
     $ JPROFILE=y JPROFILELOG=/tmp/j.foo juicer-admin repo import --noop ./repo_def_example.json
     [PROFILING ENABLED] Log will be written to /tmp/j.foo
