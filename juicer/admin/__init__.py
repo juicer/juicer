@@ -26,7 +26,7 @@ def create_repo(args):
 def export_repo(args):
     pulp = ja(args)
     export_list = pulp.export_repos(args.serial, args.envs)
-    print export_list
+    juicer.utils.Log.log_info("%s", juicer.utils.create_json_str(export_list, indent=4, cls=juicer.common.Repo.RepoEncoder))
 
 
 def import_repo(args):

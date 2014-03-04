@@ -266,14 +266,14 @@ class JuicerAdmin(object):
 
         return True
 
-    def export_repos(self, serial=False):
+    def export_repos(self, serial=False, envs=[]):
         """Dump JuicerRepo() objects for all repos in all environments.
 
         Note that this has undefined results should a repo exist with
         different configurations in different environments.
         """
-        all_envs = juicer.utils.get_environments()
-        #all_envs = ['re']
+        all_envs = envs
+        juicer.utils.Log.log_notice("Only exporting repos in environment(s): %s", ", ".join(all_envs))
         all_pulp_repo_names = self.list_repos(envs=all_envs)
         all_pulp_repo_names_uniqued = set()
         num_repos = 0
@@ -288,7 +288,15 @@ class JuicerAdmin(object):
 
         num_repos += len(all_pulp_repo_names_uniqued)
 
-        widgets = ["Exporting: ", progressbar.Percentage(), " ", "(", progressbar.SimpleProgress(), ") ", progressbar.Timer()]
+        widgets = [
+            "Exporting: ",
+            progressbar.Percentage(),
+            " ",
+            "(",
+            progressbar.SimpleProgress(),
+            ") ",
+            progressbar.ETA()
+        ]
         progress_bar = JuiceBar(num_repos, widgets)
 
         # Hacky way to get around not easily being able to pass
@@ -308,13 +316,22 @@ class JuicerAdmin(object):
         # TODO: Add the serial/concurrent logic here
 
         try:
+            # Make our thread pool
             p = ThreadPool()
-            p.map(juicer.admin.ThreaddedQuery.concurrent_pulp_lookup, lookup_objects)
+            # Get an AsyncResult object
+            r = p.map_async(juicer.admin.ThreaddedQuery.concurrent_pulp_lookup, lookup_objects)
+            # TODO: We should probably use p.apply_async here to avoid the crappy lookup_objects hack
+
+            while not r.ready():
+                r.wait(1)
         except KeyboardInterrupt, e:
-            p.close()
+            juicer.utils.Log.log_error("User pressed ^C during repo export")
+            juicer.utils.Log.log_error("Terminating %s worker threads and then exiting", len(p._pool))
+            # Prevents any more tasks from being submitted to the
+            # pool. Once all the tasks have been completed the worker
+            # threads will exit.
+            #p.close()
             p.terminate()
-        finally:
-            p.close()
             p.join()
 
         # XXX: End serial/concurrent logic

@@ -30,10 +30,10 @@ def main():
 
 if __name__ == '__main__':
     try:
-        if os.environ['JPROFILE']:
+        if os.getenv('JPROFILE', None):
             import cProfile
             import juicer.utils
-            profile_log = os.environ.get('JPROFILELOG', '/tmp/juicer-admin-call-stats')
+            profile_log = os.getenv('JPROFILELOG', '/tmp/juicer-admin-call-stats')
             juicer.utils.print_stderr("[PROFILING ENABLED] Log will be written to %s\n" % profile_log)
             cProfile.run('main()', profile_log)
         else:
