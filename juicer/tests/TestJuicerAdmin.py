@@ -2,7 +2,7 @@
 import unittest
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pmoney
-from juicer.utils import mute, get_login_info, get_environments, create_json_str
+from juicer.utils import mute, get_login_info, get_environments
 import juicer.common.Repo
 
 
@@ -19,7 +19,7 @@ class TestJuicerAdmin(unittest.TestCase):
                     # remove repo
                     self.connectors[env].delete('/repositories/test-repo-456/')
 
-        super(__init__)
+        super(TestJuicerAdmin, self).__init__()
 
     def setUp(self):
         self.parser = pmoney()

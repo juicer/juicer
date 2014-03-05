@@ -99,7 +99,7 @@ pep8:
 	@echo "# Running PEP8 Compliance Tests"
 	@echo "#############################################"
 # --ignore=E501,E221,W291,W391,E302,E251,E203,W293,E231,E303,E201,E225,E261
-	pep8 --exclude=texttable.py --ignore=E501 -r juicer/ bin/
+	pep8 --exclude=texttable.py --ignore=E501,E502,E123,E126,E127,E128 -r juicer/ bin/
 
 pyflakes:
 	@echo "#############################################"

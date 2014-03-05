@@ -27,7 +27,7 @@ class TestJuicer(unittest.TestCase):
             repo_name=setup_args.name, envs=setup_args.envs)
 
     def tearDown(self):
-        aparser = pamoney()
+        # aparser = pamoney()
 
         setup_args = self.aparser.parser.parse_args(
             ('repo delete %s --in re qa' % self.rname).split())

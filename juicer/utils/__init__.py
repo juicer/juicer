@@ -630,10 +630,6 @@ def upload_rpm(rpm_path, repoid, connector):
 
     info = rpm_info(rpm_path)
     pkg_name = info['name']
-    version = info['version']
-    release = info['release']
-    epoch = info['epoch']
-    arch = info['arch']
     nvrea = info['nvrea']
     cksum = info['cksum']
     size = info['size']

@@ -25,8 +25,6 @@ import juicer.utils.ValidateRepoDef
 import juicer.admin.ThreaddedQuery
 from juicer.utils.ProgressBar import ProgressBar as JuiceBar
 import re
-import json
-import threading
 from multiprocessing.pool import ThreadPool
 import progressbar
 
@@ -324,7 +322,7 @@ class JuicerAdmin(object):
 
             while not r.ready():
                 r.wait(1)
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt:
             juicer.utils.Log.log_error("User pressed ^C during repo export")
             juicer.utils.Log.log_error("Terminating %s worker threads and then exiting", len(p._pool))
             # Prevents any more tasks from being submitted to the
@@ -337,7 +335,7 @@ class JuicerAdmin(object):
         # XXX: End serial/concurrent logic
 
         progress_bar.finish()
-        juicer_repos = [r.to_juicer_repo() for r in repos_processed]
+        juicer_repos = [pr.to_juicer_repo() for pr in repos_processed]
         return sorted(juicer_repos, key=lambda d: d['name'].lower())
 
     def create_user(self, login=None, password=None, user_name=None, envs=[], query='/users/'):

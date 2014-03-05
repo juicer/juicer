@@ -28,7 +28,6 @@ Repository Definition file validation functions.
 
 
 from juicer.common.Errors import *
-import json
 import juicer.utils
 import juicer.common.Constants
 import re

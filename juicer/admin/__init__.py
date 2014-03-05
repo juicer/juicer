@@ -17,7 +17,6 @@
 
 from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 import juicer.utils
-from datetime import datetime as dt
 import sys
 
 

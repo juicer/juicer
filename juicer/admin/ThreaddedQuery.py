@@ -15,17 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from juicer.common import Constants
-from juicer.common.Errors import *
-from juicer.common.Repo import JuicerRepo, PulpRepo
 import juicer.admin
 import juicer.utils
 import juicer.utils.Log
 import juicer.utils.ValidateRepoDef
-from juicer.utils.ProgressBar import ProgressBar
-import re
-import json
-
 import threading
 import multiprocessing
 

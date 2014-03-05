@@ -28,9 +28,9 @@ def create(args):
     if args.f:
         juicer.utils.Log.log_debug("Manifest detected.")
 
-        cart = pulp.create_manifest(args.cartname, args.f)
+        pulp.create_manifest(args.cartname, args.f)
     elif args.r:
-        cart = pulp.create(args.cartname, args.r)
+        pulp.create(args.cartname, args.r)
     else:
         raise JuicerError("Argument Error")
 
