@@ -784,8 +784,12 @@ def header(msg):
     s.append('-' * width)
     return '\n'.join(s)
 
-def table(rows):
-    t = texttable.Texttable()
+def table(rows, columns=None):
+    if not columns is None:
+        t = texttable.Texttable(max_width=columns)
+    else:
+        t = texttable.Texttable()
+
     t.add_rows(rows)
     return t.draw()
 

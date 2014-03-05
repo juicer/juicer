@@ -139,6 +139,9 @@ def show_repo(args):
 
         # Human readable table-style output by default
         rows = [['Repo', 'Env', 'RPMs', 'SRPMs', 'Checksum', 'Feed']]
+        # If feeds are set, things can get messy. Lets make this wider
+        # if anybody has a feed
+        found_feed = False
         for env,repos in repo_objects.iteritems():
             # 'repos' contains a list of hashes
             for repo in repos:
@@ -149,8 +152,14 @@ def show_repo(args):
                 repo_checksum = repo['checksum_type']
                 repo_feed = repo['feed']
                 rows.append([repo_name, env, repo_rpm_count, repo_srpm_count, repo_checksum, str(repo_feed)])
+                if not repo_feed is None:
+                    juicer.utils.Log.log_debug("Found a repo feed. Making the table wider.")
+                    found_feed = True
 
-        print juicer.utils.table(rows)
+        if found_feed:
+            print juicer.utils.table(rows, columns=0)
+        else:
+            print juicer.utils.table(rows)
 
 def show_user(args):
     pulp = ja(args)
