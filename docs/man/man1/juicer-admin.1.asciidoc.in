@@ -65,7 +65,9 @@ REPO IMPORT
 usage: juicer-admin repo import 'REPO_DEF' [--noop]
 
 Create repositories matching the definitions in the repo def
-file. Repositories which already exist will be updated.
+file. Repositories which already exist will be updated if necessary.
+
+*Note* this command can take a __long__ time to complete.
 
 *REPO_DEF*::
 
@@ -81,9 +83,36 @@ Don't create the repos, just show what would have happened.
 *Note:* This command does not respect *--in*
 
 
+
+REPO EXPORT
+-----------
+usage: juicer-admin repo export [--out 'OUT'] [--pretty]
+
+This dumps a standard juicer format repository definition for all of
+you repos. Note that this may take a long time to finish. However, the
+runtime decreases linearly in relation to the number of CPUs
+available.
+
+
+*-o* 'OUT',*--out=*'OUT'::
+Write the output to 'OUT'. Use a single hypen, *-*, for
+*stdout*. Default is repodefs-__datestamp__.json. The __datestamp__
+is in ISO8601 format: YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM].
+
+*-p*,*--pretty*::
+Pretty-print the export.
+
+*Note:* Unlike the **IMPORT** command, this command *does* respect
+ *--in*
+
+
+
 REPO DELETE
 -----------
 usage: juicer-admin repo delete 'REPONAME'
+
+Delete a pulp repository. The repository will be deleted in *all
+environments* if you do not specify *--in*.
 
 *REPONAME*::
 Name of repository which will be deleted
@@ -105,31 +134,40 @@ REPO SHOW
 usage: juicer-admin repo show 'REPONAME' [...] [--json]
 
 Show basic statistics in table format about one or more repos in
-pulp. This information includes: Name, Environment, RPM count, SRPM
-count, and Checksum Type.
+pulp.
 
 *REPONAME*::
 Name of the repository to show. Separate multiple 'REPONAME'
 parameters with spaces.
 
 *--json*::
-
 Optional. Return the data in JSON format.
 
+Examples:
+
+- juicer-admin repo show demo-repo
+
+[options="header"]
+|=============================================================
+|Name     |Environment|RPM count|SRPM count|Checksum Type|Feed
+|demo-repo|QA         |1337     |0         |sha256       |None
+|=============================================================
+
+- Show a few repos, in json format, only in dev and stage
+
+    juicer-admin repo show repo01 repo02 repo04 --in dev stage --json
 
 
 REPO SYNC
 ---------
 usage: juicer-admin repo sync 'NAME'
 
+Syncs content into repository 'NAME' from a feed source. This call
+always executes asynchronously. The feed source is defined at
+repository creation time.
+
 *NAME*::
 Name of repository to sync
-
-
-
-
-
-
 
 
 
@@ -159,6 +197,9 @@ USER DELETE
 -----------
 usage: juicer-admin user delete 'LOGIN'
 
+Delete the 'LOGIN' account. The account will be deleted in *all
+environments* if you do not specify *--in*.
+
 *LOGIN*::
 The login or username of user which will be deleted
 
@@ -168,11 +209,15 @@ USER LIST
 ---------
 usage: juicer-admin user list
 
+Print out the users in each environment, as well as their associated
+roles.
 
 
 USER SHOW
 ---------
 usage: juicer-admin user show 'LOGIN'
+
+Print the *Login*, *Name*, and *Role* of 'LOGIN' in each environment.
 
 *LOGIN*::
 The login for the user to show
@@ -180,7 +225,13 @@ The login for the user to show
 
 USER UPDATE
 -----------
-usage: juicer-admin user update LOGIN --name FULLNAME --password PASSWORD
+usage: juicer-admin user update 'LOGIN' { [--name 'FULLNAME'] |
+[--password 'PASSWORD'] }
+
+Update the 'FULLNAME' and/or 'PASSWORD' for the 'LOGIN' account. One
+of *--name* or *--password* is required. Providing both is not
+necessary, but valid.
+
 
 *LOGIN*::
 Login or username of user which will be updated
@@ -204,6 +255,14 @@ ROLE LIST
 ---------
 usage: juicer-admin role list
 
+For each environment, print summary information on each defined
+role. This information includes:
+
+- *Name* of the role
+- *Description* of the role
+- *ID* of the role
+- *Users* assigned the role
+
 See the Pulp User documentation (*SEE ALSO*) for more information on
 the specifics of role management.
 
@@ -212,6 +271,9 @@ the specifics of role management.
 ROLE ADD
 --------
 usage: juicer-admin role add --role 'ROLE' --login 'LOGIN'
+
+Add the specified 'ROLE' to the 'LOGIN' account in the specified
+environments.
 
 *--role=*'ROLE'::
 The role which will be assigned to login or username

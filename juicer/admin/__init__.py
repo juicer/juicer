@@ -27,7 +27,7 @@ def create_repo(args):
 
 def export_repo(args):
     pulp = ja(args)
-    export_list = pulp.export_repos(args.serial, args.envs)
+    export_list = pulp.export_repos(args.envs)
     fmt_args = {}
     fmt_args['cls'] = juicer.common.Repo.RepoEncoder
     if args.pretty:

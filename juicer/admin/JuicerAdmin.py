@@ -266,7 +266,7 @@ class JuicerAdmin(object):
 
         return True
 
-    def export_repos(self, serial=False, envs=[]):
+    def export_repos(self, envs=[]):
         """Dump JuicerRepo() objects for all repos in all environments.
 
         Note that this has undefined results should a repo exist with

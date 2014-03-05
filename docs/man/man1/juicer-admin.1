@@ -2,12 +2,12 @@
 .\"     Title: juicer-admin
 .\"    Author: :doctype:manpage
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 02/25/2014
+.\"      Date: 03/05/2014
 .\"    Manual: Pulp repos and release carts
 .\"    Source: Juicer 0.7.0
 .\"  Language: English
 .\"
-.TH "JUICER\-ADMIN" "1" "02/25/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
+.TH "JUICER\-ADMIN" "1" "03/05/2014" "Juicer 0\&.7\&.0" "Pulp repos and release carts"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -87,7 +87,9 @@ Optional\&. The checksum type to use when generating meta\-data\&. Defaults to
 .sp
 usage: juicer\-admin repo import \fIREPO_DEF\fR [\-\-noop]
 .sp
-Create repositories matching the definitions in the repo def file\&. Repositories which already exist will be updated\&.
+Create repositories matching the definitions in the repo def file\&. Repositories which already exist will be updated if necessary\&.
+.sp
+\fBNote\fR this command can take a \fIlong\fR time to complete\&.
 .PP
 \fBREPO_DEF\fR
 .RS 4
@@ -102,9 +104,33 @@ Don\(cqt create the repos, just show what would have happened\&.
 .RE
 .sp
 \fBNote:\fR This command does not respect \fB\-\-in\fR
+.SH "REPO EXPORT"
+.sp
+usage: juicer\-admin repo export [\-\-out \fIOUT\fR] [\-\-pretty]
+.sp
+This dumps a standard juicer format repository definition for all of you repos\&. Note that this may take a long time to finish\&. However, the runtime decreases linearly in relation to the number of CPUs available\&.
+.PP
+\fB\-o\fR \fIOUT\fR,\fB\-\-out=\fR\fIOUT\fR
+.RS 4
+Write the output to
+\fIOUT\fR\&. Use a single hypen,
+\fB\-\fR, for
+\fBstdout\fR\&. Default is repodefs\-\fIdatestamp\fR\&.json\&. The
+\fIdatestamp\fR
+is in ISO8601 format: YYYY\-MM\-DDTHH:MM:SS[\&.mmmmmm][+HH:MM]\&.
+.RE
+.PP
+\fB\-p\fR,\fB\-\-pretty\fR
+.RS 4
+Pretty\-print the export\&.
+.RE
+.sp
+\fBNote:\fR Unlike the \fBIMPORT\fR command, this command \fBdoes\fR respect \fB\-\-in\fR
 .SH "REPO DELETE"
 .sp
 usage: juicer\-admin repo delete \fIREPONAME\fR
+.sp
+Delete a pulp repository\&. The repository will be deleted in \fBall environments\fR if you do not specify \fB\-\-in\fR\&.
 .PP
 \fBREPONAME\fR
 .RS 4
@@ -124,7 +150,7 @@ Optional\&. Return the data in JSON format\&.
 .sp
 usage: juicer\-admin repo show \fIREPONAME\fR [\&...] [\-\-json]
 .sp
-Show basic statistics in table format about one or more repos in pulp\&. This information includes: Name, Environment, RPM count, SRPM count, and Checksum Type\&.
+Show basic statistics in table format about one or more repos in pulp\&.
 .PP
 \fBREPONAME\fR
 .RS 4
@@ -137,9 +163,84 @@ parameters with spaces\&.
 .RS 4
 Optional\&. Return the data in JSON format\&.
 .RE
+.sp
+Examples:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+juicer\-admin repo show demo\-repo
+.RE
+.TS
+allbox tab(:);
+ltB ltB ltB ltB ltB ltB.
+T{
+Name
+T}:T{
+Environment
+T}:T{
+RPM count
+T}:T{
+SRPM count
+T}:T{
+Checksum Type
+T}:T{
+Feed
+T}
+.T&
+lt lt lt lt lt lt.
+T{
+.sp
+demo\-repo
+T}:T{
+.sp
+QA
+T}:T{
+.sp
+1337
+T}:T{
+.sp
+0
+T}:T{
+.sp
+sha256
+T}:T{
+.sp
+None
+T}
+.TE
+.sp 1
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Show a few repos, in json format, only in dev and stage
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+juicer\-admin repo show repo01 repo02 repo04 \-\-in dev stage \-\-json
+.fi
+.if n \{\
+.RE
+.\}
+.RE
 .SH "REPO SYNC"
 .sp
 usage: juicer\-admin repo sync \fINAME\fR
+.sp
+Syncs content into repository \fINAME\fR from a feed source\&. This call always executes asynchronously\&. The feed source is defined at repository creation time\&.
 .PP
 \fBNAME\fR
 .RS 4
@@ -171,6 +272,8 @@ Plain text password\&. Will prompt if no arg specified
 .SH "USER DELETE"
 .sp
 usage: juicer\-admin user delete \fILOGIN\fR
+.sp
+Delete the \fILOGIN\fR account\&. The account will be deleted in \fBall environments\fR if you do not specify \fB\-\-in\fR\&.
 .PP
 \fBLOGIN\fR
 .RS 4
@@ -179,9 +282,13 @@ The login or username of user which will be deleted
 .SH "USER LIST"
 .sp
 usage: juicer\-admin user list
+.sp
+Print out the users in each environment, as well as their associated roles\&.
 .SH "USER SHOW"
 .sp
 usage: juicer\-admin user show \fILOGIN\fR
+.sp
+Print the \fBLogin\fR, \fBName\fR, and \fBRole\fR of \fILOGIN\fR in each environment\&.
 .PP
 \fBLOGIN\fR
 .RS 4
@@ -189,7 +296,9 @@ The login for the user to show
 .RE
 .SH "USER UPDATE"
 .sp
-usage: juicer\-admin user update LOGIN \-\-name FULLNAME \-\-password PASSWORD
+usage: juicer\-admin user update \fILOGIN\fR { [\-\-name \fIFULLNAME\fR] | [\-\-password \fIPASSWORD\fR] }
+.sp
+Update the \fIFULLNAME\fR and/or \fIPASSWORD\fR for the \fILOGIN\fR account\&. One of \fB\-\-name\fR or \fB\-\-password\fR is required\&. Providing both is not necessary, but valid\&.
 .PP
 \fBLOGIN\fR
 .RS 4
@@ -212,10 +321,62 @@ This section describes all of the \fIROLE\fR subcommands\&.
 .sp
 usage: juicer\-admin role list
 .sp
+For each environment, print summary information on each defined role\&. This information includes:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBName\fR
+of the role
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBDescription\fR
+of the role
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBID\fR
+of the role
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBUsers\fR
+assigned the role
+.RE
+.sp
 See the Pulp User documentation (\fBSEE ALSO\fR) for more information on the specifics of role management\&.
 .SH "ROLE ADD"
 .sp
 usage: juicer\-admin role add \-\-role \fIROLE\fR \-\-login \fILOGIN\fR
+.sp
+Add the specified \fIROLE\fR to the \fILOGIN\fR account in the specified environments\&.
 .PP
 \fB\-\-role=\fR\fIROLE\fR
 .RS 4

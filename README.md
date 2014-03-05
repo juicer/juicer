@@ -26,6 +26,8 @@ and you're set!
 2. [Configuration](https://github.com/juicer/juicer/blob/master/docs/markdown/config.md)
 3. [Hacking](https://github.com/juicer/juicer/blob/master/docs/markdown/hacking.md)
 4. [RpmSignPlugins](https://github.com/juicer/juicer/blob/master/docs/markdown/plugins.md)
+5. [Repo Import/Exporting](https://github.com/juicer/juicer/blob/master/docs/markdown/import_export.md)
+
 
 ## Examples
 
