@@ -761,6 +761,7 @@ def find_latest(pkg_name, url='/content/units/rpm/search/'):
         return False, False
     else:
         pkg_info = content[0]
+        juicer.utils.Log.log_debug("found %s version %s" % (pkg_info['version'], pkg_info['release']))
 
         return pkg_info['version'], pkg_info['release']
 
