@@ -71,6 +71,8 @@ done
 for test in test_create_repo test_create_user test_delete_user test_list_repos test_list_roles test_role_add test_show_repo test_show_user;
 do
     echo "Running ${test}..."
+    export JPROFILE=yes
+    export JPROFILELOG="/tmp/JTESTS/${test}"
     python -m unittest TestJuicerAdmin.TestJuicerAdmin.$test
 done
 
