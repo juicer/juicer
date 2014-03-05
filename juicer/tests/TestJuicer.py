@@ -20,17 +20,17 @@ class TestJuicer(unittest.TestCase):
         self.cpath = os.path.expanduser('%s/%s.json' % (Constants.CART_LOCATION, self.cname))
         self.rname = 'hats'
         (self.connectors, self._defaults) = get_login_info()
-        setup_args = self.aparser.parser.parse_args(\
-                ('repo create %s --in re qa' % self.rname).split())
+        setup_args = self.aparser.parser.parse_args(
+            ('repo create %s --in re qa' % self.rname).split())
         pulp_admin = ja(setup_args)
         mute()(pulp_admin.create_repo)(
-                repo_name=setup_args.name, envs=setup_args.envs)
+            repo_name=setup_args.name, envs=setup_args.envs)
 
     def tearDown(self):
         aparser = pamoney()
 
-        setup_args = self.aparser.parser.parse_args(\
-                ('repo delete %s --in re qa' % self.rname).split())
+        setup_args = self.aparser.parser.parse_args(
+            ('repo delete %s --in re qa' % self.rname).split())
         pulp_admin = ja(setup_args)
         mute()(pulp_admin.delete_repo)(repo_name=setup_args.name, envs=setup_args.envs)
 
@@ -42,8 +42,8 @@ class TestJuicer(unittest.TestCase):
             os.remove(self.cpath)
 
         # test uploading an rpm
-        self.args = self.parser.parser.parse_args(\
-                ('rpm upload -r %s %s' % (self.rname, rpm_path)).split())
+        self.args = self.parser.parser.parse_args(
+            ('rpm upload -r %s %s' % (self.rname, rpm_path)).split())
         pulp = j(self.args)
         cart = pulp.create('upload-cart', self.args.r)
 
@@ -56,20 +56,20 @@ class TestJuicer(unittest.TestCase):
         pulp = j(self.args)
         mute()(pulp.search)(pkg_name=self.args.rpmname)
 
-        self.args = self.parser.parser.parse_args(\
+        self.args = self.parser.parser.parse_args(
             'rpm search %s --in re'.split())
         pulp = j(self.args)
         mute()(pulp.search)(pkg_name=self.args.rpmname)
 
         # test creating a cart
-        self.args = self.parser.parser.parse_args(('cart create CHG0DAY -r %s %s %s' \
-                % ('hats', rpm_path, rpm2_path)).split())
+        self.args = self.parser.parser.parse_args(('cart create CHG0DAY -r %s %s %s'
+                                                   % ('hats', rpm_path, rpm2_path)).split())
         pulp = j(self.args)
         mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
 
         # test pushing a cart
-        self.args = self.parser.parser.parse_args(('cart create %s -r hats %s' \
-                % (self.cname, rpm_path)).split())
+        self.args = self.parser.parser.parse_args(('cart create %s -r hats %s'
+                                                   % (self.cname, rpm_path)).split())
         pulp = j(self.args)
         cart = juicer.common.Cart.Cart(self.args.cartname, autoload=True, autosync=True)
         mute()(pulp.push)(cart=cart)
@@ -89,8 +89,8 @@ class TestJuicer(unittest.TestCase):
         # test creating a cart from manifest
         new_cname = 'CHG1DAY'
 
-        self.args = self.parser.parser.parse_args(('cart create %s -f %s' \
-                % (new_cname, '../../share/juicer/rpm-manifest.yaml')).split())
+        self.args = self.parser.parser.parse_args(('cart create %s -f %s' %
+                                                   (new_cname, '../../share/juicer/rpm-manifest.yaml')).split())
         pulp = j(self.args)
         mute()(pulp.create_manifest)(cart_name=self.args.cartname, manifests=self.args.f)
 

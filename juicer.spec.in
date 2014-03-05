@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Wed Mar  5 2014 Tim Bielawa <tbielawa@redhat.com> - 0.7.1-1
+- Import/Export repository configurations from/to json files
+
 * Tue Jan 21 2014 Alex Chvatal <achvatal@redhat.com> - 0.7.0-1
 - Release of 0.7.0, "Orange Rind"
 

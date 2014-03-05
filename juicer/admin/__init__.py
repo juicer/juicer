@@ -20,6 +20,7 @@ import juicer.utils
 from datetime import datetime as dt
 import sys
 
+
 def create_repo(args):
     pulp = ja(args)
     pulp.create_repo(args.name, args.feed, args.envs, args.checksum_type)
@@ -42,6 +43,7 @@ def export_repo(args):
     writer.write(export_str)
     writer.flush()
 
+
 def import_repo(args):
     pulp = ja(args)
     # Get our TODO specs from juicer-admin
@@ -56,7 +58,7 @@ def import_repo(args):
             for repo in to_create:
                 num_to_create += len(repo['missing_in_env'])
 
-        for env,repos in to_update.iteritems():
+        for env, repos in to_update.iteritems():
             for repo in repos:
                 debug_msg = None
                 repo_diff_specs = repo['reality_check_in_env']
@@ -84,7 +86,7 @@ def import_repo(args):
                              envs=repo['missing_in_env'],
                              checksum_type=repo['checksum_type'])
 
-        for env,repos in to_update.iteritems():
+        for env, repos in to_update.iteritems():
             for repo in repos:
                 repo_diff_specs = repo['reality_check_in_env']
                 for diff_spec in repo_diff_specs:
@@ -102,10 +104,10 @@ def import_repo(args):
                                 juicer.utils.Log.log_info(debug_msg)
 
 
-
 def create_user(args):
     pulp = ja(args)
     pulp.create_user(args.login, args.password, args.name, args.envs)
+
 
 def list_repos(args):
     pulp = ja(args)
@@ -115,6 +117,7 @@ def list_repos(args):
     else:
         for env, repos in repo_lists.iteritems():
             print "%s(%d): %s" % (env, len(repos), ' '.join(repos))
+
 
 def sync_repo(args):
     pulp = ja(args)
@@ -142,7 +145,7 @@ def show_repo(args):
         # If feeds are set, things can get messy. Lets make this wider
         # if anybody has a feed
         found_feed = False
-        for env,repos in repo_objects.iteritems():
+        for env, repos in repo_objects.iteritems():
             # 'repos' contains a list of hashes
             for repo in repos:
                 # each hash represents a repo
@@ -160,6 +163,7 @@ def show_repo(args):
             print juicer.utils.table(rows, columns=0)
         else:
             print juicer.utils.table(rows)
+
 
 def show_user(args):
     pulp = ja(args)

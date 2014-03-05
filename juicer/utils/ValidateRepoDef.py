@@ -36,6 +36,7 @@ import sys
 
 valid_repo_name = re.compile('^([a-zA-Z0-9-_.]+)$')
 
+
 def validate_document(document_path):
     try:
         defs = juicer.utils.read_json_document(document_path)
@@ -50,16 +51,20 @@ def validate_document(document_path):
 
     return defs
 
+
 def is_list(ds):
     return type(ds) == list
 
+
 def is_dict(ds):
     return type(ds) == dict
+
 
 def is_valid_checksum(cs):
     legacy = juicer.common.Constants.REPO_DEF_LEGACY_CHECKSUM_TYPES
     current = juicer.common.Constants.REPO_DEF_CHECKSUM_TYPES
     return cs in legacy or cs in current
+
 
 def has_valid_keys(ds):
     keys = ds.keys()
@@ -95,6 +100,7 @@ def has_valid_keys(ds):
     else:
         raise JuicerRepoDefError("Missing required keys: %s" % ', '.join(required_keys))
 
+
 def is_valid_repo_name(repo_name):
     match = valid_repo_name.match(repo_name)
     if match:
@@ -102,8 +108,10 @@ def is_valid_repo_name(repo_name):
     else:
         return False
 
+
 def is_string(str):
     return (type(str) == str) or (type(str) == unicode)
+
 
 def validate_definitions(defs):
     for definition in defs:
@@ -111,6 +119,7 @@ def validate_definitions(defs):
             validate_def_keys(definition)
         else:
             raise JuicerRepoDefError("Repo definition is not a dictionary!")
+
 
 def validate_def_keys(definition):
     if has_valid_keys(definition):

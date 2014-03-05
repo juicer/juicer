@@ -16,8 +16,8 @@ class TestJuicerAdmin(unittest.TestCase):
             for user in users:
                 if user['login'] == 'cjesop':
                     self.connectors[env].delete('/users/%s/' % user['id'])
-            # remove repo
-            self.connectors[env].delete('/repositories/test-repo-456/')
+                    # remove repo
+                    self.connectors[env].delete('/repositories/test-repo-456/')
 
         super(__init__)
 
@@ -29,7 +29,7 @@ class TestJuicerAdmin(unittest.TestCase):
         args = self.parser.parser.parse_args(("user create cjesop --password cjesop --name 'ColonelJesop' --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
         mute()(pulp.create_user)(login=args.login, user_name=args.name, password=args.password, \
-                                     envs=args.envs)
+                                 envs=args.envs)
 
     def delete_test_user(self):
         args = self.parser.parser.parse_args(("user delete cjesop --in %s" % self._defaults['start_in']).split())
@@ -54,7 +54,7 @@ class TestJuicerAdmin(unittest.TestCase):
         output = mute()(pulp.show_repo)(repo_names=args.name, envs=args.envs)
         env_output = output[env][0]
         self.assertEqual('test-repo-456', env_output['name'], msg="Expected to see test-repo-456 in %s" %
-                        juicer.utils.create_json_str(env_output, indent=4, cls=juicer.common.Repo.RepoEncoder))
+                         juicer.utils.create_json_str(env_output, indent=4, cls=juicer.common.Repo.RepoEncoder))
         self.delete_test_repo()
 
     def test_delete_repo(self):
@@ -87,7 +87,7 @@ class TestJuicerAdmin(unittest.TestCase):
         args = self.parser.parser.parse_args(("user create cjesop --password cjesop --name 'ColonelJesop' --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.create_user)(login=args.login, user_name=args.name, \
-                                                  password=args.password, envs=args.envs)
+                                                             password=args.password, envs=args.envs)
         self.assertTrue(any((('created' in k) or ('shares' in k)) for k in output))
         self.delete_test_user()
 
