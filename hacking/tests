@@ -57,21 +57,21 @@ colorize() {
 
 ######################################################################
 
-echo "#################################"
-echo "Running repo def validation tests"
-echo "#################################"
+colorize 'YELLOW' "#################################\n"
+colorize 'YELLOW' "Running repo def validation tests\n"
+colorize 'YELLOW' "#################################\n"
 
 # Count how many tests we're running
 NUM_TESTS=`ls -1 ./hacking/repo_def/*.json | wc -l`
 # Only one of them should pass
 MUST_FAIL=$(( ${NUM_TESTS} - 1 ))
-echo "Expecting `colorize 'green' '1 PASS'` and `colorize 'red' \"${MUST_FAIL} FAIL\"`s"
+colorize 'GREEN' "Expecting `colorize 'GREEN' '1 PASS'` and `colorize 'RED' \"${MUST_FAIL} FAIL\"`s\n"
 
 python ./juicer/utils/ValidateRepoDef.py ./hacking/repo_def/*.json
 if [ "$?" == "${MUST_FAIL}" ]; then
-    echo "Repo def validation tests success: (`colorize 'green' '1 PASS'`/`colorize 'red' \"${MUST_FAIL} FAIL\"`s)"
+    colorize 'GREEN' "Repo def validation tests success: (`colorize 'GREEN' '1 PASS'`/`colorize 'RED' \"${MUST_FAIL} FAIL\"`s)\n"
 else
-    echo `colorize 'red' "Repo def validation failed"`
+    colorize 'RED' "Repo def validation failed\n"
 fi
 
 ######################################################################
