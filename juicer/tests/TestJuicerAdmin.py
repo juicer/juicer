@@ -22,7 +22,7 @@ class TestJuicerAdmin(unittest.TestCase):
             # remove user
             users = self.connectors[env].get('/users/')
             for user in users:
-                if user['login'] == self.testuser
+                if user['login'] == self.testuser:
                     self.connectors[env].delete('/users/%s/' % self.testuser)
                     # remove repo
                     self.connectors[env].delete('/repositories/%s/' % self.testrepo)
@@ -32,13 +32,15 @@ class TestJuicerAdmin(unittest.TestCase):
     def setUp(self):
         self.parser = pmoney()
         (self.connectors, self._defaults) = get_login_info()
+        self.testrepo = TESTREPO
+        self.testuser = TESTUSER
 
     def create_test_user(self):
         args = self.parser.parser.parse_args(("user create %s --password %s --name '%s' --in %s" %
                                               (self.testuser,
                                                self.testuser,
                                                self.testuser,
-                                               self._defaults['start_in']).split()))
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         mute()(pulp.create_user)(login=args.login, user_name=args.name, password=args.password, \
                                  envs=args.envs)
@@ -46,7 +48,7 @@ class TestJuicerAdmin(unittest.TestCase):
     def delete_test_user(self):
         args = self.parser.parser.parse_args(("user delete %s --in %s" %
                                               (self.testuser,
-                                               self._defaults['start_in']).split()))
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         mute()(pulp.delete_user)(login=args.login, envs=args.envs)
 
@@ -117,7 +119,7 @@ class TestJuicerAdmin(unittest.TestCase):
                                               (self.testuser,
                                                self.testuser,
                                                self.testuser,
-                                               self._defaults['start_in']).split()))
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.create_user)(login=args.login, user_name=args.name, \
                                                              password=args.password, envs=args.envs)
@@ -131,7 +133,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.create_test_user()
         args = self.parser.parser.parse_args(("user delete %s --in %s" %
                                               (self.testuser,
-                                               self._defaults['start_in']).split()))
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.delete_user)(login=args.login, envs=args.envs)
         self.assertTrue(any('deleted' in k for k in output))
@@ -143,7 +145,7 @@ class TestJuicerAdmin(unittest.TestCase):
         self.create_test_user()
         args = self.parser.parser.parse_args(("user show %s --in %s" %
                                               (self.testuser,
-                                               self._defaults['start_in']).split()))
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.show_user)(login=args.login, envs=args.envs)
         self.assertTrue(any(self.testuser in k for k in output))
@@ -163,10 +165,9 @@ class TestJuicerAdmin(unittest.TestCase):
 
     def _test_role_add(self):
         self.create_test_user()
-        args = self.parser.parser.parse_args(("role add --login %s \
-                --role super-users --in %s" %
+        args = self.parser.parser.parse_args(("role add --login %s --role super-users --in %s" %
                                               (self.testuser,
-                                               self._defaults['start_in']).split()))
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.role_add)(role=args.role, login=args.login, envs=args.envs)
         self.assertTrue(any('added' in k for k in output))
