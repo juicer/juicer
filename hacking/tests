@@ -86,6 +86,14 @@ export TESTCART="testcart-${TESTID}"
 export TESTREPO="testrepo-${TESTID}"
 export TESTUSER="testuser-${TESTID}"
 
+colorize 'CYAN' "#####################################################\n"
+colorize 'CYAN' "Test cart: ${TESTCART}\n"
+colorize 'CYAN' "Test cart: ${TESTREPO}\n"
+colorize 'CYAN' "Test cart: ${TESTUSER}\n"
+colorize 'CYAN' "#####################################################\n\n\n"
+
+
+
 for test in test_hello test_pull test_show test_workflow;
 do
     colorize 'YELLOW' "#####################################################\n"

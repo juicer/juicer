@@ -69,14 +69,19 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp.search)(pkg_name=self.args.rpmname)
 
         # test creating a cart
-        self.args = self.parser.parser.parse_args(('cart create CHG0DAY -r %s %s %s'
-                                                   % ('hats', rpm_path, rpm2_path)).split())
+        self.args = self.parser.parser.parse_args(('cart create %s -r %s %s %s' %
+                                                   (self.cname,
+                                                    self.rname,
+                                                    rpm_path,
+                                                    rpm2_path)).split())
         pulp = j(self.args)
         mute()(pulp.create)(cart_name=self.args.cartname, cart_description=self.args.r)
 
         # test pushing a cart
-        self.args = self.parser.parser.parse_args(('cart create %s -r hats %s'
-                                                   % (self.cname, rpm_path)).split())
+        self.args = self.parser.parser.parse_args(('cart create %s -r %s %s' %
+                                                   (self.cname,
+                                                    self.rname,
+                                                    rpm_path)).split())
         pulp = j(self.args)
         cart = juicer.common.Cart.Cart(self.args.cartname, autoload=True, autosync=True)
         mute()(pulp.push)(cart=cart)
@@ -94,7 +99,7 @@ class TestJuicer(unittest.TestCase):
         self.assertFalse(cart.current_env == old_env)
 
         # test creating a cart from manifest
-        new_cname = 'CHG1DAY'
+        new_cname = self.cname + "1"
 
         self.args = self.parser.parser.parse_args(('cart create %s -f %s' %
                                                    (new_cname, '../../share/juicer/rpm-manifest.yaml')).split())
