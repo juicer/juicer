@@ -26,6 +26,7 @@ import juicer.admin.ThreaddedQuery
 from juicer.utils.ProgressBar import ProgressBar as JuiceBar
 import re
 from multiprocessing.pool import ThreadPool
+import multiprocessing
 import progressbar
 
 
@@ -139,12 +140,17 @@ class JuicerAdmin(object):
         all_repos = [JuicerRepo(repo['name'], repo_def=repo) for repo in repo_defs]
 
         # Detailed information on all existing repos
-        #
-        # TODO: Optimize this so we only call to pulp for environments
-        # we KNOW we need to operate in. Determine this by evaluating
-        # the 'env' property of each repo def.
-        juicer.utils.Log.log_info("Loading information on all existing repos (this could take a while)")
-        existing_repos = self.list_repos(envs=all_envs)
+        existing_repos = {}
+        repo_pool = ThreadPool()
+
+        # Parallelize getting the repo lists
+        env_results = [repo_pool.apply_async(self.list_repos, tuple(), kwds={'envs': [er]}, callback=existing_repos.update) for er in all_envs]
+        repo_pool.close()
+
+        for result_async in env_results:
+            result_async.wait()
+
+        repo_pool.join()
 
         # Use a cache to speed up testing
         # juicer.utils.Log.log_info("BE AWARE: Currently reading repo list from local cache")
@@ -161,41 +167,39 @@ class JuicerAdmin(object):
         defined_envs = juicer.utils.unique_repo_def_envs(all_repos)
         juicer.utils.Log.log_notice("Discovered environments: %s" % ", ".join(list(defined_envs)))
 
+        widgets = [
+            "Importing: ",
+            progressbar.Percentage(),
+            " ",
+            "(",
+            progressbar.SimpleProgress(),
+            ") ",
+            progressbar.ETA()
+        ]
+        progress_bar = JuiceBar(len(all_repos), widgets)
+        repos_processed = juicer.admin.ThreaddedQuery.LookupObject()
+        repos_processed.processed = 0
         # sort out new vs. existing
-        for repo in all_repos:
-            # Does the repo refer to environments in our juicer.conf file?
-            if juicer.utils.repo_in_defined_envs(repo, all_envs):
-                repo['reality_check_in_env'] = []
-                repo['missing_in_env'] = []
-                for env in repo['env']:
-                    if juicer.utils.repo_exists_in_repo_list(repo, existing_repos[env]):
-                        # Does the repo def match what exists already?
-                        pulp_repo = self.show_repo(repo_names=[repo['name']], envs=[env])
-                        #juicer.utils.Log.log_debug(str(pulp_repo))
-                        repo_diff = juicer.utils.repo_def_matches_reality(repo, pulp_repo[env][0])
-                        if not repo_diff.diff()['distributor'] or repo_diff.diff()['importer']:
-                            juicer.utils.Log.log_notice("Repo %s already exists in %s, but reality does not the definition", repo['name'], env)
-                            # TODO: Need a better way to track this
-                            # information. The repo_objects_create
-                            # datastructure gets pretty messy and
-                            # duplicates a lot of information.
-                            repo['reality_check_in_env'].append((env, repo_diff, pulp_repo[env][0]))
-                        else:
-                            juicer.utils.Log.log_notice("Repo %s already exists and is correct", repo['name'])
-                    else:
-                        # The repo does not exist yet in reality
-                        juicer.utils.Log.log_notice("Need to create %s in %s", repo['name'], env)
-                        repo['missing_in_env'].append(env)
+        # Break these into batches we can process at once
+        for chunks in juicer.utils.chunks(all_repos, multiprocessing.cpu_count() - 1):
+            crud_pool = ThreadPool()
+            crud_args = (all_repos, all_envs, existing_repos, self, repo_objects_create, repo_objects_update, repos_processed, progress_bar)
+            calculate_results = [crud_pool.apply_async(juicer.admin.ThreaddedQuery.calculate_create_and_update,
+                                                       crud_args,
+                                                       kwds={'repo': repo},
+                                                       callback=juicer.admin.ThreaddedQuery.crud_progress_updater)
+                                 for repo in chunks]
+            crud_pool.close()
+            to_process = len(calculate_results)
+            juicer.utils.Log.log_debug("And we started the pool; items: %s" % len(calculate_results))
+            while to_process > 0:
+                for thingy in calculate_results:
+                    thingy.wait(0.5)
+                    if thingy.ready():
+                        to_process -= 1
+            crud_pool.join()
 
-                # Do we need to create the repo anywhere?
-                if repo['missing_in_env']:
-                    repo_objects_create.append(repo)
-
-                # We we need to update the repo anywhere?
-                if repo['reality_check_in_env']:
-                    for env, repo_diff, pulp_repo in repo['reality_check_in_env']:
-                        repo_objects_update[env].append(repo)
-
+        juicer.utils.Log.log_debug("And we joined all threads")
         """repo_objects_update looks like this:
 
         {'environment': [repo_update_spec, ...]}

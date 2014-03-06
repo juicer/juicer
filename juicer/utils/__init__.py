@@ -851,3 +851,9 @@ def debug_log_repo(repo):
                                           indent=4,
                                           cls=juicer.common.Repo.RepoEncoder)
     juicer.utils.Log.log_debug(ds_str)
+
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in xrange(0, len(l), n):
+        yield l[i:i + n]

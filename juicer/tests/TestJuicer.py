@@ -15,6 +15,7 @@ PROFILE_LOG = os.getenv('JPROFILELOG', '/tmp/juicer-call-stats')
 TESTCART = os.getenv('TESTCART')
 TESTREPO = os.getenv('TESTREPO')
 
+
 class TestJuicer(unittest.TestCase):
     def setUp(self):
         self.parser = pmoney()

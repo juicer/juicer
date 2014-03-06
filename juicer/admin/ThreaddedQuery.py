@@ -27,6 +27,12 @@ JUICER_CPU_COUNT = multiprocessing.cpu_count()
 PROCESSED_LOCK = threading.Lock()
 PROGRESS_LOCK = threading.Lock()
 
+CREATE_LOCK = threading.Lock()
+UPDATE_LOCK = threading.Lock()
+
+CRUD_COUNT_LOCK = threading.Lock()
+CRUD_PROGRESS_LOCK = threading.Lock()
+
 
 class LookupObject(object):
     def __init__(self):
@@ -69,3 +75,56 @@ def concurrent_pulp_lookup(lookup_object):
 
     juicer.utils.Log.log_debug("Processed initial export step for %s", pulp_repo)
     return True
+
+
+def calculate_create_and_update(all_repos, all_envs, existing_repos, ja, to_create, to_update, repos_processed, progress_bar, repo=None):
+    juicer.utils.Log.log_debug("Calculating CRUD for %s", repo['name'])
+    # Does the repo refer to environments in our juicer.conf file?
+    if juicer.utils.repo_in_defined_envs(repo, all_envs):
+        repo['reality_check_in_env'] = []
+        repo['missing_in_env'] = []
+        for env in repo['env']:
+            if juicer.utils.repo_exists_in_repo_list(repo, existing_repos[env]):
+                # Does the repo def match what exists already?
+                pulp_repo = ja.show_repo(repo_names=[repo['name']], envs=[env])
+                #juicer.utils.Log.log_debug(str(pulp_repo))
+                repo_diff = juicer.utils.repo_def_matches_reality(repo, pulp_repo[env][0])
+                if not repo_diff.diff()['distributor'] or repo_diff.diff()['importer']:
+                    juicer.utils.Log.log_notice("Repo %s already exists in %s, but reality does not the definition", repo['name'], env)
+                    # TODO: Need a better way to track this
+                    # information. The repo_objects_create
+                    # datastructure gets pretty messy and
+                    # duplicates a lot of information.
+                    repo['reality_check_in_env'].append((env, repo_diff, pulp_repo[env][0]))
+                else:
+                    juicer.utils.Log.log_notice("Repo %s already exists and is correct", repo['name'])
+            else:
+                # The repo does not exist yet in reality
+                juicer.utils.Log.log_notice("Need to create %s in %s", repo['name'], env)
+                repo['missing_in_env'].append(env)
+
+        juicer.utils.Log.log_debug(threading.active_count())
+        # Do we need to create the repo anywhere?
+        if repo['missing_in_env']:
+            CREATE_LOCK.acquire()
+            to_create.append(repo)
+            CREATE_LOCK.release()
+
+        # We we need to update the repo anywhere?
+        if repo['reality_check_in_env']:
+            UPDATE_LOCK.acquire()
+            for env, repo_diff, pulp_repo in repo['reality_check_in_env']:
+                to_update[env].append(repo)
+            UPDATE_LOCK.release()
+
+    return (repos_processed, progress_bar)
+
+
+def crud_progress_updater(input):
+    (r, p) = input
+    CRUD_COUNT_LOCK.acquire()
+    r.processed += 1
+    CRUD_COUNT_LOCK.release()
+    CRUD_PROGRESS_LOCK.acquire()
+    p.update(r.processed)
+    CRUD_PROGRESS_LOCK.release()
