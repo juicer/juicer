@@ -98,6 +98,18 @@ class TestJuicer(unittest.TestCase):
 
         self.assertFalse(cart.is_empty())
 
+        # test deleting a cart
+        self.args = self.parser.parser.parse_args(('cart delete %s' % \
+                                        (self.cname)).split())
+        pulp = j(self.args)
+
+        mute()(pulp.delete)(cartname=cart.cart_name)
+        self.assertFalse(os.path.exists(cart.cart_file()))
+
+        cart = juicer.common.Cart.Cart(self.cname, autoload=True)
+        mute()(pulp.delete)(cartname=cart.cart_name)
+        self.assertFalse(os.path.exists(cart.cart_file()))
+
     def test_show(self):
         self.args = self.parser.parser.parse_args(('cart show %s' % self.cname).split())
         pulp = j(self.args)

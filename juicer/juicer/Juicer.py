@@ -578,3 +578,11 @@ class Juicer(object):
             _r.raise_for_status()
         else:
             juicer.utils.Log.log_info("`%s` published in `%s`" % (repo, env))
+
+    def delete(self, cartname):
+        """
+        `cartname` - name of the cart to delete
+        Delete a cart both from your local filesystem and the mongo database
+        """
+        cart = juicer.common.Cart.Cart(cart_name=cartname)
+        cart.implode(self._defaults['start_in'])

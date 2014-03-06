@@ -259,3 +259,29 @@ class Cart(object):
         note: the file does not need to already exist to use this
         """
         return os.path.join(CART_LOCATION, self.cart_name) + '.json'
+
+    def implode(self, env):
+        """
+        remove all trace of this cart: delete the file(s) on the local
+        filesystem and delete the entry from the database
+        """
+        juicer.utils.Log.log_debug("imploding %s" % self.cart_name)
+
+        # rm -r self.remotes_storage()
+        if os.path.exists(self.remotes_storage):
+            for item in os.listdir(self.remotes_storage):
+                ipath = os.path.expanduser(self.remotes_storage + '/' + item)
+                if os.path.exists(ipath):
+                    juicer.utils.Log.log_debug("removing %s" % ipath)
+                    os.remove(ipath)
+                juicer.utils.Log.log_debug("removing %s's remote item storage dir" % self.cart_name)
+                os.rmdir(self.remotes_storage)
+
+        # rm cart_file()
+        if os.path.exists(self.cart_file()):
+            juicer.utils.Log.log_debug("removing %s's cart file" % self.cart_name)
+            os.remove(self.cart_file())
+
+        # db.carts.delete(self.name)
+        juicer.utils.Log.log_debug("removing %s from the database" % self.cart_name)
+        juicer.utils.cart_db()[env].remove({'_id': self.cart_name})

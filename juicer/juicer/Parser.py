@@ -192,6 +192,17 @@ class Parser(object):
         parser_cart_push.set_defaults(j=juicer.juicer.push)
 
         ##################################################################
+        # Create the 'cart delete' sub-parser
+        parser_cart_delete = subparser_cart.add_parser('delete', \
+                help='Delete a cart locally and on the pulp server.',
+                usage='%(prog)s CARTNAME [-h]')
+
+        parser_cart_delete.add_argument('cartname', metavar='cartname', \
+                                    help='The name of the release cart to delete')
+
+        parser_cart_delete.set_defaults(j=juicer.juicer.delete)
+
+        ##################################################################
         # Create the 'rpm search' sub-parser
         parser_rpm_search = subparser_rpm.add_parser('search', \
                 help='Search for an RPM in pulp.', \

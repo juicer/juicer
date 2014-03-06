@@ -121,3 +121,7 @@ def publish(args):
     pulp = j(args)
     for env in args.environment:
         pulp.publish_repo(args.repo, env)
+
+def delete(args):
+    pulp = j(args)
+    pulp.delete(cartname=args.cartname)
