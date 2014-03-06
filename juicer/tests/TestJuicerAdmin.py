@@ -53,12 +53,16 @@ class TestJuicerAdmin(unittest.TestCase):
         mute()(pulp.delete_user)(login=args.login, envs=args.envs)
 
     def create_test_repo(self):
-        args = self.parser.parser.parse_args(("repo create test-repo-456 --in %s" % self._defaults['start_in']).split())
+        args = self.parser.parser.parse_args(("repo create %s --in %s" %
+                                              (self.testrepo,
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         mute()(pulp.create_repo)(repo_name=args.name, envs=args.envs)
 
     def delete_test_repo(self):
-        args = self.parser.parser.parse_args(("repo delete test-repo-456 --in %s" % self._defaults['start_in']).split())
+        args = self.parser.parser.parse_args(("repo delete %s --in %s" %
+                                              (self.testrepo,
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         mute()(pulp.delete_repo)(repo_name=args.name, envs=args.envs)
 
@@ -68,12 +72,15 @@ class TestJuicerAdmin(unittest.TestCase):
     def _test_show_repo(self):
         self.create_test_repo()
         env = self._defaults['start_in']
-        args = self.parser.parser.parse_args(("repo show test-repo-456  --in %s" % env).split())
+        args = self.parser.parser.parse_args(("repo show %s --in %s" %
+                                              (self.testrepo,
+                                               env)).split())
         pulp = ja(args)
         output = mute()(pulp.show_repo)(repo_names=args.name, envs=args.envs)
         env_output = output[env][0]
-        self.assertEqual('test-repo-456', env_output['name'], msg="Expected to see test-repo-456 in %s" %
-                         juicer.utils.create_json_str(env_output, indent=4, cls=juicer.common.Repo.RepoEncoder))
+        self.assertEqual(self.testrepo, env_output['name'], msg="Expected to see %s in %s" %
+                         (self.testrepo,
+                          juicer.utils.create_json_str(env_output, indent=4, cls=juicer.common.Repo.RepoEncoder)))
         self.delete_test_repo()
 
     def test_delete_repo(self):
@@ -81,7 +88,9 @@ class TestJuicerAdmin(unittest.TestCase):
 
     def _test_delete_repo(self):
         self.create_test_repo()
-        args = self.parser.parser.parse_args(("repo delete test-repo-456 --in %s" % self._defaults['start_in']).split())
+        args = self.parser.parser.parse_args(("repo delete %s --in %s" %
+                                              (self.testrepo,
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.delete_repo)(repo_name=args.name, envs=args.envs)
         self.assertTrue(any('deleted' in k for k in output))
@@ -96,15 +105,18 @@ class TestJuicerAdmin(unittest.TestCase):
         pulp = ja(args)
         output = mute()(pulp.list_repos)(envs=args.envs)
         env_output = output[env]
-        self.assertTrue('test-repo-456' in env_output, msg="Expected to find test-repo-456 in output: %s" %
-                        juicer.utils.create_json_str(output, indent=4, cls=juicer.common.Repo.RepoEncoder))
+        self.assertTrue(self.testrepo in env_output, msg="Expected to find %s in output: %s" %
+                        (self.testrepo,
+                         juicer.utils.create_json_str(output, indent=4, cls=juicer.common.Repo.RepoEncoder)))
         self.delete_test_repo()
 
     def test_create_repo(self):
         cProfile.runctx('self._test_create_repo()', globals(), locals(), PROFILE_LOG)
 
     def _test_create_repo(self):
-        args = self.parser.parser.parse_args(("repo create test-repo-456 --in %s" % self._defaults['start_in']).split())
+        args = self.parser.parser.parse_args(("repo create %s --in %s" %
+                                              (self.testrepo,
+                                               self._defaults['start_in'])).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.create_repo)(repo_name=args.name, envs=args.envs)
         self.assertTrue(any('created' in k for k in output), msg="'created' not in output: %s" %
