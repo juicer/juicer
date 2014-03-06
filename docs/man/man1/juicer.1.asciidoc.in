@@ -73,6 +73,15 @@ given multiple times.
 Items to add to the cart in repository 'REPONAME'.
 
 
+CART DELETE
+-----------
+usage: juicer cart delete 'CARTNAME'
+
+Deletes a release cart from your local system and on the cart server.
+
+*CARTNAME*::
+The name of the release cart to delete.
+
 
 RPM DELETE
 ----------

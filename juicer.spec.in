@@ -4,7 +4,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %endif
 
 Name:          juicer
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Pulp and release carts
 Version:       %VERSION%
 
@@ -95,6 +95,10 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Thu Mar  6 2014 Tim Bielawa <tbielawa@redhat.com> - 0.7.1-2
+- Add juicer cart delete command
+- Fix up a bunch of lint and unit tests
+
 * Wed Mar  5 2014 Tim Bielawa <tbielawa@redhat.com> - 0.7.1-1
 - Import/Export repository configurations from/to json files
 
