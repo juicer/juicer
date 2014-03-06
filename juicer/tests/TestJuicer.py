@@ -12,16 +12,17 @@ import cProfile
 
 
 PROFILE_LOG = os.getenv('JPROFILELOG', '/tmp/juicer-call-stats')
-
+TESTCART = os.getenv('TESTCART')
+TESTREPO = os.getenv('TESTREPO')
 
 class TestJuicer(unittest.TestCase):
     def setUp(self):
         self.parser = pmoney()
         self.aparser = pamoney()
 
-        self.cname = 'CHG0DAY'
+        self.cname = TESTCART
         self.cpath = os.path.expanduser('%s/%s.json' % (Constants.CART_LOCATION, self.cname))
-        self.rname = 'hats'
+        self.rname = TESTREPO
         (self.connectors, self._defaults) = get_login_info()
         setup_args = self.aparser.parser.parse_args(
             ('repo create %s --in re qa' % self.rname).split())

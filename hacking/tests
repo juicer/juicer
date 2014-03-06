@@ -81,6 +81,11 @@ fi
 pushd juicer/tests/
 mkdir -p /tmp/JTESTS/
 
+TESTID=`date +'%Y%m%d%S'`
+export TESTCART="testcart-${TESTID}"
+export TESTREPO="testrepo-${TESTID}"
+export TESTUSER="testuser-${TESTID}"
+
 for test in test_hello test_pull test_show test_workflow;
 do
     colorize 'YELLOW' "#####################################################\n"
