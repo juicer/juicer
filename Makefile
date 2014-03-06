@@ -13,7 +13,8 @@
 #   make docs ----------------- rebuild the manpages (results are checked in)
 #   make pyflakes, make pep8 -- source code checks
 #   make test ----------------- run all unit tests (export LOG=true for /tmp/ logging)
-
+#        -> testjuiceradmin; testjuicer; testrepodefs
+#   make tag ------------------- tag this release with make tag TAG=FOO (usually a version-release)
 ########################################################
 
 # > VARIABLE = value
@@ -188,6 +189,9 @@ oorpm: rpmcommon
 
 koji: srpm
 	koji build --scratch f17 rpm-build/$(RPMNVR).src.rpm
+
+tag:
+	git tag -s -m $(TAG) $(NAME)-$(TAG)
 
 test: testrepodefs testjuicer testjuiceradmin
 	:
