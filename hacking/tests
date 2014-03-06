@@ -86,12 +86,11 @@ export TESTCART="testcart-${TESTID}"
 export TESTREPO="testrepo-${TESTID}"
 export TESTUSER="testuser-${TESTID}"
 
-colorize 'CYAN' "#####################################################\n"
+colorize 'CYAN' "\n#####################################################\n"
 colorize 'CYAN' "Test cart: ${TESTCART}\n"
 colorize 'CYAN' "Test cart: ${TESTREPO}\n"
 colorize 'CYAN' "Test cart: ${TESTUSER}\n"
-colorize 'CYAN' "#####################################################\n\n\n"
-
+colorize 'CYAN' "#####################################################\n\n"
 
 
 for test in test_hello test_pull test_show test_workflow;
@@ -100,7 +99,7 @@ do
     colorize 'YELLOW' "Running TestJuicer.TestJuicer.${test}...\n"
     export JPROFILE=yes
     export JPROFILELOG="/tmp/JTESTS/${test}"
-    python -m unittest TestJuicer.TestJuicer.$test
+    python -m unittest -v TestJuicer.TestJuicer.$test
 done
 
 for test in test_create_repo test_create_user test_delete_user test_list_repos test_list_roles test_role_add test_show_repo test_show_user;
@@ -109,7 +108,7 @@ do
     colorize 'YELLOW' "Running TestJuicerAdmin.TestJuicerAdmin.${test}...\n"
     export JPROFILE=yes
     export JPROFILELOG="/tmp/JTESTS/${test}"
-    python -m unittest TestJuicerAdmin.TestJuicerAdmin.$test
+    python -m unittest -v TestJuicerAdmin.TestJuicerAdmin.$test
 done
 
 popd
