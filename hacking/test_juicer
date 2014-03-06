@@ -1,0 +1,44 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+# Juicer - Administer Pulp and Release Carts
+# Copyright © 2012-2014, Red Hat, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+######################################################################
+# Catch a ^C exit so the for loops don't keep running
+######################################################################
+trap "{ exit 0; }" SIGINT SIGTERM
+######################################################################
+
+. ./hacking/lib.sh
+
+######################################################################
+
+pushd juicer/tests/ >/dev/null 2>&1
+mkdir -p /tmp/JTESTS/
+
+colorize 'CYAN' '######################################################################\n'
+colorize 'CYAN' '#                     RUNNING JUICER TESTS                           #\n'
+colorize 'CYAN' '######################################################################\n\n'
+
+for test in test_hello test_pull test_show test_workflow;
+do
+    colorize 'YELLOW' "#####################################################\n"
+    colorize 'YELLOW' "Running TestJuicer.TestJuicer.${test}...\n"
+    export JPROFILELOG="/tmp/JTESTS/${test}"
+    python -m unittest -v TestJuicer.TestJuicer.$test
+done
+
+popd >/dev/null 2>&1

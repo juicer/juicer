@@ -189,13 +189,31 @@ oorpm: rpmcommon
 koji: srpm
 	koji build --scratch f17 rpm-build/$(RPMNVR).src.rpm
 
-test:
-	. ./hacking/setup-env
-	if [ "$(LOG)" = "true" ]; then \
-		./hacking/tests 2>&1 | tee -a /tmp/juicer_tests.log; \
+test: testrepodefs testjuicer testjuiceradmin
+	:
+
+testjuiceradmin:
+	@if [ "$(LOG)" = "true" ]; then \
+		./hacking/test_juicer_admin 2>&1 | tee -a /tmp/juicer_tests.log; \
 		echo "Test results logged to /tmp/juicer_tests.log"; \
 	else \
-		./hacking/tests; \
+		./hacking/test_juicer_admin; \
+	fi
+
+testjuicer:
+	@if [ "$(LOG)" = "true" ]; then \
+		./hacking/test_juicer 2>&1 | tee -a /tmp/juicer_tests.log; \
+		echo "Test results logged to /tmp/juicer_tests.log"; \
+	else \
+		./hacking/test_juicer; \
+	fi
+
+testrepodefs:
+	@if [ "$(LOG)" = "true" ]; then \
+		./hacking/test_repo_defs 2>&1 | tee -a /tmp/juicer_tests.log; \
+		echo "Test results logged to /tmp/juicer_tests.log"; \
+	else \
+		./hacking/test_repo_defs; \
 	fi
 
 rpminstall: rpm

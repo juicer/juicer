@@ -1,0 +1,44 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+# Juicer - Administer Pulp and Release Carts
+# Copyright © 2012-2014, Red Hat, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+######################################################################
+# Catch a ^C exit so the for loops don't keep running
+######################################################################
+trap "{ exit 0; }" SIGINT SIGTERM
+######################################################################
+
+. ./hacking/lib.sh
+
+######################################################################
+
+colorize 'CYAN' '######################################################################\n'
+colorize 'CYAN' '#               RUNNING REPO DEF VALIDATION TESTS                    #\n'
+colorize 'CYAN' '######################################################################\n\n'
+
+# Count how many tests we're running
+NUM_TESTS=`ls -1 ./hacking/repo_def/*.json | wc -l`
+# Only one of them should pass
+MUST_FAIL=$(( ${NUM_TESTS} - 1 ))
+colorize 'GREEN' "Expecting `colorize 'GREEN' '1 PASS'` and `colorize 'RED' \"${MUST_FAIL} FAIL\"`s\n"
+
+python ./juicer/utils/ValidateRepoDef.py ./hacking/repo_def/*.json
+if [ "$?" == "${MUST_FAIL}" ]; then
+    colorize 'GREEN' "Repo def validation tests success: (`colorize 'GREEN' '1 PASS'`/`colorize 'RED' \"${MUST_FAIL} FAIL\"`s)\n\n"
+else
+    colorize 'RED' "Repo def validation failed\n\n"
+fi
