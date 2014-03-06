@@ -27,6 +27,7 @@ JUICER_CPU_COUNT = multiprocessing.cpu_count()
 PROCESSED_LOCK = threading.Lock()
 PROGRESS_LOCK = threading.Lock()
 
+
 class LookupObject(object):
     def __init__(self):
         pass
@@ -41,9 +42,8 @@ def concurrent_pulp_lookup(lookup_object):
     progress_bar = lookup_object.progress_bar
     repos_processed = lookup_object.repos_processed
 
-
     juicer.utils.Log.log_debug("Finding all environments %s lives in", pulp_repo)
-    envs = [ env for env in all_envs if pulp_repo in all_pulp_repo_names[env] ]
+    envs = [env for env in all_envs if pulp_repo in all_pulp_repo_names[env]]
     juicer.utils.Log.log_debug("%s exists in %s", pulp_repo, str(envs))
     # use the last environment in the list, as that is most
     # likely prod, which is most likely the desired state

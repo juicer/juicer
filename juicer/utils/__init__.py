@@ -46,6 +46,7 @@ except ImportError:
 from pymongo import Connection as MongoClient
 from pymongo import errors as MongoErrors
 
+
 def load_json_str(jstr):
     """
     Internalize the json content object (`jstr`) into a native Python
@@ -566,7 +567,7 @@ def parse_manifest(manifest):
     fd = open(manifest)
     data = yaml.load(fd)
 
-    if data == None:
+    if data is None:
         raise JuicerManifestError('%s contains no items' % manifest)
 
     for pkg_name, version in data.iteritems():
@@ -575,7 +576,7 @@ def parse_manifest(manifest):
         elif version == 'latest':
             juicer.utils.Log.log_debug('%s is set to latest. Finding...' % pkg_name)
             lversion, release = juicer.utils.find_latest(pkg_name)
-            if lversion == False and release == False:
+            if not lversion and not release:
                 # package wasn't found in repo so don't add it to the list
                 continue
             juicer.utils.Log.log_debug('Adding %s version %s release %s' % (pkg_name, lversion, release))
@@ -762,11 +763,13 @@ def find_latest(pkg_name, url='/content/units/rpm/search/'):
 
         return pkg_info['version'], pkg_info['release']
 
+
 def juicer_version():
     """
     Duh, just print out what version of juicer you're running.
     """
     return juicer.__version__
+
 
 def header(msg):
     """
@@ -779,6 +782,7 @@ def header(msg):
     s.append("| %s |" % msg)
     s.append('-' * width)
     return '\n'.join(s)
+
 
 def table(rows, columns=None):
     if not columns is None:
@@ -797,6 +801,7 @@ def unique_repo_def_envs(repo_def):
         juicer.utils.Log.log_debug("envs for repo %s: %s", repo['name'], ", ".join(repo['env']))
     return defined_envs
 
+
 def repo_exists_in_repo_list(repo, repo_list):
     """`repo_def` - a Repo object representing a juicer repo def
 
@@ -804,6 +809,7 @@ def repo_exists_in_repo_list(repo, repo_list):
     data from juicer.admin.JuicerAdmin.list_repos
     """
     return repo['name'] in repo_list
+
 
 def repo_in_defined_envs(repo, all_envs):
     """Raises exception if the repo references undefined environments"""
@@ -813,6 +819,7 @@ def repo_in_defined_envs(repo, all_envs):
                                         (repo['name'], ", ".join(list(remaining_envs))))
     else:
         return True
+
 
 def repo_def_matches_reality(juicer_def, pulp_def):
     """Compare a juicer repo def with a given pulp definition. Compute and
@@ -828,12 +835,15 @@ def exit_with_code(code):
     """Exit with a specific return code"""
     sys.exit(code)
 
+
 def iso_date_str():
     return datetime.datetime.now().isoformat()
 
+
 def chunk_list(l, n):
     """Return `n` size lists from a given list `l`"""
-    return [l[i:i+n] for i in range(0, len(l), n)]
+    return [l[i:i + n] for i in range(0, len(l), n)]
+
 
 def debug_log_repo(repo):
     """Log to DEBUG level a Repo (or subclass) pretty-printed"""

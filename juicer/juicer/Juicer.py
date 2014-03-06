@@ -43,7 +43,6 @@ class Juicer(object):
                 if env not in self.connectors.keys():
                     raise JuicerKeyError("%s is not an environment defined in juicer.conf" % env)
 
-
     # this is used to upload carts to pulp
     def upload(self, env, cart):
         """
@@ -239,7 +238,7 @@ class Juicer(object):
                 except JuicerConfigError:
                     continue
             fwd_env = fwd_env + env_req
-            query = {'_id': {'$regex': cart_name}, 'current_env' : {'$in' : fwd_env}}
+            query = {'_id': {'$regex': cart_name}, 'current_env': {'$in': fwd_env}}
             juicer.utils.Log.log_debug('query: %s' % query)
 
             cln = juicer.utils.get_login_info()[1]['start_in']
@@ -375,7 +374,7 @@ class Juicer(object):
         'juicer pull'ing carts that can't be located locally. Then cry
         like a baby and error out.
         """
-        if new_cart_name != None:
+        if new_cart_name is not None:
             cart_name = new_cart_name
         else:
             cart_name = carts[0]

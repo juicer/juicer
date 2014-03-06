@@ -84,9 +84,9 @@ class Connectors(object):
         _r = requests.get(url, auth=self.auth, headers=self.headers,
                           verify=False)
 
-        if _r.status_code == Constants.PULP_GET_OK: # server is up, cool.
+        if _r.status_code == Constants.PULP_GET_OK:  # server is up, cool.
             version = juicer.utils.load_json_str(_r.content)['api_version'].strip()
-            if version != Constants.EXPECTED_SERVER_VERSION: # we done goofed
+            if version != Constants.EXPECTED_SERVER_VERSION:  # we done goofed
                 raise JuicerPulpError("Client expects %s and got %s -- you should probably update!" \
-                                      % (Constants.EXPECTED_SERVER_VERSION,version))
+                                      % (Constants.EXPECTED_SERVER_VERSION, version))
         return True

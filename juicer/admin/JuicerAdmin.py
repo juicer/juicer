@@ -28,6 +28,7 @@ import re
 from multiprocessing.pool import ThreadPool
 import progressbar
 
+
 class JuicerAdmin(object):
     def __init__(self, args):
         self.args = args
@@ -72,10 +73,11 @@ class JuicerAdmin(object):
 
                 if _r.status_code == Constants.PULP_POST_CREATED:
                     imp_query = '/repositories/%s/importers/' % data['id']
-                    imp_data = {'importer_id': 'yum_importer',
-                            'importer_type_id': 'yum_importer',
-                            'importer_config': {},
-                            }
+                    imp_data = {
+                        'importer_id': 'yum_importer',
+                        'importer_type_id': 'yum_importer',
+                        'importer_config': {},
+                    }
 
                     if feed:
                         imp_data['importer_config']['feed_url'] = feed
@@ -191,7 +193,7 @@ class JuicerAdmin(object):
 
                 # We we need to update the repo anywhere?
                 if repo['reality_check_in_env']:
-                    for env,repo_diff,pulp_repo in repo['reality_check_in_env']:
+                    for env, repo_diff, pulp_repo in repo['reality_check_in_env']:
                         repo_objects_update[env].append(repo)
 
         """repo_objects_update looks like this:
@@ -211,7 +213,6 @@ class JuicerAdmin(object):
         pulp_repo :: Json serialization of a repo as returned from pulp (or juicer-admin repo show --json)
         """
         return (repo_objects_create, repo_objects_update)
-
 
     def _update_repo(self, juicer_repo, pulp_repo, env, repo_diff, query='/repositories/'):
         """
@@ -246,7 +247,7 @@ class JuicerAdmin(object):
         elif _r.status_code == Constants.PULP_PUT_CONFLICT:
             juicer.utils.Log.log_debug(str(_r.content))
         elif _r.status_code == Constants.PULP_PUT_NOT_FOUND:
-             juicer.utils.Log.log_debug(str(_r.content))
+            juicer.utils.Log.log_debug(str(_r.content))
         else:
             _r.raise_for_status()
 
@@ -258,7 +259,7 @@ class JuicerAdmin(object):
         elif _r.status_code == Constants.PULP_PUT_CONFLICT:
             juicer.utils.Log.log_debug(str(_r.content))
         elif _r.status_code == Constants.PULP_PUT_NOT_FOUND:
-             juicer.utils.Log.log_debug(str(_r.content))
+            juicer.utils.Log.log_debug(str(_r.content))
         else:
             _r.raise_for_status()
 
@@ -440,7 +441,7 @@ class JuicerAdmin(object):
         Sync repository in specified environments
         """
         juicer.utils.Log.log_debug(
-               "Sync Repo %s In: %s" % (repo_name, ",".join(envs)))
+            "Sync Repo %s In: %s" % (repo_name, ",".join(envs)))
 
         data = {
             'override_config': {
@@ -558,7 +559,7 @@ class JuicerAdmin(object):
                         juicer.utils.Log.log_warn("could not find repo '%s' in %s" % (repo_name, env))
                     else:
                         _r.raise_for_status()
-        for k,v in repo_objects.iteritems():
+        for k, v in repo_objects.iteritems():
             juicer.utils.Log.log_debug("environment %s: found %d repos" % (k, len(v)))
         return repo_objects
 
@@ -646,7 +647,7 @@ class JuicerAdmin(object):
 
         login = login.lower()
 
-        data = { 'delta': {} }
+        data = {'delta': {}}
 
         if not user_name and not password:
             raise JuicerError("Error: --name or --password must be present")

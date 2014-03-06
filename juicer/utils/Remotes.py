@@ -117,7 +117,7 @@ def parse_input_file(resource):
 
     juicer.utils.Log.log_debug("Input file parsed into: %s\n" % str(remotes_list))
 
-    remote_packages = [pkg for pkg in remotes_list if is_remote_package(pkg) == True]
+    remote_packages = [pkg for pkg in remotes_list if is_remote_package(pkg) is True]
     juicer.utils.Log.log_debug("remote_packages filtered into %s\n" % str(remote_packages))
 
     excluded_data = [datum for datum in remotes_list if datum not in remote_packages]

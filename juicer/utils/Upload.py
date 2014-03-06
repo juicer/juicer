@@ -86,9 +86,9 @@ class Upload(object):
                     'filename': self.pkg_name,
                     'license': lic if lic else '',
                     'requires': req if req else '',
-                #    'type': ftype,
+                    #    'type': ftype,
                     'description': desc if desc else '',
-                #    'size': self.size,
+                    #    'size': self.size,
                     'vendor': vendor if vendor else '',
                     'relativepath': self.pkg_name,
                     }

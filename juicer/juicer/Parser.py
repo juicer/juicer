@@ -44,7 +44,6 @@ class Parser(object):
                                                 dest='command',
                                                 description='\'%(prog)s COMMAND -h\' for individual help topics')
 
-
         ##################################################################
         # Create the 'cart' sub-parser
         parser_cart = subparsers.add_parser('cart',
@@ -87,7 +86,6 @@ class Parser(object):
                             help='RPM manifest for cart')
 
         parser_cart_create.set_defaults(j=juicer.juicer.create)
-
 
         ##################################################################
         # Create the 'edit' sub-parser

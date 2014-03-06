@@ -4,10 +4,14 @@ from juicer.admin.JuicerAdmin import JuicerAdmin as ja
 from juicer.admin.Parser import Parser as pmoney
 from juicer.utils import mute, get_login_info, get_environments
 import juicer.common.Repo
+import cProfile
+import os
+
+
+PROFILE_LOG = os.getenv('JPROFILELOG', '/tmp/juicer-admin-call-stats')
 
 
 class TestJuicerAdmin(unittest.TestCase):
-
     def __init(self):
         (self.connectors, self._defaults) = get_login_info()
         for env in get_environments():
@@ -47,6 +51,9 @@ class TestJuicerAdmin(unittest.TestCase):
         mute()(pulp.delete_repo)(repo_name=args.name, envs=args.envs)
 
     def test_show_repo(self):
+        cProfile.runctx('self._test_show_repo()', globals(), locals(), PROFILE_LOG)
+
+    def _test_show_repo(self):
         self.create_test_repo()
         env = self._defaults['start_in']
         args = self.parser.parser.parse_args(("repo show test-repo-456  --in %s" % env).split())
@@ -58,6 +65,9 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_repo()
 
     def test_delete_repo(self):
+        cProfile.runctx('self._test_delete_repo()', globals(), locals(), PROFILE_LOG)
+
+    def _test_delete_repo(self):
         self.create_test_repo()
         args = self.parser.parser.parse_args(("repo delete test-repo-456 --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
@@ -65,6 +75,9 @@ class TestJuicerAdmin(unittest.TestCase):
         self.assertTrue(any('deleted' in k for k in output))
 
     def test_list_repos(self):
+        cProfile.runctx('self._test_list_repos()', globals(), locals(), PROFILE_LOG)
+
+    def _test_list_repos(self):
         self.create_test_repo()
         env = self._defaults['start_in']
         args = self.parser.parser.parse_args(("repo list --in %s" % env).split())
@@ -76,6 +89,9 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_repo()
 
     def test_create_repo(self):
+        cProfile.runctx('self._test_create_repo()', globals(), locals(), PROFILE_LOG)
+
+    def _test_create_repo(self):
         args = self.parser.parser.parse_args(("repo create test-repo-456 --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.create_repo)(repo_name=args.name, envs=args.envs)
@@ -84,6 +100,9 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_repo()
 
     def test_create_user(self):
+        cProfile.runctx('self._test_create_user()', globals(), locals(), PROFILE_LOG)
+
+    def _test_create_user(self):
         args = self.parser.parser.parse_args(("user create cjesop --password cjesop --name 'ColonelJesop' --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.create_user)(login=args.login, user_name=args.name, \
@@ -92,6 +111,9 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_user()
 
     def test_delete_user(self):
+        cProfile.runctx('self._test_delete_user()', globals(), locals(), PROFILE_LOG)
+
+    def _test_delete_user(self):
         self.create_test_user()
         args = self.parser.parser.parse_args(("user delete cjesop --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
@@ -99,6 +121,9 @@ class TestJuicerAdmin(unittest.TestCase):
         self.assertTrue(any('deleted' in k for k in output))
 
     def test_show_user(self):
+        cProfile.runctx('self._test_show_user()', globals(), locals(), PROFILE_LOG)
+
+    def _test_show_user(self):
         self.create_test_user()
         args = self.parser.parser.parse_args(("user show cjesop --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
@@ -107,12 +132,18 @@ class TestJuicerAdmin(unittest.TestCase):
         self.delete_test_user()
 
     def test_list_roles(self):
+        cProfile.runctx('self._test_list_roles()', globals(), locals(), PROFILE_LOG)
+
+    def _test_list_roles(self):
         args = self.parser.parser.parse_args(("role list --in %s" % self._defaults['start_in']).split())
         pulp = ja(args)
         output = mute(returns_output=True)(pulp.list_roles)(envs=args.envs)
         self.assertTrue(any('super-users' in k for k in output))
 
     def test_role_add(self):
+        cProfile.runctx('self._test_role_add()', globals(), locals(), PROFILE_LOG)
+
+    def _test_role_add(self):
         self.create_test_user()
         args = self.parser.parser.parse_args(("role add --login cjesop \
                 --role super-users --in %s" % self._defaults['start_in']).split())

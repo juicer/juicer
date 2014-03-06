@@ -47,14 +47,17 @@ class JuicerManifestError(JuicerError):
 class JuicerRpmSignPluginError(JuicerError):
     pass
 
+
 class JuicerRepoExclusionError(JuicerError):
     pass
+
 
 class JuicerRepoDefError(JuicerError):
     """
     Raised for invalid repo def files
     """
     pass
+
 
 class JuicerRepoInUndefinedEnvs(JuicerError):
     pass

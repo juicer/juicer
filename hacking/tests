@@ -25,17 +25,35 @@ trap "{ exit 0; }" SIGINT SIGTERM
 . ./hacking/setup-env
 
 # Oh SWEET. Color codes! Ganked from http://stackoverflow.com/a/10466960/263969
-RESTORE='\033[0m'
-RED='\033[00;31m'
-GREEN='\033[00;32m'
+declare -A COLORS
 
-green() {
-    echo -en "${RESTORE}${GREEN}${1}${RESTORE}"
+COLORS[RESTORE]='\033[0m'
+COLORS[RED]='\033[00;31m'
+COLORS[GREEN]='\033[00;32m'
+COLORS[YELLOW]='\033[00;33m'
+COLORS[BLUE]='\033[00;34m'
+COLORS[PURPLE]='\033[00;35m'
+COLORS[CYAN]='\033[00;36m'
+COLORS[LIGHTGRAY]='\033[00;37m'
+COLORS[LRED]='\033[01;31m'
+COLORS[LGREEN]='\033[01;32m'
+COLORS[LYELLOW]='\033[01;33m'
+COLORS[LBLUE]='\033[01;34m'
+COLORS[LPURPLE]='\033[01;35m'
+COLORS[LCYAN]='\033[01;36m'
+COLORS[WHITE]='\033[01;37m'
+
+colorize() {
+    # $1 = a COLOR from the table above ^
+    # $2 = a quoted string to print out in COLOR
+    #
+    # NOTE: 'colorize' doesn't print trailing new lines, ergo you may
+    # use it inline:
+    #
+    #    $ echo "black stuff, `colorize GREEN 'green stuff'`, more black stuff
+    echo -en "${COLORS[RESTORE]}${COLORS[${1}]}${2}${COLORS[RESTORE]}"
 }
 
-red() {
-    echo -ne "${RESTORE}${RED}${1}${RESTORE}"
-}
 
 ######################################################################
 
@@ -47,13 +65,13 @@ echo "#################################"
 NUM_TESTS=`ls -1 ./hacking/repo_def/*.json | wc -l`
 # Only one of them should pass
 MUST_FAIL=$(( ${NUM_TESTS} - 1 ))
-echo "Expecting `green '1 PASS'` and `red \"${MUST_FAIL} FAIL\"`s"
+echo "Expecting `colorize 'green' '1 PASS'` and `colorize 'red' \"${MUST_FAIL} FAIL\"`s"
 
 python ./juicer/utils/ValidateRepoDef.py ./hacking/repo_def/*.json
 if [ "$?" == "${MUST_FAIL}" ]; then
-    echo "Repo def validation tests success: (`green '1 PASS'`/`red \"${MUST_FAIL} FAIL\"`s)"
+    echo "Repo def validation tests success: (`colorize 'green' '1 PASS'`/`colorize 'red' \"${MUST_FAIL} FAIL\"`s)"
 else
-    echo `red "Repo def validation failed"`
+    echo `colorize 'red' "Repo def validation failed"`
 fi
 
 ######################################################################
@@ -61,16 +79,21 @@ fi
 ######################################################################
 
 pushd juicer/tests/
+mkdir -p /tmp/JTESTS/
 
 for test in test_hello test_pull test_show test_workflow;
 do
-    echo "Running ${test}..."
+    colorize 'YELLOW' "#####################################################\n"
+    colorize 'YELLOW' "Running TestJuicer.TestJuicer.${test}...\n"
+    export JPROFILE=yes
+    export JPROFILELOG="/tmp/JTESTS/${test}"
     python -m unittest TestJuicer.TestJuicer.$test
 done
 
 for test in test_create_repo test_create_user test_delete_user test_list_repos test_list_roles test_role_add test_show_repo test_show_user;
 do
-    echo "Running ${test}..."
+    colorize 'YELLOW' "#####################################################\n"
+    colorize 'YELLOW' "Running TestJuicerAdmin.TestJuicerAdmin.${test}...\n"
     export JPROFILE=yes
     export JPROFILELOG="/tmp/JTESTS/${test}"
     python -m unittest TestJuicerAdmin.TestJuicerAdmin.$test

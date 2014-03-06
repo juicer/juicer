@@ -8,10 +8,13 @@ from juicer.utils import mute, get_login_info, get_environments
 import juicer.common.Constants as Constants
 import juicer.common.Cart
 import os
+import cProfile
+
+
+PROFILE_LOG = os.getenv('JPROFILELOG', '/tmp/juicer-call-stats')
 
 
 class TestJuicer(unittest.TestCase):
-
     def setUp(self):
         self.parser = pmoney()
         self.aparser = pamoney()
@@ -35,6 +38,9 @@ class TestJuicer(unittest.TestCase):
         mute()(pulp_admin.delete_repo)(repo_name=setup_args.name, envs=setup_args.envs)
 
     def test_workflow(self):
+        cProfile.runctx('self._test_workflow()', globals(), locals(), PROFILE_LOG)
+
+    def _test_workflow(self):
         rpm_path = '../../share/juicer/empty-0.1-1.noarch.rpm'
         rpm2_path = '../../share/juicer/alsoempty-0.1-1.noarch.rpm'
 
@@ -111,11 +117,17 @@ class TestJuicer(unittest.TestCase):
         self.assertFalse(os.path.exists(cart.cart_file()))
 
     def test_show(self):
+        cProfile.runctx('self._test_show()', globals(), locals(), PROFILE_LOG)
+
+    def _test_show(self):
         self.args = self.parser.parser.parse_args(('cart show %s' % self.cname).split())
         pulp = j(self.args)
         mute()(pulp.show)(self.cname, get_environments())
 
     def test_pull(self):
+        cProfile.runctx('self._test_pull()', globals(), locals(), PROFILE_LOG)
+
+    def _test_pull(self):
         if os.path.exists(self.cpath):
             os.remove(self.cpath)
 
@@ -126,6 +138,9 @@ class TestJuicer(unittest.TestCase):
         self.assertTrue(os.path.exists(self.cpath))
 
     def test_hello(self):
+        cProfile.runctx('self._test_hello()', globals(), locals(), PROFILE_LOG)
+
+    def _test_hello(self):
         self.args = self.parser.parser.parse_args(("hello --in %s" % self._defaults['start_in']).split())
         pulp = j(self.args)
         mute()(pulp.hello)()

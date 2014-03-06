@@ -20,6 +20,7 @@ from juicer.common.Errors import *
 from time import sleep
 import juicer.utils
 
+
 class TaskPoller(object):
     def __init__(self, task_id, connectors, env, sleep_time=5):
         self.task_id = task_id
