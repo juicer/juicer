@@ -17,4 +17,4 @@
 
 # Juicer package
 
-__version__ = '0.7.1-f36b1c3'
+__version__ = '0.7.1-7f23aff'
