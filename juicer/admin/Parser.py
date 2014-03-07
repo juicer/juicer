@@ -117,13 +117,13 @@ instructions on how to write a proper repo def file."""
         ##################################################################
         # Create the 'repo export' sub-parser
 
-        import_description = """This dumps a standard juicer format repository definition for all
+        export_description = """This dumps a standard juicer format repository definition for all
 of you repos. Note that this may take a long time to finish."""
 
         parser_repo_export = subparser_repo.add_parser('export',
                                                        help='Export pulp repositories into a juicer repo def file.',
                                                        usage='%(prog)s',
-                                                       description=import_description)
+                                                       description=export_description)
 
         parser_repo_export.add_argument('--out', '-o',
                                         default="repodefs-%s.json" % juicer.utils.iso_date_str(),
