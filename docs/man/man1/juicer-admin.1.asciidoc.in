@@ -323,15 +323,26 @@ REPO DEF FORMAT
 - Use a linting service if you're stuck, for example: *http://jsonlint.com/*
 
 
-
-
-
-
 FILES
 -----
+
 *~/.config/juicer/config* -- Juicer configuration file
 
 *~/.config/juicer/carts/* -- Cart storage location
+
+
+
+EXIT CODES
+----------
+
+Generally speaking, *juicer-admin* will return *0* on success, and
+non-zero on failure. There is one exception, however: *repo import
+--noop*
+
+- If no create/updates would have been made, this command returns *0*
+
+- If create/updates would have been made, then the exit code is the
+  number of create/updates that would have happened.
 
 
 

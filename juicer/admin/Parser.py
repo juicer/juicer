@@ -96,10 +96,14 @@ def file. Repositories which already exist will be updated. See the
 "repo import" and "Repo Def Format" sections in juicer-admin(1) for
 instructions on how to write a proper repo def file."""
 
+        import_epilog = """See "Exit Codes" in juicer-admin(1) for a description of how the
+'--noop' flag alters the exit code."""
+
         parser_repo_import = subparser_repo.add_parser('import',
                                                        help='Create pulp repositories from an imported definition',
                                                        usage='%(prog)s FROM_FILE [--noop]',
-                                                       description=import_description)
+                                                       description=import_description,
+                                                       epilog=import_epilog)
 
         parser_repo_import.add_argument('from_file', default=None,
                                         help='Repository definition file in JSON format')
