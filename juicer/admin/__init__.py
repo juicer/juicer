@@ -59,7 +59,8 @@ def import_repo(args):
 
         for env, repos in to_update.iteritems():
             for repo in repos:
-                debug_msg = None
+                noop_msg = None
+                debug_msg = False
                 repo_diff_specs = repo['reality_check_in_env']
                 for diff_spec in repo_diff_specs:
                     # [0] = env, [1] = RepoDiff, [2] = PulpRepo
@@ -68,12 +69,22 @@ def import_repo(args):
                         # "{'distributor': {'distributor_config': {}}, 'importer': {'importer_config': {}}}"
                         repo_diff = diff_spec[1]
                         # Does the diff contain anything?
-                        if repo_diff.diff()['distributor']['distributor_config'] or repo_diff.diff()['importer']['importer_config']:
-                            debug_msg = "    %s" % juicer.utils.create_json_str(this_env_diff_spec[1], indent=4, cls=juicer.common.Repo.RepoEncoder)
+                        whole_diff = {}
+                        rdist = repo_diff.diff()['distributor']['distributor_config']
+                        rimp = repo_diff.diff()['importer']['importer_config']
+
+                        if not rdist == {}:
+                            whole_diff['distributor'] = rdist
+                            debug_msg = True
+                        if not rimp == {}:
+                            whole_diff['importer'] = rimp
+                            debug_msg = True
+                        if debug_msg:
+                            noop_msg = "    %s" % juicer.utils.create_json_str(whole_diff, indent=4, cls=juicer.common.Repo.RepoEncoder)
 
                 if debug_msg:
                     juicer.utils.Log.log_info("NOOP: Would have updated %s-%s with:", repo['name'], env)
-                    juicer.utils.Log.log_info(debug_msg)
+                    juicer.utils.Log.log_info(noop_msg)
                     num_to_update += 1
 
         juicer.utils.exit_with_code(num_to_create + num_to_update)
