@@ -152,10 +152,6 @@ class JuicerAdmin(object):
 
         repo_pool.join()
 
-        # Use a cache to speed up testing
-        # juicer.utils.Log.log_info("BE AWARE: Currently reading repo list from local cache")
-        # existing_repos = juicer.utils.read_json_document('/tmp/repo_list.json')
-
         for repo in all_repos:
             # 'env' is all environments if: 'env' is not defined; 'env' is an empty list
             current_env = repo.get('env', [])

@@ -48,14 +48,7 @@ class JuicerRpmSignPluginError(JuicerError):
     pass
 
 
-class JuicerRepoExclusionError(JuicerError):
-    pass
-
-
 class JuicerRepoDefError(JuicerError):
-    """
-    Raised for invalid repo def files
-    """
     pass
 
 

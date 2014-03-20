@@ -25,10 +25,13 @@ class Repo(object):
     Internal representation of a repository object
     """
     def __init__(self, repo_name, env=None, repo_def=None):
-        """
-        `repo_name` - Name of this repo
-        `env` - Environment the repo lives in
-        `repo_def` - Repository definition as per juicer (see: docs/markdown/repo_syntax.md)
+        """`repo_name` - Name of this repo
+
+        `env` - Environment the repo lives in (only necessary for pulp repos)
+
+        `repo_def`- Repository definition. Juicer or pulp style (see:
+        docs/markdown/repo_syntax.md and the Pulp/JuicerRepo
+        subclasses below)
         """
         juicer.utils.Log.log_debug("creating repo object for %s-%s" % (repo_name, env))
         self.spec = {}
@@ -88,9 +91,12 @@ class PulpRepo(Repo):
         juicer.utils.Log.log_debug("parsing pulp definition for %s", self['name'])
         self['rpm_count'] = repo_def.get('content_unit_counts', {}).get('rpm', 0)
         self['srpm_count'] = repo_def.get('content_unit_counts', {}).get('srpm', 0)
-        # There's no pretty way to write this that doesn't take up 10 lines of code...
-        # Grab the deeply nested key 'checksum_type', or return 'sha256' if it doesn't exist
-        self['checksum_type'] = repo_def.get('distributors', [{}])[0].get('config', {}).get('checksum_type', 'sha256')
+        # There's no pretty way to write this that doesn't take up 10
+        # lines of code...  Grab the deeply nested key
+        # 'checksum_type', or return the default checksum_type if it
+        # doesn't exist
+        default_cs = juicer.common.Constants.REPO_DEF_DEFAULTS['checksum_type']
+        self['checksum_type'] = repo_def.get('distributors', [{}])[0].get('config', {}).get('checksum_type', default_cs)
 
         # Does this thing even have an importer defined?
         self['feed'] = None
@@ -119,10 +125,12 @@ class RepoDiff(object):
     """Calculate the difference of a juicer repo and a pulp repo."""
     def __init__(self, juicer_repo=None, pulp_repo=None):
         if not type(juicer_repo) == juicer.common.Repo.JuicerRepo:
-            raise TypeError("juicer_repo option to RepoDiff is not a JuicerRepo")
+            raise TypeError("juicer_repo parameter to RepoDiff is not a JuicerRepo: %s" %
+                            type(juicer_repo))
 
         if not type(pulp_repo) == juicer.common.Repo.PulpRepo:
-            raise TypeError("pulp_repo option to RepoDiff is not a PulpRepo")
+            raise TypeError("pulp_repo parameter to RepoDiff is not a PulpRepo %s" %
+                            type(pulp_repo))
 
         self.j = juicer_repo
         self.p = pulp_repo
@@ -176,11 +184,3 @@ class RepoEncoder(json.JSONEncoder):
             return str(obj)
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)
-
-# Custom encoder for RepoDiff types so we can dump them with standard json tools
-# class RepoDiffEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, RepoDiff):
-#             return str(obj)
-#         # Let the base class default method raise the TypeError
-#         return json.JSONEncoder.default(self, obj)
