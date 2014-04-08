@@ -30,7 +30,7 @@ class RPM(object):
         # out just those RPMs.
         self.modified = False
 
-        if self.source.startswith("http"):
+        if self.source.startswith("http://"):
             self.synced = False
             self.path = None
         else:
