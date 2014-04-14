@@ -206,7 +206,6 @@ class Cart(object):
 
     def add_from_manifest(self, manifest, connectors, query='/content/units/rpm/search/'):
         pkg_list = juicer.utils.parse_manifest(manifest)
-        env_re = re.compile('.*-%s' % self.current_env)
 
         urls = {}
 
@@ -220,7 +219,8 @@ class Cart(object):
                         'filters': {
                             'name': pkg['name'],
                             'version': pkg['version'],
-                            'release': pkg['release']
+                            'release': pkg['release'],
+                            'repo': {'$regex': ".*-%s" % self.current_env}
                             },
                         'sort': [['name', 'ascending']],
                         'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
@@ -241,14 +241,13 @@ class Cart(object):
 
             for ppkg in content:
                 for repo in ppkg['repository_memberships']:
-                    if re.match(env_re, repo):
-                        ending = "-%s" % self.current_env
-                        simple_repo = repo[:-len(ending)]
-                        if simple_repo not in urls:
-                            urls[simple_repo] = []
+                    ending = "-%s" % self.current_env
+                    simple_repo = repo[:-len(ending)]
+                    if simple_repo not in urls:
+                        urls[simple_repo] = []
 
-                        pkg_url = juicer.utils.remote_url(connectors[self.current_env], self.current_env, repo, ppkg['filename'])
-                        urls[simple_repo].append(pkg_url)
+                    pkg_url = juicer.utils.remote_url(connectors[self.current_env], self.current_env, repo, ppkg['filename'])
+                    urls[simple_repo].append(pkg_url)
 
         for repo in urls:
             self[repo] = urls[repo]
