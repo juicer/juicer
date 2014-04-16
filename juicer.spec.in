@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Wed Apr 16 2014 Alex Chvatal <achvatal@redhat.com> - 0.7.2-1
+- Speed up creating carts from a manifest
+
 * Thu Mar 20 2014 Tim Bielawa <tbielawa@redhat.com> - 0.7.1-4
 - Clean up tasks from code review
 - No altered functionality
