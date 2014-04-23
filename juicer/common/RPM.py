@@ -18,7 +18,7 @@
 import os.path
 import juicer.utils
 import juicer.utils.Log
-
+import re
 
 class RPM(object):
     def __init__(self, source):
@@ -30,7 +30,9 @@ class RPM(object):
         # out just those RPMs.
         self.modified = False
 
-        if self.source.startswith("http"):
+        url_regex = re.compile(r'^(http)s?://')
+
+        if url_regex.match(self.source):
             self.synced = False
             self.path = None
         else:
