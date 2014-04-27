@@ -619,12 +619,15 @@ def rpm_info(rpm_path):
     return rpm_info
 
 
-def upload_rpm(rpm_path, repoid, connector):
-    """
-    upload an rpm into pulp
+def upload_rpm(rpm_path, repoid, connector, callback=None):
+    """upload an rpm into pulp
 
     rpm_path: path to an rpm
     connector: the connector to use for interacting with pulp
+
+    callback: Optional callback to call after an RPM is
+    uploaded. Callback should accept one argument, the name of the RPM
+    which was uploaded
     """
     ts = rpm.TransactionSet()
     ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
@@ -669,6 +672,16 @@ def upload_rpm(rpm_path, repoid, connector):
 
     # clean up working dir
     upload.clean_upload()
+
+    # Run callbacks?
+    if callback:
+        try:
+            juicer.utils.Log.log_debug("Calling upload callack: %s" % str(callback))
+            callback(pkg_name)
+        except Exception:
+            juicer.utils.Log.log_error("Exception raised in callback: %s", str(callback))
+            pass
+
     return rpm_id
 
 

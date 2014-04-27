@@ -44,7 +44,7 @@ class Juicer(object):
                     raise JuicerKeyError("%s is not an environment defined in juicer.conf" % env)
 
     # this is used to upload carts to pulp
-    def upload(self, env, cart):
+    def upload(self, env, cart, callback=None):
         """
         Nothing special happens here. This method recieves a
         destination repo, and a payload of `cart` which will be
@@ -60,6 +60,7 @@ class Juicer(object):
 
         `env` - name of the environment with the cart destination
         `cart` - cart to upload
+        `callback` - Optional callback to call if juicer.utils.upload_rpm succeeds
         """
         for repo in cart.repos():
             if not juicer.utils.repo_exists_p(repo, self.connectors[env], env):
@@ -86,7 +87,7 @@ class Juicer(object):
                         else:
                             juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
                             item.sync_to(cart.remotes_storage)
-                            rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+                            rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env], callback)
 
                             filename = os.path.basename(item.path)
                             item.update('%s/%s' % (juicer.utils.pulp_repo_path(con, repoid), filename))
@@ -95,13 +96,13 @@ class Juicer(object):
                                                        (os.path.basename(item.path), rpm_id))
                     else:
                         juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
-                        rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+                        rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env], callback)
                         juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
                                                    (os.path.basename(item.path), rpm_id))
                 # else item is local
                 elif juicer.utils.is_rpm(item.path):
                     juicer.utils.Log.log_info("Initiating upload of '%s' into '%s'" % (item.path, repoid))
-                    rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env])
+                    rpm_id = juicer.utils.upload_rpm(item.path, repoid, self.connectors[env], callback)
                     juicer.utils.Log.log_debug('%s uploaded with an id of %s' %
                                                (os.path.basename(item.path), rpm_id))
 
@@ -125,9 +126,10 @@ class Juicer(object):
             self.publish(cart)
         return True
 
-    def push(self, cart, env=None):
+    def push(self, cart, env=None, callback=None):
         """
         `cart` - Release cart to push items from
+        `callback` - Optional callback to call if juicer.utils.upload_rpm succeeds
 
         Pushes the items in a release cart to the pre-release environment.
         """
@@ -138,7 +140,7 @@ class Juicer(object):
 
         cart.current_env = env
         self.sign_cart_for_env_maybe(cart, env)
-        self.upload(env, cart)
+        self.upload(env, cart, callback)
         return True
 
     def publish(self, cart, env=None):
@@ -414,10 +416,10 @@ class Juicer(object):
         cart_check = juicer.utils.download_cart(cartname, env)
         if cart_check is None:
             print 'error: cart \'%s\' does not exist' % cartname
+            return None
         else:
             juicer.utils.write_json_document(cart_file, juicer.utils.download_cart(cartname, env))
-
-        return True
+            return cart_check
 
     def promote(self, cart_name):
         """
