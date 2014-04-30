@@ -4,7 +4,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %endif
 
 Name:          juicer
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Pulp and release carts
 Version:       %VERSION%
 
@@ -95,6 +95,11 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Wed Apr 30 2014 Tim Bielawa <tbielawa@redhat.com> - 0.7.2-3
+- API related changes
+- Cart methods return useful data
+- Optional callbacks allowed while pushing
+
 * Mon Apr 21 2014 Alex Chvatal <achvatal@redhat.com> - 0.7.2-2
 - revert a change that impacted remote urls
 
