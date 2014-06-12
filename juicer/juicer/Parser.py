@@ -248,7 +248,7 @@ class Parser(object):
         # create the 'hello' sub-parser
         parser_hello = subparsers.add_parser('hello',
                                              help='Test your connection to the pulp server',
-                                             usage='%(prog)s hello [--in env ...]')
+                                             usage='%(prog)s [--in env ...]')
 
         parser_hello.add_argument('--in', nargs='*',
                                   metavar='environment',
