@@ -220,7 +220,6 @@ class Cart(object):
                             'name': pkg['name'],
                             'version': pkg['version'],
                             'release': pkg['release'],
-                            'repo': {'$regex': ".*-%s" % self.current_env}
                             },
                         'sort': [['name', 'ascending']],
                         'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
