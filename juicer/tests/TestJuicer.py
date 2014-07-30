@@ -158,6 +158,35 @@ class TestJuicer(unittest.TestCase):
         pulp = j(self.args)
         mute()(pulp.hello)()
 
+    def test_rpm_delete(self):
+        cProfile.runctx('self._test_rpm_delete()', globals(), locals(), PROFILE_LOG)
+
+    def _test_rpm_delete(self):
+        rpm_path = '../../share/juicer/empty-0.1-1.noarch.rpm'
+
+        # test uploading an rpm
+        self.args = self.parser.parser.parse_args(
+            ('rpm upload -r %s %s' % (self.rname, rpm_path)).split())
+        pulp = j(self.args)
+        cart = pulp.create('upload-cart', self.args.r)
+
+        self.args = self.parser.parser.parse_args('cart push upload-cart'.split())
+        pulp = j(self.args)
+        mute()(pulp.push)(cart)
+
+        # test deleting rpm
+        self.args = self.parser.parser.parse_args(
+            ('rpm delete -r %s %s --in re' % (self.rname, rpm_path.split('/')[-1])).split())
+        pulp = j(self.args)
+        output = mute(returns_output=True)(pulp.delete_rpms)(self.args.r[0][0] + "-re", self.args.r[0][1], 're')
+
+        self.args = self.parser.parser.parse_args(
+            ('rpm search %s --in re' % (rpm_path.split('/')[-1])).split())
+        pulp = j(self.args)
+        output = mute(returns_output=True)(pulp.search)(pkg_name=self.args.rpmname)
+        self.assertFalse(any(self.args.rpmname in k for k in output))
+
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJuicer)
     unittest.TextTestRunner(verbosity=2).run(suite)

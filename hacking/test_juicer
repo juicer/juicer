@@ -33,7 +33,7 @@ colorize 'CYAN' '###############################################################
 colorize 'CYAN' '#                     RUNNING JUICER TESTS                           #\n'
 colorize 'CYAN' '######################################################################\n\n'
 
-for test in test_hello test_workflow test_pull test_show test_delete;
+for test in test_hello test_workflow test_pull test_show test_delete test_rpm_delete;
 do
     colorize 'YELLOW' "#####################################################\n"
     colorize 'YELLOW' "Running TestJuicer.TestJuicer.${test}...\n"
