@@ -219,13 +219,12 @@ class Cart(object):
                         'filters': {
                             'name': pkg['name'],
                             'version': pkg['version'],
-                            'release': pkg['release'],
-                            'repo': {'$regex': ".*-%s" % self.current_env}
+                            'release': pkg['release']
                             },
                         'sort': [['name', 'ascending']],
-                        'fields': ['name', 'description', 'version', 'release', 'arch', 'filename']
+                        'fields': ['name', 'description', 'version', 'release', 'arch', 'filename', 'repository_memberships']
                         },
-                    'include_repos': 'true'
+                     'include_repos': 'true'
                     }
 
             _r = connectors[self.current_env].post(query, data)

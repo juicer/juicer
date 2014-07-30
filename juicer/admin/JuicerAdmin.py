@@ -95,7 +95,7 @@ class JuicerAdmin(object):
                                 'checksum_type': checksum_type
                                 },
                             'auto_publish': True,
-                            'relative_path': '/%s/%s/' % (env, repo_name)
+                            'relative_url': '/%s/%s/' % (env, repo_name)
                             }
 
                     _r = self.connectors[env].post(dist_query, dist_data)

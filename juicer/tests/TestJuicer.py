@@ -100,28 +100,34 @@ class TestJuicer(unittest.TestCase):
         self.assertFalse(cart.current_env == old_env)
 
         # test creating a cart from manifest
-        new_cname = self.cname + "1"
+        new_cname = self.cname + "new"
 
         self.args = self.parser.parser.parse_args(('cart create %s -f %s' %
                                                    (new_cname, '../../share/juicer/rpm-manifest.yaml')).split())
         pulp = j(self.args)
-        mute()(pulp.create_manifest)(cart_name=self.args.cartname, manifests=self.args.f)
-
+        mute()(pulp.create_manifest)(self.args.cartname, self.args.f)
         cart = juicer.common.Cart.Cart(new_cname, autoload=True)
 
         self.assertFalse(cart.is_empty())
 
+    def test_delete(self):
+        cProfile.runctx('self._test_delete()', globals(), locals(), PROFILE_LOG)
+
+    def _test_delete(self):
         # test deleting a cart
         self.args = self.parser.parser.parse_args(('cart delete %s' % \
                                         (self.cname)).split())
         pulp = j(self.args)
-
-        mute()(pulp.delete)(cartname=cart.cart_name)
-        self.assertFalse(os.path.exists(cart.cart_file()))
-
         cart = juicer.common.Cart.Cart(self.cname, autoload=True)
         mute()(pulp.delete)(cartname=cart.cart_name)
         self.assertFalse(os.path.exists(cart.cart_file()))
+        self.args = self.parser.parser.parse_args(('cart delete %s' % \
+                                                   (self.cname + "new")).split())
+        pulp = j(self.args)
+        cart = juicer.common.Cart.Cart(self.cname + "new", autoload=True)
+        mute()(pulp.delete)(cartname=cart.cart_name)
+        self.assertFalse(os.path.exists(cart.cart_file()))
+
 
     def test_show(self):
         cProfile.runctx('self._test_show()', globals(), locals(), PROFILE_LOG)

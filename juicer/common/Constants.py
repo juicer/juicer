@@ -75,7 +75,7 @@ EXAMPLE_SYSTEM_CONFIG = '/usr/share/juicer/juicer.conf'
 
 ######################################################################
 # The version the server should be running
-EXPECTED_SERVER_VERSION = '2.3'
+EXPECTED_SERVER_VERSION = '2'
 
 ######################################################################
 # Repo def file defaults/attributes
