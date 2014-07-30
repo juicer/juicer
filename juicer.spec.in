@@ -4,7 +4,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %endif
 
 Name:          juicer
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Pulp and release carts
 Version:       %VERSION%
 
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Wed Jul 30 2014 Andrew Butcher <abutcher@redhat.com> - 0.8.0-1
+- Pulp 2.4 support.
+
 * Mon Apr 21 2014 Alex Chvatal <achvatal@redhat.com> - 0.7.2-2
 - revert a change that impacted remote urls
 
