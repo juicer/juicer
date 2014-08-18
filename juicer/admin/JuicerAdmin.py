@@ -57,7 +57,20 @@ class JuicerAdmin(object):
         data = {'display_name': repo_name,
                 'notes': {
                     '_repo-type': 'rpm-repo',
-                    }
+                    },
+                'distributors': [{'distributor_id': 'yum_distributor',
+                                  'distributor_type_id': 'yum_distributor',
+                                  'distributor_config': {
+                                      'http': True,
+                                      'https': True,
+                                      'checksum_type': checksum_type
+                                  },
+                                  'auto_publish': True
+                              }],
+                'importer_id': 'yum_importer',
+                'importer_type_id': 'yum_importer',
+                'importer_config': {},
+
                 }
         juicer.utils.Log.log_debug("Create Repo: %s", repo_name)
 
@@ -69,45 +82,21 @@ class JuicerAdmin(object):
             else:
                 data['relative_path'] = '/%s/%s/' % (env, repo_name)
                 data['id'] = '-'.join([repo_name, env])
+                data['distributors'][0]['distributor_config']['relative_url'] = '/%s/%s/' % (env, repo_name)
+                data['distributors'][0]['relative_url'] = '/%s/%s/' % (env, repo_name)
+
+                if feed:
+                    imp_data['importer_config']['feed_url'] = feed
 
                 _r = self.connectors[env].post(query, data)
 
+                # Repository was successfully created.
                 if _r.status_code == Constants.PULP_POST_CREATED:
-                    imp_query = '/repositories/%s/importers/' % data['id']
-                    imp_data = {
-                        'importer_id': 'yum_importer',
-                        'importer_type_id': 'yum_importer',
-                        'importer_config': {},
-                    }
+                    _r = self.connectors[env].post('/repositories/%s-%s/actions/publish/' % (repo_name, env), {'id': 'yum_distributor'})
+                    # Repository publish accepted.
+                    if _r.status_code == Constants.PULP_POST_ACCEPTED:
 
-                    if feed:
-                        imp_data['importer_config']['feed_url'] = feed
-
-                    _r = self.connectors[env].post(imp_query, imp_data)
-
-                    dist_query = '/repositories/%s/distributors/' % data['id']
-                    dist_data = {'distributor_id': 'yum_distributor',
-                            'distributor_type_id': 'yum_distributor',
-                            'distributor_config': {
-                                'relative_url': '/%s/%s/' % (env, repo_name),
-                                'http': True,
-                                'https': True,
-                                'checksum_type': checksum_type
-                                },
-                            'auto_publish': True,
-                            'relative_url': '/%s/%s/' % (env, repo_name)
-                            }
-
-                    _r = self.connectors[env].post(dist_query, dist_data)
-
-                    if _r.status_code == Constants.PULP_POST_CREATED:
-                        pub_query = '/repositories/%s/actions/publish/' % data['id']
-                        pub_data = {'id': 'yum_distributor'}
-
-                        _r = self.connectors[env].post(pub_query, pub_data)
-
-                        if _r.status_code == Constants.PULP_POST_ACCEPTED:
-                            juicer.utils.Log.log_info("created repo `%s` in %s", repo_name, env)
+                        juicer.utils.Log.log_info("created repo `%s` in %s", repo_name, env)
                     else:
                         _r.raise_for_status()
                 else:
