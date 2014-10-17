@@ -88,8 +88,8 @@ directly to the json if we wanted to.
     $ cat ~/.config/juicer/carts/ComplicatedRelease.json
 
 We have to push this release to multiple environments. The standard
-example environments we use are 're' (release engineering), qa, stage
-and prod.
+example environments we use are `re` (release engineering), `qa`,
+`stage` and `prod`.
 
 First, we'll push this change to our release engineering
 environment. Pulp repositories for this environment are stored in a
