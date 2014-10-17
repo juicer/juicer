@@ -64,7 +64,7 @@ When you're satisfied, promote the cart to the next environment
 ### A Non-Trivial Release Workflow
 
 In this example, we have many rpms to be pushed to several different
-repositories. We've organized those rpms on our local system into
+repositories. We've organized these rpms on our local system into
 several folders and possibly have a few stragglers that we've built
 using another system.
 
