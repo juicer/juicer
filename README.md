@@ -131,7 +131,7 @@ At this point in the release, the qa team finds a horrible bug that
 must be patched (again on a remote system). So he updates the cart
 once more.
 
-    $ juicer cart update ComplicatedRelease -r first-repository https://remote.buildsystem.host/my-build/my-rpm-0.0.0-1.el6.noarch.rpm \
+    $ juicer cart update ComplicatedRelease -r first-repository https://remote.buildsystem.host/my-build/my-rpm-0.0.0-2.el6.noarch.rpm \
                                             -r third-repository https://remote.buildsystem.host/my-build/my-other-rpm-0.0.0-3.el6.noarch.rpm
 
 Now he has to start over, so he pushes the cart into `re`, `qa`, and
