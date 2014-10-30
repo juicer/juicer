@@ -61,10 +61,10 @@ When you're satisfied, promote the cart to the next environment
 
     $ juicer cart promote MyJuicyRelease
 
-## A Non-Trivial Release Workflow
+### A Non-Trivial Release Workflow
 
 In this example, we have many rpms to be pushed to several different
-repositories. We've organized those rpms on our local system into
+repositories. We've organized these rpms on our local system into
 several folders and possibly have a few stragglers that we've built
 using another system.
 
@@ -88,8 +88,8 @@ directly to the json if we wanted to.
     $ cat ~/.config/juicer/carts/ComplicatedRelease.json
 
 We have to push this release to multiple environments. The standard
-example environments we use are 're' (release engineering), qa, stage
-and prod.
+example environments we use are `re` (release engineering), `qa`,
+`stage` and `prod`.
 
 First, we'll push this change to our release engineering
 environment. Pulp repositories for this environment are stored in a
@@ -103,8 +103,8 @@ these rpms to change since our organization operates in many time
 zones.
 
 The first release engineer, who promoted the rpms to the `re`
-environment must update the cart since more recent package builds have
-occurred on the remote system. So she must run a `cart update`:
+environment, must update the cart since more recent package builds have
+occurred on the remote system. So she must run a `juicer cart update`:
 
     $ juicer cart update ComplicatedRelease -r third-repository https://remote.buildsystem.host/my-build/my-other-rpm-0.0.0-2.el6.noarch.rpm
 
@@ -131,7 +131,7 @@ At this point in the release, the qa team finds a horrible bug that
 must be patched (again on a remote system). So he updates the cart
 once more.
 
-    $ juicer cart update ComplicatedRelease -r first-repository https://remote.buildsystem.host/my-build/my-rpm-0.0.0-1.el6.noarch.rpm \
+    $ juicer cart update ComplicatedRelease -r first-repository https://remote.buildsystem.host/my-build/my-rpm-0.0.0-2.el6.noarch.rpm \
                                             -r third-repository https://remote.buildsystem.host/my-build/my-other-rpm-0.0.0-3.el6.noarch.rpm
 
 Now he has to start over, so he pushes the cart into `re`, `qa`, and
