@@ -123,6 +123,11 @@ def publish(args):
         pulp.publish_repo(args.repo, env)
 
 
+def prune_repo(args):
+    pulp = j(args)
+    pulp.prune_repo(args.reponame, args.daycount, args.envs)
+
+
 def delete(args):
     pulp = j(args)
     pulp.delete(cartname=args.cartname)

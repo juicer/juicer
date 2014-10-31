@@ -305,6 +305,35 @@ class Parser(object):
         parser_rpm_delete.set_defaults(j=juicer.juicer.delete_rpm)
 
         ##################################################################
+        # Create the 'repo prune' sub-parser
+
+        prune_description = """This removes packages older than the specified time from the specified repo.
+Defaults to 90 days."""
+
+        parser_repo_prune = subparser_repo.add_parser('prune',
+                help='Clear old packages from a repo.',
+                usage='%(prog)s -r REPO [-n DAYS] [--in ENV]',
+                description=prune_description)
+
+        parser_repo_prune.add_argument('-r', '--repo-name',
+                dest='reponame',
+                help='The repo to prune')
+
+        parser_repo_prune.add_argument('-n', '--number-days',
+                type=int,
+                default=90,
+                dest='daycount',
+                help='Prune packages older than this many days.')
+
+        parser_repo_prune.add_argument('--in', metavar='envs',
+                nargs="+",
+                dest='envs',
+                default=self._default_envs,
+                help='The environments in which to prune the repo.')
+
+        parser_repo_prune.set_defaults(ja=juicer.juicer.prune_repo)
+
+        ##################################################################
         # create the 'publish' sub-parser
         parser_repo_publish = subparser_repo.add_parser('publish',
                                                         help='Publish a repository, this will regenerate metadata.',

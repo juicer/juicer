@@ -23,6 +23,7 @@ import juicer.juicer
 import juicer.utils
 import juicer.utils.Upload
 import os
+import datetime
 
 
 class Juicer(object):
@@ -579,6 +580,50 @@ class Juicer(object):
             _r.raise_for_status()
         else:
             juicer.utils.Log.log_info("`%s` published in `%s`" % (repo, env))
+
+    def prune_repo(self, repo_name=None, daycount=None, envs=[], query='/repositories/'):
+        """
+        `repo_name` - name of the repository to prune
+        """
+        orphan_query = '/content/orphans/rpm/'
+        t = datetime.datetime.now() - datetime.timedelta(days = daycount)
+        juicer.utils.Log.log_debug("Prune Repo: %s", repo_name)
+        juicer.utils.Log.log_debug("Pruning packages created before %s" % t)
+
+        for env in self.args.envs:
+            if not juicer.utils.repo_exists_p(repo_name, self.connectors[env], env):
+                juicer.utils.Log.log_info("repo `%s` doesn't exist in %s... skipping!",
+                                           (repo_name, env))
+                continue
+            else:
+                url = "%s%s-%s/actions/unassociate/" % (query, repo_name, env)
+                # FIXME: this should be at least 90 days ago
+                data = {'created' : t.strftime('%Y-%m-%d%H:%M:%S')}
+                print data
+                _r = self.connectors[env].post(url, data)
+
+                if _r.status_code == Constants.PULP_POST_ACCEPTED:
+                    pub_query = '/repositories/%s-%s/actions/publish/' % (repo_name, env)
+                    pub_data = {'id': 'yum_distributor'}
+
+                    _r = self.connectors[env].post(pub_query, pub_data)
+
+                    if _r.status_code == Constants.PULP_POST_ACCEPTED:
+                        juicer.utils.Log.log_info("pruned repo `%s` in %s", repo_name, env)
+                else:
+                    _r.raise_for_status()
+
+                # after pruning, remove orphaned packages
+                _r = self.connectors[env].get(orphan_query)
+                if _r.status_code is Constants.PULP_POST_OK:
+                    if len(juicer.utils.load_json_str(_r.content)) > 0:
+                        __r = self.connectors[env].delete(orphan_query)
+                        if __r.status_code is Constants.PULP_DELETE_ACCEPTED:
+                            juicer.utils.Log.log_debug("deleted orphaned rpms in %s." % env)
+                        else:
+                            juicer.utils.Log.log_error("unable to delete orphaned rpms in %s. a %s error was returned", (env, __r.status_code))
+                else:
+                    juicer.utils.Log.log_error("unable to get a list of orphaned rpms. encountered a %s error." % _r.status_code)
 
     def delete(self, cartname):
         """
