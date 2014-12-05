@@ -111,6 +111,17 @@ class TestJuicer(unittest.TestCase):
 
         self.assertFalse(cart.is_empty())
 
+        # test pruning a repo
+        self.args = self.parser.parser.parse_args(('repo prune -r %s -n %s' % (self.rname, '30')).split())
+        pulp = j(self.args)
+        mute()(pulp.prune_repo)(repo_name=args.reponame, daycount=args.daycount, envs=args.envs)
+        # TODO: check repo contents somehow
+
+        ## prune everything!
+        self.args = self.parser.parser.parse_args(('repo prune -r %s -n %s' % (self.rname, '0')).split())
+        pulp = j(self.args)
+        mute()(pulp.prune_repo)(repo_name=args.reponame, daycount=args.daycount, envs=args.envs)
+
         # test deleting a cart
         self.args = self.parser.parser.parse_args(('cart delete %s' % \
                                         (self.cname)).split())
