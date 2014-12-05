@@ -4,7 +4,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %endif
 
 Name:          juicer
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       Pulp and release carts
 Version:       %VERSION%
 
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ######################################################################
 %changelog
+* Fri Dec 05 2014 Alex Chvatal <achvatal@redhat.com> - 0.8.0-1
+- add ability to prune old content from repos
+
 * Wed Aug 27 2014 Alex Chvatal <achvatal@redhat.com> - 0.7.2-4
 - Display the correct version when asked
 
