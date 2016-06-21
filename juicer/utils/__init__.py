@@ -43,7 +43,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
-from pymongo import Connection as MongoClient
+from pymongo import MongoClient
 from pymongo import errors as MongoErrors
 
 
