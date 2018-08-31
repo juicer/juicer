@@ -12,7 +12,13 @@
 """
 Functions for handling remote package resources
 """
-from BeautifulSoup import BeautifulSoup as bs
+try:
+    from BeautifulSoup import BeautifulSoup as bs
+except ImportError:
+    try:
+        from bs4 import BeautifulSoup as bs
+    except:
+        print "Failed to import BeautifulSoup."
 from os.path import exists, expanduser
 import re
 import urllib2
